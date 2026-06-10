@@ -7,10 +7,9 @@ using System.Collections.ObjectModel;
 
 namespace LockIn.ViewModels;
 
-[QueryProperty(nameof(TemplateId), "TemplateId")]
-public partial class TemplateEditViewModel(DatabaseService db) : ObservableObject
+public partial class TemplateEditViewModel(DatabaseService db) : ObservableObject, IQueryAttributable
 {
-    private WorkoutTemplate? _template;
+    private WorkoutTemplate _template = new();
 
     [ObservableProperty] private int _templateId;
     [ObservableProperty] private string _templateName = "";
@@ -18,7 +17,11 @@ public partial class TemplateEditViewModel(DatabaseService db) : ObservableObjec
 
     public ObservableCollection<TemplateExerciseRow> Exercises { get; } = new();
 
-    partial void OnTemplateIdChanged(int value) => _ = LoadAsync(value);
+    public void ApplyQueryAttributes(IDictionary<string, object> query)
+    {
+        if (query.TryGetValue("TemplateId", out var val) && val is int id)
+            _ = LoadAsync(id);
+    }
 
     private async Task LoadAsync(int templateId)
     {
@@ -93,7 +96,7 @@ public partial class TemplateEditViewModel(DatabaseService db) : ObservableObjec
             return;
         }
 
-        _template!.Name = TemplateName.Trim();
+        _template.Name = TemplateName.Trim();
         await db.SaveTemplateAsync(_template);
 
         if (TemplateId != 0)
