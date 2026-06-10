@@ -1,0 +1,21 @@
+{
+  "name": "LockIn",
+  "identifier": "com.josefaxen.lockin.source",
+  "apps": [
+    {
+      "name": "LockIn",
+      "bundleIdentifier": "com.josefaxen.lockin",
+      "developerName": "Josef Axén",
+      "localizedDescription": "Logga träningspass, sets, reps och vikt. Auto-timer och PR-detektering.",
+      "tintColor": "FF5A1F",
+      "versions": [
+        {
+          "version": "1.0.0",
+          "date": "2026-06-10",
+          "downloadURL": "https://github.com/JosefAxen/LockIn/releases/latest/download/LockIn.ipa",
+          "size": 5000000
+        }
+      ]
+    }
+  ]
+}

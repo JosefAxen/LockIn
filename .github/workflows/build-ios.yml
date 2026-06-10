@@ -5,6 +5,9 @@ on:
     branches: [ main, master ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: macos-latest
@@ -38,15 +41,33 @@ jobs:
       - name: Package as IPA
         run: |
           APP_PATH=$(find LockIn/bin/Release/net9.0-ios/ios-arm64 -name "*.app" | head -1)
-          echo "Found app: $APP_PATH"
           mkdir -p Payload
           cp -r "$APP_PATH" Payload/
           zip -r LockIn.ipa Payload
-          echo "IPA created"
 
-      - name: Upload IPA artifact
-        uses: actions/upload-artifact@v4
+      - name: Get version
+        id: version
+        run: echo "tag=$(date +'%Y.%m.%d')-$(echo $GITHUB_SHA | cut -c1-6)" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
         with:
-          name: LockIn-iOS
-          path: LockIn.ipa
-          retention-days: 30
+          tag_name: v${{ steps.version.outputs.tag }}
+          name: LockIn ${{ steps.version.outputs.tag }}
+          files: LockIn.ipa
+          make_latest: true
+
+      - name: Update source.json version
+        run: |
+          VERSION="${{ steps.version.outputs.tag }}"
+          DATE=$(date +'%Y-%m-%d')
+          sed -i '' "s/\"version\": \".*\"/\"version\": \"$VERSION\"/" docs/source.json
+          sed -i '' "s/\"date\": \".*\"/\"date\": \"$DATE\"/" docs/source.json
+
+      - name: Commit updated source.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/source.json
+          git diff --staged --quiet || git commit -m "chore: update source.json to ${{ steps.version.outputs.tag }} [skip ci]"
+          git push
