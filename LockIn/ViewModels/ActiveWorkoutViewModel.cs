@@ -192,7 +192,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         var section = Exercises.FirstOrDefault(e => e.SessionExerciseId == sessionExerciseId);
         if (section is null) return;
 
-        _activeTimerSection?.Let(s => s.IsTimerActive = false);
+        if (_activeTimerSection != null) _activeTimerSection.IsTimerActive = false;
         _activeTimerSection = section;
 
         timer.Cancel();
@@ -272,9 +272,4 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             { "SessionId", _session.Id }
         });
     }
-}
-
-file static class Extensions
-{
-    public static void Let<T>(this T obj, Action<T> action) => action(obj);
 }
