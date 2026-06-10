@@ -12,6 +12,7 @@ public partial class TrainViewModel(DatabaseService db) : ObservableObject
     public ObservableCollection<WorkoutTemplate> Templates { get; } = new();
 
     [ObservableProperty] private bool _isLoading;
+    [ObservableProperty] private bool _hasNoTemplates;
 
     public async Task LoadAsync()
     {
@@ -20,6 +21,7 @@ public partial class TrainViewModel(DatabaseService db) : ObservableObject
         Templates.Clear();
         foreach (var t in templates)
             Templates.Add(t);
+        HasNoTemplates = Templates.Count == 0;
         IsLoading = false;
     }
 
@@ -47,6 +49,15 @@ public partial class TrainViewModel(DatabaseService db) : ObservableObject
         await Shell.Current.GoToAsync(nameof(TemplateEditPage), new Dictionary<string, object>
         {
             { "TemplateId", template.Id }
+        });
+    }
+
+    [RelayCommand]
+    private async Task StartFreeWorkoutAsync()
+    {
+        await Shell.Current.GoToAsync(nameof(ActiveWorkoutPage), new Dictionary<string, object>
+        {
+            { "TemplateId", 0 }
         });
     }
 

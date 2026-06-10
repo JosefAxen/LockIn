@@ -17,4 +17,7 @@ public partial class HistoryPage : ContentPage
         base.OnAppearing();
         await _vm.LoadAsync();
     }
+
+    internal async void OnSessionTapped(object sender, TappedEventArgs e)
+        => await AnimationHelper.PressAsync(sender);
 }

@@ -9,8 +9,8 @@
 
     <Grid RowDefinitions="Auto,*">
 
-        <Grid Grid.Row="0" Padding="20,16,20,8">
-            <Label Text="HISTORIK" Style="{StaticResource DisplayLabel}" FontSize="32"/>
+        <Grid Grid.Row="0" Padding="20,20,20,4">
+            <Label Text="HISTORIK" Style="{StaticResource DisplayLabel}" FontSize="40"/>
         </Grid>
 
         <Grid Grid.Row="1">
@@ -21,58 +21,75 @@
 
             <CollectionView ItemsSource="{Binding Sessions}"
                             IsVisible="{Binding IsLoading, Converter={x:Static vm:InverseBoolConverter.Instance}}"
-                            Margin="16,0,16,0">
+                            Margin="16,8,16,0">
                 <CollectionView.EmptyView>
-                    <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="8" Margin="0,60,0,0">
-                        <Label Text="Inga pass loggade ännu"
+                    <StackLayout VerticalOptions="Center" HorizontalOptions="Center"
+                                 Spacing="8" Margin="0,80,0,0">
+                        <Label Text="INGA PASS"
+                               Style="{StaticResource DisplayLabel}"
+                               FontSize="22"
+                               HorizontalOptions="Center"
+                               TextColor="{StaticResource ForgeMuted}"/>
+                        <Label Text="Starta ditt första pass i Träna-fliken"
                                Style="{StaticResource MutedLabel}"
-                               HorizontalOptions="Center"/>
-                        <Label Text="Gå till Träna för att starta ett pass"
-                               Style="{StaticResource MutedLabel}"
-                               FontSize="13"
-                               HorizontalOptions="Center"/>
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center"/>
                     </StackLayout>
                 </CollectionView.EmptyView>
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="svc:DatabaseService+SessionSummaryRow">
-                        <Border Style="{StaticResource CardFrame}"
-                                Margin="0,0,0,10">
-                            <Grid ColumnDefinitions="*,Auto" Padding="16">
-                                <StackLayout Grid.Column="0" Spacing="6">
-                                    <Label Text="{Binding TemplateName}"
-                                           FontFamily="BebasNeue" FontSize="20"
-                                           TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
-                                    <Label Text="{Binding StartedAt, StringFormat='{0:d MMM yyyy  ·  HH:mm}'}"
-                                           Style="{StaticResource MutedLabel}" FontSize="13"/>
-                                    <Grid ColumnDefinitions="Auto,Auto,Auto" ColumnSpacing="16" Margin="0,4,0,0">
+                        <Border Style="{StaticResource CardFrame}" Margin="0,0,0,10">
+                            <Grid ColumnDefinitions="4,*">
+                                <!-- Left accent strip -->
+                                <BoxView Grid.Column="0"
+                                         BackgroundColor="{StaticResource ForgeBorderLight}"
+                                         CornerRadius="16,0,0,16"/>
+                                <!-- Content -->
+                                <StackLayout Grid.Column="1" Padding="14,14,14,14" Spacing="10">
+                                    <!-- Top row: name + date -->
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <Label Grid.Column="0"
+                                               Text="{Binding TemplateName}"
+                                               FontFamily="BebasNeue" FontSize="24"
+                                               CharacterSpacing="1"
+                                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                                        <Label Grid.Column="1"
+                                               Text="{Binding StartedAt, StringFormat='{0:d MMM}'}"
+                                               Style="{StaticResource MutedLabel}"
+                                               FontSize="12"
+                                               VerticalOptions="Center"/>
+                                    </Grid>
+                                    <!-- Stats row -->
+                                    <Grid ColumnDefinitions="*,*,*,Auto">
                                         <StackLayout Grid.Column="0" Spacing="1">
-                                            <Label Text="{Binding TotalVolume, StringFormat='{0:F0} kg'}"
-                                                   FontFamily="DMSansMedium" FontSize="15"
-                                                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
-                                            <Label Text="VOLYM" Style="{StaticResource SectionLabel}" FontSize="10"/>
+                                            <Label Text="{Binding TotalVolume, StringFormat='{0:F0}'}"
+                                                   Style="{StaticResource AccentHeroNumber}"
+                                                   FontSize="28"/>
+                                            <Label Text="KG VOLYM" Style="{StaticResource SectionLabel}"/>
                                         </StackLayout>
                                         <StackLayout Grid.Column="1" Spacing="1">
                                             <Label Text="{Binding TotalSets}"
-                                                   FontFamily="DMSansMedium" FontSize="15"
-                                                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
-                                            <Label Text="SETS" Style="{StaticResource SectionLabel}" FontSize="10"/>
+                                                   Style="{StaticResource HeroNumber}"
+                                                   FontSize="28"/>
+                                            <Label Text="SETS" Style="{StaticResource SectionLabel}"/>
                                         </StackLayout>
                                         <StackLayout Grid.Column="2" Spacing="1"
                                                      IsVisible="{Binding PRCount, Converter={x:Static vm:GreaterThanZeroConverter.Instance}}">
                                             <Label Text="{Binding PRCount}"
-                                                   FontFamily="DMSansMedium" FontSize="15"
+                                                   FontFamily="BebasNeue" FontSize="28"
                                                    TextColor="{StaticResource ForgeSuccess}"/>
-                                            <Label Text="PRs" Style="{StaticResource SectionLabel}" FontSize="10"/>
+                                            <Label Text="PRs" Style="{StaticResource SectionLabel}"/>
                                         </StackLayout>
+                                        <Label Grid.Column="3" Text="›"
+                                               FontSize="22"
+                                               TextColor="{StaticResource ForgeMuted}"
+                                               VerticalOptions="Center"/>
                                     </Grid>
                                 </StackLayout>
-                                <Label Grid.Column="1" Text="›"
-                                       FontSize="28"
-                                       TextColor="{StaticResource ForgeMuted}"
-                                       VerticalOptions="Center"/>
                             </Grid>
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer
+                                    Tapped="OnSessionTapped"
                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HistoryViewModel}}, Path=OpenSessionCommand}"
                                     CommandParameter="{Binding .}"/>
                             </Border.GestureRecognizers>

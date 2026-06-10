@@ -17,4 +17,7 @@ public partial class TrainPage : ContentPage
         base.OnAppearing();
         await _vm.LoadAsync();
     }
+
+    internal async void OnTemplateTapped(object sender, TappedEventArgs e)
+        => await AnimationHelper.PressAsync(sender);
 }
