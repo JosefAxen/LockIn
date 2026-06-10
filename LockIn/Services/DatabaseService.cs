@@ -203,6 +203,30 @@ public class DatabaseService
               JOIN SessionExercises se ON se.Id = ls.SessionExerciseId
               WHERE se.SessionId = ? AND ls.IsPR = 1", sessionId);
 
+    public Task<List<SessionSummaryRow>> GetCompletedSessionsAsync() =>
+        _db.QueryAsync<SessionSummaryRow>(
+            @"SELECT ws.Id, ws.StartedAt, ws.CompletedAt,
+                     COALESCE(wt.Name, 'Fritt pass') as TemplateName,
+                     COALESCE(SUM(ls.WeightKg * ls.Reps), 0) as TotalVolume,
+                     COUNT(ls.Id) as TotalSets,
+                     SUM(CASE WHEN ls.IsPR = 1 THEN 1 ELSE 0 END) as PRCount
+              FROM WorkoutSessions ws
+              LEFT JOIN WorkoutTemplates wt ON wt.Id = ws.TemplateId
+              LEFT JOIN SessionExercises se ON se.SessionId = ws.Id
+              LEFT JOIN LoggedSets ls ON ls.SessionExerciseId = se.Id
+              WHERE ws.CompletedAt IS NOT NULL
+              GROUP BY ws.Id
+              ORDER BY ws.StartedAt DESC");
+
+    public Task<List<SessionExerciseDetailRow>> GetSessionExerciseDetailsAsync(int sessionId) =>
+        _db.QueryAsync<SessionExerciseDetailRow>(
+            @"SELECT e.Name as ExerciseName, ls.SetNumber, ls.WeightKg, ls.Reps, ls.RIR, ls.IsPR
+              FROM SessionExercises se
+              JOIN Exercises e ON e.Id = se.ExerciseId
+              JOIN LoggedSets ls ON ls.SessionExerciseId = se.Id
+              WHERE se.SessionId = ?
+              ORDER BY se.OrderIndex, ls.SetNumber", sessionId);
+
     public Task<int> DeleteAllDataAsync() => _db.DeleteAllAsync<LoggedSet>()
         .ContinueWith(_ => _db.DeleteAllAsync<SessionExercise>()).Unwrap()
         .ContinueWith(_ => _db.DeleteAllAsync<WorkoutSession>()).Unwrap()
@@ -210,6 +234,27 @@ public class DatabaseService
         .ContinueWith(_ => _db.DeleteAllAsync<WorkoutTemplate>()).Unwrap()
         .ContinueWith(_ => _db.DeleteAllAsync<Exercise>()).Unwrap()
         .ContinueWith(async _ => { await SeedAsync(); return 0; }).Unwrap();
+
+    public class SessionSummaryRow
+    {
+        public int Id { get; set; }
+        public DateTime StartedAt { get; set; }
+        public DateTime? CompletedAt { get; set; }
+        public string TemplateName { get; set; } = "";
+        public decimal TotalVolume { get; set; }
+        public int TotalSets { get; set; }
+        public int PRCount { get; set; }
+    }
+
+    public class SessionExerciseDetailRow
+    {
+        public string ExerciseName { get; set; } = "";
+        public int SetNumber { get; set; }
+        public decimal WeightKg { get; set; }
+        public int Reps { get; set; }
+        public int RIR { get; set; }
+        public bool IsPR { get; set; }
+    }
 
     private class BestSetRow
     {

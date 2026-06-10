@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:LockIn.ViewModels"
+             xmlns:svc="clr-namespace:LockIn.Services"
+             x:Class="LockIn.Views.SessionDetailPage"
+             x:DataType="vm:SessionDetailViewModel"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Padding="16,16,20,12" ColumnDefinitions="Auto,*">
+            <Button Grid.Column="0" Text="‹"
+                    Style="{StaticResource SecondaryButton}"
+                    WidthRequest="44" HeightRequest="44" Padding="0"
+                    Command="{Binding GoBackCommand}"/>
+            <Label Grid.Column="1"
+                   Text="{Binding TemplateName}"
+                   Style="{StaticResource DisplayLabel}"
+                   FontSize="24"
+                   HorizontalOptions="Center" VerticalOptions="Center"/>
+        </Grid>
+
+        <ScrollView Grid.Row="1">
+            <StackLayout Padding="16,0,16,32" Spacing="12">
+
+                <!-- Stats card -->
+                <Border Style="{StaticResource CardFrame}" Padding="16">
+                    <StackLayout Spacing="8">
+                        <Label Text="{Binding DateDisplay}"
+                               Style="{StaticResource MutedLabel}" FontSize="13"/>
+                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                            <StackLayout Grid.Column="0" Spacing="2">
+                                <Label Text="{Binding VolumeDisplay}"
+                                       FontFamily="BebasNeue" FontSize="24"
+                                       TextColor="{StaticResource ForgeAccent}"/>
+                                <Label Text="VOLYM" Style="{StaticResource SectionLabel}" FontSize="10"/>
+                            </StackLayout>
+                            <StackLayout Grid.Column="1" Spacing="2">
+                                <Label Text="{Binding DurationDisplay}"
+                                       FontFamily="BebasNeue" FontSize="24"
+                                       TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                                <Label Text="TID" Style="{StaticResource SectionLabel}" FontSize="10"/>
+                            </StackLayout>
+                            <StackLayout Grid.Column="2" Spacing="2">
+                                <Label Text="{Binding PRCount}"
+                                       FontFamily="BebasNeue" FontSize="24"
+                                       TextColor="{StaticResource ForgeSuccess}"/>
+                                <Label Text="PRs" Style="{StaticResource SectionLabel}" FontSize="10"/>
+                            </StackLayout>
+                        </Grid>
+                    </StackLayout>
+                </Border>
+
+                <!-- Exercise groups -->
+                <StackLayout BindableLayout.ItemsSource="{Binding ExerciseGroups}" Spacing="10">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="vm:SessionExerciseGroup">
+                            <Border Style="{StaticResource CardFrame}">
+                                <StackLayout Spacing="0">
+                                    <Label Text="{Binding ExerciseName}"
+                                           FontFamily="DMSansMedium" FontSize="15"
+                                           Padding="16,12,16,8"/>
+
+                                    <!-- Column headers -->
+                                    <Grid ColumnDefinitions="24,*,*,*"
+                                          Padding="16,0,16,6" ColumnSpacing="8">
+                                        <Label Grid.Column="0" Text="SET"
+                                               Style="{StaticResource SectionLabel}" FontSize="10"/>
+                                        <Label Grid.Column="1" Text="KG"
+                                               Style="{StaticResource SectionLabel}" FontSize="10"
+                                               HorizontalTextAlignment="Center"/>
+                                        <Label Grid.Column="2" Text="REPS"
+                                               Style="{StaticResource SectionLabel}" FontSize="10"
+                                               HorizontalTextAlignment="Center"/>
+                                        <Label Grid.Column="3" Text="RIR"
+                                               Style="{StaticResource SectionLabel}" FontSize="10"
+                                               HorizontalTextAlignment="Center"/>
+                                    </Grid>
+
+                                    <StackLayout BindableLayout.ItemsSource="{Binding .}" Spacing="0">
+                                        <BindableLayout.ItemTemplate>
+                                            <DataTemplate x:DataType="svc:DatabaseService+SessionExerciseDetailRow">
+                                                <Grid ColumnDefinitions="24,*,*,*"
+                                                      Padding="16,6,16,6" ColumnSpacing="8"
+                                                      BackgroundColor="Transparent">
+                                                    <Label Grid.Column="0"
+                                                           Text="{Binding SetNumber}"
+                                                           Style="{StaticResource MutedLabel}"
+                                                           VerticalOptions="Center"/>
+                                                    <Label Grid.Column="1"
+                                                           Text="{Binding WeightKg}"
+                                                           FontFamily="DMSansMedium" FontSize="14"
+                                                           HorizontalTextAlignment="Center"
+                                                           VerticalOptions="Center"
+                                                           TextColor="{Binding IsPR, Converter={x:Static vm:PRColorConverter.Instance}}"/>
+                                                    <Label Grid.Column="2"
+                                                           Text="{Binding Reps}"
+                                                           FontFamily="DMSansMedium" FontSize="14"
+                                                           HorizontalTextAlignment="Center"
+                                                           VerticalOptions="Center"/>
+                                                    <Label Grid.Column="3"
+                                                           Text="{Binding RIR}"
+                                                           Style="{StaticResource MutedLabel}"
+                                                           HorizontalTextAlignment="Center"
+                                                           VerticalOptions="Center"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </BindableLayout.ItemTemplate>
+                                    </StackLayout>
+
+                                </StackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </StackLayout>
+
+            </StackLayout>
+        </ScrollView>
+
+    </Grid>
+</ContentPage>

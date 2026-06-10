@@ -2,93 +2,85 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:LockIn.ViewModels"
-             xmlns:models="clr-namespace:LockIn.Models"
+             xmlns:svc="clr-namespace:LockIn.Services"
              x:Class="LockIn.Views.HistoryPage"
              x:DataType="vm:HistoryViewModel"
              Title="Historik">
 
-    <Grid RowDefinitions="Auto,Auto,*">
+    <Grid RowDefinitions="Auto,*">
 
         <Grid Grid.Row="0" Padding="20,16,20,8">
             <Label Text="HISTORIK" Style="{StaticResource DisplayLabel}" FontSize="32"/>
         </Grid>
 
-        <SearchBar Grid.Row="1"
-                   Text="{Binding SearchText}"
-                   Placeholder="Sök övning..."
-                   Margin="16,0,16,8"/>
-
-        <ScrollView Grid.Row="2">
-            <StackLayout Padding="16,0,16,32" Spacing="0">
-
-                <!-- Exercise list (visible when no exercise selected) -->
-                <StackLayout IsVisible="{Binding IsExerciseNotSelected}"
-                             Spacing="6">
-                    <CollectionView ItemsSource="{Binding FilteredExercises}"
-                                    SelectionMode="Single"
-                                    SelectedItem="{Binding SelectedExercise}"
-                                    HeightRequest="600">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate x:DataType="models:Exercise">
-                                <Border Margin="0,0,0,6"
-                                        Style="{StaticResource CardFrame}"
-                                        Padding="16,14">
-                                    <Label Text="{Binding Name}"
-                                           FontFamily="DMSansMedium" FontSize="15"/>
-                                </Border>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </StackLayout>
-
-                <!-- History detail (visible when exercise selected) -->
-                <StackLayout IsVisible="{Binding IsExerciseSelected}"
-                             Spacing="10">
-
-                    <!-- Back button + exercise name -->
-                    <Grid ColumnDefinitions="Auto,*" Margin="0,0,0,8">
-                        <Button Grid.Column="0" Text="‹ Tillbaka"
-                                Style="{StaticResource SecondaryButton}"
-                                Padding="12,8"
-                                Command="{Binding ClearSelectionCommand}"/>
-                        <Label Grid.Column="1"
-                               Text="{Binding SelectedExercise.Name}"
-                               FontFamily="DMSansMedium" FontSize="16"
+        <Grid Grid.Row="1">
+            <ActivityIndicator IsRunning="{Binding IsLoading}"
+                               IsVisible="{Binding IsLoading}"
                                HorizontalOptions="Center"
                                VerticalOptions="Center"/>
-                    </Grid>
 
-                    <CollectionView ItemsSource="{Binding HistoryRows}">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate x:DataType="vm:ExerciseHistoryRow">
-                                <Border Margin="0,0,0,8"
-                                        Style="{StaticResource CardFrame}"
-                                        Padding="16,12">
-                                    <Grid ColumnDefinitions="*,Auto">
-                                        <StackLayout Grid.Column="0" Spacing="2">
-                                            <Label Text="{Binding SetDisplay}"
-                                                   FontFamily="DMSansMedium" FontSize="15"/>
-                                            <Label Text="{Binding Epley1RM}"
-                                                   Style="{StaticResource AccentLabel}"
-                                                   FontSize="12"/>
-                                            <Label Text="{Binding Date}"
-                                                   Style="{StaticResource MutedLabel}"
-                                                   FontSize="11"/>
+            <CollectionView ItemsSource="{Binding Sessions}"
+                            IsVisible="{Binding IsLoading, Converter={x:Static vm:InverseBoolConverter.Instance}}"
+                            Margin="16,0,16,0">
+                <CollectionView.EmptyView>
+                    <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="8" Margin="0,60,0,0">
+                        <Label Text="Inga pass loggade ännu"
+                               Style="{StaticResource MutedLabel}"
+                               HorizontalOptions="Center"/>
+                        <Label Text="Gå till Träna för att starta ett pass"
+                               Style="{StaticResource MutedLabel}"
+                               FontSize="13"
+                               HorizontalOptions="Center"/>
+                    </StackLayout>
+                </CollectionView.EmptyView>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="svc:DatabaseService+SessionSummaryRow">
+                        <Border Style="{StaticResource CardFrame}"
+                                Margin="0,0,0,10">
+                            <Grid ColumnDefinitions="*,Auto" Padding="16">
+                                <StackLayout Grid.Column="0" Spacing="6">
+                                    <Label Text="{Binding TemplateName}"
+                                           FontFamily="BebasNeue" FontSize="20"
+                                           TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                                    <Label Text="{Binding StartedAt, StringFormat='{0:d MMM yyyy  ·  HH:mm}'}"
+                                           Style="{StaticResource MutedLabel}" FontSize="13"/>
+                                    <Grid ColumnDefinitions="Auto,Auto,Auto" ColumnSpacing="16" Margin="0,4,0,0">
+                                        <StackLayout Grid.Column="0" Spacing="1">
+                                            <Label Text="{Binding TotalVolume, StringFormat='{0:F0} kg'}"
+                                                   FontFamily="DMSansMedium" FontSize="15"
+                                                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                                            <Label Text="VOLYM" Style="{StaticResource SectionLabel}" FontSize="10"/>
                                         </StackLayout>
-                                        <Label Grid.Column="1" Text="🏆"
-                                               FontSize="20"
-                                               VerticalOptions="Center"
-                                               IsVisible="{Binding IsPR}"/>
+                                        <StackLayout Grid.Column="1" Spacing="1">
+                                            <Label Text="{Binding TotalSets}"
+                                                   FontFamily="DMSansMedium" FontSize="15"
+                                                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                                            <Label Text="SETS" Style="{StaticResource SectionLabel}" FontSize="10"/>
+                                        </StackLayout>
+                                        <StackLayout Grid.Column="2" Spacing="1"
+                                                     IsVisible="{Binding PRCount, Converter={x:Static vm:GreaterThanZeroConverter.Instance}}">
+                                            <Label Text="{Binding PRCount}"
+                                                   FontFamily="DMSansMedium" FontSize="15"
+                                                   TextColor="{StaticResource ForgeSuccess}"/>
+                                            <Label Text="PRs" Style="{StaticResource SectionLabel}" FontSize="10"/>
+                                        </StackLayout>
                                     </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-
-                </StackLayout>
-
-            </StackLayout>
-        </ScrollView>
+                                </StackLayout>
+                                <Label Grid.Column="1" Text="›"
+                                       FontSize="28"
+                                       TextColor="{StaticResource ForgeMuted}"
+                                       VerticalOptions="Center"/>
+                            </Grid>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HistoryViewModel}}, Path=OpenSessionCommand}"
+                                    CommandParameter="{Binding .}"/>
+                            </Border.GestureRecognizers>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
 
     </Grid>
 </ContentPage>

@@ -1,79 +1,34 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using LockIn.Models;
 using LockIn.Services;
+using LockIn.Views;
 using System.Collections.ObjectModel;
+using static LockIn.Services.DatabaseService;
 
 namespace LockIn.ViewModels;
 
 public partial class HistoryViewModel(DatabaseService db) : ObservableObject
 {
-    private List<Exercise> _allExercises = new();
+    public ObservableCollection<SessionSummaryRow> Sessions { get; } = new();
 
-    public ObservableCollection<Exercise> FilteredExercises { get; } = new();
-    public ObservableCollection<ExerciseHistoryRow> HistoryRows { get; } = new();
-
-    [ObservableProperty] private string _searchText = "";
-    [ObservableProperty] private Exercise? _selectedExercise;
     [ObservableProperty] private bool _isLoading;
-    [ObservableProperty] private bool _isExerciseSelected;
-    [ObservableProperty] private bool _isExerciseNotSelected = true;
-
-    partial void OnSearchTextChanged(string value) => ApplyFilter();
-    partial void OnSelectedExerciseChanged(Exercise? value)
-    {
-        IsExerciseSelected = value is not null;
-        IsExerciseNotSelected = value is null;
-        _ = LoadHistoryAsync(value);
-    }
 
     public async Task LoadAsync()
     {
         IsLoading = true;
-        _allExercises = await db.GetExercisesAsync();
-        ApplyFilter();
+        var sessions = await db.GetCompletedSessionsAsync();
+        Sessions.Clear();
+        foreach (var s in sessions)
+            Sessions.Add(s);
         IsLoading = false;
     }
 
-    private void ApplyFilter()
-    {
-        var q = SearchText.Trim().ToLowerInvariant();
-        FilteredExercises.Clear();
-        foreach (var e in _allExercises.Where(e =>
-            string.IsNullOrEmpty(q) || e.Name.ToLowerInvariant().Contains(q)))
-            FilteredExercises.Add(e);
-    }
-
     [RelayCommand]
-    private void SelectExercise(Exercise exercise) => SelectedExercise = exercise;
-
-    [RelayCommand]
-    private void ClearSelection() => SelectedExercise = null;
-
-    private async Task LoadHistoryAsync(Exercise? exercise)
+    private async Task OpenSessionAsync(SessionSummaryRow session)
     {
-        if (exercise is null) return;
-        IsLoading = true;
-        HistoryRows.Clear();
-        var rows = await db.GetBestSetPerSessionForExerciseAsync(exercise.Id);
-        foreach (var (date, weight, reps, epley, isPR) in rows)
+        await Shell.Current.GoToAsync(nameof(SessionDetailPage), new Dictionary<string, object>
         {
-            HistoryRows.Add(new ExerciseHistoryRow
-            {
-                Date = date.ToString("d MMM yyyy"),
-                SetDisplay = $"{weight} kg × {reps}",
-                Epley1RM = $"{epley:F0} kg",
-                IsPR = isPR
-            });
-        }
-        IsLoading = false;
+            { "Session", session }
+        });
     }
-}
-
-public class ExerciseHistoryRow
-{
-    public string Date { get; set; } = "";
-    public string SetDisplay { get; set; } = "";
-    public string Epley1RM { get; set; } = "";
-    public bool IsPR { get; set; }
 }
