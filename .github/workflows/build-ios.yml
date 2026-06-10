@@ -19,7 +19,7 @@ jobs:
           dotnet-version: '9.0.200'
 
       - name: Install MAUI iOS workload
-        run: dotnet workload install maui-ios
+        run: dotnet workload install maui-ios --from-rollback-file workload-rollback.json --skip-sign-check
 
       - name: Restore
         run: dotnet restore LockIn/LockIn.csproj
