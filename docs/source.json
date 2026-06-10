@@ -7,6 +7,7 @@
       "bundleIdentifier": "com.josefaxen.lockin",
       "developerName": "Josef Axén",
       "localizedDescription": "Logga träningspass, sets, reps och vikt. Auto-timer och PR-detektering.",
+      "iconURL": "https://raw.githubusercontent.com/JosefAxen/LockIn/master/LockIn/Resources/AppIcon/appicon.png",
       "tintColor": "FF5A1F",
       "versions": [
         {
