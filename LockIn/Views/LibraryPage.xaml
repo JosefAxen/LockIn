@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:LockIn.ViewModels"
+             xmlns:models="clr-namespace:LockIn.Models"
+             x:Class="LockIn.Views.LibraryPage"
+             x:DataType="vm:LibraryViewModel"
+             Title="Bibliotek">
+
+    <Grid RowDefinitions="Auto,Auto,Auto,*">
+
+        <Grid Grid.Row="0" Padding="20,16,20,8" ColumnDefinitions="*,Auto">
+            <Label Grid.Column="0" Text="BIBLIOTEK"
+                   Style="{StaticResource DisplayLabel}" FontSize="32"/>
+            <Button Grid.Column="1" Text="+ Ny övning"
+                    Style="{StaticResource SecondaryButton}"
+                    Padding="12,8" HeightRequest="40"
+                    Command="{Binding AddCustomExerciseCommand}"/>
+        </Grid>
+
+        <SearchBar Grid.Row="1"
+                   Text="{Binding SearchText}"
+                   Placeholder="Sök övning..."
+                   Margin="16,0,16,8"/>
+
+        <ActivityIndicator Grid.Row="2"
+                           IsRunning="{Binding IsLoading}"
+                           IsVisible="{Binding IsLoading}"
+                           HorizontalOptions="Center"/>
+
+        <CollectionView Grid.Row="3"
+                        ItemsSource="{Binding Groups}"
+                        IsGrouped="True">
+            <CollectionView.GroupHeaderTemplate>
+                <DataTemplate x:DataType="vm:ExerciseGroup">
+                    <Label Text="{Binding Title}"
+                           Style="{StaticResource SectionLabel}"
+                           Padding="16,12,16,4"/>
+                </DataTemplate>
+            </CollectionView.GroupHeaderTemplate>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:Exercise">
+                    <Border Margin="16,0,16,8"
+                            Style="{StaticResource CardFrame}"
+                            Padding="16,12">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <StackLayout Grid.Column="0" Spacing="2">
+                                <Label Text="{Binding Name}"
+                                       FontFamily="DMSansMedium" FontSize="15"/>
+                                <Label Text="{Binding DefaultRestSeconds, StringFormat='Vila: {0}s'}"
+                                       Style="{StaticResource MutedLabel}"/>
+                            </StackLayout>
+                            <Border Grid.Column="1"
+                                    IsVisible="{Binding IsCustom}"
+                                    BackgroundColor="{StaticResource ForgeAccentDim}"
+                                    StrokeShape="RoundRectangle 6"
+                                    StrokeThickness="0" Padding="8,4">
+                                <Label Text="EGEN" TextColor="{StaticResource ForgeAccent}"
+                                       FontSize="11" FontFamily="BebasNeue"
+                                       CharacterSpacing="1"/>
+                            </Border>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </Grid>
+</ContentPage>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- Forge dark palette -->
+    <Color x:Key="ForgeBackground">#0C0C0E</Color>
+    <Color x:Key="ForgeSurface">#181818</Color>
+    <Color x:Key="ForgeSurface2">#222224</Color>
+    <Color x:Key="ForgeAccent">#FF5A1F</Color>
+    <Color x:Key="ForgeAccentDim">#28FF5A1F</Color>
+    <Color x:Key="ForgeText">#F2F2F2</Color>
+    <Color x:Key="ForgeMuted">#505055</Color>
+    <Color x:Key="ForgeBorder">#1C1C1E</Color>
+    <Color x:Key="ForgeSuccess">#4ADE80</Color>
+    <Color x:Key="ForgeSuccessDim">#284ADE80</Color>
+    <Color x:Key="ForgeDestructive">#FF3B30</Color>
+
+    <!-- Light mode equivalents -->
+    <Color x:Key="LightBackground">#F5F5F7</Color>
+    <Color x:Key="LightSurface">#FFFFFF</Color>
+    <Color x:Key="LightSurface2">#F0F0F2</Color>
+    <Color x:Key="LightText">#1C1C1E</Color>
+    <Color x:Key="LightMuted">#8E8E93</Color>
+    <Color x:Key="LightBorder">#E5E5EA</Color>
+
+    <SolidColorBrush x:Key="ForgeAccentBrush" Color="{StaticResource ForgeAccent}" />
+    <SolidColorBrush x:Key="ForgeSurfaceBrush" Color="{StaticResource ForgeSurface}" />
+    <SolidColorBrush x:Key="ForgeBorderBrush" Color="{StaticResource ForgeBorder}" />
+
+</ResourceDictionary>

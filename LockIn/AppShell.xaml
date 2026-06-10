@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="LockIn.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:LockIn.Views"
+    Title="LockIn">
+
+    <TabBar>
+        <ShellContent Title="Träna"
+                      Route="TrainPage"
+                      ContentTemplate="{DataTemplate views:TrainPage}" />
+        <ShellContent Title="Historik"
+                      Route="HistoryPage"
+                      ContentTemplate="{DataTemplate views:HistoryPage}" />
+        <ShellContent Title="Bibliotek"
+                      Route="LibraryPage"
+                      ContentTemplate="{DataTemplate views:LibraryPage}" />
+        <ShellContent Title="Inställningar"
+                      Route="SettingsPage"
+                      ContentTemplate="{DataTemplate views:SettingsPage}" />
+    </TabBar>
+
+</Shell>

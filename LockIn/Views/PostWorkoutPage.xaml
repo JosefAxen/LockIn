@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:LockIn.ViewModels"
+             xmlns:views="clr-namespace:LockIn.Views"
+             x:Class="LockIn.Views.PostWorkoutPage"
+             x:DataType="vm:PostWorkoutViewModel"
+             Shell.NavBarIsVisible="False">
+
+    <ContentPage.Resources>
+        <views:GreaterThanZeroConverter x:Key="GtzConverter"/>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <Grid Grid.Row="0" Padding="20,16,20,8">
+            <Label Text="{Binding TemplateName}"
+                   Style="{StaticResource DisplayLabel}"
+                   FontSize="28"/>
+            <Label Text="{Binding Duration}"
+                   Style="{StaticResource MutedLabel}"
+                   FontSize="14"
+                   HorizontalOptions="End" VerticalOptions="Center"/>
+        </Grid>
+
+        <ScrollView Grid.Row="1">
+            <StackLayout Padding="16,0,16,32" Spacing="16">
+
+                <!-- Stats row -->
+                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                    <Border Grid.Column="0" Style="{StaticResource CardFrame}" Padding="14,12">
+                        <StackLayout Spacing="2">
+                            <Label Text="{Binding TotalVolume}"
+                                   FontFamily="BebasNeue" FontSize="26"
+                                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                            <Label Text="Volym (kg)" Style="{StaticResource MutedLabel}"/>
+                        </StackLayout>
+                    </Border>
+                    <Border Grid.Column="1" Style="{StaticResource CardFrame}" Padding="14,12">
+                        <StackLayout Spacing="2">
+                            <Label Text="{Binding TotalSets}"
+                                   FontFamily="BebasNeue" FontSize="26"
+                                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                            <Label Text="Set" Style="{StaticResource MutedLabel}"/>
+                        </StackLayout>
+                    </Border>
+                    <Border Grid.Column="2" Style="{StaticResource CardFrame}" Padding="14,12">
+                        <StackLayout Spacing="2">
+                            <Label Text="{Binding PrCount}"
+                                   FontFamily="BebasNeue" FontSize="26"
+                                   TextColor="{StaticResource ForgeSuccess}"/>
+                            <Label Text="PR" Style="{StaticResource MutedLabel}"/>
+                        </StackLayout>
+                    </Border>
+                </Grid>
+
+                <!-- Muscle groups -->
+                <Label Text="MUSKELGRUPPER" Style="{StaticResource SectionLabel}"/>
+                <Border Style="{StaticResource CardFrame}" Padding="16,12">
+                    <StackLayout BindableLayout.ItemsSource="{Binding MuscleGroups}" Spacing="10">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="vm:MuscleGroupRow">
+                                <Grid ColumnDefinitions="70,*,80" ColumnSpacing="10">
+                                    <Label Grid.Column="0" Text="{Binding Name}"
+                                           Style="{StaticResource MutedLabel}"
+                                           VerticalOptions="Center"/>
+                                    <ProgressBar Grid.Column="1"
+                                                 Progress="{Binding ProgressFraction}"
+                                                 ProgressColor="{StaticResource ForgeAccent}"
+                                                 VerticalOptions="Center"/>
+                                    <StackLayout Grid.Column="2" Spacing="0">
+                                        <Label Text="{Binding VolumeDisplay}"
+                                               FontFamily="DMSansMedium" FontSize="12"
+                                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                                               HorizontalTextAlignment="End"/>
+                                        <Label Text="{Binding SetsDisplay}"
+                                               Style="{StaticResource MutedLabel}"
+                                               HorizontalTextAlignment="End"/>
+                                    </StackLayout>
+                                </Grid>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </StackLayout>
+                </Border>
+
+                <!-- PRs -->
+                <Label Text="PERSONLIGA REKORD" Style="{StaticResource SectionLabel}"
+                       IsVisible="{Binding PRs.Count, Converter={StaticResource GtzConverter}}"/>
+                <Border Style="{StaticResource CardFrame}" Padding="16,12"
+                        IsVisible="{Binding PRs.Count, Converter={StaticResource GtzConverter}}">
+                    <StackLayout BindableLayout.ItemsSource="{Binding PRs}" Spacing="0">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="vm:PRRow">
+                                <Grid ColumnDefinitions="Auto,*,Auto" Padding="0,8,0,8"
+                                      ColumnSpacing="12">
+                                    <Label Grid.Column="0" Text="🏆"
+                                           FontSize="18" VerticalOptions="Center"/>
+                                    <StackLayout Grid.Column="1" Spacing="2">
+                                        <Label Text="{Binding ExerciseName}"
+                                               FontFamily="DMSansMedium" FontSize="13"/>
+                                        <Label Text="{Binding Epley1RM}"
+                                               Style="{StaticResource MutedLabel}"/>
+                                    </StackLayout>
+                                    <Label Grid.Column="2"
+                                           Text="{Binding Display}"
+                                           TextColor="{StaticResource ForgeSuccess}"
+                                           FontFamily="DMSansMedium" FontSize="13"
+                                           VerticalOptions="Center"/>
+                                </Grid>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </StackLayout>
+                </Border>
+
+            </StackLayout>
+        </ScrollView>
+
+        <Grid Grid.Row="2" Padding="16,8,16,32">
+            <Button Text="KLAR"
+                    Style="{StaticResource PrimaryButton}"
+                    Command="{Binding DoneCommand}"/>
+        </Grid>
+
+    </Grid>
+
+
+</ContentPage>

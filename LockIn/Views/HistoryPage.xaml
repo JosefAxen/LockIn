@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:LockIn.ViewModels"
+             xmlns:models="clr-namespace:LockIn.Models"
+             x:Class="LockIn.Views.HistoryPage"
+             x:DataType="vm:HistoryViewModel"
+             Title="Historik">
+
+    <Grid RowDefinitions="Auto,Auto,*">
+
+        <Grid Grid.Row="0" Padding="20,16,20,8">
+            <Label Text="HISTORIK" Style="{StaticResource DisplayLabel}" FontSize="32"/>
+        </Grid>
+
+        <SearchBar Grid.Row="1"
+                   Text="{Binding SearchText}"
+                   Placeholder="Sök övning..."
+                   Margin="16,0,16,8"/>
+
+        <Grid Grid.Row="2" ColumnDefinitions="*,*">
+
+            <!-- Exercise list -->
+            <CollectionView Grid.Column="0"
+                            ItemsSource="{Binding FilteredExercises}"
+                            SelectionMode="Single"
+                            SelectedItem="{Binding SelectedExercise}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Exercise">
+                        <Border Margin="8,4,4,4"
+                                Style="{StaticResource CardFrame}"
+                                Padding="12,10">
+                            <Label Text="{Binding Name}"
+                                   FontFamily="DMSansMedium" FontSize="13"
+                                   LineBreakMode="TailTruncation"/>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- History for selected exercise -->
+            <StackLayout Grid.Column="1" Padding="4,0,8,0">
+                <Label Text="{Binding SelectedExercise.Name}"
+                       FontFamily="DMSansMedium" FontSize="14"
+                       Margin="4,8,4,8"
+                       IsVisible="{Binding SelectedExercise, Converter={x:Static vm:NullToBoolConverter.Instance}}"/>
+                <CollectionView ItemsSource="{Binding HistoryRows}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="vm:ExerciseHistoryRow">
+                            <Border Margin="0,0,0,8"
+                                    Style="{StaticResource CardFrame}"
+                                    Padding="10,10">
+                                <StackLayout Spacing="2">
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <Label Grid.Column="0"
+                                               Text="{Binding SetDisplay}"
+                                               FontFamily="DMSansMedium" FontSize="14"/>
+                                        <Label Grid.Column="1" Text="🏆"
+                                               FontSize="14"
+                                               IsVisible="{Binding IsPR}"/>
+                                    </Grid>
+                                    <Label Text="{Binding Epley1RM}"
+                                           Style="{StaticResource AccentLabel}"
+                                           FontSize="12"/>
+                                    <Label Text="{Binding Date}"
+                                           Style="{StaticResource MutedLabel}"
+                                           FontSize="11"/>
+                                </StackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </StackLayout>
+
+        </Grid>
+    </Grid>
+</ContentPage>

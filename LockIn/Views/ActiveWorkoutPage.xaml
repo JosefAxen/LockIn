@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:LockIn.ViewModels"
+             xmlns:views="clr-namespace:LockIn.Views"
+             x:Class="LockIn.Views.ActiveWorkoutPage"
+             x:DataType="vm:ActiveWorkoutViewModel"
+             Shell.NavBarIsVisible="False">
+
+    <ContentPage.Resources>
+        <views:BoolToColorConverter x:Key="BoolToColorConverter"/>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!-- Top bar: name + elapsed -->
+        <Grid Grid.Row="0" Padding="16,16,20,8"
+              ColumnDefinitions="Auto,*,Auto">
+            <Button Grid.Column="0" Text="‹"
+                    Style="{StaticResource SecondaryButton}"
+                    WidthRequest="44" HeightRequest="44"
+                    Padding="0"
+                    Clicked="OnBackClicked"/>
+            <Label Grid.Column="1" Text="{Binding TemplateName}"
+                   Style="{StaticResource DisplayLabel}"
+                   FontSize="22"
+                   HorizontalOptions="Center" VerticalOptions="Center"/>
+            <Label Grid.Column="2" Text="{Binding ElapsedTime}"
+                   Style="{StaticResource AccentLabel}"
+                   FontFamily="BebasNeue"
+                   FontSize="22"
+                   VerticalOptions="Center"/>
+        </Grid>
+
+        <ScrollView Grid.Row="1">
+            <StackLayout Padding="16,0,16,16" Spacing="12">
+
+                <!-- PR Banner -->
+                <Border IsVisible="{Binding HasPR}"
+                        BackgroundColor="{StaticResource ForgeSuccessDim}"
+                        StrokeShape="RoundRectangle 12"
+                        StrokeThickness="0" Padding="14,12">
+                    <Grid ColumnDefinitions="Auto,*">
+                        <Label Grid.Column="0" Text="🏆" FontSize="22"
+                               VerticalOptions="Center" Margin="0,0,10,0"/>
+                        <Label Grid.Column="1" Text="{Binding PrMessage}"
+                               TextColor="{StaticResource ForgeSuccess}"
+                               FontFamily="DMSansMedium" FontSize="13"
+                               LineBreakMode="WordWrap"/>
+                    </Grid>
+                </Border>
+
+                <!-- Exercise sections -->
+                <BindableLayout.ItemsSource>
+                    <Binding Path="Exercises"/>
+                </BindableLayout.ItemsSource>
+                <StackLayout BindableLayout.ItemsSource="{Binding Exercises}" Spacing="12">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="vm:WorkoutExerciseSection">
+                            <Border Style="{StaticResource CardFrame}">
+                                <StackLayout Spacing="0">
+
+                                    <!-- Exercise header -->
+                                    <Grid ColumnDefinitions="*,Auto" Padding="16,12,16,10">
+                                        <Label Grid.Column="0"
+                                               Text="{Binding ExerciseName}"
+                                               FontFamily="DMSansMedium" FontSize="16"/>
+                                        <Border Grid.Column="1"
+                                                BackgroundColor="{StaticResource ForgeAccentDim}"
+                                                StrokeShape="RoundRectangle 6"
+                                                StrokeThickness="0" Padding="8,4">
+                                            <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="4">
+                                                <Label Grid.Column="0" Text="⏱"
+                                                       FontSize="12" VerticalOptions="Center"/>
+                                                <Label Grid.Column="1"
+                                                       Text="{Binding TimerDisplay}"
+                                                       TextColor="{StaticResource ForgeAccent}"
+                                                       FontFamily="DMSansMedium" FontSize="12"/>
+                                            </Grid>
+                                        </Border>
+                                    </Grid>
+
+                                    <!-- Column headers -->
+                                    <Grid ColumnDefinitions="24,*,16,*,40,36"
+                                          Padding="16,0,16,6" ColumnSpacing="6">
+                                        <Label Grid.Column="0" Text="SET"
+                                               Style="{StaticResource SectionLabel}" FontSize="10"/>
+                                        <Label Grid.Column="1" Text="KG"
+                                               Style="{StaticResource SectionLabel}" FontSize="10"
+                                               HorizontalTextAlignment="Center"/>
+                                        <Label Grid.Column="3" Text="REPS"
+                                               Style="{StaticResource SectionLabel}" FontSize="10"
+                                               HorizontalTextAlignment="Center"/>
+                                        <Label Grid.Column="4" Text="RIR"
+                                               Style="{StaticResource SectionLabel}" FontSize="10"
+                                               HorizontalTextAlignment="Center"/>
+                                    </Grid>
+
+                                    <!-- Set rows -->
+                                    <StackLayout BindableLayout.ItemsSource="{Binding Sets}" Spacing="0">
+                                        <BindableLayout.ItemTemplate>
+                                            <DataTemplate x:DataType="vm:LoggedSetRow">
+                                                <Grid ColumnDefinitions="24,*,16,*,40,36"
+                                                      Padding="16,6,16,6" ColumnSpacing="6">
+
+                                                    <Label Grid.Column="0"
+                                                           Text="{Binding SetNumber}"
+                                                           Style="{StaticResource MutedLabel}"
+                                                           VerticalOptions="Center"/>
+
+                                                    <!-- Weight input -->
+                                                    <Border Grid.Column="1"
+                                                            BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}"
+                                                            StrokeShape="RoundRectangle 8"
+                                                            StrokeThickness="0" Padding="4,4">
+                                                        <Entry Text="{Binding WeightText}"
+                                                               Keyboard="Numeric"
+                                                               HorizontalTextAlignment="Center"
+                                                               FontFamily="DMSansMedium" FontSize="15"
+                                                               BackgroundColor="Transparent"
+                                                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                                                               HeightRequest="36" Margin="0"/>
+                                                    </Border>
+
+                                                    <Label Grid.Column="2" Text="×"
+                                                           Style="{StaticResource MutedLabel}"
+                                                           HorizontalOptions="Center"
+                                                           VerticalOptions="Center"/>
+
+                                                    <!-- Reps input -->
+                                                    <Border Grid.Column="3"
+                                                            BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}"
+                                                            StrokeShape="RoundRectangle 8"
+                                                            StrokeThickness="0" Padding="4,4">
+                                                        <Entry Text="{Binding RepsText}"
+                                                               Keyboard="Numeric"
+                                                               HorizontalTextAlignment="Center"
+                                                               FontFamily="DMSansMedium" FontSize="15"
+                                                               BackgroundColor="Transparent"
+                                                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                                                               HeightRequest="36" Margin="0"/>
+                                                    </Border>
+
+                                                    <!-- RIR picker (simple label tap cycle) -->
+                                                    <Border Grid.Column="4"
+                                                            BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}"
+                                                            StrokeShape="RoundRectangle 8"
+                                                            StrokeThickness="0">
+                                                        <Label Text="{Binding RirDisplay}"
+                                                               HorizontalOptions="Center"
+                                                               VerticalOptions="Center"
+                                                               FontFamily="DMSansMedium" FontSize="13"
+                                                               TextColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"/>
+                                                        <Border.GestureRecognizers>
+                                                            <TapGestureRecognizer Tapped="OnRirTapped"/>
+                                                        </Border.GestureRecognizers>
+                                                    </Border>
+
+                                                    <!-- Done button -->
+                                                    <Border Grid.Column="5"
+                                                            StrokeShape="RoundRectangle 8"
+                                                            StrokeThickness="0"
+                                                            BackgroundColor="{Binding IsCompleted, Converter={StaticResource BoolToColorConverter}}">
+                                                        <Label Text="✓"
+                                                               HorizontalOptions="Center"
+                                                               VerticalOptions="Center"
+                                                               FontSize="16"
+                                                               TextColor="White"/>
+                                                        <Border.GestureRecognizers>
+                                                            <TapGestureRecognizer
+                                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ActiveWorkoutViewModel}}, Path=CompleteSetCommand}"
+                                                                CommandParameter="{Binding .}"/>
+                                                        </Border.GestureRecognizers>
+                                                    </Border>
+
+                                                </Grid>
+                                            </DataTemplate>
+                                        </BindableLayout.ItemTemplate>
+                                    </StackLayout>
+
+                                    <!-- Rest timer bar -->
+                                    <Grid IsVisible="{Binding IsTimerActive}"
+                                          ColumnDefinitions="Auto,*,Auto"
+                                          BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}"
+                                          Padding="16,10,16,10" ColumnSpacing="10">
+                                        <Label Grid.Column="0" Text="⏱"
+                                               FontSize="14" VerticalOptions="Center"
+                                               TextColor="{StaticResource ForgeAccent}"/>
+                                        <ProgressBar Grid.Column="1"
+                                                     Progress="{Binding TimerProgress}"
+                                                     ProgressColor="{StaticResource ForgeAccent}"
+                                                     VerticalOptions="Center"/>
+                                        <Label Grid.Column="2"
+                                               Text="{Binding TimerDisplay}"
+                                               FontFamily="BebasNeue" FontSize="18"
+                                               TextColor="{StaticResource ForgeAccent}"
+                                               VerticalOptions="Center"/>
+                                    </Grid>
+
+                                </StackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </StackLayout>
+
+            </StackLayout>
+        </ScrollView>
+
+        <!-- Finish button -->
+        <Grid Grid.Row="2" Padding="16,8,16,32">
+            <Button Text="AVSLUTA PASS"
+                    Style="{StaticResource SecondaryButton}"
+                    BorderColor="{StaticResource ForgeAccent}"
+                    BorderWidth="1"
+                    TextColor="{StaticResource ForgeAccent}"
+                    HeightRequest="52"
+                    FontFamily="BebasNeue" FontSize="18" CharacterSpacing="2"
+                    Command="{Binding FinishWorkoutCommand}"/>
+        </Grid>
+
+    </Grid>
+
+
+</ContentPage>

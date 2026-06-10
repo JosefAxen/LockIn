@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:LockIn.ViewModels"
+             xmlns:models="clr-namespace:LockIn.Models"
+             x:Class="LockIn.Views.TrainPage"
+             x:DataType="vm:TrainViewModel"
+             Title="Träna">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Padding="20,16,20,8"
+              ColumnDefinitions="*,Auto">
+            <Label Grid.Column="0" Text="TRÄNA"
+                   Style="{StaticResource DisplayLabel}"
+                   FontSize="32" VerticalOptions="Center"/>
+        </Grid>
+
+        <!-- Template list -->
+        <ScrollView Grid.Row="1">
+            <StackLayout Padding="16,0,16,32" Spacing="0">
+
+                <!-- New template button -->
+                <Button Text="+ NY MALL"
+                        Style="{StaticResource PrimaryButton}"
+                        Margin="0,0,0,16"
+                        Command="{Binding NewTemplateCommand}" />
+
+                <ActivityIndicator IsRunning="{Binding IsLoading}"
+                                   IsVisible="{Binding IsLoading}"
+                                   HorizontalOptions="Center" Margin="20"/>
+
+                <!-- Templates -->
+                <BindableLayout.ItemsSource>
+                    <Binding Path="Templates"/>
+                </BindableLayout.ItemsSource>
+                <StackLayout BindableLayout.ItemsSource="{Binding Templates}" Spacing="10">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="models:WorkoutTemplate">
+                            <Border Style="{StaticResource CardFrame}">
+                                <Grid ColumnDefinitions="Auto,*,Auto" Padding="16">
+                                    <!-- Icon -->
+                                    <Border Grid.Column="0"
+                                            BackgroundColor="{StaticResource ForgeAccentDim}"
+                                            StrokeShape="RoundRectangle 12"
+                                            StrokeThickness="0"
+                                            HeightRequest="44" WidthRequest="44"
+                                            Margin="0,0,14,0">
+                                        <Label Text="⚡" FontSize="20"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"/>
+                                    </Border>
+                                    <!-- Info -->
+                                    <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                        <Label Text="{Binding Name}"
+                                               FontFamily="DMSansMedium"
+                                               FontSize="15"/>
+                                        <Label Text="Tryck för att starta"
+                                               Style="{StaticResource MutedLabel}"/>
+                                    </StackLayout>
+                                    <!-- Arrow -->
+                                    <Label Grid.Column="2" Text="›"
+                                           FontSize="24"
+                                           TextColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"
+                                           VerticalOptions="Center"/>
+                                </Grid>
+
+                                <!-- Tap to start -->
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TrainViewModel}}, Path=StartWorkoutCommand}"
+                                        CommandParameter="{Binding .}"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </StackLayout>
+
+            </StackLayout>
+        </ScrollView>
+
+    </Grid>
+</ContentPage>

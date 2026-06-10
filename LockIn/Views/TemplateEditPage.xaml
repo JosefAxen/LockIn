@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:LockIn.ViewModels"
+             x:Class="LockIn.Views.TemplateEditPage"
+             x:DataType="vm:TemplateEditViewModel"
+             Title="Mall">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="0">
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Padding="16,16,16,8" ColumnDefinitions="Auto,*,Auto">
+            <Button Grid.Column="0" Text="‹ Tillbaka"
+                    Style="{StaticResource SecondaryButton}"
+                    Padding="12,8"
+                    Clicked="OnBackClicked"/>
+            <Label Grid.Column="1" Text="MALL"
+                   Style="{StaticResource DisplayLabel}"
+                   FontSize="24" HorizontalOptions="Center" VerticalOptions="Center"/>
+            <Button Grid.Column="2" Text="SPARA"
+                    Style="{StaticResource PrimaryButton}"
+                    HeightRequest="40" Padding="16,0"
+                    Command="{Binding SaveCommand}"/>
+        </Grid>
+
+        <ScrollView Grid.Row="1">
+            <StackLayout Padding="16,8,16,32" Spacing="16">
+
+                <!-- Name field -->
+                <Border Style="{StaticResource CardFrame}" Padding="16">
+                    <StackLayout Spacing="6">
+                        <Label Text="MALLNAMN" Style="{StaticResource SectionLabel}"/>
+                        <Entry Text="{Binding TemplateName}"
+                               Style="{StaticResource InputField}"
+                               Placeholder="T.ex. Push A"
+                               ReturnType="Done"/>
+                    </StackLayout>
+                </Border>
+
+                <!-- Exercises -->
+                <Label Text="ÖVNINGAR" Style="{StaticResource SectionLabel}" Margin="4,0,0,0"/>
+
+                <StackLayout BindableLayout.ItemsSource="{Binding Exercises}" Spacing="10">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="vm:TemplateExerciseRow">
+                            <Border Style="{StaticResource CardFrame}">
+                                <Grid ColumnDefinitions="*,Auto" Padding="16,12">
+                                    <StackLayout Grid.Column="0" Spacing="3">
+                                        <Label Text="{Binding ExerciseName}"
+                                               FontFamily="DMSansMedium" FontSize="15"/>
+                                        <Label Text="{Binding SetsRepsDisplay}"
+                                               Style="{StaticResource MutedLabel}"/>
+                                        <Label Text="{Binding RestDisplay, StringFormat='Vila: {0}'}"
+                                               Style="{StaticResource MutedLabel}"/>
+                                    </StackLayout>
+                                    <Button Grid.Column="1" Text="✕"
+                                            BackgroundColor="Transparent"
+                                            TextColor="{StaticResource ForgeMuted}"
+                                            FontSize="18"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TemplateEditViewModel}}, Path=RemoveExerciseCommand}"
+                                            CommandParameter="{Binding .}"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </StackLayout>
+
+                <Button Text="+ LÄGG TILL ÖVNING"
+                        Style="{StaticResource SecondaryButton}"
+                        Command="{Binding AddExerciseCommand}"/>
+
+            </StackLayout>
+        </ScrollView>
+
+    </Grid>
+</ContentPage>

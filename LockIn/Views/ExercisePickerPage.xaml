@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:LockIn.ViewModels"
+             xmlns:models="clr-namespace:LockIn.Models"
+             x:Class="LockIn.Views.ExercisePickerPage"
+             x:DataType="vm:ExercisePickerViewModel"
+             Title="Välj övning">
+
+    <Grid RowDefinitions="Auto,Auto,*">
+
+        <Grid Grid.Row="0" Padding="16,16,16,8" ColumnDefinitions="Auto,*">
+            <Button Grid.Column="0" Text="‹ Avbryt"
+                    Style="{StaticResource SecondaryButton}"
+                    Padding="12,8" Clicked="OnBackClicked"/>
+            <Label Grid.Column="1" Text="VÄLJ ÖVNING"
+                   Style="{StaticResource DisplayLabel}"
+                   FontSize="22" HorizontalOptions="Center" VerticalOptions="Center"/>
+        </Grid>
+
+        <SearchBar Grid.Row="1"
+                   Text="{Binding SearchText}"
+                   Placeholder="Sök övning..."
+                   Margin="16,0,16,8"/>
+
+        <CollectionView Grid.Row="2"
+                        ItemsSource="{Binding FilteredExercises}"
+                        SelectionMode="None">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:Exercise">
+                    <Border Style="{StaticResource CardFrame}" Margin="16,0,16,8">
+                        <Grid ColumnDefinitions="*,Auto" Padding="16,14">
+                            <StackLayout Grid.Column="0" Spacing="2">
+                                <Label Text="{Binding Name}"
+                                       FontFamily="DMSansMedium" FontSize="15"/>
+                                <Label Text="{Binding MuscleGroup}"
+                                       Style="{StaticResource MutedLabel}"/>
+                            </StackLayout>
+                            <Label Grid.Column="1" Text="›" FontSize="22"
+                                   TextColor="{StaticResource ForgeMuted}"
+                                   VerticalOptions="Center"/>
+                        </Grid>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ExercisePickerViewModel}}, Path=SelectExerciseCommand}"
+                                CommandParameter="{Binding .}"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </Grid>
+</ContentPage>

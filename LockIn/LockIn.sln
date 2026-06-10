@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.2.11430.68 d18.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LockIn", "LockIn.csproj", "{A132E049-7BA3-41C3-61D9-2FB155C0A671}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A132E049-7BA3-41C3-61D9-2FB155C0A671}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A132E049-7BA3-41C3-61D9-2FB155C0A671}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A132E049-7BA3-41C3-61D9-2FB155C0A671}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{A132E049-7BA3-41C3-61D9-2FB155C0A671}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A132E049-7BA3-41C3-61D9-2FB155C0A671}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4444B34C-D5F7-4C4D-AC32-2E3E9B976673}
+	EndGlobalSection
+EndGlobal

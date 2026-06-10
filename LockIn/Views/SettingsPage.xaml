@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:LockIn.ViewModels"
+             xmlns:views="clr-namespace:LockIn.Views"
+             x:Class="LockIn.Views.SettingsPage"
+             x:DataType="vm:SettingsViewModel"
+             Title="Inställningar">
+
+    <ContentPage.Resources>
+        <views:WeightUnitConverter x:Key="WeightUnitConverter"/>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*">
+
+        <Grid Grid.Row="0" Padding="20,16,20,8">
+            <Label Text="INSTÄLLNINGAR" Style="{StaticResource DisplayLabel}" FontSize="28"/>
+        </Grid>
+
+        <ScrollView Grid.Row="1">
+            <StackLayout Padding="16,8,16,48" Spacing="16">
+
+                <!-- Weight unit -->
+                <Label Text="ENHETER" Style="{StaticResource SectionLabel}" Margin="4,0"/>
+                <Border Style="{StaticResource CardFrame}" Padding="16,14">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <StackLayout Grid.Column="0" Spacing="2">
+                            <Label Text="Viktenhet" FontFamily="DMSansMedium" FontSize="15"/>
+                            <Label Text="{Binding UseKg, Converter={StaticResource WeightUnitConverter}}"
+                                   Style="{StaticResource MutedLabel}"/>
+                        </StackLayout>
+                        <Switch Grid.Column="1"
+                                IsToggled="{Binding UseKg}"
+                                VerticalOptions="Center"/>
+                    </Grid>
+                </Border>
+
+                <!-- Danger zone -->
+                <Label Text="DATAHANTERING" Style="{StaticResource SectionLabel}" Margin="4,8,4,0"/>
+                <Border Style="{StaticResource CardFrame}" Padding="16,4">
+                    <Button Text="Rensa all data"
+                            Style="{StaticResource DestructiveButton}"
+                            HorizontalOptions="Start"
+                            Command="{Binding ClearAllDataCommand}"/>
+                </Border>
+
+                <!-- Version -->
+                <Label Text="{Binding AppVersion, StringFormat='LockIn v{0}'}"
+                       Style="{StaticResource MutedLabel}"
+                       HorizontalOptions="Center"
+                       Margin="0,16,0,0"/>
+
+            </StackLayout>
+        </ScrollView>
+
+    </Grid>
+
+
+</ContentPage>
