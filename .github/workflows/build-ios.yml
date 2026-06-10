@@ -1,0 +1,52 @@
+name: Build iOS IPA
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 9
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Install MAUI iOS workload
+        run: dotnet workload install maui-ios
+
+      - name: Restore
+        run: dotnet restore LockIn/LockIn.csproj
+
+      - name: Build iOS (unsigned)
+        run: |
+          dotnet publish LockIn/LockIn.csproj \
+            -f net9.0-ios \
+            -c Release \
+            -r ios-arm64 \
+            /p:CodesignKey="" \
+            /p:CodesignProvision="" \
+            /p:EnableCodeSigning=false \
+            /p:ArchiveOnBuild=false
+
+      - name: Package as IPA
+        run: |
+          APP_PATH=$(find LockIn/bin/Release/net9.0-ios/ios-arm64 -name "*.app" | head -1)
+          echo "Found app: $APP_PATH"
+          mkdir -p Payload
+          cp -r "$APP_PATH" Payload/
+          zip -r LockIn.ipa Payload
+          echo "IPA created"
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: LockIn-iOS
+          path: LockIn.ipa
+          retention-days: 30
