@@ -44,7 +44,7 @@
                                 <Label Text="TID" Style="{StaticResource SectionLabel}" FontSize="10"/>
                             </StackLayout>
                             <StackLayout Grid.Column="2" Spacing="2">
-                                <Label Text="{Binding PRCount}"
+                                <Label Text="{Binding PrCountValue}"
                                        FontFamily="BebasNeue" FontSize="24"
                                        TextColor="{StaticResource ForgeSuccess}"/>
                                 <Label Text="PRs" Style="{StaticResource SectionLabel}" FontSize="10"/>
