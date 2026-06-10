@@ -16,9 +16,16 @@ public partial class HistoryViewModel(DatabaseService db) : ObservableObject
     [ObservableProperty] private string _searchText = "";
     [ObservableProperty] private Exercise? _selectedExercise;
     [ObservableProperty] private bool _isLoading;
+    [ObservableProperty] private bool _isExerciseSelected;
+    [ObservableProperty] private bool _isExerciseNotSelected = true;
 
     partial void OnSearchTextChanged(string value) => ApplyFilter();
-    partial void OnSelectedExerciseChanged(Exercise? value) => _ = LoadHistoryAsync(value);
+    partial void OnSelectedExerciseChanged(Exercise? value)
+    {
+        IsExerciseSelected = value is not null;
+        IsExerciseNotSelected = value is null;
+        _ = LoadHistoryAsync(value);
+    }
 
     public async Task LoadAsync()
     {
@@ -39,6 +46,9 @@ public partial class HistoryViewModel(DatabaseService db) : ObservableObject
 
     [RelayCommand]
     private void SelectExercise(Exercise exercise) => SelectedExercise = exercise;
+
+    [RelayCommand]
+    private void ClearSelection() => SelectedExercise = null;
 
     private async Task LoadHistoryAsync(Exercise? exercise)
     {

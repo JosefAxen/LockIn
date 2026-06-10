@@ -32,9 +32,6 @@
                                    HorizontalOptions="Center" Margin="20"/>
 
                 <!-- Templates -->
-                <BindableLayout.ItemsSource>
-                    <Binding Path="Templates"/>
-                </BindableLayout.ItemsSource>
                 <StackLayout BindableLayout.ItemsSource="{Binding Templates}" Spacing="10">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate x:DataType="models:WorkoutTemplate">

@@ -18,60 +18,77 @@
                    Placeholder="Sök övning..."
                    Margin="16,0,16,8"/>
 
-        <Grid Grid.Row="2" ColumnDefinitions="*,*">
+        <ScrollView Grid.Row="2">
+            <StackLayout Padding="16,0,16,32" Spacing="0">
 
-            <!-- Exercise list -->
-            <CollectionView Grid.Column="0"
-                            ItemsSource="{Binding FilteredExercises}"
-                            SelectionMode="Single"
-                            SelectedItem="{Binding SelectedExercise}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="models:Exercise">
-                        <Border Margin="8,4,4,4"
-                                Style="{StaticResource CardFrame}"
-                                Padding="12,10">
-                            <Label Text="{Binding Name}"
-                                   FontFamily="DMSansMedium" FontSize="13"
-                                   LineBreakMode="TailTruncation"/>
-                        </Border>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                <!-- Exercise list (visible when no exercise selected) -->
+                <StackLayout IsVisible="{Binding IsExerciseNotSelected}"
+                             Spacing="6">
+                    <CollectionView ItemsSource="{Binding FilteredExercises}"
+                                    SelectionMode="Single"
+                                    SelectedItem="{Binding SelectedExercise}"
+                                    HeightRequest="600">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:Exercise">
+                                <Border Margin="0,0,0,6"
+                                        Style="{StaticResource CardFrame}"
+                                        Padding="16,14">
+                                    <Label Text="{Binding Name}"
+                                           FontFamily="DMSansMedium" FontSize="15"/>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </StackLayout>
 
-            <!-- History for selected exercise -->
-            <StackLayout Grid.Column="1" Padding="4,0,8,0">
-                <Label Text="{Binding SelectedExercise.Name}"
-                       FontFamily="DMSansMedium" FontSize="14"
-                       Margin="4,8,4,8"
-                       IsVisible="{Binding SelectedExercise, Converter={x:Static vm:NullToBoolConverter.Instance}}"/>
-                <CollectionView ItemsSource="{Binding HistoryRows}">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="vm:ExerciseHistoryRow">
-                            <Border Margin="0,0,0,8"
-                                    Style="{StaticResource CardFrame}"
-                                    Padding="10,10">
-                                <StackLayout Spacing="2">
+                <!-- History detail (visible when exercise selected) -->
+                <StackLayout IsVisible="{Binding IsExerciseSelected}"
+                             Spacing="10">
+
+                    <!-- Back button + exercise name -->
+                    <Grid ColumnDefinitions="Auto,*" Margin="0,0,0,8">
+                        <Button Grid.Column="0" Text="‹ Tillbaka"
+                                Style="{StaticResource SecondaryButton}"
+                                Padding="12,8"
+                                Command="{Binding ClearSelectionCommand}"/>
+                        <Label Grid.Column="1"
+                               Text="{Binding SelectedExercise.Name}"
+                               FontFamily="DMSansMedium" FontSize="16"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </Grid>
+
+                    <CollectionView ItemsSource="{Binding HistoryRows}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="vm:ExerciseHistoryRow">
+                                <Border Margin="0,0,0,8"
+                                        Style="{StaticResource CardFrame}"
+                                        Padding="16,12">
                                     <Grid ColumnDefinitions="*,Auto">
-                                        <Label Grid.Column="0"
-                                               Text="{Binding SetDisplay}"
-                                               FontFamily="DMSansMedium" FontSize="14"/>
+                                        <StackLayout Grid.Column="0" Spacing="2">
+                                            <Label Text="{Binding SetDisplay}"
+                                                   FontFamily="DMSansMedium" FontSize="15"/>
+                                            <Label Text="{Binding Epley1RM}"
+                                                   Style="{StaticResource AccentLabel}"
+                                                   FontSize="12"/>
+                                            <Label Text="{Binding Date}"
+                                                   Style="{StaticResource MutedLabel}"
+                                                   FontSize="11"/>
+                                        </StackLayout>
                                         <Label Grid.Column="1" Text="🏆"
-                                               FontSize="14"
+                                               FontSize="20"
+                                               VerticalOptions="Center"
                                                IsVisible="{Binding IsPR}"/>
                                     </Grid>
-                                    <Label Text="{Binding Epley1RM}"
-                                           Style="{StaticResource AccentLabel}"
-                                           FontSize="12"/>
-                                    <Label Text="{Binding Date}"
-                                           Style="{StaticResource MutedLabel}"
-                                           FontSize="11"/>
-                                </StackLayout>
-                            </Border>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-            </StackLayout>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
 
-        </Grid>
+                </StackLayout>
+
+            </StackLayout>
+        </ScrollView>
+
     </Grid>
 </ContentPage>
