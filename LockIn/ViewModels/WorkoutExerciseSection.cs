@@ -9,13 +9,23 @@ public partial class WorkoutExerciseSection : ObservableObject
     public int ExerciseId { get; set; }
     public string ExerciseName { get; set; } = "";
     public int DefaultRestSeconds { get; set; }
-    public ObservableCollection<LoggedSetRow> Sets { get; } = new();
 
+    [ObservableProperty] private int _restSeconds;
     [ObservableProperty] private bool _isTimerActive;
     [ObservableProperty] private int _timerSecondsRemaining;
     [ObservableProperty] private double _timerProgress;
 
-    public string TimerDisplay => Services.RestTimerService.Format(TimerSecondsRemaining);
+    public ObservableCollection<LoggedSetRow> Sets { get; } = new();
 
-    public void RefreshTimerDisplay() => OnPropertyChanged(nameof(TimerDisplay));
+    public string TimerDisplay => Services.RestTimerService.Format(TimerSecondsRemaining);
+    public string RestDisplay => Services.RestTimerService.Format(RestSeconds);
+
+    public void RefreshTimerDisplay()
+    {
+        OnPropertyChanged(nameof(TimerDisplay));
+        OnPropertyChanged(nameof(RestDisplay));
+    }
+
+    partial void OnRestSecondsChanged(int value) =>
+        OnPropertyChanged(nameof(RestDisplay));
 }

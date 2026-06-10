@@ -4,19 +4,27 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:views="clr-namespace:LockIn.Views"
-    Title="LockIn">
+    Title="LockIn"
+    Shell.TabBarBackgroundColor="#111111"
+    Shell.TabBarForegroundColor="#FF5A1F"
+    Shell.TabBarUnselectedColor="#505055"
+    Shell.TabBarTitleColor="#FF5A1F">
 
     <TabBar>
         <ShellContent Title="Träna"
+                      Icon="tab_train.svg"
                       Route="TrainPage"
                       ContentTemplate="{DataTemplate views:TrainPage}" />
         <ShellContent Title="Historik"
+                      Icon="tab_history.svg"
                       Route="HistoryPage"
                       ContentTemplate="{DataTemplate views:HistoryPage}" />
         <ShellContent Title="Bibliotek"
+                      Icon="tab_library.svg"
                       Route="LibraryPage"
                       ContentTemplate="{DataTemplate views:LibraryPage}" />
         <ShellContent Title="Inställningar"
+                      Icon="tab_settings.svg"
                       Route="SettingsPage"
                       ContentTemplate="{DataTemplate views:SettingsPage}" />
     </TabBar>

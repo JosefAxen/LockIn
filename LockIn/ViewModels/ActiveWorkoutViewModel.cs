@@ -7,15 +7,15 @@ using System.Collections.ObjectModel;
 
 namespace LockIn.ViewModels;
 
-[QueryProperty(nameof(TemplateId), "TemplateId")]
-public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, RestTimerService timer) : ObservableObject
+public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, RestTimerService timer)
+    : ObservableObject, IQueryAttributable
 {
     private WorkoutSession? _session;
     private WorkoutExerciseSection? _activeTimerSection;
     private DateTime _startTime;
+    private CancellationTokenSource? _clockCts;
 
-    [ObservableProperty] private int _templateId;
-    [ObservableProperty] private string _templateName = "";
+    [ObservableProperty] private string _templateName = "FRITT PASS";
     [ObservableProperty] private string _elapsedTime = "0:00";
     [ObservableProperty] private bool _isLoading;
     [ObservableProperty] private bool _hasPR;
@@ -23,82 +23,126 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
 
     public ObservableCollection<WorkoutExerciseSection> Exercises { get; } = new();
 
-    private CancellationTokenSource? _clockCts;
-
-    partial void OnTemplateIdChanged(int value) => _ = LoadAsync(value);
+    public void ApplyQueryAttributes(IDictionary<string, object> query)
+    {
+        int templateId = 0;
+        if (query.TryGetValue("TemplateId", out var val) && val is int id)
+            templateId = id;
+        _ = LoadAsync(templateId);
+    }
 
     private async Task LoadAsync(int templateId)
     {
         IsLoading = true;
 
-        var templates = await db.GetTemplatesAsync();
-        var template = templates.FirstOrDefault(t => t.Id == templateId);
-        TemplateName = template?.Name ?? "";
-
-        _session = new WorkoutSession
+        if (templateId != 0)
         {
-            TemplateId = templateId,
-            StartedAt = DateTime.Now
-        };
+            var templates = await db.GetTemplatesAsync();
+            var template = templates.FirstOrDefault(t => t.Id == templateId);
+            TemplateName = template?.Name ?? "PASS";
+        }
+
+        _session = new WorkoutSession { TemplateId = templateId, StartedAt = DateTime.Now };
         await db.SaveSessionAsync(_session);
         _startTime = _session.StartedAt;
 
-        var templateExercises = await db.GetTemplateExercisesAsync(templateId);
-        for (int i = 0; i < templateExercises.Count; i++)
+        if (templateId != 0)
         {
-            var te = templateExercises[i];
-            var exercise = await db.GetExerciseAsync(te.ExerciseId);
-
-            var se = new SessionExercise
+            var templateExercises = await db.GetTemplateExercisesAsync(templateId);
+            for (int i = 0; i < templateExercises.Count; i++)
             {
-                SessionId = _session.Id,
-                ExerciseId = te.ExerciseId,
-                OrderIndex = i
-            };
-            await db.SaveSessionExerciseAsync(se);
-
-            var section = new WorkoutExerciseSection
-            {
-                SessionExerciseId = se.Id,
-                ExerciseId = te.ExerciseId,
-                ExerciseName = exercise?.Name ?? "",
-                DefaultRestSeconds = te.DefaultRestSeconds
-            };
-
-            for (int s = 1; s <= te.Sets; s++)
-            {
-                section.Sets.Add(new LoggedSetRow
-                {
-                    SessionExerciseId = se.Id,
-                    ExerciseId = te.ExerciseId,
-                    SetNumber = s,
-                    WeightText = te.TargetWeight > 0 ? te.TargetWeight.ToString() : "",
-                    RepsText = te.Reps.ToString()
-                });
+                var te = templateExercises[i];
+                var exercise = await db.GetExerciseAsync(te.ExerciseId);
+                await AddExerciseSectionAsync(exercise!, i, te.Sets, te.Reps,
+                    te.TargetWeight, te.DefaultRestSeconds);
             }
-
-            Exercises.Add(section);
         }
 
         StartClock();
         IsLoading = false;
     }
 
-    private void StartClock()
+    private async Task<WorkoutExerciseSection> AddExerciseSectionAsync(
+        Exercise exercise, int orderIndex, int sets = 3, int reps = 8,
+        decimal targetWeight = 0, int restSeconds = 90)
     {
-        _clockCts = new CancellationTokenSource();
-        var token = _clockCts.Token;
-        _ = Task.Run(async () =>
+        var se = new SessionExercise
         {
-            while (!token.IsCancellationRequested)
+            SessionId = _session!.Id,
+            ExerciseId = exercise.Id,
+            OrderIndex = orderIndex
+        };
+        await db.SaveSessionExerciseAsync(se);
+
+        var section = new WorkoutExerciseSection
+        {
+            SessionExerciseId = se.Id,
+            ExerciseId = exercise.Id,
+            ExerciseName = exercise.Name,
+            DefaultRestSeconds = restSeconds,
+            RestSeconds = restSeconds
+        };
+
+        for (int s = 1; s <= sets; s++)
+        {
+            section.Sets.Add(new LoggedSetRow
             {
-                await Task.Delay(1000, token).ContinueWith(_ => { });
-                if (token.IsCancellationRequested) break;
-                var elapsed = DateTime.Now - _startTime;
-                MainThread.BeginInvokeOnMainThread(() =>
-                    ElapsedTime = $"{(int)elapsed.TotalMinutes}:{elapsed.Seconds:D2}");
-            }
-        }, token);
+                SessionExerciseId = se.Id,
+                ExerciseId = exercise.Id,
+                SetNumber = s,
+                WeightText = targetWeight > 0 ? targetWeight.ToString() : "",
+                RepsText = reps.ToString()
+            });
+        }
+
+        Exercises.Add(section);
+        return section;
+    }
+
+    [RelayCommand]
+    private async Task AddExerciseAsync()
+    {
+        await Shell.Current.GoToAsync(nameof(ExercisePickerPage), new Dictionary<string, object>
+        {
+            { "CallbackAction", new Action<Exercise>(async ex =>
+            {
+                await AddExerciseSectionAsync(ex, Exercises.Count);
+            })}
+        });
+    }
+
+    [RelayCommand]
+    private async Task ChangeRestTimeAsync(WorkoutExerciseSection section)
+    {
+        var result = await Shell.Current.DisplayPromptAsync(
+            "Vilotid",
+            $"Ange vilotid i sekunder för {section.ExerciseName}:",
+            initialValue: section.RestSeconds.ToString(),
+            keyboard: Keyboard.Numeric);
+
+        if (int.TryParse(result, out var secs) && secs > 0)
+            section.RestSeconds = secs;
+    }
+
+    [RelayCommand]
+    private void AddSet(WorkoutExerciseSection section)
+    {
+        var last = section.Sets.LastOrDefault();
+        section.Sets.Add(new LoggedSetRow
+        {
+            SessionExerciseId = section.SessionExerciseId,
+            ExerciseId = section.ExerciseId,
+            SetNumber = section.Sets.Count + 1,
+            WeightText = last?.WeightText ?? "",
+            RepsText = last?.RepsText ?? "8"
+        });
+    }
+
+    [RelayCommand]
+    private void RemoveSet(WorkoutExerciseSection section)
+    {
+        if (section.Sets.Count > 1)
+            section.Sets.RemoveAt(section.Sets.Count - 1);
     }
 
     [RelayCommand]
@@ -132,9 +176,9 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         if (isPR)
         {
             HasPR = true;
-            PrMessage = $"Nytt PR — {GetExerciseName(set.SessionExerciseId)}";
-            var estimate = PRService.CalculateEpley1RM(weight, reps);
-            PrMessage += $"\n{weight} kg × {reps} reps · Est. 1RM {estimate:F0} kg";
+            var name = GetExerciseName(set.SessionExerciseId);
+            var est = PRService.CalculateEpley1RM(weight, reps);
+            PrMessage = $"Nytt PR — {name}\n{weight} kg × {reps} reps · Est. 1RM {est:F0} kg";
         }
 
         StartTimerForSection(set.SessionExerciseId);
@@ -148,45 +192,64 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         var section = Exercises.FirstOrDefault(e => e.SessionExerciseId == sessionExerciseId);
         if (section is null) return;
 
-        _activeTimerSection?.Let(s => { s.IsTimerActive = false; });
+        _activeTimerSection?.Let(s => s.IsTimerActive = false);
         _activeTimerSection = section;
 
         timer.Cancel();
-        timer.Start(section.DefaultRestSeconds);
+        timer.Tick -= OnTimerTick;
+        timer.Completed -= OnTimerCompleted;
+
+        _currentTimerSection = section;
+        timer.Tick += OnTimerTick;
+        timer.Completed += OnTimerCompleted;
+
+        timer.Start(section.RestSeconds);
         section.IsTimerActive = true;
-        section.TimerSecondsRemaining = section.DefaultRestSeconds;
+        section.TimerSecondsRemaining = section.RestSeconds;
         section.TimerProgress = 1.0;
-
-        timer.Tick += secs =>
-        {
-            MainThread.BeginInvokeOnMainThread(() =>
-            {
-                section.TimerSecondsRemaining = secs;
-                section.TimerProgress = (double)secs / section.DefaultRestSeconds;
-                section.RefreshTimerDisplay();
-            });
-        };
-
-        timer.Completed += () =>
-        {
-            MainThread.BeginInvokeOnMainThread(() =>
-            {
-                section.IsTimerActive = false;
-                _activeTimerSection = null;
-            });
-        };
     }
 
-    [RelayCommand]
-    private void SetRir(object param)
+    private WorkoutExerciseSection? _currentTimerSection;
+
+    private void OnTimerTick(int secs)
     {
-        if (param is not string[] parts || parts.Length != 2) return;
-        var set = Exercises.SelectMany(e => e.Sets)
-            .FirstOrDefault(s => s.SetNumber.ToString() == parts[0] &&
-                                 s.SessionExerciseId.ToString() == parts[1]);
-        if (set is null) return;
-        if (int.TryParse(parts[2] ?? "", out var rir))
-            set.Rir = rir;
+        var section = _currentTimerSection;
+        if (section is null) return;
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            section.TimerSecondsRemaining = secs;
+            section.TimerProgress = section.RestSeconds > 0
+                ? (double)secs / section.RestSeconds : 0;
+            section.RefreshTimerDisplay();
+        });
+    }
+
+    private void OnTimerCompleted()
+    {
+        var section = _currentTimerSection;
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            if (section != null) section.IsTimerActive = false;
+            _activeTimerSection = null;
+            _currentTimerSection = null;
+        });
+    }
+
+    private void StartClock()
+    {
+        _clockCts = new CancellationTokenSource();
+        var token = _clockCts.Token;
+        _ = Task.Run(async () =>
+        {
+            while (!token.IsCancellationRequested)
+            {
+                await Task.Delay(1000, token).ContinueWith(_ => { });
+                if (token.IsCancellationRequested) break;
+                var elapsed = DateTime.Now - _startTime;
+                MainThread.BeginInvokeOnMainThread(() =>
+                    ElapsedTime = $"{(int)elapsed.TotalMinutes}:{elapsed.Seconds:D2}");
+            }
+        }, token);
     }
 
     [RelayCommand]
@@ -197,6 +260,8 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         if (!confirmed) return;
 
         _clockCts?.Cancel();
+        timer.Tick -= OnTimerTick;
+        timer.Completed -= OnTimerCompleted;
         timer.Cancel();
 
         _session!.CompletedAt = DateTime.Now;
