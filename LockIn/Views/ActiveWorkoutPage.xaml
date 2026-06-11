@@ -50,7 +50,7 @@
 
         <!-- Scrollable content -->
         <ScrollView Grid.Row="1">
-            <StackLayout Padding="16,0,16,96" Spacing="12">
+            <StackLayout Padding="16,0,16,120" Spacing="12">
 
                 <!-- PR Banner -->
                 <Border IsVisible="{Binding HasPR}"

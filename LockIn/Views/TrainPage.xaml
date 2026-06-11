@@ -16,7 +16,7 @@
 
         <!-- Content -->
         <ScrollView Grid.Row="1">
-            <StackLayout Padding="16,8,16,96" Spacing="0">
+            <StackLayout Padding="16,8,16,120" Spacing="0">
 
                 <!-- Stats row -->
                 <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8" Margin="0,0,0,16">
