@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using LockIn.Data;
 using LockIn.Models;
 using LockIn.Services;
 using LockIn.Views;
@@ -9,7 +10,52 @@ namespace LockIn.ViewModels;
 
 public partial class LibraryViewModel(DatabaseService db) : ObservableObject
 {
-    private List<Exercise> _allExercises = new();
+    // ── Tab control ────────────────────────────────────────────────────────
+
+    [ObservableProperty] private int _selectedTab = 0;
+
+    public bool ShowExercises => SelectedTab == 0;
+    public bool ShowTemplates => SelectedTab == 1;
+    public bool ShowPrograms  => SelectedTab == 2;
+    public bool ShowActionButton => SelectedTab < 2;
+
+    private static readonly Color ActiveTabBg  = Color.FromArgb("#1AFF5A1F");
+    private static readonly Color InactiveTabBg = Color.FromArgb("#1A1A1A");
+    private static readonly Color ActiveTabFg  = Color.FromArgb("#FF5A1F");
+    private static readonly Color InactiveTabFg = Color.FromArgb("#A0A0A8");
+
+    public Color Tab0Bg => SelectedTab == 0 ? ActiveTabBg  : InactiveTabBg;
+    public Color Tab1Bg => SelectedTab == 1 ? ActiveTabBg  : InactiveTabBg;
+    public Color Tab2Bg => SelectedTab == 2 ? ActiveTabBg  : InactiveTabBg;
+    public Color Tab0Fg => SelectedTab == 0 ? ActiveTabFg  : InactiveTabFg;
+    public Color Tab1Fg => SelectedTab == 1 ? ActiveTabFg  : InactiveTabFg;
+    public Color Tab2Fg => SelectedTab == 2 ? ActiveTabFg  : InactiveTabFg;
+
+    partial void OnSelectedTabChanged(int value)
+    {
+        OnPropertyChanged(nameof(ShowExercises));
+        OnPropertyChanged(nameof(ShowTemplates));
+        OnPropertyChanged(nameof(ShowPrograms));
+        OnPropertyChanged(nameof(ShowActionButton));
+        OnPropertyChanged(nameof(Tab0Bg)); OnPropertyChanged(nameof(Tab0Fg));
+        OnPropertyChanged(nameof(Tab1Bg)); OnPropertyChanged(nameof(Tab1Fg));
+        OnPropertyChanged(nameof(Tab2Bg)); OnPropertyChanged(nameof(Tab2Fg));
+        if (value == 1) _ = LoadTemplatesAsync();
+    }
+
+    [RelayCommand]
+    private void SelectTab(int tab) => SelectedTab = tab;
+
+    [RelayCommand]
+    private async Task ActionButtonAsync()
+    {
+        if (SelectedTab == 0) await AddCustomExerciseAsync();
+        else if (SelectedTab == 1) await NewTemplateAsync();
+    }
+
+    // ── Exercises tab ──────────────────────────────────────────────────────
+
+    private List<Exercise> _allExercises = [];
 
     public ObservableCollection<ExerciseGroup> Groups { get; } = new();
 
@@ -23,6 +69,7 @@ public partial class LibraryViewModel(DatabaseService db) : ObservableObject
         IsLoading = true;
         _allExercises = await db.GetExercisesAsync();
         ApplyFilter();
+        if (SelectedTab == 1) await LoadTemplatesAsync();
         IsLoading = false;
     }
 
@@ -36,7 +83,7 @@ public partial class LibraryViewModel(DatabaseService db) : ObservableObject
         Groups.Clear();
         foreach (var group in filtered.GroupBy(e => e.MuscleGroup).OrderBy(g => g.Key.ToString()))
         {
-            var g = new ExerciseGroup(MuscleGroupName(group.Key));
+            var g = new ExerciseGroup(MuscleGroupLabel(group.Key));
             foreach (var e in group.OrderBy(e => e.Name))
                 g.Add(e);
             Groups.Add(g);
@@ -71,17 +118,80 @@ public partial class LibraryViewModel(DatabaseService db) : ObservableObject
         ApplyFilter();
     }
 
-    private static string MuscleGroupName(MuscleGroup mg) => mg switch
+    // ── Templates tab ──────────────────────────────────────────────────────
+
+    public ObservableCollection<WorkoutTemplate> Templates { get; } = new();
+
+    private async Task LoadTemplatesAsync()
     {
-        MuscleGroup.Chest => "Bröst",
-        MuscleGroup.Back => "Rygg",
+        var templates = await db.GetTemplatesAsync();
+        Templates.Clear();
+        foreach (var t in templates) Templates.Add(t);
+    }
+
+    [RelayCommand]
+    private async Task NewTemplateAsync()
+    {
+        await Shell.Current.GoToAsync(nameof(TemplateEditPage), new Dictionary<string, object>
+        {
+            { "TemplateId", 0 }
+        });
+    }
+
+    [RelayCommand]
+    private async Task EditTemplateAsync(WorkoutTemplate template)
+    {
+        await Shell.Current.GoToAsync(nameof(TemplateEditPage), new Dictionary<string, object>
+        {
+            { "TemplateId", template.Id }
+        });
+    }
+
+    [RelayCommand]
+    private async Task StartFromTemplateAsync(WorkoutTemplate template)
+    {
+        await Shell.Current.GoToAsync(nameof(ActiveWorkoutPage), new Dictionary<string, object>
+        {
+            { "TemplateId", template.Id }
+        });
+    }
+
+    [RelayCommand]
+    private async Task DeleteTemplateAsync(WorkoutTemplate template)
+    {
+        var confirmed = await Shell.Current.DisplayAlert(
+            "Ta bort mall", $"Ta bort \"{template.Name}\"?", "Ta bort", "Avbryt");
+        if (!confirmed) return;
+        await db.DeleteTemplateAsync(template);
+        Templates.Remove(template);
+    }
+
+    // ── Programs tab ───────────────────────────────────────────────────────
+
+    public IReadOnlyList<WorkoutProgram> Programs { get; } = WorkoutPrograms.All;
+
+    [RelayCommand]
+    private async Task OpenProgramAsync(WorkoutProgram program)
+    {
+        await Shell.Current.GoToAsync(nameof(ProgramDetailPage), new Dictionary<string, object>
+        {
+            { "ProgramId", program.Id }
+        });
+    }
+
+    // ── Helpers ────────────────────────────────────────────────────────────
+
+    private static string MuscleGroupLabel(MuscleGroup mg) => mg switch
+    {
+        MuscleGroup.Chest    => "Bröst",
+        MuscleGroup.Back     => "Rygg",
         MuscleGroup.Shoulders => "Axlar",
-        MuscleGroup.Biceps => "Biceps",
-        MuscleGroup.Triceps => "Triceps",
-        MuscleGroup.Legs => "Ben",
-        MuscleGroup.Core => "Core",
+        MuscleGroup.Biceps   => "Biceps",
+        MuscleGroup.Triceps  => "Triceps",
+        MuscleGroup.Legs     => "Ben",
+        MuscleGroup.Core     => "Core",
         MuscleGroup.FullBody => "Helkropp",
-        _ => "Övrigt"
+        _                    => "Övrigt"
     };
 }
 

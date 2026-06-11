@@ -10,19 +10,10 @@
     <Grid RowDefinitions="Auto,*,Auto">
 
         <!-- Header -->
-        <Grid Grid.Row="0" Padding="20,20,20,4" ColumnDefinitions="*,Auto">
-            <Label Grid.Column="0" Text="TRÄNA"
+        <Grid Grid.Row="0" Padding="20,20,20,4">
+            <Label Text="TRÄNA"
                    Style="{StaticResource DisplayLabel}"
                    FontSize="40"/>
-            <Button Grid.Column="1"
-                    Text="+ NY MALL"
-                    Style="{StaticResource SecondaryButton}"
-                    FontFamily="DMSansMedium"
-                    FontSize="13"
-                    Padding="14,0"
-                    HeightRequest="36"
-                    VerticalOptions="Center"
-                    Command="{Binding NewTemplateCommand}"/>
         </Grid>
 
         <!-- Template list -->
@@ -44,18 +35,18 @@
                            FontSize="22"
                            HorizontalOptions="Center"
                            TextColor="{StaticResource ForgeMuted}"/>
-                    <Label Text="Tryck på + NY MALL för att komma igång"
+                    <Label Text="Skapa mallar under Bibliotek → Mallar"
                            Style="{StaticResource MutedLabel}"
                            HorizontalOptions="Center"
                            HorizontalTextAlignment="Center"/>
                 </StackLayout>
 
-                <!-- Templates -->
+                <!-- Templates — tap to start -->
                 <StackLayout BindableLayout.ItemsSource="{Binding Templates}" Spacing="10">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate x:DataType="models:WorkoutTemplate">
                             <Border Style="{StaticResource CardFrame}">
-                                <Grid ColumnDefinitions="4,*,Auto">
+                                <Grid ColumnDefinitions="4,*">
                                     <!-- Orange left strip -->
                                     <BoxView Grid.Column="0"
                                              BackgroundColor="{StaticResource ForgeAccent}"
@@ -63,13 +54,12 @@
                                     <!-- Content -->
                                     <Grid Grid.Column="1"
                                           ColumnDefinitions="*,Auto"
-                                          Padding="14,16,14,16">
+                                          Padding="14,16,16,16">
                                         <StackLayout Grid.Column="0" Spacing="3" VerticalOptions="Center">
                                             <Label Text="{Binding Name}"
                                                    FontFamily="BebasNeue"
                                                    FontSize="22"
-                                                   CharacterSpacing="1"
-                                                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                                                   CharacterSpacing="1"/>
                                             <Label Text="TRYCK FÖR ATT STARTA"
                                                    Style="{StaticResource SectionLabel}"
                                                    FontSize="10"/>
@@ -80,22 +70,6 @@
                                                TextColor="{StaticResource ForgeAccent}"
                                                VerticalOptions="Center"/>
                                     </Grid>
-                                    <!-- Edit area -->
-                                    <Border Grid.Column="2"
-                                            BackgroundColor="Transparent"
-                                            StrokeThickness="0"
-                                            Padding="0,0,14,0"
-                                            VerticalOptions="Center">
-                                        <Label Text="···"
-                                               FontSize="18"
-                                               TextColor="{StaticResource ForgeMuted}"
-                                               VerticalOptions="Center"/>
-                                        <Border.GestureRecognizers>
-                                            <TapGestureRecognizer
-                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TrainViewModel}}, Path=EditTemplateCommand}"
-                                                CommandParameter="{Binding .}"/>
-                                        </Border.GestureRecognizers>
-                                    </Border>
                                 </Grid>
                                 <Border.GestureRecognizers>
                                     <TapGestureRecognizer
@@ -111,7 +85,7 @@
             </StackLayout>
         </ScrollView>
 
-        <!-- Bottom: quick start -->
+        <!-- Bottom: free workout -->
         <Grid Grid.Row="2"
               Padding="16,8,16,36"
               BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource ForgeBackground}}">

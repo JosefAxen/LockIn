@@ -47,6 +47,8 @@ public static class MauiProgram
         builder.Services.AddTransient<SessionDetailViewModel>();
         builder.Services.AddTransient<ExerciseProgressPage>();
         builder.Services.AddTransient<ExerciseProgressViewModel>();
+        builder.Services.AddTransient<ProgramDetailPage>();
+        builder.Services.AddTransient<ProgramDetailViewModel>();
 
 #if DEBUG
         builder.Logging.AddDebug();

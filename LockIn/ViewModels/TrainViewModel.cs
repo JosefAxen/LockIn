@@ -26,27 +26,9 @@ public partial class TrainViewModel(DatabaseService db) : ObservableObject
     }
 
     [RelayCommand]
-    private async Task NewTemplateAsync()
-    {
-        await Shell.Current.GoToAsync(nameof(TemplateEditPage), new Dictionary<string, object>
-        {
-            { "TemplateId", 0 }
-        });
-    }
-
-    [RelayCommand]
     private async Task StartWorkoutAsync(WorkoutTemplate template)
     {
         await Shell.Current.GoToAsync(nameof(ActiveWorkoutPage), new Dictionary<string, object>
-        {
-            { "TemplateId", template.Id }
-        });
-    }
-
-    [RelayCommand]
-    private async Task EditTemplateAsync(WorkoutTemplate template)
-    {
-        await Shell.Current.GoToAsync(nameof(TemplateEditPage), new Dictionary<string, object>
         {
             { "TemplateId", template.Id }
         });
@@ -59,17 +41,5 @@ public partial class TrainViewModel(DatabaseService db) : ObservableObject
         {
             { "TemplateId", 0 }
         });
-    }
-
-    [RelayCommand]
-    private async Task DeleteTemplateAsync(WorkoutTemplate template)
-    {
-        var confirmed = await Shell.Current.DisplayAlert(
-            "Ta bort mall",
-            $"Ta bort \"{template.Name}\"?",
-            "Ta bort", "Avbryt");
-        if (!confirmed) return;
-        await db.DeleteTemplateAsync(template);
-        Templates.Remove(template);
     }
 }

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:LockIn.ViewModels"
+             xmlns:data="clr-namespace:LockIn.Data"
+             x:Class="LockIn.Views.ProgramDetailPage"
+             x:DataType="vm:ProgramDetailViewModel"
+             Shell.NavBarIsVisible="False">
+
+    <ContentPage.Resources>
+        <views:InvertedBoolConverter x:Key="InvertedBoolConverter"/>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Padding="16,16,16,8" ColumnDefinitions="Auto,*">
+            <Button Grid.Column="0" Text="‹"
+                    Style="{StaticResource SecondaryButton}"
+                    WidthRequest="44" HeightRequest="44" Padding="0"
+                    Clicked="OnBackClicked"/>
+            <StackLayout Grid.Column="1" Spacing="1" VerticalOptions="Center" Margin="12,0,0,0">
+                <Label Text="{Binding ProgramName}"
+                       FontFamily="BebasNeue" FontSize="24" CharacterSpacing="1"/>
+                <Label Text="{Binding DaysLabel}"
+                       Style="{StaticResource MutedLabel}"/>
+            </StackLayout>
+        </Grid>
+
+        <!-- Content -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="16,4,16,16" Spacing="10">
+
+                <!-- Description -->
+                <Border Style="{StaticResource CardFrame}" Padding="16,14">
+                    <Label Text="{Binding Description}"
+                           Style="{StaticResource MutedLabel}"
+                           LineBreakMode="WordWrap"/>
+                </Border>
+
+                <!-- Days -->
+                <Label Text="PASS I PROGRAMMET"
+                       Style="{StaticResource SectionLabel}" Margin="4,4,0,0"/>
+
+                <StackLayout BindableLayout.ItemsSource="{Binding Days}" Spacing="10">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="data:ProgramDay">
+                            <Border Style="{StaticResource CardFrame}">
+                                <VerticalStackLayout Spacing="0">
+
+                                    <!-- Day header -->
+                                    <Label Text="{Binding Label}"
+                                           FontFamily="DMSansMedium" FontSize="15"
+                                           Padding="16,12,16,8"/>
+
+                                    <BoxView BackgroundColor="{StaticResource ForgeBorder}"
+                                             HeightRequest="1" Margin="0"/>
+
+                                    <!-- Exercises list -->
+                                    <StackLayout BindableLayout.ItemsSource="{Binding Exercises}"
+                                                 Padding="16,8,16,10" Spacing="6">
+                                        <BindableLayout.ItemTemplate>
+                                            <DataTemplate x:DataType="data:ProgramExercise">
+                                                <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="10">
+                                                    <Label Grid.Column="0"
+                                                           Text="{Binding ExerciseName}"
+                                                           FontFamily="DMSansRegular" FontSize="14"
+                                                           VerticalOptions="Center"/>
+                                                    <Label Grid.Column="1"
+                                                           Text="{Binding Sets, StringFormat='{0}×'}"
+                                                           Style="{StaticResource MutedLabel}"
+                                                           FontFamily="BebasNeue" FontSize="15"
+                                                           VerticalOptions="Center"/>
+                                                    <Label Grid.Column="2"
+                                                           Text="{Binding Reps}"
+                                                           Style="{StaticResource MutedLabel}"
+                                                           FontFamily="BebasNeue" FontSize="15"
+                                                           VerticalOptions="Center"/>
+                                                    <Label Grid.Column="3"
+                                                           Text="{Binding RestSeconds, StringFormat='{0}s vila'}"
+                                                           Style="{StaticResource MutedLabel}"
+                                                           FontSize="12"
+                                                           VerticalOptions="Center"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </BindableLayout.ItemTemplate>
+                                    </StackLayout>
+
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </StackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Activate button -->
+        <Grid Grid.Row="2" Padding="16,8,16,32">
+            <Button Text="AKTIVERA PROGRAM"
+                    Style="{StaticResource PrimaryButton}"
+                    IsEnabled="{Binding IsActivating, Converter={x:StaticResource InvertedBoolConverter}}"
+                    Command="{Binding ActivateCommand}"/>
+        </Grid>
+
+    </Grid>
+
+</ContentPage>

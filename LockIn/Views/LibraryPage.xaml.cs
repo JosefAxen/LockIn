@@ -17,4 +17,10 @@ public partial class LibraryPage : ContentPage
         base.OnAppearing();
         await _vm.LoadAsync();
     }
+
+    protected override async void OnNavigatedTo(NavigatedToEventArgs args)
+    {
+        base.OnNavigatedTo(args);
+        await _vm.LoadAsync();
+    }
 }
