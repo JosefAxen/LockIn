@@ -8,19 +8,19 @@
 
     <TabBar>
         <ShellContent Title="Träna"
-                      Icon="tab_train.svg"
+                      Icon="tab_train.png"
                       Route="TrainPage"
                       ContentTemplate="{DataTemplate views:TrainPage}" />
         <ShellContent Title="Historik"
-                      Icon="tab_history.svg"
+                      Icon="tab_history.png"
                       Route="HistoryPage"
                       ContentTemplate="{DataTemplate views:HistoryPage}" />
         <ShellContent Title="Bibliotek"
-                      Icon="tab_library.svg"
+                      Icon="tab_library.png"
                       Route="LibraryPage"
                       ContentTemplate="{DataTemplate views:LibraryPage}" />
         <ShellContent Title="Inställningar"
-                      Icon="tab_settings.svg"
+                      Icon="tab_settings.png"
                       Route="SettingsPage"
                       ContentTemplate="{DataTemplate views:SettingsPage}" />
     </TabBar>
