@@ -11,7 +11,7 @@
 
     <TabBar>
         <ShellContent Title="Hem"
-                      Icon="ic_barbell.png"
+                      Icon="tab_home.png"
                       Route="HemPage"
                       ContentTemplate="{DataTemplate views:HemPage}" />
         <ShellContent Title="Träna"

@@ -36,11 +36,8 @@
                             Stroke="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorder}}"
                             StrokeThickness="1"
                             VerticalOptions="End">
-                        <Label Text="JA"
-                               FontFamily="BebasNeue"
-                               FontSize="16"
-                               CharacterSpacing="1"
-                               TextColor="{StaticResource ForgeAccent}"
+                        <Image Source="ic_profile.png"
+                               WidthRequest="22" HeightRequest="22"
                                HorizontalOptions="Center"
                                VerticalOptions="Center"/>
                     </Border>
