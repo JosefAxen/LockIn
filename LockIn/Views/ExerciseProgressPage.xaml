@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:LockIn.ViewModels"
+             xmlns:views="clr-namespace:LockIn.Views"
+             x:Class="LockIn.Views.ExerciseProgressPage"
+             x:DataType="vm:ExerciseProgressViewModel"
+             Shell.NavBarIsVisible="False">
+
+    <ContentPage.Resources>
+        <views:InvertedBoolConverter x:Key="InvertedBoolConverter"/>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Padding="16,16,16,8" ColumnDefinitions="Auto,*">
+            <Button Grid.Column="0" Text="‹"
+                    Style="{StaticResource SecondaryButton}"
+                    WidthRequest="44" HeightRequest="44" Padding="0"
+                    Clicked="OnBackClicked"/>
+            <StackLayout Grid.Column="1" Spacing="1" VerticalOptions="Center" Margin="12,0,0,0">
+                <Label Text="{Binding ExerciseName}"
+                       FontFamily="BebasNeue" FontSize="26"
+                       CharacterSpacing="1"/>
+                <Label Text="{Binding MuscleGroupName}"
+                       Style="{StaticResource MutedLabel}"/>
+            </StackLayout>
+        </Grid>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="16,4,16,40" Spacing="12">
+
+                <!-- Chart card -->
+                <Border Style="{StaticResource CardFrame}" Padding="12,14,12,10">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="EST. 1RM PROGRESSION"
+                               Style="{StaticResource SectionLabel}"
+                               Margin="4,0,0,0"/>
+                        <GraphicsView x:Name="ChartView"
+                                      Drawable="{Binding ChartDrawable}"
+                                      HeightRequest="200"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Stats row -->
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+
+                    <Border Grid.Column="0" Style="{StaticResource CardFrame}" Padding="16,14">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="BÄSTA LYFT"
+                                   Style="{StaticResource SectionLabel}"/>
+                            <Label Text="{Binding BestSet}"
+                                   FontFamily="DMSansMedium" FontSize="15"/>
+                            <Label Text="{Binding EstimatedOneRm, StringFormat='Est. 1RM: {0}'}"
+                                   Style="{StaticResource MutedLabel}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Grid.Column="1" Style="{StaticResource CardFrame}" Padding="16,14">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="TOTAL VOLYM"
+                                   Style="{StaticResource SectionLabel}"/>
+                            <Label Text="{Binding TotalSessions}"
+                                   FontFamily="BebasNeue" FontSize="32"
+                                   CharacterSpacing="1"
+                                   TextColor="{StaticResource ForgeAccent}"/>
+                            <Label Text="loggade träningar"
+                                   Style="{StaticResource MutedLabel}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                </Grid>
+
+                <!-- Empty state -->
+                <Border IsVisible="{Binding HasData, Converter={x:StaticResource InvertedBoolConverter}}"
+                        Style="{StaticResource CardFrame}" Padding="24,20">
+                    <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                        <Label Text="Ingen historik ännu"
+                               FontFamily="DMSansMedium" FontSize="15"
+                               HorizontalOptions="Center"/>
+                        <Label Text="Logga ett pass med denna övning för att se din progression."
+                               Style="{StaticResource MutedLabel}"
+                               HorizontalTextAlignment="Center"
+                               LineBreakMode="WordWrap"/>
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </Grid>
+</ContentPage>

@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn.Models;
 using LockIn.Services;
+using LockIn.Views;
 using System.Collections.ObjectModel;
 
 namespace LockIn.ViewModels;
@@ -40,6 +41,15 @@ public partial class LibraryViewModel(DatabaseService db) : ObservableObject
                 g.Add(e);
             Groups.Add(g);
         }
+    }
+
+    [RelayCommand]
+    private async Task OpenExerciseProgressAsync(Exercise exercise)
+    {
+        await Shell.Current.GoToAsync(nameof(ExerciseProgressPage), new Dictionary<string, object>
+        {
+            { "ExerciseId", exercise.Id }
+        });
     }
 
     [RelayCommand]

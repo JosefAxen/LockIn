@@ -43,6 +43,11 @@
                     <Border Margin="16,0,16,8"
                             Style="{StaticResource CardFrame}"
                             Padding="16,12">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}}, Path=OpenExerciseProgressCommand}"
+                                CommandParameter="{Binding .}"/>
+                        </Border.GestureRecognizers>
                         <Grid ColumnDefinitions="*,Auto">
                             <StackLayout Grid.Column="0" Spacing="2">
                                 <Label Text="{Binding Name}"
