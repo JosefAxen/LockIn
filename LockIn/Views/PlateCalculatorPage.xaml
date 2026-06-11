@@ -91,7 +91,7 @@
                 <Border IsVisible="{Binding HasResult}"
                         BackgroundColor="{StaticResource ForgeAccentDim}"
                         StrokeShape="RoundRectangle 16"
-                        Stroke="{StaticResource ForgeAccent}"
+                        Stroke="{StaticResource ForgeAccentBrush}"
                         StrokeThickness="1"
                         Padding="20,18">
                     <VerticalStackLayout Spacing="4">

@@ -6,39 +6,39 @@ namespace LockIn.Services;
 public class DatabaseService
 {
     private SQLiteAsyncConnection _db = null!;
-    private static readonly SemaphoreSlim _initLock = new(1, 1);
-    private bool _initialized;
+    private readonly Lazy<Task> _lazyInit;
 
-    public async Task InitAsync()
+    public DatabaseService()
     {
-        await _initLock.WaitAsync();
-        try
-        {
-            if (_initialized) return;
+        _lazyInit = new Lazy<Task>(() => InitCoreAsync(),
+            System.Threading.LazyThreadSafetyMode.ExecutionAndPublication);
+    }
 
-            var dbPath = Path.Combine(FileSystem.AppDataDirectory, "lockin.db");
-            _db = new SQLiteAsyncConnection(dbPath, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache);
+    public Task InitAsync() => _lazyInit.Value;
 
-            await _db.CreateTableAsync<Exercise>();
-            await _db.CreateTableAsync<WorkoutTemplate>();
-            await _db.CreateTableAsync<TemplateExercise>();
-            await _db.CreateTableAsync<WorkoutSession>();
-            await _db.CreateTableAsync<SessionExercise>();
-            await _db.CreateTableAsync<LoggedSet>();
-            await _db.CreateTableAsync<AppSettings>();
-            await _db.CreateTableAsync<BodyWeightEntry>();
+    private async Task InitCoreAsync()
+    {
+        var dbPath = Path.Combine(FileSystem.AppDataDirectory, "lockin.db");
+        _db = new SQLiteAsyncConnection(dbPath,
+            SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache);
 
-            // Plan 3: SetType migrations
-            try { await _db.ExecuteAsync("ALTER TABLE LoggedSets ADD COLUMN SetType INTEGER NOT NULL DEFAULT 0"); } catch { }
-            try { await _db.ExecuteAsync("ALTER TABLE LoggedSets ADD COLUMN DurationSeconds INTEGER NOT NULL DEFAULT 0"); } catch { }
+        await _db.CreateTableAsync<Exercise>();
+        await _db.CreateTableAsync<WorkoutTemplate>();
+        await _db.CreateTableAsync<TemplateExercise>();
+        await _db.CreateTableAsync<WorkoutSession>();
+        await _db.CreateTableAsync<SessionExercise>();
+        await _db.CreateTableAsync<LoggedSet>();
+        await _db.CreateTableAsync<AppSettings>();
+        await _db.CreateTableAsync<BodyWeightEntry>();
 
-            await SeedAsync();
-            _initialized = true;
-        }
-        finally
-        {
-            _initLock.Release();
-        }
+        // Plan 3: SetType migrations (no-op if already added by sqlite-net-pcl)
+        try { await _db.ExecuteAsync("ALTER TABLE LoggedSets ADD COLUMN SetType INTEGER NOT NULL DEFAULT 0"); } catch { }
+        try { await _db.ExecuteAsync("ALTER TABLE LoggedSets ADD COLUMN DurationSeconds INTEGER NOT NULL DEFAULT 0"); } catch { }
+        // Backfill NULLs that sqlite-net-pcl may have added without DEFAULT
+        try { await _db.ExecuteAsync("UPDATE LoggedSets SET SetType = 0 WHERE SetType IS NULL"); } catch { }
+        try { await _db.ExecuteAsync("UPDATE LoggedSets SET DurationSeconds = 0 WHERE DurationSeconds IS NULL"); } catch { }
+
+        await SeedAsync();
     }
 
     private async Task SeedAsync()
@@ -101,70 +101,131 @@ public class DatabaseService
 
     // ── Exercises ──────────────────────────────────────────────────────────
 
-    public Task<List<Exercise>> GetExercisesAsync() =>
-        _db.Table<Exercise>().OrderBy(e => e.Name).ToListAsync();
+    public async Task<List<Exercise>> GetExercisesAsync()
+    {
+        await InitAsync();
+        return await _db.Table<Exercise>().OrderBy(e => e.Name).ToListAsync();
+    }
 
-    public async Task<Exercise?> GetExerciseAsync(int id) =>
-        await _db.Table<Exercise>().Where(e => e.Id == id).FirstOrDefaultAsync();
+    public async Task<Exercise?> GetExerciseAsync(int id)
+    {
+        await InitAsync();
+        return await _db.Table<Exercise>().Where(e => e.Id == id).FirstOrDefaultAsync();
+    }
 
-    public Task<int> SaveExerciseAsync(Exercise exercise) =>
-        exercise.Id == 0 ? _db.InsertAsync(exercise) : _db.UpdateAsync(exercise);
+    public async Task<int> SaveExerciseAsync(Exercise exercise)
+    {
+        await InitAsync();
+        return exercise.Id == 0 ? await _db.InsertAsync(exercise) : await _db.UpdateAsync(exercise);
+    }
 
-    public Task<int> DeleteExerciseAsync(Exercise exercise) =>
-        _db.DeleteAsync(exercise);
+    public async Task<int> DeleteExerciseAsync(Exercise exercise)
+    {
+        await InitAsync();
+        return await _db.DeleteAsync(exercise);
+    }
 
     // ── Templates ──────────────────────────────────────────────────────────
 
-    public Task<List<WorkoutTemplate>> GetTemplatesAsync() =>
-        _db.Table<WorkoutTemplate>().ToListAsync();
+    public async Task<List<WorkoutTemplate>> GetTemplatesAsync()
+    {
+        await InitAsync();
+        return await _db.Table<WorkoutTemplate>().ToListAsync();
+    }
 
-    public Task<int> SaveTemplateAsync(WorkoutTemplate template) =>
-        template.Id == 0 ? _db.InsertAsync(template) : _db.UpdateAsync(template);
+    public async Task<int> SaveTemplateAsync(WorkoutTemplate template)
+    {
+        await InitAsync();
+        return template.Id == 0 ? await _db.InsertAsync(template) : await _db.UpdateAsync(template);
+    }
 
-    public Task<int> DeleteTemplateAsync(WorkoutTemplate template) =>
-        _db.DeleteAsync(template);
+    public async Task<int> DeleteTemplateAsync(WorkoutTemplate template)
+    {
+        await InitAsync();
+        return await _db.DeleteAsync(template);
+    }
 
-    public Task<List<TemplateExercise>> GetTemplateExercisesAsync(int templateId) =>
-        _db.Table<TemplateExercise>().Where(te => te.TemplateId == templateId).OrderBy(te => te.OrderIndex).ToListAsync();
+    public async Task<List<TemplateExercise>> GetTemplateExercisesAsync(int templateId)
+    {
+        await InitAsync();
+        return await _db.Table<TemplateExercise>()
+            .Where(te => te.TemplateId == templateId)
+            .OrderBy(te => te.OrderIndex)
+            .ToListAsync();
+    }
 
-    public Task<int> SaveTemplateExerciseAsync(TemplateExercise te) =>
-        te.Id == 0 ? _db.InsertAsync(te) : _db.UpdateAsync(te);
+    public async Task<int> SaveTemplateExerciseAsync(TemplateExercise te)
+    {
+        await InitAsync();
+        return te.Id == 0 ? await _db.InsertAsync(te) : await _db.UpdateAsync(te);
+    }
 
-    public Task<int> DeleteTemplateExerciseAsync(TemplateExercise te) =>
-        _db.DeleteAsync(te);
+    public async Task<int> DeleteTemplateExerciseAsync(TemplateExercise te)
+    {
+        await InitAsync();
+        return await _db.DeleteAsync(te);
+    }
 
     // ── Sessions ───────────────────────────────────────────────────────────
 
-    public Task<int> SaveSessionAsync(WorkoutSession session) =>
-        session.Id == 0 ? _db.InsertAsync(session) : _db.UpdateAsync(session);
+    public async Task<int> SaveSessionAsync(WorkoutSession session)
+    {
+        await InitAsync();
+        return session.Id == 0 ? await _db.InsertAsync(session) : await _db.UpdateAsync(session);
+    }
 
-    public Task<List<WorkoutSession>> GetSessionsAsync() =>
-        _db.Table<WorkoutSession>().OrderByDescending(s => s.StartedAt).ToListAsync();
+    public async Task<List<WorkoutSession>> GetSessionsAsync()
+    {
+        await InitAsync();
+        return await _db.Table<WorkoutSession>().OrderByDescending(s => s.StartedAt).ToListAsync();
+    }
 
-    public Task<int> SaveSessionExerciseAsync(SessionExercise se) =>
-        se.Id == 0 ? _db.InsertAsync(se) : _db.UpdateAsync(se);
+    public async Task<int> SaveSessionExerciseAsync(SessionExercise se)
+    {
+        await InitAsync();
+        return se.Id == 0 ? await _db.InsertAsync(se) : await _db.UpdateAsync(se);
+    }
 
-    public Task<List<SessionExercise>> GetSessionExercisesAsync(int sessionId) =>
-        _db.Table<SessionExercise>().Where(se => se.SessionId == sessionId).OrderBy(se => se.OrderIndex).ToListAsync();
+    public async Task<List<SessionExercise>> GetSessionExercisesAsync(int sessionId)
+    {
+        await InitAsync();
+        return await _db.Table<SessionExercise>()
+            .Where(se => se.SessionId == sessionId)
+            .OrderBy(se => se.OrderIndex)
+            .ToListAsync();
+    }
 
     // ── Logged Sets ────────────────────────────────────────────────────────
 
-    public Task<int> SaveLoggedSetAsync(LoggedSet set) =>
-        set.Id == 0 ? _db.InsertAsync(set) : _db.UpdateAsync(set);
+    public async Task<int> SaveLoggedSetAsync(LoggedSet set)
+    {
+        await InitAsync();
+        return set.Id == 0 ? await _db.InsertAsync(set) : await _db.UpdateAsync(set);
+    }
 
-    public Task<List<LoggedSet>> GetSetsForSessionExerciseAsync(int sessionExerciseId) =>
-        _db.Table<LoggedSet>().Where(s => s.SessionExerciseId == sessionExerciseId).OrderBy(s => s.SetNumber).ToListAsync();
+    public async Task<List<LoggedSet>> GetSetsForSessionExerciseAsync(int sessionExerciseId)
+    {
+        await InitAsync();
+        return await _db.Table<LoggedSet>()
+            .Where(s => s.SessionExerciseId == sessionExerciseId)
+            .OrderBy(s => s.SetNumber)
+            .ToListAsync();
+    }
 
-    public Task<List<LoggedSet>> GetAllSetsForExerciseAsync(int exerciseId) =>
-        _db.QueryAsync<LoggedSet>(
+    public async Task<List<LoggedSet>> GetAllSetsForExerciseAsync(int exerciseId)
+    {
+        await InitAsync();
+        return await _db.QueryAsync<LoggedSet>(
             @"SELECT ls.* FROM LoggedSets ls
               JOIN SessionExercises se ON se.Id = ls.SessionExerciseId
               JOIN WorkoutSessions ws ON ws.Id = se.SessionId
               WHERE se.ExerciseId = ?
               ORDER BY ls.LoggedAt DESC", exerciseId);
+    }
 
     public async Task<List<LoggedSet>> GetLastSessionSetsAsync(int exerciseId, int excludeSessionId)
     {
+        await InitAsync();
         var sets = await _db.QueryAsync<LoggedSet>(
             @"SELECT ls.* FROM LoggedSets ls
               JOIN SessionExercises se ON se.Id = ls.SessionExerciseId
@@ -182,6 +243,7 @@ public class DatabaseService
 
     public async Task<List<(DateTime Date, decimal WeightKg, int Reps, double Epley1RM, bool IsPR)>> GetBestSetPerSessionForExerciseAsync(int exerciseId)
     {
+        await InitAsync();
         var rows = await _db.QueryAsync<BestSetRow>(
             @"SELECT ws.StartedAt as SessionDate, ls.WeightKg, ls.Reps, ls.IsPR
               FROM LoggedSets ls
@@ -203,12 +265,13 @@ public class DatabaseService
 
     public async Task<Dictionary<MuscleGroup, (decimal Volume, int Sets)>> GetSessionVolumeByMuscleGroupAsync(int sessionId)
     {
+        await InitAsync();
         var rows = await _db.QueryAsync<MuscleVolumeRow>(
             @"SELECT e.MuscleGroup, ls.WeightKg, ls.Reps
               FROM LoggedSets ls
               JOIN SessionExercises se ON se.Id = ls.SessionExerciseId
               JOIN Exercises e ON e.Id = se.ExerciseId
-              WHERE se.SessionId = ? AND ls.SetType = 0", sessionId);
+              WHERE se.SessionId = ? AND (ls.SetType = 0 OR ls.SetType IS NULL)", sessionId);
 
         return rows
             .GroupBy(r => (MuscleGroup)r.MuscleGroup)
@@ -217,14 +280,19 @@ public class DatabaseService
                 g => (g.Sum(r => r.WeightKg * r.Reps), g.Count()));
     }
 
-    public Task<List<LoggedSet>> GetPRsForSessionAsync(int sessionId) =>
-        _db.QueryAsync<LoggedSet>(
+    public async Task<List<LoggedSet>> GetPRsForSessionAsync(int sessionId)
+    {
+        await InitAsync();
+        return await _db.QueryAsync<LoggedSet>(
             @"SELECT ls.* FROM LoggedSets ls
               JOIN SessionExercises se ON se.Id = ls.SessionExerciseId
               WHERE se.SessionId = ? AND ls.IsPR = 1", sessionId);
+    }
 
-    public Task<List<SessionSummaryRow>> GetCompletedSessionsAsync() =>
-        _db.QueryAsync<SessionSummaryRow>(
+    public async Task<List<SessionSummaryRow>> GetCompletedSessionsAsync()
+    {
+        await InitAsync();
+        return await _db.QueryAsync<SessionSummaryRow>(
             @"SELECT ws.Id, ws.StartedAt, ws.CompletedAt, ws.Notes,
                      COALESCE(wt.Name, 'Fritt pass') as TemplateName,
                      COALESCE(SUM(ls.WeightKg * ls.Reps), 0) as TotalVolume,
@@ -237,9 +305,12 @@ public class DatabaseService
               WHERE ws.CompletedAt IS NOT NULL
               GROUP BY ws.Id
               ORDER BY ws.StartedAt DESC");
+    }
 
-    public Task<List<SessionExerciseDetailRow>> GetSessionExerciseDetailsAsync(int sessionId) =>
-        _db.QueryAsync<SessionExerciseDetailRow>(
+    public async Task<List<SessionExerciseDetailRow>> GetSessionExerciseDetailsAsync(int sessionId)
+    {
+        await InitAsync();
+        return await _db.QueryAsync<SessionExerciseDetailRow>(
             @"SELECT e.Name as ExerciseName, ls.SetNumber, ls.WeightKg, ls.Reps, ls.RIR, ls.IsPR,
                      ls.SetType, ls.DurationSeconds
               FROM SessionExercises se
@@ -247,24 +318,31 @@ public class DatabaseService
               JOIN LoggedSets ls ON ls.SessionExerciseId = se.Id
               WHERE se.SessionId = ?
               ORDER BY se.OrderIndex, ls.SetNumber", sessionId);
+    }
 
     // ── Train stats ────────────────────────────────────────────────────────
 
-    public Task<int> GetTotalCompletedSessionCountAsync() =>
-        _db.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM WorkoutSessions WHERE CompletedAt IS NOT NULL");
-
-    public Task<int> GetSessionCountThisWeekAsync()
+    public async Task<int> GetTotalCompletedSessionCountAsync()
     {
+        await InitAsync();
+        return await _db.ExecuteScalarAsync<int>(
+            "SELECT COUNT(*) FROM WorkoutSessions WHERE CompletedAt IS NOT NULL");
+    }
+
+    public async Task<int> GetSessionCountThisWeekAsync()
+    {
+        await InitAsync();
         var today = DateTime.Today;
         var daysFromMonday = (int)today.DayOfWeek == 0 ? 6 : (int)today.DayOfWeek - 1;
         var monday = today.AddDays(-daysFromMonday);
-        return _db.ExecuteScalarAsync<int>(
+        return await _db.ExecuteScalarAsync<int>(
             "SELECT COUNT(*) FROM WorkoutSessions WHERE CompletedAt IS NOT NULL AND StartedAt >= ?",
             monday);
     }
 
     public async Task<int> GetCurrentStreakAsync()
     {
+        await InitAsync();
         var rows = await _db.QueryAsync<SessionDateRow>(
             "SELECT StartedAt FROM WorkoutSessions WHERE CompletedAt IS NOT NULL ORDER BY StartedAt DESC");
 
@@ -290,22 +368,36 @@ public class DatabaseService
 
     // ── Body weight ────────────────────────────────────────────────────────
 
-    public Task<List<BodyWeightEntry>> GetBodyWeightEntriesAsync() =>
-        _db.Table<BodyWeightEntry>().OrderByDescending(e => e.LoggedAt).ToListAsync();
+    public async Task<List<BodyWeightEntry>> GetBodyWeightEntriesAsync()
+    {
+        await InitAsync();
+        return await _db.Table<BodyWeightEntry>().OrderByDescending(e => e.LoggedAt).ToListAsync();
+    }
 
-    public Task<int> SaveBodyWeightEntryAsync(BodyWeightEntry entry) =>
-        entry.Id == 0 ? _db.InsertAsync(entry) : _db.UpdateAsync(entry);
+    public async Task<int> SaveBodyWeightEntryAsync(BodyWeightEntry entry)
+    {
+        await InitAsync();
+        return entry.Id == 0 ? await _db.InsertAsync(entry) : await _db.UpdateAsync(entry);
+    }
 
-    public Task<int> DeleteBodyWeightEntryAsync(BodyWeightEntry entry) =>
-        _db.DeleteAsync(entry);
+    public async Task<int> DeleteBodyWeightEntryAsync(BodyWeightEntry entry)
+    {
+        await InitAsync();
+        return await _db.DeleteAsync(entry);
+    }
 
-    public Task<int> DeleteAllDataAsync() => _db.DeleteAllAsync<LoggedSet>()
-        .ContinueWith(_ => _db.DeleteAllAsync<SessionExercise>()).Unwrap()
-        .ContinueWith(_ => _db.DeleteAllAsync<WorkoutSession>()).Unwrap()
-        .ContinueWith(_ => _db.DeleteAllAsync<TemplateExercise>()).Unwrap()
-        .ContinueWith(_ => _db.DeleteAllAsync<WorkoutTemplate>()).Unwrap()
-        .ContinueWith(_ => _db.DeleteAllAsync<Exercise>()).Unwrap()
-        .ContinueWith(async _ => { await SeedAsync(); return 0; }).Unwrap();
+    public async Task<int> DeleteAllDataAsync()
+    {
+        await InitAsync();
+        await _db.DeleteAllAsync<LoggedSet>();
+        await _db.DeleteAllAsync<SessionExercise>();
+        await _db.DeleteAllAsync<WorkoutSession>();
+        await _db.DeleteAllAsync<TemplateExercise>();
+        await _db.DeleteAllAsync<WorkoutTemplate>();
+        await _db.DeleteAllAsync<Exercise>();
+        await SeedAsync();
+        return 0;
+    }
 
     public class SessionSummaryRow
     {
@@ -357,9 +449,15 @@ public class DatabaseService
 
     // ── Settings ───────────────────────────────────────────────────────────
 
-    public Task<AppSettings> GetSettingsAsync() =>
-        _db.Table<AppSettings>().FirstAsync();
+    public async Task<AppSettings> GetSettingsAsync()
+    {
+        await InitAsync();
+        return await _db.Table<AppSettings>().FirstAsync();
+    }
 
-    public Task<int> SaveSettingsAsync(AppSettings settings) =>
-        _db.UpdateAsync(settings);
+    public async Task<int> SaveSettingsAsync(AppSettings settings)
+    {
+        await InitAsync();
+        return await _db.UpdateAsync(settings);
+    }
 }
