@@ -159,30 +159,16 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
     }
 
     [RelayCommand]
-    private async Task ChangeSetTypeAsync(LoggedSetRow set)
+    private void ChangeSetType(LoggedSetRow set)
     {
         if (set.IsCompleted) return;
-
-        var current = set.SetType switch
+        set.SetType = set.SetType switch
         {
-            SetType.Normal  => "Normal",
-            SetType.Warmup  => "Uppvärmning",
-            SetType.Time    => "Tidsbaserat",
-            SetType.Dropset => "Dropset",
-            _               => "Normal"
-        };
-
-        var choice = await Application.Current!.MainPage!.DisplayActionSheetAsync(
-            $"Settyp (nu: {current})", "Avbryt", null,
-            "Normal", "Uppvärmning (W)", "Tidsbaserat (⏱)", "Dropset (↓)");
-
-        set.SetType = choice switch
-        {
-            "Uppvärmning (W)"   => SetType.Warmup,
-            "Tidsbaserat (⏱)"  => SetType.Time,
-            "Dropset (↓)"      => SetType.Dropset,
-            "Normal"            => SetType.Normal,
-            _                   => set.SetType
+            SetType.Normal  => SetType.Warmup,
+            SetType.Warmup  => SetType.Time,
+            SetType.Time    => SetType.Dropset,
+            SetType.Dropset => SetType.Normal,
+            _               => SetType.Normal
         };
     }
 
