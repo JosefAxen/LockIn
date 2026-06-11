@@ -39,6 +39,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
     private async Task LoadAsync(int templateId)
     {
         IsLoading = true;
+        Exercises.Clear();
 
         if (templateId != 0)
         {
