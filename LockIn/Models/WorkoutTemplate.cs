@@ -10,4 +10,5 @@ public class WorkoutTemplate
 
     [NotNull]
     public string Name { get; set; } = string.Empty;
+    public string? ProgramId { get; set; }
 }

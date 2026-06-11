@@ -7,7 +7,7 @@
              x:DataType="vm:ExercisePickerViewModel"
              Title="Välj övning">
 
-    <Grid RowDefinitions="Auto,Auto,*">
+    <Grid RowDefinitions="Auto,Auto,Auto,*">
 
         <Grid Grid.Row="0" Padding="16,16,16,8" ColumnDefinitions="Auto,*">
             <Button Grid.Column="0" Text="‹ Avbryt"
@@ -23,7 +23,35 @@
                    Placeholder="Sök övning..."
                    Margin="16,0,16,8"/>
 
+        <!-- Muscle group chips -->
         <CollectionView Grid.Row="2"
+                        ItemsSource="{Binding MuscleChips}"
+                        SelectionMode="None"
+                        HeightRequest="40"
+                        Margin="16,0,16,8">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Horizontal" ItemSpacing="6"/>
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="vm:MuscleGroupChip">
+                    <Border BackgroundColor="{Binding Background}"
+                            StrokeShape="RoundRectangle 10" StrokeThickness="0"
+                            Padding="12,0">
+                        <Label Text="{Binding Label}"
+                               TextColor="{Binding Foreground}"
+                               FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
+                               VerticalOptions="Center"/>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ExercisePickerViewModel}}, Path=SelectChipCommand}"
+                                CommandParameter="{Binding .}"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <CollectionView Grid.Row="3"
                         ItemsSource="{Binding FilteredExercises}"
                         SelectionMode="None">
             <CollectionView.ItemTemplate>

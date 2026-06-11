@@ -11,12 +11,10 @@
 
         <!-- Header -->
         <Grid Grid.Row="0" Padding="20,20,20,4">
-            <Label Text="TRÄNA"
-                   Style="{StaticResource DisplayLabel}"
-                   FontSize="40"/>
+            <Label Text="TRÄNA" Style="{StaticResource DisplayLabel}" FontSize="40"/>
         </Grid>
 
-        <!-- Template list -->
+        <!-- Content -->
         <ScrollView Grid.Row="1">
             <StackLayout Padding="16,8,16,8" Spacing="0">
 
@@ -60,57 +58,119 @@
 
                 <!-- Empty state -->
                 <StackLayout IsVisible="{Binding HasNoTemplates}"
-                             VerticalOptions="Center"
-                             HorizontalOptions="Center"
-                             Spacing="10"
-                             Margin="0,80,0,0">
+                             HorizontalOptions="Center" Spacing="10" Margin="0,80,0,0">
                     <Label Text="INGA MALLAR"
-                           Style="{StaticResource DisplayLabel}"
-                           FontSize="22"
-                           HorizontalOptions="Center"
-                           TextColor="{StaticResource ForgeMuted}"/>
+                           Style="{StaticResource DisplayLabel}" FontSize="22"
+                           HorizontalOptions="Center" TextColor="{StaticResource ForgeMuted}"/>
                     <Label Text="Skapa mallar under Bibliotek → Mallar"
                            Style="{StaticResource MutedLabel}"
-                           HorizontalOptions="Center"
-                           HorizontalTextAlignment="Center"/>
+                           HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
                 </StackLayout>
 
-                <!-- Templates — tap to start -->
-                <StackLayout BindableLayout.ItemsSource="{Binding Templates}" Spacing="10">
+                <!-- Program groups -->
+                <Label Text="PROGRAM" Style="{StaticResource SectionLabel}"
+                       IsVisible="{Binding HasProgramGroups}" Margin="4,0,4,8"/>
+
+                <StackLayout BindableLayout.ItemsSource="{Binding ProgramGroups}"
+                             Spacing="10" Margin="0,0,0,16"
+                             IsVisible="{Binding HasProgramGroups}">
                     <BindableLayout.ItemTemplate>
-                        <DataTemplate x:DataType="models:WorkoutTemplate">
+                        <DataTemplate x:DataType="vm:ProgramGroup">
                             <Border Style="{StaticResource CardFrame}">
-                                <Grid ColumnDefinitions="4,*">
-                                    <!-- Orange left strip -->
-                                    <BoxView Grid.Column="0"
-                                             BackgroundColor="{StaticResource ForgeAccent}"
-                                             CornerRadius="16,0,0,16"/>
-                                    <!-- Content -->
-                                    <Grid Grid.Column="1"
-                                          ColumnDefinitions="*,Auto"
-                                          Padding="14,16,16,16">
-                                        <StackLayout Grid.Column="0" Spacing="3" VerticalOptions="Center">
-                                            <Label Text="{Binding Name}"
-                                                   FontFamily="BebasNeue"
-                                                   FontSize="22"
-                                                   CharacterSpacing="1"/>
-                                            <Label Text="TRYCK FÖR ATT STARTA"
-                                                   Style="{StaticResource SectionLabel}"
-                                                   FontSize="10"/>
-                                        </StackLayout>
-                                        <Image Grid.Column="1"
-                                               Source="ic_play.png"
-                                               WidthRequest="18" HeightRequest="18"
-                                               VerticalOptions="Center"/>
+                                <StackLayout Spacing="0">
+                                    <!-- Program header -->
+                                    <Grid ColumnDefinitions="4,*">
+                                        <BoxView Grid.Column="0"
+                                                 BackgroundColor="{StaticResource ForgeAccent}"
+                                                 CornerRadius="16,0,0,16"/>
+                                        <Grid Grid.Column="1" ColumnDefinitions="*,Auto"
+                                              Padding="14,14,16,14">
+                                            <StackLayout Grid.Column="0" Spacing="2" VerticalOptions="Center">
+                                                <Label Text="{Binding ProgramName}"
+                                                       FontFamily="BebasNeue" FontSize="20" CharacterSpacing="1"/>
+                                                <Label Text="{Binding TemplateCount, StringFormat='{0} PASS'}"
+                                                       Style="{StaticResource SectionLabel}" FontSize="10"/>
+                                            </StackLayout>
+                                            <Label Grid.Column="1" Text="{Binding ChevronIcon}"
+                                                   FontSize="20" TextColor="{StaticResource ForgeMuted}"
+                                                   VerticalOptions="Center"/>
+                                        </Grid>
                                     </Grid>
-                                </Grid>
+                                    <!-- Template list (expandable) -->
+                                    <StackLayout IsVisible="{Binding IsExpanded}" Spacing="0">
+                                        <BoxView BackgroundColor="{StaticResource ForgeBorder}" HeightRequest="1"/>
+                                        <StackLayout BindableLayout.ItemsSource="{Binding Templates}" Spacing="0">
+                                            <BindableLayout.ItemTemplate>
+                                                <DataTemplate x:DataType="models:WorkoutTemplate">
+                                                    <Grid ColumnDefinitions="*,Auto"
+                                                          Padding="14,10,12,10">
+                                                        <Label Grid.Column="0" Text="{Binding Name}"
+                                                               FontFamily="DMSansMedium" FontSize="14"
+                                                               VerticalOptions="Center"/>
+                                                        <Button Grid.Column="1"
+                                                                ImageSource="ic_play.png" Text=""
+                                                                Style="{StaticResource PrimaryButton}"
+                                                                HeightRequest="36" WidthRequest="44" Padding="9"
+                                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TrainViewModel}}, Path=StartWorkoutCommand}"
+                                                                CommandParameter="{Binding .}"/>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </BindableLayout.ItemTemplate>
+                                        </StackLayout>
+                                    </StackLayout>
+                                </StackLayout>
                                 <Border.GestureRecognizers>
                                     <TapGestureRecognizer
-                                        Tapped="OnTemplateTapped"
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TrainViewModel}}, Path=StartWorkoutCommand}"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TrainViewModel}}, Path=ToggleProgramGroupCommand}"
                                         CommandParameter="{Binding .}"/>
                                 </Border.GestureRecognizers>
                             </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </StackLayout>
+
+                <!-- Free templates -->
+                <Label Text="MINA MALLAR" Style="{StaticResource SectionLabel}" Margin="4,0,4,8"/>
+
+                <StackLayout BindableLayout.ItemsSource="{Binding FreeTemplates}" Spacing="10">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="models:WorkoutTemplate">
+                            <SwipeView>
+                                <SwipeView.RightItems>
+                                    <SwipeItems>
+                                        <SwipeItem Text="Ta bort"
+                                                   BackgroundColor="{StaticResource ForgeDestructive}"
+                                                   Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TrainViewModel}}, Path=DeleteTemplateCommand}"
+                                                   CommandParameter="{Binding .}"/>
+                                    </SwipeItems>
+                                </SwipeView.RightItems>
+                                <Border Style="{StaticResource CardFrame}">
+                                    <Grid ColumnDefinitions="4,*">
+                                        <BoxView Grid.Column="0"
+                                                 BackgroundColor="{StaticResource ForgeAccent}"
+                                                 CornerRadius="16,0,0,16"/>
+                                        <Grid Grid.Column="1" ColumnDefinitions="*,Auto"
+                                              Padding="14,16,16,16">
+                                            <StackLayout Grid.Column="0" Spacing="3" VerticalOptions="Center">
+                                                <Label Text="{Binding Name}"
+                                                       FontFamily="BebasNeue" FontSize="22" CharacterSpacing="1"/>
+                                                <Label Text="TRYCK FÖR ATT STARTA"
+                                                       Style="{StaticResource SectionLabel}" FontSize="10"/>
+                                            </StackLayout>
+                                            <Image Grid.Column="1"
+                                                   Source="ic_play.png"
+                                                   WidthRequest="18" HeightRequest="18"
+                                                   VerticalOptions="Center"/>
+                                        </Grid>
+                                    </Grid>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Tapped="OnTemplateTapped"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TrainViewModel}}, Path=StartWorkoutCommand}"
+                                            CommandParameter="{Binding .}"/>
+                                    </Border.GestureRecognizers>
+                                </Border>
+                            </SwipeView>
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>
                 </StackLayout>
@@ -119,8 +179,7 @@
         </ScrollView>
 
         <!-- Bottom: free workout -->
-        <Grid Grid.Row="2"
-              Padding="16,8,16,36"
+        <Grid Grid.Row="2" Padding="16,8,16,36"
               BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource ForgeBackground}}">
             <Grid.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">

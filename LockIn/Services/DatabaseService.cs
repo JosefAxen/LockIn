@@ -31,6 +31,8 @@ public class DatabaseService
         await _db.CreateTableAsync<AppSettings>();
         await _db.CreateTableAsync<BodyWeightEntry>();
 
+        try { await _db.ExecuteAsync("ALTER TABLE WorkoutTemplates ADD COLUMN ProgramId TEXT NULL"); } catch { }
+
         // Plan 3: SetType migrations (no-op if already added by sqlite-net-pcl)
         try { await _db.ExecuteAsync("ALTER TABLE LoggedSets ADD COLUMN SetType INTEGER NOT NULL DEFAULT 0"); } catch { }
         try { await _db.ExecuteAsync("ALTER TABLE LoggedSets ADD COLUMN DurationSeconds INTEGER NOT NULL DEFAULT 0"); } catch { }

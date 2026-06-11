@@ -8,7 +8,7 @@
              x:DataType="vm:LibraryViewModel"
              Title="Bibliotek">
 
-    <Grid RowDefinitions="Auto,Auto,Auto,*">
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,*">
 
         <!-- Header -->
         <Grid Grid.Row="0" Padding="20,16,16,8" ColumnDefinitions="*,Auto">
@@ -76,14 +76,43 @@
                    Placeholder="Sök övning..."
                    Margin="16,0,16,8"/>
 
+        <!-- Muscle chips (exercises only) -->
+        <CollectionView Grid.Row="3"
+                        IsVisible="{Binding ShowExercises}"
+                        ItemsSource="{Binding MuscleChips}"
+                        SelectionMode="None"
+                        HeightRequest="40"
+                        Margin="16,0,16,6">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Horizontal" ItemSpacing="6"/>
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="vm:MuscleGroupChip">
+                    <Border BackgroundColor="{Binding Background}"
+                            StrokeShape="RoundRectangle 10" StrokeThickness="0"
+                            Padding="12,0">
+                        <Label Text="{Binding Label}"
+                               TextColor="{Binding Foreground}"
+                               FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
+                               VerticalOptions="Center"/>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}}, Path=SelectMuscleChipCommand}"
+                                CommandParameter="{Binding .}"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
         <!-- Loading indicator -->
-        <ActivityIndicator Grid.Row="2"
+        <ActivityIndicator Grid.Row="4"
                            IsRunning="{Binding IsLoading}"
                            IsVisible="{Binding IsLoading}"
                            HorizontalOptions="Center"/>
 
         <!-- Tab 0: Exercises -->
-        <CollectionView Grid.Row="3"
+        <CollectionView Grid.Row="4"
                         IsVisible="{Binding ShowExercises}"
                         ItemsSource="{Binding Groups}"
                         IsGrouped="True">
@@ -127,7 +156,7 @@
         </CollectionView>
 
         <!-- Tab 1: Templates -->
-        <Grid Grid.Row="3" IsVisible="{Binding ShowTemplates}">
+        <Grid Grid.Row="4" IsVisible="{Binding ShowTemplates}">
             <CollectionView ItemsSource="{Binding Templates}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:WorkoutTemplate">
@@ -177,7 +206,7 @@
         </Grid>
 
         <!-- Tab 2: Programs -->
-        <ScrollView Grid.Row="3" IsVisible="{Binding ShowPrograms}">
+        <ScrollView Grid.Row="4" IsVisible="{Binding ShowPrograms}">
             <StackLayout BindableLayout.ItemsSource="{Binding Programs}"
                          Padding="16,0,16,40" Spacing="12">
                 <BindableLayout.ItemTemplate>

@@ -13,6 +13,9 @@ public partial class PlateCalculatorViewModel : ObservableObject
     [ObservableProperty] private string _resultText = "";
     [ObservableProperty] private bool _hasResult;
 
+    public List<(decimal Plate, int Count)> PlateData { get; private set; } = new();
+    public event Action? PlatesChanged;
+
     [RelayCommand]
     private void Calculate()
     {
@@ -20,6 +23,8 @@ public partial class PlateCalculatorViewModel : ObservableObject
                 NumberStyles.Number, CultureInfo.InvariantCulture, out var target) || target <= 0)
         {
             ResultText = "Ange en giltig målvikt.";
+            PlateData = new();
+            PlatesChanged?.Invoke();
             HasResult = true;
             return;
         }
@@ -32,6 +37,8 @@ public partial class PlateCalculatorViewModel : ObservableObject
         if (target < barWeight)
         {
             ResultText = $"Målvikt måste vara ≥ stångvikt ({barWeight} kg).";
+            PlateData = new();
+            PlatesChanged?.Invoke();
             HasResult = true;
             return;
         }
@@ -54,6 +61,8 @@ public partial class PlateCalculatorViewModel : ObservableObject
         {
             var achievable = target - remaining * 2;
             ResultText = $"Exakt {target} kg går ej.\nNärmaste: {achievable:G} kg";
+            PlateData = new();
+            PlatesChanged?.Invoke();
             HasResult = true;
             return;
         }
@@ -61,12 +70,16 @@ public partial class PlateCalculatorViewModel : ObservableObject
         if (pairs.Count == 0)
         {
             ResultText = $"Bara stången: {barWeight} kg";
+            PlateData = new();
+            PlatesChanged?.Invoke();
             HasResult = true;
             return;
         }
 
         var parts = pairs.Select(p => $"{p.Count}× {p.Plate:G}");
         ResultText = string.Join(" + ", parts) + " kg per sida";
+        PlateData = pairs;
+        PlatesChanged?.Invoke();
         HasResult = true;
     }
 

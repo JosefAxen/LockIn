@@ -29,6 +29,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)
     {
+        if (_session is not null) return;
         int templateId = 0;
         if (query.TryGetValue("TemplateId", out var val) && val is int id)
             templateId = id;

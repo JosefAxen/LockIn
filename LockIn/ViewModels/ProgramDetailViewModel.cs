@@ -52,7 +52,7 @@ public partial class ProgramDetailViewModel(DatabaseService db) : ObservableObje
 
         foreach (var day in _program.Days)
         {
-            var template = new WorkoutTemplate { Name = day.Label };
+            var template = new WorkoutTemplate { Name = day.Label, ProgramId = _program.Id };
             await db.SaveTemplateAsync(template);
 
             for (int i = 0; i < day.Exercises.Count; i++)

@@ -87,22 +87,25 @@
                         HeightRequest="52"
                         Command="{Binding CalculateCommand}"/>
 
-                <!-- Result card -->
+                <!-- Result: barbell view -->
                 <Border IsVisible="{Binding HasResult}"
-                        BackgroundColor="{StaticResource ForgeAccentDim}"
+                        BackgroundColor="{StaticResource ForgeSurface2}"
                         StrokeShape="RoundRectangle 16"
-                        Stroke="{StaticResource ForgeAccentBrush}"
-                        StrokeThickness="1"
-                        Padding="20,18">
-                    <VerticalStackLayout Spacing="4">
-                        <Label Text="PLATTOR PER SIDA"
+                        StrokeThickness="0"
+                        Padding="0,16">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="PER SIDA"
                                Style="{StaticResource SectionLabel}"
-                               TextColor="{StaticResource ForgeAccent}"/>
-                        <Label Text="{Binding ResultText}"
-                               FontFamily="BebasNeue" FontSize="26"
-                               TextColor="{StaticResource ForgeText}"
-                               LineBreakMode="WordWrap"
-                               CharacterSpacing="0.5"/>
+                               TextColor="{StaticResource ForgeAccent}"
+                               Margin="20,0"/>
+                        <GraphicsView x:Name="BarbellView"
+                                      HeightRequest="160"/>
+                        <Label x:Name="ResultLabel"
+                               Text="{Binding ResultText}"
+                               FontFamily="BebasNeue" FontSize="18"
+                               TextColor="{StaticResource ForgeTextSecondary}"
+                               HorizontalTextAlignment="Center"
+                               Margin="20,0"/>
                     </VerticalStackLayout>
                 </Border>
 

@@ -56,8 +56,10 @@ public partial class LibraryViewModel(DatabaseService db) : ObservableObject
     // ── Exercises tab ──────────────────────────────────────────────────────
 
     private List<Exercise> _allExercises = [];
+    private MuscleGroup? _selectedMuscleGroup;
 
     public ObservableCollection<ExerciseGroup> Groups { get; } = new();
+    public ObservableCollection<MuscleGroupChip> MuscleChips { get; } = new();
 
     [ObservableProperty] private string _searchText = "";
     [ObservableProperty] private bool _isLoading;
@@ -68,20 +70,37 @@ public partial class LibraryViewModel(DatabaseService db) : ObservableObject
     {
         IsLoading = true;
         _allExercises = await db.GetExercisesAsync();
+
+        MuscleChips.Clear();
+        MuscleChips.Add(new MuscleGroupChip { Label = "ALLA", MuscleGroup = null, IsSelected = true });
+        foreach (var g in _allExercises.Select(e => e.MuscleGroup).Distinct().OrderBy(g => g.ToString()))
+            MuscleChips.Add(new MuscleGroupChip { Label = MuscleGroupLabel(g), MuscleGroup = g });
+
         ApplyFilter();
         if (SelectedTab == 1) await LoadTemplatesAsync();
         IsLoading = false;
     }
 
+    [RelayCommand]
+    private void SelectMuscleChip(MuscleGroupChip chip)
+    {
+        foreach (var c in MuscleChips) c.IsSelected = false;
+        chip.IsSelected = true;
+        _selectedMuscleGroup = chip.MuscleGroup;
+        ApplyFilter();
+    }
+
     private void ApplyFilter()
     {
         var q = SearchText.Trim().ToLowerInvariant();
-        var filtered = string.IsNullOrEmpty(q)
-            ? _allExercises
-            : _allExercises.Where(e => e.Name.ToLowerInvariant().Contains(q)).ToList();
+        var source = _allExercises.AsEnumerable();
+        if (_selectedMuscleGroup.HasValue)
+            source = source.Where(e => e.MuscleGroup == _selectedMuscleGroup.Value);
+        if (!string.IsNullOrEmpty(q))
+            source = source.Where(e => e.Name.ToLowerInvariant().Contains(q));
 
         Groups.Clear();
-        foreach (var group in filtered.GroupBy(e => e.MuscleGroup).OrderBy(g => g.Key.ToString()))
+        foreach (var group in source.GroupBy(e => e.MuscleGroup).OrderBy(g => g.Key.ToString()))
         {
             var g = new ExerciseGroup(MuscleGroupLabel(group.Key));
             foreach (var e in group.OrderBy(e => e.Name))
