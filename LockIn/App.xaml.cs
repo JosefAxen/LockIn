@@ -23,7 +23,9 @@ public partial class App : Application
 #if IOS
             if (window.Handler?.PlatformView is UIKit.UIView uiView)
             {
-                var tap = new UIKit.UITapGestureRecognizer(_ => uiView.EndEditing(true))
+                var tap = new UIKit.UITapGestureRecognizer(_ =>
+                    UIKit.UIApplication.SharedApplication.SendAction(
+                        new ObjCRuntime.Selector("resignFirstResponder"), null, null, null))
                 {
                     CancelsTouchesInView = false
                 };
