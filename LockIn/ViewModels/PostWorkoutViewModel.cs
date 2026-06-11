@@ -34,7 +34,7 @@ public partial class PostWorkoutViewModel(DatabaseService db) : ObservableObject
         if (session is null) { IsLoading = false; return; }
 
         _loadedSession = session;
-        Notes = session.Notes;
+        Notes = session.Notes ?? "";
 
         var templates = await db.GetTemplatesAsync();
         TemplateName = templates.FirstOrDefault(t => t.Id == session.TemplateId)?.Name ?? "";

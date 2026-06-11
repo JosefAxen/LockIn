@@ -32,7 +32,7 @@ public partial class SessionDetailViewModel(DatabaseService db) : ObservableObje
         DateDisplay = session.StartedAt.ToString("d MMM yyyy");
         PrCountValue = session.PRCount;
         VolumeDisplay = $"{session.TotalVolume:F0} kg";
-        SessionNotes = session.Notes;
+        SessionNotes = session.Notes ?? "";
         HasNotes = !string.IsNullOrWhiteSpace(session.Notes);
 
         if (session.CompletedAt.HasValue)

@@ -38,7 +38,7 @@ public partial class ExerciseProgressViewModel(DatabaseService db) : ObservableO
         {
             ExerciseName = _exercise.Name;
             MuscleGroupName = MuscleGroupLabel(_exercise.MuscleGroup);
-            ExerciseNotes = _exercise.Notes;
+            ExerciseNotes = _exercise.Notes ?? "";
         }
 
         var history = await db.GetBestSetPerSessionForExerciseAsync(exerciseId);
