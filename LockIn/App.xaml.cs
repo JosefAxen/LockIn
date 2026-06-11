@@ -17,6 +17,20 @@ public partial class App : Application
 
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        return new Window(new AppShell());
+        var window = new Window(new AppShell());
+        window.HandlerChanged += (_, _) =>
+        {
+#if IOS
+            if (window.Handler?.PlatformView is UIKit.UIView uiView)
+            {
+                var tap = new UIKit.UITapGestureRecognizer(_ => uiView.EndEditing(true))
+                {
+                    CancelsTouchesInView = false
+                };
+                uiView.AddGestureRecognizer(tap);
+            }
+#endif
+        };
+        return window;
     }
 }
