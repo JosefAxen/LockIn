@@ -10,6 +10,10 @@
     Shell.TabBarBackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}">
 
     <TabBar>
+        <ShellContent Title="Hem"
+                      Icon="ic_barbell.png"
+                      Route="HemPage"
+                      ContentTemplate="{DataTemplate views:HemPage}" />
         <ShellContent Title="Träna"
                       Icon="tab_train.png"
                       Route="TrainPage"

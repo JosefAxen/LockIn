@@ -63,7 +63,7 @@
 		<MauiImage Update="Resources\Images\ic_plus.png" Resize="True" BaseSize="18,18" />
 		<MauiImage Update="Resources\Images\ic_minus.png" Resize="True" BaseSize="18,18" />
 		<MauiImage Update="Resources\Images\ic_check.png" Resize="True" BaseSize="18,18" />
-		<MauiImage Update="Resources\Images\ic_barbell.png" Resize="True" BaseSize="16,16" />
+		<MauiImage Update="Resources\Images\ic_barbell.png" Resize="True" BaseSize="25,25" />
 		<MauiImage Update="Resources\Images\ic_calendar.png" Resize="True" BaseSize="16,16" />
 		<MauiImage Update="Resources\Images\ic_flame.png" Resize="True" BaseSize="16,16" />
 		<MauiImage Update="Resources\Images\ic_layers.png" Resize="True" BaseSize="18,18" />

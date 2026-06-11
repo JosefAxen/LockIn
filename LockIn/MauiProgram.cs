@@ -30,6 +30,8 @@ public static class MauiProgram
 #endif
 
         // Tab pages
+        builder.Services.AddTransient<HemPage>();
+        builder.Services.AddTransient<HemViewModel>();
         builder.Services.AddTransient<TrainPage>();
         builder.Services.AddTransient<TrainViewModel>();
         builder.Services.AddTransient<HistoryPage>();
