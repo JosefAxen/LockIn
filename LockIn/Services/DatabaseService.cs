@@ -26,6 +26,7 @@ public class DatabaseService
             await _db.CreateTableAsync<SessionExercise>();
             await _db.CreateTableAsync<LoggedSet>();
             await _db.CreateTableAsync<AppSettings>();
+            await _db.CreateTableAsync<BodyWeightEntry>();
 
             await SeedAsync();
             _initialized = true;
@@ -220,7 +221,7 @@ public class DatabaseService
 
     public Task<List<SessionSummaryRow>> GetCompletedSessionsAsync() =>
         _db.QueryAsync<SessionSummaryRow>(
-            @"SELECT ws.Id, ws.StartedAt, ws.CompletedAt,
+            @"SELECT ws.Id, ws.StartedAt, ws.CompletedAt, ws.Notes,
                      COALESCE(wt.Name, 'Fritt pass') as TemplateName,
                      COALESCE(SUM(ls.WeightKg * ls.Reps), 0) as TotalVolume,
                      COUNT(ls.Id) as TotalSets,
@@ -242,6 +243,57 @@ public class DatabaseService
               WHERE se.SessionId = ?
               ORDER BY se.OrderIndex, ls.SetNumber", sessionId);
 
+    // ── Train stats ────────────────────────────────────────────────────────
+
+    public Task<int> GetTotalCompletedSessionCountAsync() =>
+        _db.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM WorkoutSessions WHERE CompletedAt IS NOT NULL");
+
+    public Task<int> GetSessionCountThisWeekAsync()
+    {
+        var today = DateTime.Today;
+        var daysFromMonday = (int)today.DayOfWeek == 0 ? 6 : (int)today.DayOfWeek - 1;
+        var monday = today.AddDays(-daysFromMonday);
+        return _db.ExecuteScalarAsync<int>(
+            "SELECT COUNT(*) FROM WorkoutSessions WHERE CompletedAt IS NOT NULL AND StartedAt >= ?",
+            monday);
+    }
+
+    public async Task<int> GetCurrentStreakAsync()
+    {
+        var rows = await _db.QueryAsync<SessionDateRow>(
+            "SELECT StartedAt FROM WorkoutSessions WHERE CompletedAt IS NOT NULL ORDER BY StartedAt DESC");
+
+        var distinctDates = rows
+            .Select(r => r.StartedAt.Date)
+            .Distinct()
+            .OrderByDescending(d => d)
+            .ToList();
+
+        if (distinctDates.Count == 0) return 0;
+        var today = DateTime.Today;
+        if (distinctDates[0] < today.AddDays(-1)) return 0;
+
+        var expected = distinctDates[0];
+        int streak = 0;
+        foreach (var d in distinctDates)
+        {
+            if (d == expected) { streak++; expected = expected.AddDays(-1); }
+            else break;
+        }
+        return streak;
+    }
+
+    // ── Body weight ────────────────────────────────────────────────────────
+
+    public Task<List<BodyWeightEntry>> GetBodyWeightEntriesAsync() =>
+        _db.Table<BodyWeightEntry>().OrderByDescending(e => e.LoggedAt).ToListAsync();
+
+    public Task<int> SaveBodyWeightEntryAsync(BodyWeightEntry entry) =>
+        entry.Id == 0 ? _db.InsertAsync(entry) : _db.UpdateAsync(entry);
+
+    public Task<int> DeleteBodyWeightEntryAsync(BodyWeightEntry entry) =>
+        _db.DeleteAsync(entry);
+
     public Task<int> DeleteAllDataAsync() => _db.DeleteAllAsync<LoggedSet>()
         .ContinueWith(_ => _db.DeleteAllAsync<SessionExercise>()).Unwrap()
         .ContinueWith(_ => _db.DeleteAllAsync<WorkoutSession>()).Unwrap()
@@ -259,6 +311,7 @@ public class DatabaseService
         public decimal TotalVolume { get; set; }
         public int TotalSets { get; set; }
         public int PRCount { get; set; }
+        public string Notes { get; set; } = "";
     }
 
     public class SessionExerciseDetailRow
@@ -284,6 +337,11 @@ public class DatabaseService
         public int MuscleGroup { get; set; }
         public decimal WeightKg { get; set; }
         public int Reps { get; set; }
+    }
+
+    private class SessionDateRow
+    {
+        public DateTime StartedAt { get; set; }
     }
 
     // ── Settings ───────────────────────────────────────────────────────────

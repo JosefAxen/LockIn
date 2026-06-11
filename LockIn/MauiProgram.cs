@@ -23,6 +23,9 @@ public static class MauiProgram
         builder.Services.AddSingleton<DatabaseService>();
         builder.Services.AddSingleton<PRService>();
         builder.Services.AddSingleton<RestTimerService>();
+#if IOS
+        builder.Services.AddSingleton<ISoundService, SoundService>();
+#endif
 
         // Tab pages
         builder.Services.AddTransient<TrainPage>();
@@ -49,6 +52,8 @@ public static class MauiProgram
         builder.Services.AddTransient<ExerciseProgressViewModel>();
         builder.Services.AddTransient<ProgramDetailPage>();
         builder.Services.AddTransient<ProgramDetailViewModel>();
+        builder.Services.AddTransient<BodyWeightPage>();
+        builder.Services.AddTransient<BodyWeightViewModel>();
 
 #if DEBUG
         builder.Logging.AddDebug();

@@ -53,6 +53,18 @@
                     </StackLayout>
                 </Border>
 
+                <!-- Notes -->
+                <Border Style="{StaticResource CardFrame}" Padding="16,14"
+                        IsVisible="{Binding HasNotes}">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="ANTECKNINGAR" Style="{StaticResource SectionLabel}"/>
+                        <Label Text="{Binding SessionNotes}"
+                               FontFamily="DMSansRegular" FontSize="14"
+                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                               LineBreakMode="WordWrap"/>
+                    </VerticalStackLayout>
+                </Border>
+
                 <!-- Exercise groups -->
                 <StackLayout BindableLayout.ItemsSource="{Binding ExerciseGroups}" Spacing="10">
                     <BindableLayout.ItemTemplate>

@@ -13,6 +13,9 @@ public partial class TrainViewModel(DatabaseService db) : ObservableObject
 
     [ObservableProperty] private bool _isLoading;
     [ObservableProperty] private bool _hasNoTemplates;
+    [ObservableProperty] private int _weekCount;
+    [ObservableProperty] private int _streak;
+    [ObservableProperty] private int _totalCount;
 
     public async Task LoadAsync()
     {
@@ -22,6 +25,11 @@ public partial class TrainViewModel(DatabaseService db) : ObservableObject
         foreach (var t in templates)
             Templates.Add(t);
         HasNoTemplates = Templates.Count == 0;
+
+        WeekCount = await db.GetSessionCountThisWeekAsync();
+        Streak = await db.GetCurrentStreakAsync();
+        TotalCount = await db.GetTotalCompletedSessionCountAsync();
+
         IsLoading = false;
     }
 

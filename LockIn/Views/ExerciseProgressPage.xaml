@@ -86,6 +86,30 @@
                     </VerticalStackLayout>
                 </Border>
 
+                <!-- Notes -->
+                <Border Style="{StaticResource CardFrame}" Padding="16,14">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="ANTECKNINGAR" Style="{StaticResource SectionLabel}"/>
+                        <Border BackgroundColor="#1A1A1A" Stroke="#2A2A2A" StrokeThickness="1"
+                                StrokeShape="RoundRectangle 8">
+                            <Editor Text="{Binding ExerciseNotes}"
+                                    Placeholder="Anteckningar om övningen, tips, form-cues..."
+                                    PlaceholderColor="{StaticResource ForgeMuted}"
+                                    BackgroundColor="Transparent"
+                                    TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                                    FontFamily="DMSansRegular" FontSize="14"
+                                    AutoSize="TextChanges"
+                                    MinimumHeightRequest="80"
+                                    Margin="12,8"/>
+                        </Border>
+                        <Button Text="SPARA"
+                                Style="{StaticResource SecondaryButton}"
+                                Command="{Binding SaveNotesCommand}"
+                                HorizontalOptions="End"
+                                Padding="20,0"/>
+                    </VerticalStackLayout>
+                </Border>
+
             </VerticalStackLayout>
         </ScrollView>
 

@@ -20,6 +20,34 @@
         <ScrollView Grid.Row="1">
             <StackLayout Padding="16,8,16,8" Spacing="0">
 
+                <!-- Stats row -->
+                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8" Margin="0,0,0,16">
+                    <Border Grid.Column="0" Style="{StaticResource CardFrame}" Padding="14,12">
+                        <StackLayout Spacing="2">
+                            <Label Text="{Binding WeekCount}"
+                                   FontFamily="BebasNeue" FontSize="28"
+                                   TextColor="{StaticResource ForgeAccent}"/>
+                            <Label Text="DENNA VECKA" Style="{StaticResource SectionLabel}" FontSize="9"/>
+                        </StackLayout>
+                    </Border>
+                    <Border Grid.Column="1" Style="{StaticResource CardFrame}" Padding="14,12">
+                        <StackLayout Spacing="2">
+                            <Label Text="{Binding Streak}"
+                                   FontFamily="BebasNeue" FontSize="28"
+                                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                            <Label Text="DAGAR STREAK" Style="{StaticResource SectionLabel}" FontSize="9"/>
+                        </StackLayout>
+                    </Border>
+                    <Border Grid.Column="2" Style="{StaticResource CardFrame}" Padding="14,12">
+                        <StackLayout Spacing="2">
+                            <Label Text="{Binding TotalCount}"
+                                   FontFamily="BebasNeue" FontSize="28"
+                                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                            <Label Text="TOTALT PASS" Style="{StaticResource SectionLabel}" FontSize="9"/>
+                        </StackLayout>
+                    </Border>
+                </Grid>
+
                 <ActivityIndicator IsRunning="{Binding IsLoading}"
                                    IsVisible="{Binding IsLoading}"
                                    HorizontalOptions="Center" Margin="20"/>

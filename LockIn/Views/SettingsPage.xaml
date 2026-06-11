@@ -35,11 +35,12 @@
                     </Grid>
                 </Border>
 
-                <!-- Haptic -->
+                <!-- Haptic + Sound -->
+                <Label Text="VILOTIMER" Style="{StaticResource SectionLabel}" Margin="4,0"/>
                 <Border Style="{StaticResource CardFrame}" Padding="16,14">
                     <Grid ColumnDefinitions="*,Auto">
                         <StackLayout Grid.Column="0" Spacing="2">
-                            <Label Text="Vibration vid viloTimer" FontFamily="DMSansMedium" FontSize="15"/>
+                            <Label Text="Vibration" FontFamily="DMSansMedium" FontSize="15"/>
                             <Label Text="Vibrera när vilotimern är klar"
                                    Style="{StaticResource MutedLabel}"/>
                         </StackLayout>
@@ -47,6 +48,37 @@
                                 IsToggled="{Binding HapticEnabled}"
                                 VerticalOptions="Center"/>
                     </Grid>
+                </Border>
+                <Border Style="{StaticResource CardFrame}" Padding="16,14">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <StackLayout Grid.Column="0" Spacing="2">
+                            <Label Text="Ljud" FontFamily="DMSansMedium" FontSize="15"/>
+                            <Label Text="Spela ett ljud när vilotimern är klar"
+                                   Style="{StaticResource MutedLabel}"/>
+                        </StackLayout>
+                        <Switch Grid.Column="1"
+                                IsToggled="{Binding SoundEnabled}"
+                                VerticalOptions="Center"/>
+                    </Grid>
+                </Border>
+
+                <!-- Body weight -->
+                <Label Text="HÄLSA" Style="{StaticResource SectionLabel}" Margin="4,0"/>
+                <Border Style="{StaticResource CardFrame}" Padding="16,14">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <StackLayout Grid.Column="0" Spacing="2">
+                            <Label Text="Kroppsvikt" FontFamily="DMSansMedium" FontSize="15"/>
+                            <Label Text="Logga och följ din kroppsvikt över tid"
+                                   Style="{StaticResource MutedLabel}"/>
+                        </StackLayout>
+                        <Label Grid.Column="1" Text="›"
+                               FontSize="22"
+                               TextColor="{StaticResource ForgeMuted}"
+                               VerticalOptions="Center"/>
+                    </Grid>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding OpenBodyWeightCommand}"/>
+                    </Border.GestureRecognizers>
                 </Border>
 
                 <!-- Danger zone -->
@@ -68,6 +100,5 @@
         </ScrollView>
 
     </Grid>
-
 
 </ContentPage>

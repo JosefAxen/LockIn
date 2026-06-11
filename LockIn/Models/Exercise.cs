@@ -21,4 +21,6 @@ public class Exercise
     public int DefaultRestSeconds { get; set; } = 120;
 
     public MuscleGroup MuscleGroup { get; set; }
+
+    public string Notes { get; set; } = "";
 }

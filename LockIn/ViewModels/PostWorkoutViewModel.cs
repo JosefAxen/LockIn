@@ -15,7 +15,10 @@ public partial class PostWorkoutViewModel(DatabaseService db) : ObservableObject
     [ObservableProperty] private string _totalVolume = "";
     [ObservableProperty] private string _totalSets = "";
     [ObservableProperty] private string _prCount = "";
+    [ObservableProperty] private string _notes = "";
     [ObservableProperty] private bool _isLoading;
+
+    private WorkoutSession? _loadedSession;
 
     public ObservableCollection<MuscleGroupRow> MuscleGroups { get; } = new();
     public ObservableCollection<PRRow> PRs { get; } = new();
@@ -29,6 +32,9 @@ public partial class PostWorkoutViewModel(DatabaseService db) : ObservableObject
         var sessions = await db.GetSessionsAsync();
         var session = sessions.FirstOrDefault(s => s.Id == sessionId);
         if (session is null) { IsLoading = false; return; }
+
+        _loadedSession = session;
+        Notes = session.Notes;
 
         var templates = await db.GetTemplatesAsync();
         TemplateName = templates.FirstOrDefault(t => t.Id == session.TemplateId)?.Name ?? "";
@@ -96,8 +102,15 @@ public partial class PostWorkoutViewModel(DatabaseService db) : ObservableObject
     }
 
     [RelayCommand]
-    private async Task DoneAsync() =>
+    private async Task DoneAsync()
+    {
+        if (_loadedSession is not null)
+        {
+            _loadedSession.Notes = Notes;
+            await db.SaveSessionAsync(_loadedSession);
+        }
         await Shell.Current.GoToAsync("//TrainPage");
+    }
 
     private static string MuscleGroupName(MuscleGroup mg) => mg switch
     {

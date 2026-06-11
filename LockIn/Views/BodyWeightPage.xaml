@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:LockIn.ViewModels"
+             xmlns:models="clr-namespace:LockIn.Models"
+             xmlns:views="clr-namespace:LockIn.Views"
+             x:Class="LockIn.Views.BodyWeightPage"
+             x:DataType="vm:BodyWeightViewModel"
+             Shell.NavBarIsVisible="False">
+
+    <ContentPage.Resources>
+        <views:InvertedBoolConverter x:Key="InvertedBoolConverter"/>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Padding="16,16,16,8" ColumnDefinitions="Auto,*">
+            <Button Grid.Column="0" Text="‹"
+                    Style="{StaticResource SecondaryButton}"
+                    WidthRequest="44" HeightRequest="44" Padding="0"
+                    Command="{Binding GoBackCommand}"/>
+            <Label Grid.Column="1"
+                   Text="KROPPSVIKT"
+                   Style="{StaticResource DisplayLabel}"
+                   FontSize="28"
+                   HorizontalOptions="Center" VerticalOptions="Center"/>
+        </Grid>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="16,4,16,32" Spacing="12">
+
+                <!-- Latest weight hero -->
+                <Border Style="{StaticResource CardFrame}" Padding="24,20">
+                    <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                        <Label Text="{Binding LatestWeight}"
+                               FontFamily="BebasNeue" FontSize="56"
+                               CharacterSpacing="1"
+                               TextColor="#6EA8DC"
+                               HorizontalOptions="Center"/>
+                        <Label Text="{Binding LatestDate}"
+                               Style="{StaticResource MutedLabel}"
+                               HorizontalOptions="Center"/>
+                        <Label Text="Ingen data ännu – logga din första vikt nedan"
+                               Style="{StaticResource MutedLabel}"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center"
+                               IsVisible="{Binding HasData, Converter={x:StaticResource InvertedBoolConverter}}"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Chart -->
+                <Border Style="{StaticResource CardFrame}" Padding="12,14,12,10"
+                        IsVisible="{Binding HasData}">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="VIKTUTVECKLING"
+                               Style="{StaticResource SectionLabel}"
+                               Margin="4,0,0,0"/>
+                        <GraphicsView x:Name="ChartView"
+                                      Drawable="{Binding ChartDrawable}"
+                                      HeightRequest="180"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Recent entries -->
+                <Label Text="SENASTE LOGGNINGAR"
+                       Style="{StaticResource SectionLabel}"
+                       IsVisible="{Binding HasData}"/>
+                <Border Style="{StaticResource CardFrame}" Padding="0,4"
+                        IsVisible="{Binding HasData}">
+                    <StackLayout BindableLayout.ItemsSource="{Binding RecentEntries}" Spacing="0">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="models:BodyWeightEntry">
+                                <Grid ColumnDefinitions="*,Auto,Auto" Padding="16,10,12,10">
+                                    <Label Grid.Column="0"
+                                           Text="{Binding LoggedAt, StringFormat='{0:d MMM yyyy  HH:mm}'}"
+                                           Style="{StaticResource MutedLabel}"
+                                           VerticalOptions="Center"/>
+                                    <Label Grid.Column="1"
+                                           Text="{Binding WeightKg, StringFormat='{0:F1} kg'}"
+                                           FontFamily="DMSansMedium" FontSize="15"
+                                           TextColor="#6EA8DC"
+                                           VerticalOptions="Center"
+                                           Margin="0,0,12,0"/>
+                                    <Button Grid.Column="2"
+                                            Text="✕"
+                                            Style="{StaticResource SecondaryButton}"
+                                            WidthRequest="36" HeightRequest="36"
+                                            Padding="0" FontSize="12"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:BodyWeightViewModel}}, Path=DeleteEntryCommand}"
+                                            CommandParameter="{Binding .}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </StackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Log button -->
+        <Grid Grid.Row="2" Padding="16,8,16,36">
+            <Button Text="+ LOGGA VIKT"
+                    Style="{StaticResource PrimaryButton}"
+                    Command="{Binding LogWeightCommand}"/>
+        </Grid>
+
+    </Grid>
+</ContentPage>

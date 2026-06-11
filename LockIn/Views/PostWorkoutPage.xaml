@@ -83,6 +83,20 @@
                     </StackLayout>
                 </Border>
 
+                <!-- Session notes -->
+                <Label Text="ANTECKNINGAR" Style="{StaticResource SectionLabel}"/>
+                <Border Style="{StaticResource CardFrame}" Padding="4,2">
+                    <Editor Text="{Binding Notes}"
+                            Placeholder="Hur gick passet? Anteckna trötthet, skador, tankar..."
+                            PlaceholderColor="{StaticResource ForgeMuted}"
+                            BackgroundColor="Transparent"
+                            TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                            FontFamily="DMSansRegular" FontSize="14"
+                            AutoSize="TextChanges"
+                            MinimumHeightRequest="72"
+                            Margin="12,6"/>
+                </Border>
+
                 <!-- PRs -->
                 <Label Text="PERSONLIGA REKORD" Style="{StaticResource SectionLabel}"
                        IsVisible="{Binding PRs.Count, Converter={StaticResource GtzConverter}}"/>

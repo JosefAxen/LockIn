@@ -7,13 +7,68 @@
              x:DataType="vm:HistoryViewModel"
              Title="Historik">
 
-    <Grid RowDefinitions="Auto,*">
+    <Grid RowDefinitions="Auto,Auto,*">
 
-        <Grid Grid.Row="0" Padding="20,20,20,4">
+        <Grid Grid.Row="0" Padding="20,20,20,8">
             <Label Text="HISTORIK" Style="{StaticResource DisplayLabel}" FontSize="40"/>
         </Grid>
 
-        <Grid Grid.Row="1">
+        <!-- Filter + Sort controls -->
+        <StackLayout Grid.Row="1" Padding="16,0,16,8" Spacing="8">
+            <!-- Period filter -->
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="6">
+                <Border Grid.Column="0" BackgroundColor="{Binding Period0Bg}"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="0,8">
+                    <Label Text="ALLT" HorizontalOptions="Center"
+                           FontFamily="BebasNeue" FontSize="14" CharacterSpacing="1"
+                           TextColor="{Binding Period0Fg}"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectPeriodCommand}" CommandParameter="{x:Int32 0}"/>
+                    </Border.GestureRecognizers>
+                </Border>
+                <Border Grid.Column="1" BackgroundColor="{Binding Period1Bg}"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="0,8">
+                    <Label Text="VECKA" HorizontalOptions="Center"
+                           FontFamily="BebasNeue" FontSize="14" CharacterSpacing="1"
+                           TextColor="{Binding Period1Fg}"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectPeriodCommand}" CommandParameter="{x:Int32 1}"/>
+                    </Border.GestureRecognizers>
+                </Border>
+                <Border Grid.Column="2" BackgroundColor="{Binding Period2Bg}"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="0,8">
+                    <Label Text="MÅNAD" HorizontalOptions="Center"
+                           FontFamily="BebasNeue" FontSize="14" CharacterSpacing="1"
+                           TextColor="{Binding Period2Fg}"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectPeriodCommand}" CommandParameter="{x:Int32 2}"/>
+                    </Border.GestureRecognizers>
+                </Border>
+            </Grid>
+            <!-- Sort toggle -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="6">
+                <Border Grid.Column="0" BackgroundColor="{Binding Sort0Bg}"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="0,7">
+                    <Label Text="DATUM" HorizontalOptions="Center"
+                           FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
+                           TextColor="{Binding Sort0Fg}"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectSortCommand}" CommandParameter="{x:Int32 0}"/>
+                    </Border.GestureRecognizers>
+                </Border>
+                <Border Grid.Column="1" BackgroundColor="{Binding Sort1Bg}"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="0,7">
+                    <Label Text="VOLYM" HorizontalOptions="Center"
+                           FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
+                           TextColor="{Binding Sort1Fg}"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectSortCommand}" CommandParameter="{x:Int32 1}"/>
+                    </Border.GestureRecognizers>
+                </Border>
+            </Grid>
+        </StackLayout>
+
+        <Grid Grid.Row="2">
             <ActivityIndicator IsRunning="{Binding IsLoading}"
                                IsVisible="{Binding IsLoading}"
                                HorizontalOptions="Center"
@@ -21,7 +76,7 @@
 
             <CollectionView ItemsSource="{Binding Sessions}"
                             IsVisible="{Binding IsLoading, Converter={x:Static vm:InverseBoolConverter.Instance}}"
-                            Margin="16,8,16,0">
+                            Margin="16,0,16,0">
                 <CollectionView.EmptyView>
                     <StackLayout VerticalOptions="Center" HorizontalOptions="Center"
                                  Spacing="8" Margin="0,80,0,0">

@@ -7,7 +7,7 @@ using System.Collections.ObjectModel;
 
 namespace LockIn.ViewModels;
 
-public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, RestTimerService timer)
+public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, RestTimerService timer, ISoundService sound)
     : ObservableObject, IQueryAttributable
 {
     private WorkoutSession? _session;
@@ -93,7 +93,8 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
                 SessionExerciseId = se.Id,
                 ExerciseId = exercise.Id,
                 SetNumber = s,
-                WeightText = targetWeight > 0 ? targetWeight.ToString() : "",
+                WeightText = targetWeight > 0 ? targetWeight.ToString() :
+                             (prev is { WeightKg: > 0 } ? prev.WeightKg.ToString("G") : ""),
                 RepsText = reps.ToString(),
                 PrevWeightHint = prev is { WeightKg: > 0 } ? prev.WeightKg.ToString("G") : "",
                 PrevRepsHint = prev is { Reps: > 0 } ? prev.Reps.ToString() : ""
@@ -236,6 +237,8 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         {
             if (Preferences.Default.Get("haptic_enabled", true))
                 HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
+            if (Preferences.Default.Get("sound_enabled", true))
+                sound.PlayTimerComplete();
             if (section != null) section.IsTimerActive = false;
             _activeTimerSection = null;
             _currentTimerSection = null;

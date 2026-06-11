@@ -13,4 +13,6 @@ public class WorkoutSession
     public DateTime StartedAt { get; set; }
 
     public DateTime? CompletedAt { get; set; }
+
+    public string Notes { get; set; } = "";
 }

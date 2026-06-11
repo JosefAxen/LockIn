@@ -15,6 +15,8 @@ public partial class SessionDetailViewModel(DatabaseService db) : ObservableObje
     [ObservableProperty] private string _durationDisplay = "";
     [ObservableProperty] private string _volumeDisplay = "";
     [ObservableProperty] private int _prCountValue;
+    [ObservableProperty] private string _sessionNotes = "";
+    [ObservableProperty] private bool _hasNotes;
     [ObservableProperty] private bool _isLoading;
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)
@@ -30,6 +32,8 @@ public partial class SessionDetailViewModel(DatabaseService db) : ObservableObje
         DateDisplay = session.StartedAt.ToString("d MMM yyyy");
         PrCountValue = session.PRCount;
         VolumeDisplay = $"{session.TotalVolume:F0} kg";
+        SessionNotes = session.Notes;
+        HasNotes = !string.IsNullOrWhiteSpace(session.Notes);
 
         if (session.CompletedAt.HasValue)
         {

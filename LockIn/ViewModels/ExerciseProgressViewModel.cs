@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using LockIn.Models;
 using LockIn.Services;
 using LockIn.Views;
@@ -12,8 +13,11 @@ public partial class ExerciseProgressViewModel(DatabaseService db) : ObservableO
     [ObservableProperty] private string _bestSet = "–";
     [ObservableProperty] private string _estimatedOneRm = "–";
     [ObservableProperty] private string _totalSessions = "0 pass";
+    [ObservableProperty] private string _exerciseNotes = "";
     [ObservableProperty] private bool _isLoading;
     [ObservableProperty] private bool _hasData;
+
+    private Exercise? _exercise;
 
     public ExerciseProgressDrawable ChartDrawable { get; } = new();
 
@@ -29,11 +33,12 @@ public partial class ExerciseProgressViewModel(DatabaseService db) : ObservableO
     {
         IsLoading = true;
 
-        var exercise = await db.GetExerciseAsync(exerciseId);
-        if (exercise is not null)
+        _exercise = await db.GetExerciseAsync(exerciseId);
+        if (_exercise is not null)
         {
-            ExerciseName = exercise.Name;
-            MuscleGroupName = MuscleGroupLabel(exercise.MuscleGroup);
+            ExerciseName = _exercise.Name;
+            MuscleGroupName = MuscleGroupLabel(_exercise.MuscleGroup);
+            ExerciseNotes = _exercise.Notes;
         }
 
         var history = await db.GetBestSetPerSessionForExerciseAsync(exerciseId);
@@ -53,6 +58,14 @@ public partial class ExerciseProgressViewModel(DatabaseService db) : ObservableO
 
         IsLoading = false;
         ChartInvalidated?.Invoke();
+    }
+
+    [RelayCommand]
+    private async Task SaveNotesAsync()
+    {
+        if (_exercise is null) return;
+        _exercise.Notes = ExerciseNotes;
+        await db.SaveExerciseAsync(_exercise);
     }
 
     private static string MuscleGroupLabel(MuscleGroup mg) => mg switch
