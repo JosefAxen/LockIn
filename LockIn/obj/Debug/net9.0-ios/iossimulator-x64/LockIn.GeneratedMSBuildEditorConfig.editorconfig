@@ -55,11 +55,23 @@ build_metadata.AdditionalFiles.ManifestResourceName = LockIn.Views.ActiveWorkout
 build_metadata.AdditionalFiles.TargetPath = Views\ActiveWorkoutPage.xaml
 build_metadata.AdditionalFiles.RelativePath = Views\ActiveWorkoutPage.xaml
 
+[C:/Users/JosefAxen/Gym/LockIn/Views/BodyWeightPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = LockIn.Views.BodyWeightPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\BodyWeightPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\BodyWeightPage.xaml
+
 [C:/Users/JosefAxen/Gym/LockIn/Views/ExercisePickerPage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = LockIn.Views.ExercisePickerPage.xaml
 build_metadata.AdditionalFiles.TargetPath = Views\ExercisePickerPage.xaml
 build_metadata.AdditionalFiles.RelativePath = Views\ExercisePickerPage.xaml
+
+[C:/Users/JosefAxen/Gym/LockIn/Views/ExerciseProgressPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = LockIn.Views.ExerciseProgressPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\ExerciseProgressPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\ExerciseProgressPage.xaml
 
 [C:/Users/JosefAxen/Gym/LockIn/Views/HistoryPage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
@@ -67,17 +79,41 @@ build_metadata.AdditionalFiles.ManifestResourceName = LockIn.Views.HistoryPage.x
 build_metadata.AdditionalFiles.TargetPath = Views\HistoryPage.xaml
 build_metadata.AdditionalFiles.RelativePath = Views\HistoryPage.xaml
 
+[C:/Users/JosefAxen/Gym/LockIn/Views/KroppPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = LockIn.Views.KroppPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\KroppPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\KroppPage.xaml
+
 [C:/Users/JosefAxen/Gym/LockIn/Views/LibraryPage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = LockIn.Views.LibraryPage.xaml
 build_metadata.AdditionalFiles.TargetPath = Views\LibraryPage.xaml
 build_metadata.AdditionalFiles.RelativePath = Views\LibraryPage.xaml
 
+[C:/Users/JosefAxen/Gym/LockIn/Views/PlateCalculatorPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = LockIn.Views.PlateCalculatorPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\PlateCalculatorPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\PlateCalculatorPage.xaml
+
 [C:/Users/JosefAxen/Gym/LockIn/Views/PostWorkoutPage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = LockIn.Views.PostWorkoutPage.xaml
 build_metadata.AdditionalFiles.TargetPath = Views\PostWorkoutPage.xaml
 build_metadata.AdditionalFiles.RelativePath = Views\PostWorkoutPage.xaml
+
+[C:/Users/JosefAxen/Gym/LockIn/Views/ProgramDetailPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = LockIn.Views.ProgramDetailPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\ProgramDetailPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\ProgramDetailPage.xaml
+
+[C:/Users/JosefAxen/Gym/LockIn/Views/SessionDetailPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = LockIn.Views.SessionDetailPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\SessionDetailPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\SessionDetailPage.xaml
 
 [C:/Users/JosefAxen/Gym/LockIn/Views/SettingsPage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml

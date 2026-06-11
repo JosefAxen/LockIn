@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:LockIn.ViewModels"
+             xmlns:models="clr-namespace:LockIn.Models"
+             x:Class="LockIn.Views.KroppPage"
+             x:DataType="vm:KroppViewModel"
+             Title="Kropp">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Padding="20,20,16,8" ColumnDefinitions="*,Auto">
+            <Label Grid.Column="0"
+                   Text="KROPP"
+                   Style="{StaticResource DisplayLabel}" FontSize="40"/>
+            <Border Grid.Column="1"
+                    BackgroundColor="{StaticResource ForgeSurface2}"
+                    StrokeShape="RoundRectangle 12" StrokeThickness="0"
+                    WidthRequest="44" HeightRequest="44"
+                    VerticalOptions="Center">
+                <Image Source="tab_settings.png"
+                       WidthRequest="20" HeightRequest="20"
+                       HorizontalOptions="Center" VerticalOptions="Center"/>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding OpenSettingsCommand}"/>
+                </Border.GestureRecognizers>
+            </Border>
+        </Grid>
+
+        <!-- Content -->
+        <Grid Grid.Row="1">
+
+            <ActivityIndicator IsRunning="{Binding IsLoading}"
+                               IsVisible="{Binding IsLoading}"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+
+            <ScrollView IsVisible="{Binding IsLoading, Converter={x:Static vm:InverseBoolConverter.Instance}}">
+                <VerticalStackLayout Padding="16,4,16,100" Spacing="14">
+
+                    <!-- Segment tabs -->
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="0"
+                          BackgroundColor="#111" HeightRequest="44">
+                        <Border Grid.Column="0" BackgroundColor="{Binding Tab0Bg}"
+                                StrokeShape="RoundRectangle 0" StrokeThickness="0">
+                            <Label Text="VIKT"
+                                   FontFamily="BebasNeue" FontSize="15" CharacterSpacing="1"
+                                   TextColor="{Binding Tab0Fg}"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 0}"/>
+                            </Border.GestureRecognizers>
+                        </Border>
+                        <Border Grid.Column="1" BackgroundColor="{Binding Tab1Bg}"
+                                StrokeShape="RoundRectangle 0" StrokeThickness="0">
+                            <Label Text="KROPP"
+                                   FontFamily="BebasNeue" FontSize="15" CharacterSpacing="1"
+                                   TextColor="{Binding Tab1Fg}"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 1}"/>
+                            </Border.GestureRecognizers>
+                        </Border>
+                        <Border Grid.Column="2" BackgroundColor="{Binding Tab2Bg}"
+                                StrokeShape="RoundRectangle 0" StrokeThickness="0">
+                            <Label Text="HEATMAP"
+                                   FontFamily="BebasNeue" FontSize="15" CharacterSpacing="1"
+                                   TextColor="{Binding Tab2Fg}"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 2}"/>
+                            </Border.GestureRecognizers>
+                        </Border>
+                    </Grid>
+
+                    <!-- ═══ VIKT TAB ═══ -->
+                    <VerticalStackLayout IsVisible="{Binding IsViktTab}" Spacing="14">
+
+                        <!-- Latest weight hero -->
+                        <Border Style="{StaticResource CardFrame}" Padding="24,20">
+                            <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                                <Label Text="{Binding LatestWeight}"
+                                       FontFamily="BebasNeue" FontSize="52"
+                                       CharacterSpacing="1"
+                                       TextColor="#6EA8DC"
+                                       HorizontalOptions="Center"/>
+                                <Label Text="{Binding LatestWeightDate}"
+                                       Style="{StaticResource MutedLabel}"
+                                       HorizontalOptions="Center"/>
+                                <Label Text="Ingen data ännu – logga din vikt nedan"
+                                       Style="{StaticResource MutedLabel}"
+                                       HorizontalOptions="Center"
+                                       HorizontalTextAlignment="Center"
+                                       IsVisible="{Binding HasWeightData, Converter={x:Static vm:InverseBoolConverter.Instance}}"/>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Chart -->
+                        <Border Style="{StaticResource CardFrame}" Padding="12,14,12,10"
+                                IsVisible="{Binding HasWeightData}">
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="VIKTUTVECKLING"
+                                       Style="{StaticResource SectionLabel}"
+                                       Margin="4,0,0,0"/>
+                                <GraphicsView x:Name="WeightChartView"
+                                              HeightRequest="180"/>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Recent entries -->
+                        <Label Text="SENASTE LOGGNINGAR"
+                               Style="{StaticResource SectionLabel}"
+                               IsVisible="{Binding HasWeightData}"/>
+                        <Border Style="{StaticResource CardFrame}" Padding="0,4"
+                                IsVisible="{Binding HasWeightData}">
+                            <StackLayout BindableLayout.ItemsSource="{Binding WeightEntries}" Spacing="0">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="models:BodyWeightEntry">
+                                        <Grid ColumnDefinitions="*,Auto,Auto" Padding="16,10,12,10">
+                                            <Label Grid.Column="0"
+                                                   Text="{Binding LoggedAt, StringFormat='{0:d MMM yyyy  HH:mm}'}"
+                                                   Style="{StaticResource MutedLabel}"
+                                                   VerticalOptions="Center"/>
+                                            <Label Grid.Column="1"
+                                                   Text="{Binding WeightKg, StringFormat='{0:F1} kg'}"
+                                                   FontFamily="DMSansMedium" FontSize="15"
+                                                   TextColor="#6EA8DC"
+                                                   VerticalOptions="Center"
+                                                   Margin="0,0,12,0"/>
+                                            <Button Grid.Column="2"
+                                                    ImageSource="ic_trash.png" Text=""
+                                                    Style="{StaticResource SecondaryButton}"
+                                                    WidthRequest="36" HeightRequest="36" Padding="9"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:KroppViewModel}}, Path=DeleteWeightEntryCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </StackLayout>
+                        </Border>
+
+                        <Button Text="LOGGA VIKT"
+                                ImageSource="ic_plus.png"
+                                ContentLayout="Left, 10"
+                                Style="{StaticResource PrimaryButton}"
+                                Command="{Binding LogWeightCommand}"/>
+
+                    </VerticalStackLayout>
+
+                    <!-- ═══ KROPP TAB ═══ -->
+                    <VerticalStackLayout IsVisible="{Binding IsKroppTab}" Spacing="14">
+
+                        <!-- Latest measurements -->
+                        <Border Style="{StaticResource CardFrame}" Padding="16,14">
+                            <VerticalStackLayout Spacing="12">
+                                <Label Text="SENASTE MÄTNING" Style="{StaticResource SectionLabel}"/>
+                                <Grid ColumnDefinitions="*,*,*,*,*" ColumnSpacing="8">
+                                    <VerticalStackLayout Grid.Column="0" Spacing="3" HorizontalOptions="Center">
+                                        <Label Text="{Binding LatestWaist}"
+                                               FontFamily="BebasNeue" FontSize="22"
+                                               TextColor="{StaticResource ForgeAccent}"
+                                               HorizontalOptions="Center"/>
+                                        <Label Text="MIDJA" Style="{StaticResource SectionLabel}" FontSize="9" HorizontalOptions="Center"/>
+                                    </VerticalStackLayout>
+                                    <VerticalStackLayout Grid.Column="1" Spacing="3" HorizontalOptions="Center">
+                                        <Label Text="{Binding LatestChest}"
+                                               FontFamily="BebasNeue" FontSize="22"
+                                               TextColor="{StaticResource ForgeAccent}"
+                                               HorizontalOptions="Center"/>
+                                        <Label Text="BRÖST" Style="{StaticResource SectionLabel}" FontSize="9" HorizontalOptions="Center"/>
+                                    </VerticalStackLayout>
+                                    <VerticalStackLayout Grid.Column="2" Spacing="3" HorizontalOptions="Center">
+                                        <Label Text="{Binding LatestHip}"
+                                               FontFamily="BebasNeue" FontSize="22"
+                                               TextColor="{StaticResource ForgeAccent}"
+                                               HorizontalOptions="Center"/>
+                                        <Label Text="HÖFT" Style="{StaticResource SectionLabel}" FontSize="9" HorizontalOptions="Center"/>
+                                    </VerticalStackLayout>
+                                    <VerticalStackLayout Grid.Column="3" Spacing="3" HorizontalOptions="Center">
+                                        <Label Text="{Binding LatestArm}"
+                                               FontFamily="BebasNeue" FontSize="22"
+                                               TextColor="{StaticResource ForgeAccent}"
+                                               HorizontalOptions="Center"/>
+                                        <Label Text="ARMAR" Style="{StaticResource SectionLabel}" FontSize="9" HorizontalOptions="Center"/>
+                                    </VerticalStackLayout>
+                                    <VerticalStackLayout Grid.Column="4" Spacing="3" HorizontalOptions="Center">
+                                        <Label Text="{Binding LatestThigh}"
+                                               FontFamily="BebasNeue" FontSize="22"
+                                               TextColor="{StaticResource ForgeAccent}"
+                                               HorizontalOptions="Center"/>
+                                        <Label Text="LÅR" Style="{StaticResource SectionLabel}" FontSize="9" HorizontalOptions="Center"/>
+                                    </VerticalStackLayout>
+                                </Grid>
+                                <Label Text="Ingen data ännu – logga dina mått nedan"
+                                       Style="{StaticResource MutedLabel}"
+                                       HorizontalOptions="Center"
+                                       HorizontalTextAlignment="Center"
+                                       IsVisible="{Binding HasCompositionData, Converter={x:Static vm:InverseBoolConverter.Instance}}"/>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- History list -->
+                        <Label Text="HISTORIK" Style="{StaticResource SectionLabel}"
+                               IsVisible="{Binding HasCompositionData}"/>
+                        <Border Style="{StaticResource CardFrame}" Padding="0,4"
+                                IsVisible="{Binding HasCompositionData}">
+                            <StackLayout BindableLayout.ItemsSource="{Binding CompositionEntries}" Spacing="0">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="models:BodyCompositionEntry">
+                                        <Grid ColumnDefinitions="*,Auto" Padding="16,10,12,10">
+                                            <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                                <Label Text="{Binding LoggedAt, StringFormat='{0:d MMM yyyy}'}"
+                                                       FontFamily="DMSansMedium" FontSize="14"
+                                                       TextColor="{StaticResource ForgeText}"/>
+                                                <Label Text="{Binding Summary}"
+                                                       Style="{StaticResource MutedLabel}" FontSize="12"/>
+                                            </VerticalStackLayout>
+                                            <Button Grid.Column="1"
+                                                    ImageSource="ic_trash.png" Text=""
+                                                    Style="{StaticResource SecondaryButton}"
+                                                    WidthRequest="36" HeightRequest="36" Padding="9"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:KroppViewModel}}, Path=DeleteCompositionEntryCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </StackLayout>
+                        </Border>
+
+                        <Button Text="LOGGA MÅTT"
+                                ImageSource="ic_plus.png"
+                                ContentLayout="Left, 10"
+                                Style="{StaticResource PrimaryButton}"
+                                Command="{Binding LogCompositionCommand}"/>
+
+                    </VerticalStackLayout>
+
+                    <!-- ═══ HEATMAP TAB ═══ -->
+                    <VerticalStackLayout IsVisible="{Binding IsHeatmapTab}" Spacing="14">
+
+                        <Label Text="MUSKELGRUPPER · 7 DAGAR"
+                               Style="{StaticResource SectionLabel}"/>
+
+                        <!-- Heatmap grid (byggs i code-behind) -->
+                        <Grid x:Name="HeatmapGrid"
+                              ColumnDefinitions="*,*,*,*"
+                              ColumnSpacing="8" RowSpacing="8"/>
+
+                    </VerticalStackLayout>
+
+                </VerticalStackLayout>
+            </ScrollView>
+
+            <!-- Workout banner -->
+            <Border x:Name="WorkoutBanner"
+                    IsVisible="False"
+                    BackgroundColor="{StaticResource ForgeAccent}"
+                    StrokeShape="RoundRectangle 0" StrokeThickness="0"
+                    Padding="20,12,20,28"
+                    VerticalOptions="End"
+                    ZIndex="10">
+                <Grid ColumnDefinitions="Auto,*,Auto">
+                    <Ellipse Grid.Column="0" Fill="White" Opacity="0.9"
+                             WidthRequest="8" HeightRequest="8"
+                             VerticalOptions="Center" Margin="0,0,10,0"/>
+                    <Label Grid.Column="1" Text="PASS PÅGÅR"
+                           FontFamily="BebasNeue" FontSize="16" CharacterSpacing="2"
+                           TextColor="White" VerticalOptions="Center"/>
+                    <Label Grid.Column="2" Text="ÖPPNA ›"
+                           FontFamily="BebasNeue" FontSize="14" CharacterSpacing="1"
+                           TextColor="White" Opacity="0.8" VerticalOptions="Center"/>
+                </Grid>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnWorkoutBannerTapped"/>
+                </Border.GestureRecognizers>
+            </Border>
+
+        </Grid>
+
+    </Grid>
+</ContentPage>

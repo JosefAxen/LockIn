@@ -52,6 +52,43 @@
                     </Border>
                 </Grid>
 
+                <!-- Muskelpoäng: Senaste 7 dagarna -->
+                <Border Style="{StaticResource CardFrame}" Padding="16,14" Margin="0,0,0,4">
+                    <VerticalStackLayout Spacing="0">
+                        <Label Text="SENASTE 7 DAGARNA"
+                               Style="{StaticResource SectionLabel}"
+                               Margin="0,0,0,14"/>
+                        <StackLayout BindableLayout.ItemsSource="{Binding MuscleScores}" Spacing="13">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="vm:MuscleScoreRow">
+                                    <Grid ColumnDefinitions="72,*,36" ColumnSpacing="10">
+                                        <Label Grid.Column="0"
+                                               Text="{Binding Name}"
+                                               FontFamily="BebasNeue" FontSize="14"
+                                               CharacterSpacing="0.5"
+                                               TextColor="{StaticResource ForgeText}"
+                                               VerticalOptions="Center"/>
+                                        <Grid Grid.Column="1" HeightRequest="4" VerticalOptions="Center">
+                                            <BoxView BackgroundColor="#1C1C1C" CornerRadius="2"
+                                                     HorizontalOptions="Fill" VerticalOptions="Fill"/>
+                                            <BoxView BackgroundColor="{StaticResource ForgeAccent}"
+                                                     CornerRadius="2"
+                                                     HorizontalOptions="Fill" VerticalOptions="Fill"
+                                                     AnchorX="0" ScaleX="{Binding ScaleFraction}"/>
+                                        </Grid>
+                                        <Label Grid.Column="2"
+                                               Text="{Binding ScoreText}"
+                                               TextColor="{Binding ScoreColor}"
+                                               FontFamily="BebasNeue" FontSize="15"
+                                               HorizontalOptions="End"
+                                               VerticalOptions="Center"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </StackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
                 <ActivityIndicator IsRunning="{Binding IsLoading}"
                                    IsVisible="{Binding IsLoading}"
                                    HorizontalOptions="Center" Margin="20"/>

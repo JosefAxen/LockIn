@@ -38,6 +38,8 @@ public static class MauiProgram
         builder.Services.AddTransient<LibraryViewModel>();
         builder.Services.AddTransient<SettingsPage>();
         builder.Services.AddTransient<SettingsViewModel>();
+        builder.Services.AddTransient<KroppPage>();
+        builder.Services.AddTransient<KroppViewModel>();
 
         // Navigation pages
         builder.Services.AddTransient<TemplateEditPage>();

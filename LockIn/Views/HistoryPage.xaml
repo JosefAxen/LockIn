@@ -7,79 +7,124 @@
              x:DataType="vm:HistoryViewModel"
              Title="Historik">
 
-    <Grid RowDefinitions="Auto,Auto,*">
+    <Grid RowDefinitions="Auto,*">
 
         <Grid Grid.Row="0" Padding="20,20,20,8">
             <Label Text="HISTORIK" Style="{StaticResource DisplayLabel}" FontSize="40"/>
         </Grid>
 
-        <!-- Filter + Sort controls -->
-        <StackLayout Grid.Row="1" Padding="16,0,16,8" Spacing="8">
-            <!-- Period filter -->
-            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="6">
-                <Border Grid.Column="0" BackgroundColor="{Binding Period0Bg}"
-                        StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="0,8">
-                    <Label Text="ALLT" HorizontalOptions="Center"
-                           FontFamily="BebasNeue" FontSize="14" CharacterSpacing="1"
-                           TextColor="{Binding Period0Fg}"/>
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding SelectPeriodCommand}" CommandParameter="{x:Int32 0}"/>
-                    </Border.GestureRecognizers>
-                </Border>
-                <Border Grid.Column="1" BackgroundColor="{Binding Period1Bg}"
-                        StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="0,8">
-                    <Label Text="VECKA" HorizontalOptions="Center"
-                           FontFamily="BebasNeue" FontSize="14" CharacterSpacing="1"
-                           TextColor="{Binding Period1Fg}"/>
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding SelectPeriodCommand}" CommandParameter="{x:Int32 1}"/>
-                    </Border.GestureRecognizers>
-                </Border>
-                <Border Grid.Column="2" BackgroundColor="{Binding Period2Bg}"
-                        StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="0,8">
-                    <Label Text="MÅNAD" HorizontalOptions="Center"
-                           FontFamily="BebasNeue" FontSize="14" CharacterSpacing="1"
-                           TextColor="{Binding Period2Fg}"/>
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding SelectPeriodCommand}" CommandParameter="{x:Int32 2}"/>
-                    </Border.GestureRecognizers>
-                </Border>
-            </Grid>
-            <!-- Sort toggle -->
-            <Grid ColumnDefinitions="*,*" ColumnSpacing="6">
-                <Border Grid.Column="0" BackgroundColor="{Binding Sort0Bg}"
-                        StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="0,7">
-                    <Label Text="DATUM" HorizontalOptions="Center"
-                           FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
-                           TextColor="{Binding Sort0Fg}"/>
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding SelectSortCommand}" CommandParameter="{x:Int32 0}"/>
-                    </Border.GestureRecognizers>
-                </Border>
-                <Border Grid.Column="1" BackgroundColor="{Binding Sort1Bg}"
-                        StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="0,7">
-                    <Label Text="VOLYM" HorizontalOptions="Center"
-                           FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
-                           TextColor="{Binding Sort1Fg}"/>
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding SelectSortCommand}" CommandParameter="{x:Int32 1}"/>
-                    </Border.GestureRecognizers>
-                </Border>
-            </Grid>
-        </StackLayout>
+        <Grid Grid.Row="1">
 
-        <Grid Grid.Row="2">
             <ActivityIndicator IsRunning="{Binding IsLoading}"
                                IsVisible="{Binding IsLoading}"
                                HorizontalOptions="Center"
                                VerticalOptions="Center"/>
 
-            <CollectionView ItemsSource="{Binding Sessions}"
-                            IsVisible="{Binding IsLoading, Converter={x:Static vm:InverseBoolConverter.Instance}}"
-                            Margin="16,0,16,0">
-                <CollectionView.EmptyView>
-                    <StackLayout VerticalOptions="Center" HorizontalOptions="Center"
-                                 Spacing="8" Margin="0,80,0,0">
+            <ScrollView IsVisible="{Binding IsLoading, Converter={x:Static vm:InverseBoolConverter.Instance}}">
+                <VerticalStackLayout Padding="16,4,16,100" Spacing="12">
+
+                    <!-- Kalender -->
+                    <Border Style="{StaticResource CardFrame}" Padding="14,12">
+                        <VerticalStackLayout Spacing="10">
+
+                            <!-- Månadsnavigering -->
+                            <Grid ColumnDefinitions="Auto,*,Auto">
+                                <Label Grid.Column="0" Text="‹"
+                                       FontSize="26" TextColor="{StaticResource ForgeMuted}"
+                                       VerticalOptions="Center" Padding="4,0,12,0">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding PrevMonthCommand}"/>
+                                    </Label.GestureRecognizers>
+                                </Label>
+                                <Label Grid.Column="1"
+                                       Text="{Binding CalendarTitle}"
+                                       FontFamily="BebasNeue" FontSize="18" CharacterSpacing="1"
+                                       TextColor="{StaticResource ForgeText}"
+                                       HorizontalOptions="Center" VerticalOptions="Center"/>
+                                <Label Grid.Column="2" Text="›"
+                                       FontSize="26" TextColor="{StaticResource ForgeMuted}"
+                                       VerticalOptions="Center" Padding="12,0,4,0">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding NextMonthCommand}"/>
+                                    </Label.GestureRecognizers>
+                                </Label>
+                            </Grid>
+
+                            <!-- Veckodagsrubriker -->
+                            <Grid ColumnDefinitions="*,*,*,*,*,*,*" Padding="0,2,0,0">
+                                <Label Text="M" Grid.Column="0" Style="{StaticResource SectionLabel}" FontSize="11" HorizontalOptions="Center"/>
+                                <Label Text="T" Grid.Column="1" Style="{StaticResource SectionLabel}" FontSize="11" HorizontalOptions="Center"/>
+                                <Label Text="O" Grid.Column="2" Style="{StaticResource SectionLabel}" FontSize="11" HorizontalOptions="Center"/>
+                                <Label Text="T" Grid.Column="3" Style="{StaticResource SectionLabel}" FontSize="11" HorizontalOptions="Center"/>
+                                <Label Text="F" Grid.Column="4" Style="{StaticResource SectionLabel}" FontSize="11" HorizontalOptions="Center"/>
+                                <Label Text="L" Grid.Column="5" Style="{StaticResource SectionLabel}" FontSize="11" HorizontalOptions="Center"/>
+                                <Label Text="S" Grid.Column="6" Style="{StaticResource SectionLabel}" FontSize="11" HorizontalOptions="Center"/>
+                            </Grid>
+
+                            <!-- Kalenderceller (byggs i code-behind) -->
+                            <Grid x:Name="CalendarGrid"
+                                  ColumnDefinitions="*,*,*,*,*,*,*"
+                                  ColumnSpacing="2" RowSpacing="2"/>
+
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Filter + Sort -->
+                    <StackLayout Spacing="8">
+                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="6">
+                            <Border Grid.Column="0" BackgroundColor="{Binding Period0Bg}"
+                                    StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="0,8">
+                                <Label Text="ALLT" HorizontalOptions="Center"
+                                       FontFamily="BebasNeue" FontSize="14" CharacterSpacing="1"
+                                       TextColor="{Binding Period0Fg}"/>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SelectPeriodCommand}" CommandParameter="{x:Int32 0}"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+                            <Border Grid.Column="1" BackgroundColor="{Binding Period1Bg}"
+                                    StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="0,8">
+                                <Label Text="VECKA" HorizontalOptions="Center"
+                                       FontFamily="BebasNeue" FontSize="14" CharacterSpacing="1"
+                                       TextColor="{Binding Period1Fg}"/>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SelectPeriodCommand}" CommandParameter="{x:Int32 1}"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+                            <Border Grid.Column="2" BackgroundColor="{Binding Period2Bg}"
+                                    StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="0,8">
+                                <Label Text="MÅNAD" HorizontalOptions="Center"
+                                       FontFamily="BebasNeue" FontSize="14" CharacterSpacing="1"
+                                       TextColor="{Binding Period2Fg}"/>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SelectPeriodCommand}" CommandParameter="{x:Int32 2}"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+                        </Grid>
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="6">
+                            <Border Grid.Column="0" BackgroundColor="{Binding Sort0Bg}"
+                                    StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="0,7">
+                                <Label Text="DATUM" HorizontalOptions="Center"
+                                       FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
+                                       TextColor="{Binding Sort0Fg}"/>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SelectSortCommand}" CommandParameter="{x:Int32 0}"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+                            <Border Grid.Column="1" BackgroundColor="{Binding Sort1Bg}"
+                                    StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="0,7">
+                                <Label Text="VOLYM" HorizontalOptions="Center"
+                                       FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
+                                       TextColor="{Binding Sort1Fg}"/>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SelectSortCommand}" CommandParameter="{x:Int32 1}"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+                        </Grid>
+                    </StackLayout>
+
+                    <!-- Empty state -->
+                    <StackLayout IsVisible="{Binding HasNoSessions}"
+                                 HorizontalOptions="Center" Spacing="8" Margin="0,40,0,0">
                         <Label Text="INGA PASS"
                                Style="{StaticResource DisplayLabel}"
                                FontSize="22"
@@ -90,94 +135,95 @@
                                HorizontalOptions="Center"
                                HorizontalTextAlignment="Center"/>
                     </StackLayout>
-                </CollectionView.EmptyView>
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="svc:DatabaseService+SessionSummaryRow">
-                        <Border Style="{StaticResource CardFrame}" Margin="0,0,0,10">
-                            <Grid ColumnDefinitions="4,*">
-                                <!-- Left accent strip -->
-                                <BoxView Grid.Column="0"
-                                         BackgroundColor="{StaticResource ForgeBorderLight}"
-                                         CornerRadius="16,0,0,16"/>
-                                <!-- Content -->
-                                <StackLayout Grid.Column="1" Padding="14,14,14,14" Spacing="10">
-                                    <!-- Top row: name + date -->
-                                    <Grid ColumnDefinitions="*,Auto">
-                                        <Label Grid.Column="0"
-                                               Text="{Binding TemplateName}"
-                                               FontFamily="BebasNeue" FontSize="24"
-                                               CharacterSpacing="1"
-                                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
-                                        <Label Grid.Column="1"
-                                               Text="{Binding StartedAt, StringFormat='{0:d MMM}'}"
-                                               Style="{StaticResource MutedLabel}"
-                                               FontSize="12"
-                                               VerticalOptions="Center"/>
-                                    </Grid>
-                                    <!-- Stats row -->
-                                    <Grid ColumnDefinitions="*,*,*,Auto">
-                                        <StackLayout Grid.Column="0" Spacing="1">
-                                            <Label Text="{Binding TotalVolume, StringFormat='{0:F0}'}"
-                                                   Style="{StaticResource AccentHeroNumber}"
-                                                   FontSize="28"/>
-                                            <Label Text="KG VOLYM" Style="{StaticResource SectionLabel}"/>
-                                        </StackLayout>
-                                        <StackLayout Grid.Column="1" Spacing="1">
-                                            <Label Text="{Binding TotalSets}"
-                                                   Style="{StaticResource HeroNumber}"
-                                                   FontSize="28"/>
-                                            <Label Text="SETS" Style="{StaticResource SectionLabel}"/>
-                                        </StackLayout>
-                                        <StackLayout Grid.Column="2" Spacing="1"
-                                                     IsVisible="{Binding PRCount, Converter={x:Static vm:GreaterThanZeroConverter.Instance}}">
-                                            <Label Text="{Binding PRCount}"
-                                                   FontFamily="BebasNeue" FontSize="28"
-                                                   TextColor="{StaticResource ForgeSuccess}"/>
-                                            <Label Text="PRs" Style="{StaticResource SectionLabel}"/>
-                                        </StackLayout>
-                                        <Label Grid.Column="3" Text="›"
-                                               FontSize="22"
-                                               TextColor="{StaticResource ForgeMuted}"
-                                               VerticalOptions="Center"/>
-                                    </Grid>
-                                </StackLayout>
-                            </Grid>
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer
-                                    Tapped="OnSessionTapped"
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HistoryViewModel}}, Path=OpenSessionCommand}"
-                                    CommandParameter="{Binding .}"/>
-                            </Border.GestureRecognizers>
-                        </Border>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </Grid>
 
-        <!-- Active workout banner — overlay, alltid i botten -->
-        <Border x:Name="WorkoutBanner"
-                Grid.Row="0" Grid.RowSpan="3"
-                IsVisible="False"
-                BackgroundColor="{StaticResource ForgeAccent}"
-                StrokeShape="RoundRectangle 0" StrokeThickness="0"
-                Padding="20,12,20,28"
-                VerticalOptions="End"
-                ZIndex="10">
-            <Grid ColumnDefinitions="Auto,*,Auto">
-                <Ellipse Grid.Column="0" Fill="White" Opacity="0.9"
-                         WidthRequest="8" HeightRequest="8"
-                         VerticalOptions="Center" Margin="0,0,10,0"/>
-                <Label Grid.Column="1" Text="PASS PÅGÅR"
-                       FontFamily="BebasNeue" FontSize="16" CharacterSpacing="2"
-                       TextColor="White" VerticalOptions="Center"/>
-                <Label Grid.Column="2" Text="ÖPPNA ›"
-                       FontFamily="BebasNeue" FontSize="14" CharacterSpacing="1"
-                       TextColor="White" Opacity="0.8" VerticalOptions="Center"/>
-            </Grid>
-            <Border.GestureRecognizers>
-                <TapGestureRecognizer Tapped="OnWorkoutBannerTapped"/>
-            </Border.GestureRecognizers>
-        </Border>
+                    <!-- Session list -->
+                    <StackLayout BindableLayout.ItemsSource="{Binding Sessions}" Spacing="0">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="svc:DatabaseService+SessionSummaryRow">
+                                <Border Style="{StaticResource CardFrame}" Margin="0,0,0,10">
+                                    <Grid ColumnDefinitions="4,*">
+                                        <BoxView Grid.Column="0"
+                                                 BackgroundColor="{StaticResource ForgeBorderLight}"
+                                                 CornerRadius="16,0,0,16"/>
+                                        <StackLayout Grid.Column="1" Padding="14,14,14,14" Spacing="10">
+                                            <Grid ColumnDefinitions="*,Auto">
+                                                <Label Grid.Column="0"
+                                                       Text="{Binding TemplateName}"
+                                                       FontFamily="BebasNeue" FontSize="24"
+                                                       CharacterSpacing="1"
+                                                       TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                                                <Label Grid.Column="1"
+                                                       Text="{Binding StartedAt, StringFormat='{0:d MMM}'}"
+                                                       Style="{StaticResource MutedLabel}"
+                                                       FontSize="12"
+                                                       VerticalOptions="Center"/>
+                                            </Grid>
+                                            <Grid ColumnDefinitions="*,*,*,Auto">
+                                                <StackLayout Grid.Column="0" Spacing="1">
+                                                    <Label Text="{Binding TotalVolume, StringFormat='{0:F0}'}"
+                                                           Style="{StaticResource AccentHeroNumber}"
+                                                           FontSize="28"/>
+                                                    <Label Text="KG VOLYM" Style="{StaticResource SectionLabel}"/>
+                                                </StackLayout>
+                                                <StackLayout Grid.Column="1" Spacing="1">
+                                                    <Label Text="{Binding TotalSets}"
+                                                           Style="{StaticResource HeroNumber}"
+                                                           FontSize="28"/>
+                                                    <Label Text="SETS" Style="{StaticResource SectionLabel}"/>
+                                                </StackLayout>
+                                                <StackLayout Grid.Column="2" Spacing="1"
+                                                             IsVisible="{Binding PRCount, Converter={x:Static vm:GreaterThanZeroConverter.Instance}}">
+                                                    <Label Text="{Binding PRCount}"
+                                                           FontFamily="BebasNeue" FontSize="28"
+                                                           TextColor="{StaticResource ForgeSuccess}"/>
+                                                    <Label Text="PRs" Style="{StaticResource SectionLabel}"/>
+                                                </StackLayout>
+                                                <Label Grid.Column="3" Text="›"
+                                                       FontSize="22"
+                                                       TextColor="{StaticResource ForgeMuted}"
+                                                       VerticalOptions="Center"/>
+                                            </Grid>
+                                        </StackLayout>
+                                    </Grid>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Tapped="OnSessionTapped"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HistoryViewModel}}, Path=OpenSessionCommand}"
+                                            CommandParameter="{Binding .}"/>
+                                    </Border.GestureRecognizers>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </StackLayout>
+
+                </VerticalStackLayout>
+            </ScrollView>
+
+            <!-- Active workout banner -->
+            <Border x:Name="WorkoutBanner"
+                    IsVisible="False"
+                    BackgroundColor="{StaticResource ForgeAccent}"
+                    StrokeShape="RoundRectangle 0" StrokeThickness="0"
+                    Padding="20,12,20,28"
+                    VerticalOptions="End"
+                    ZIndex="10">
+                <Grid ColumnDefinitions="Auto,*,Auto">
+                    <Ellipse Grid.Column="0" Fill="White" Opacity="0.9"
+                             WidthRequest="8" HeightRequest="8"
+                             VerticalOptions="Center" Margin="0,0,10,0"/>
+                    <Label Grid.Column="1" Text="PASS PÅGÅR"
+                           FontFamily="BebasNeue" FontSize="16" CharacterSpacing="2"
+                           TextColor="White" VerticalOptions="Center"/>
+                    <Label Grid.Column="2" Text="ÖPPNA ›"
+                           FontFamily="BebasNeue" FontSize="14" CharacterSpacing="1"
+                           TextColor="White" Opacity="0.8" VerticalOptions="Center"/>
+                </Grid>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnWorkoutBannerTapped"/>
+                </Border.GestureRecognizers>
+            </Border>
+
+        </Grid>
 
     </Grid>
 </ContentPage>

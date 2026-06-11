@@ -30,6 +30,7 @@ public class DatabaseService
         await _db.CreateTableAsync<LoggedSet>();
         await _db.CreateTableAsync<AppSettings>();
         await _db.CreateTableAsync<BodyWeightEntry>();
+        await _db.CreateTableAsync<BodyCompositionEntry>();
 
         try { await _db.ExecuteAsync("ALTER TABLE WorkoutTemplates ADD COLUMN ProgramId TEXT NULL"); } catch { }
 
@@ -397,8 +398,68 @@ public class DatabaseService
         await _db.DeleteAllAsync<TemplateExercise>();
         await _db.DeleteAllAsync<WorkoutTemplate>();
         await _db.DeleteAllAsync<Exercise>();
+        await _db.DeleteAllAsync<BodyWeightEntry>();
+        await _db.DeleteAllAsync<BodyCompositionEntry>();
         await SeedAsync();
         return 0;
+    }
+
+    // ── Muscle scores ──────────────────────────────────────────────────────
+
+    public async Task<Dictionary<MuscleGroup, double>> GetMuscleScoresAsync()
+    {
+        await InitAsync();
+        var cutoff = DateTime.Now.AddDays(-7);
+        var rows = await _db.QueryAsync<MuscleSetRow>(
+            @"SELECT e.MuscleGroup, ls.RIR
+              FROM LoggedSets ls
+              JOIN SessionExercises se ON se.Id = ls.SessionExerciseId
+              JOIN Exercises e ON e.Id = se.ExerciseId
+              JOIN WorkoutSessions ws ON ws.Id = se.SessionId
+              WHERE ws.CompletedAt IS NOT NULL
+                AND ws.StartedAt >= ?
+                AND (ls.SetType = 0 OR ls.SetType IS NULL)", cutoff);
+
+        var result = new Dictionary<MuscleGroup, double>();
+        foreach (var g in rows.GroupBy(r => (MuscleGroup)r.MuscleGroup))
+        {
+            var sets = g.ToList();
+            var avgIntensity = sets.Average(s => 1.0 - Math.Max(s.RIR, 0) / 6.0);
+            var score = Math.Min(sets.Count * avgIntensity, 10.0);
+            result[g.Key] = Math.Round(score, 1);
+        }
+        return result;
+    }
+
+    public async Task<HashSet<int>> GetTrainedDaysInMonthAsync(int year, int month)
+    {
+        await InitAsync();
+        var rows = await _db.QueryAsync<SessionDateRow>(
+            "SELECT StartedAt FROM WorkoutSessions WHERE CompletedAt IS NOT NULL");
+        return rows
+            .Where(r => r.StartedAt.Year == year && r.StartedAt.Month == month)
+            .Select(r => r.StartedAt.Day)
+            .ToHashSet();
+    }
+
+    // ── Body composition ───────────────────────────────────────────────────
+
+    public async Task<List<BodyCompositionEntry>> GetBodyCompositionEntriesAsync()
+    {
+        await InitAsync();
+        return await _db.Table<BodyCompositionEntry>().OrderByDescending(e => e.LoggedAt).ToListAsync();
+    }
+
+    public async Task<int> SaveBodyCompositionEntryAsync(BodyCompositionEntry entry)
+    {
+        await InitAsync();
+        return entry.Id == 0 ? await _db.InsertAsync(entry) : await _db.UpdateAsync(entry);
+    }
+
+    public async Task<int> DeleteBodyCompositionEntryAsync(BodyCompositionEntry entry)
+    {
+        await InitAsync();
+        return await _db.DeleteAsync(entry);
     }
 
     public class SessionSummaryRow
@@ -447,6 +508,12 @@ public class DatabaseService
     private class SessionDateRow
     {
         public DateTime StartedAt { get; set; }
+    }
+
+    private class MuscleSetRow
+    {
+        public int MuscleGroup { get; set; }
+        public int RIR { get; set; }
     }
 
     // ── Settings ───────────────────────────────────────────────────────────

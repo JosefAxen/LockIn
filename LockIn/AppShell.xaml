@@ -19,10 +19,10 @@
                       Icon="tab_library.png"
                       Route="LibraryPage"
                       ContentTemplate="{DataTemplate views:LibraryPage}" />
-        <ShellContent Title="Inställningar"
-                      Icon="tab_settings.png"
-                      Route="SettingsPage"
-                      ContentTemplate="{DataTemplate views:SettingsPage}" />
+        <ShellContent Title="Kropp"
+                      Icon="ic_scale.png"
+                      Route="KroppPage"
+                      ContentTemplate="{DataTemplate views:KroppPage}" />
     </TabBar>
 
 </Shell>

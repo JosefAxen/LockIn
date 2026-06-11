@@ -12,6 +12,7 @@ public partial class TrainViewModel(DatabaseService db) : ObservableObject
 {
     public ObservableCollection<ProgramGroup> ProgramGroups { get; } = new();
     public ObservableCollection<WorkoutTemplate> FreeTemplates { get; } = new();
+    public ObservableCollection<MuscleScoreRow> MuscleScores { get; } = new();
 
     [ObservableProperty] private bool _isLoading;
     [ObservableProperty] private bool _hasNoTemplates;
@@ -25,7 +26,6 @@ public partial class TrainViewModel(DatabaseService db) : ObservableObject
         IsLoading = true;
         var templates = await db.GetTemplatesAsync();
 
-        // Group by program
         ProgramGroups.Clear();
         var grouped = templates
             .Where(t => t.ProgramId != null)
@@ -43,7 +43,6 @@ public partial class TrainViewModel(DatabaseService db) : ObservableObject
             ProgramGroups.Add(pg);
         }
 
-        // Free templates (no program)
         FreeTemplates.Clear();
         foreach (var t in templates.Where(t => t.ProgramId == null))
             FreeTemplates.Add(t);
@@ -54,6 +53,39 @@ public partial class TrainViewModel(DatabaseService db) : ObservableObject
         WeekCount = await db.GetSessionCountThisWeekAsync();
         Streak = await db.GetCurrentStreakAsync();
         TotalCount = await db.GetTotalCompletedSessionCountAsync();
+
+        // Feature 5: Restday popup after 7+ consecutive training days
+        if (Streak >= 7)
+        {
+            var lastTicks = Preferences.Default.Get("last_restday_popup", 0L);
+            if (lastTicks == 0L || DateTime.Now.AddDays(-7) > new DateTime(lastTicks))
+            {
+                Preferences.Default.Set("last_restday_popup", DateTime.Now.Ticks);
+                await Shell.Current.DisplayAlert(
+                    "Kom ihåg att vila",
+                    $"Du har tränat {Streak} dagar i rad — det är viktigt att lyssna på kroppen. Vila är en del av träningen.",
+                    "Förstår");
+            }
+        }
+
+        // Feature 1: Muscle score bars (senaste 7 dagarna)
+        var scoreData = await db.GetMuscleScoresAsync();
+        MuscleScores.Clear();
+        var muscles = new (MuscleGroup mg, string name)[]
+        {
+            (MuscleGroup.Chest,    "BRÖST"),
+            (MuscleGroup.Back,     "RYGG"),
+            (MuscleGroup.Shoulders,"AXLAR"),
+            (MuscleGroup.Biceps,   "BICEPS"),
+            (MuscleGroup.Triceps,  "TRICEPS"),
+            (MuscleGroup.Legs,     "BEN"),
+            (MuscleGroup.Core,     "CORE"),
+        };
+        foreach (var (mg, name) in muscles)
+        {
+            var score = scoreData.TryGetValue(mg, out var s) ? s : 0.0;
+            MuscleScores.Add(new MuscleScoreRow { Name = name, Score = score });
+        }
 
         IsLoading = false;
     }
@@ -87,8 +119,18 @@ public partial class TrainViewModel(DatabaseService db) : ObservableObject
         if (!confirmed) return;
         await db.DeleteTemplateAsync(template);
         FreeTemplates.Remove(template);
-        // Also remove from program groups if present
         foreach (var pg in ProgramGroups)
             pg.Templates.Remove(template);
     }
+}
+
+public class MuscleScoreRow
+{
+    public string Name { get; set; } = "";
+    public double Score { get; set; }
+    public double ScaleFraction => Score / 10.0;
+    public string ScoreText => Score >= 0.05 ? Score.ToString("F1") : "—";
+    public Color ScoreColor => Score >= 0.05
+        ? Color.FromArgb("#FF5A1F")
+        : Color.FromArgb("#303038");
 }
