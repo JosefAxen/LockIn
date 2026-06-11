@@ -103,7 +103,7 @@
                 <Border Style="{StaticResource CardFrame}" Padding="16,14">
                     <VerticalStackLayout Spacing="8">
                         <Label Text="ANTECKNINGAR" Style="{StaticResource SectionLabel}"/>
-                        <Border BackgroundColor="#1A1A1A" Stroke="#2A2A2A" StrokeThickness="1"
+                        <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}" Stroke="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorder}}" StrokeThickness="1"
                                 StrokeShape="RoundRectangle 8">
                             <Editor Text="{Binding ExerciseNotes}"
                                     Placeholder="Anteckningar om övningen, tips, form-cues..."

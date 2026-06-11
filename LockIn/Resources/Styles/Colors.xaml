@@ -4,30 +4,47 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <!-- Forge dark palette — pure black foundation -->
-    <Color x:Key="ForgeBackground">#080808</Color>
-    <Color x:Key="ForgeSurface">#111111</Color>
-    <Color x:Key="ForgeSurface2">#1A1A1A</Color>
-    <Color x:Key="ForgeSurface3">#222222</Color>
-    <Color x:Key="ForgeAccent">#FF5A1F</Color>
-    <Color x:Key="ForgeAccentDim">#1FFF5A1F</Color>
-    <Color x:Key="ForgeAccentGlow">#0FFF5A1F</Color>
-    <Color x:Key="ForgeText">#F0F0F0</Color>
-    <Color x:Key="ForgeTextSecondary">#A0A0A8</Color>
-    <Color x:Key="ForgeMuted">#484850</Color>
-    <Color x:Key="ForgeBorder">#222224</Color>
-    <Color x:Key="ForgeBorderLight">#303035</Color>
+    <!-- ═══ Dark palette ═══ -->
+    <Color x:Key="ForgeBackground">#121212</Color>
+    <Color x:Key="ForgeSurface">#171717</Color>
+    <Color x:Key="ForgeSurface2">#242424</Color>
+    <Color x:Key="ForgeSurface3">#313131</Color>
+
+    <!-- Accent: ring / highlight color — used for text, indicators, progress bars -->
+    <Color x:Key="ForgeAccent">#4ADE80</Color>
+    <!-- Primary: button background in dark mode -->
+    <Color x:Key="ForgePrimary">#006239</Color>
+    <!-- Text on primary buttons in dark mode -->
+    <Color x:Key="ForgePrimaryForeground">#DDE8E3</Color>
+
+    <!-- Tinted accent surfaces -->
+    <Color x:Key="ForgeAccentDim">#1F4ADE80</Color>
+    <Color x:Key="ForgeAccentGlow">#0F4ADE80</Color>
+
+    <Color x:Key="ForgeText">#E2E8F0</Color>
+    <Color x:Key="ForgeTextSecondary">#A2A2A2</Color>
+    <Color x:Key="ForgeMuted">#A2A2A2</Color>
+    <Color x:Key="ForgeBorder">#292929</Color>
+    <Color x:Key="ForgeBorderLight">#393939</Color>
+
+    <!-- Success — same hue as accent in this palette -->
     <Color x:Key="ForgeSuccess">#4ADE80</Color>
     <Color x:Key="ForgeSuccessDim">#1F4ADE80</Color>
-    <Color x:Key="ForgeDestructive">#FF3B30</Color>
 
-    <!-- Light mode -->
-    <Color x:Key="LightBackground">#F2F2F7</Color>
+    <Color x:Key="ForgeDestructive">#CA3214</Color>
+
+    <!-- ═══ Light palette ═══ -->
+    <Color x:Key="LightBackground">#FCFCFC</Color>
     <Color x:Key="LightSurface">#FFFFFF</Color>
-    <Color x:Key="LightSurface2">#EBEBF0</Color>
-    <Color x:Key="LightText">#0D0D0D</Color>
-    <Color x:Key="LightMuted">#8E8E93</Color>
-    <Color x:Key="LightBorder">#DCDCE0</Color>
+    <Color x:Key="LightSurface2">#EDEDED</Color>
+    <Color x:Key="LightText">#171717</Color>
+    <Color x:Key="LightMuted">#606060</Color>
+    <Color x:Key="LightBorder">#DFDFDF</Color>
+
+    <!-- Accent / primary for light mode -->
+    <Color x:Key="LightAccent">#72E3AD</Color>
+    <!-- Text on primary buttons in light mode -->
+    <Color x:Key="LightPrimaryForeground">#1E2723</Color>
 
     <SolidColorBrush x:Key="ForgeAccentBrush" Color="{StaticResource ForgeAccent}" />
     <SolidColorBrush x:Key="ForgeSurfaceBrush" Color="{StaticResource ForgeSurface}" />

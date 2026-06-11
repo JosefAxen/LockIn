@@ -99,7 +99,7 @@
                                                TextColor="{StaticResource ForgeText}"
                                                VerticalOptions="Center"/>
                                         <Grid Grid.Column="1" HeightRequest="4" VerticalOptions="Center">
-                                            <BoxView BackgroundColor="#1C1C1C" CornerRadius="2"
+                                            <BoxView BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface3}}" CornerRadius="2"
                                                      HorizontalOptions="Fill" VerticalOptions="Fill"/>
                                             <BoxView BackgroundColor="{StaticResource ForgeAccent}"
                                                      CornerRadius="2"
