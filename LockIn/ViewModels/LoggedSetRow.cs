@@ -14,5 +14,8 @@ public partial class LoggedSetRow : ObservableObject
     [ObservableProperty] private bool _isCompleted;
     [ObservableProperty] private bool _isPR;
 
+    public string PrevWeightHint { get; init; } = "";
+    public string PrevRepsHint { get; init; } = "";
+
     public string RirDisplay => _rir >= 0 ? _rir.ToString() : "RIR";
 }

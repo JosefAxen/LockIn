@@ -158,6 +158,21 @@ public class DatabaseService
               WHERE se.ExerciseId = ?
               ORDER BY ls.LoggedAt DESC", exerciseId);
 
+    public async Task<List<LoggedSet>> GetLastSessionSetsAsync(int exerciseId, int excludeSessionId)
+    {
+        var sets = await _db.QueryAsync<LoggedSet>(
+            @"SELECT ls.* FROM LoggedSets ls
+              JOIN SessionExercises se ON se.Id = ls.SessionExerciseId
+              JOIN WorkoutSessions ws ON ws.Id = se.SessionId
+              WHERE se.ExerciseId = ? AND ws.Id != ? AND ws.CompletedAt IS NOT NULL
+              ORDER BY ws.StartedAt DESC, ls.SetNumber ASC",
+            exerciseId, excludeSessionId);
+
+        if (sets.Count == 0) return sets;
+        var latestSeId = sets[0].SessionExerciseId;
+        return sets.Where(s => s.SessionExerciseId == latestSeId).ToList();
+    }
+
     // ── History ────────────────────────────────────────────────────────────
 
     public async Task<List<(DateTime Date, decimal WeightKg, int Reps, double Epley1RM, bool IsPR)>> GetBestSetPerSessionForExerciseAsync(int exerciseId)

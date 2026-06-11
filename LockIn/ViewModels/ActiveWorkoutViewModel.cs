@@ -83,15 +83,20 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             RestSeconds = restSeconds
         };
 
+        var prevSets = await db.GetLastSessionSetsAsync(exercise.Id, _session!.Id);
+
         for (int s = 1; s <= sets; s++)
         {
+            var prev = prevSets.ElementAtOrDefault(s - 1);
             section.Sets.Add(new LoggedSetRow
             {
                 SessionExerciseId = se.Id,
                 ExerciseId = exercise.Id,
                 SetNumber = s,
                 WeightText = targetWeight > 0 ? targetWeight.ToString() : "",
-                RepsText = reps.ToString()
+                RepsText = reps.ToString(),
+                PrevWeightHint = prev is { WeightKg: > 0 } ? prev.WeightKg.ToString("G") : "",
+                PrevRepsHint = prev is { Reps: > 0 } ? prev.Reps.ToString() : ""
             });
         }
 

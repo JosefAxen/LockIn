@@ -122,6 +122,8 @@
                                                             StrokeThickness="0" Padding="4,2">
                                                         <Entry Text="{Binding WeightText}"
                                                                Keyboard="Numeric"
+                                                               Placeholder="{Binding PrevWeightHint}"
+                                                               PlaceholderColor="{StaticResource ForgeTextSecondary}"
                                                                HorizontalTextAlignment="Center"
                                                                FontFamily="DMSansMedium" FontSize="15"
                                                                BackgroundColor="Transparent"
@@ -141,6 +143,8 @@
                                                             StrokeThickness="0" Padding="4,2">
                                                         <Entry Text="{Binding RepsText}"
                                                                Keyboard="Numeric"
+                                                               Placeholder="{Binding PrevRepsHint}"
+                                                               PlaceholderColor="{StaticResource ForgeTextSecondary}"
                                                                HorizontalTextAlignment="Center"
                                                                FontFamily="DMSansMedium" FontSize="15"
                                                                BackgroundColor="Transparent"
