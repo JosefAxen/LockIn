@@ -172,7 +172,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             _               => "Normal"
         };
 
-        var choice = await Shell.Current.DisplayActionSheetAsync(
+        var choice = await Application.Current!.MainPage!.DisplayActionSheetAsync(
             $"Settyp (nu: {current})", "Avbryt", null,
             "Normal", "Uppvärmning (W)", "Tidsbaserat (⏱)", "Dropset (↓)");
 
