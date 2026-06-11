@@ -424,7 +424,8 @@ public class DatabaseService
         foreach (var g in rows.GroupBy(r => (MuscleGroup)r.MuscleGroup))
         {
             var sets = g.ToList();
-            var avgIntensity = sets.Average(s => 1.0 - Math.Max(s.RIR, 0) / 6.0);
+            // NULL RIR → treat as moderate effort (RIR 3 = 0.5 intensity) rather than max
+            var avgIntensity = sets.Average(s => 1.0 - Math.Max(s.RIR ?? 3, 0) / 6.0);
             var score = Math.Min(sets.Count * avgIntensity, 10.0);
             result[g.Key] = Math.Round(score, 1);
         }
@@ -434,12 +435,12 @@ public class DatabaseService
     public async Task<HashSet<int>> GetTrainedDaysInMonthAsync(int year, int month)
     {
         await InitAsync();
+        var start = new DateTime(year, month, 1);
+        var end   = start.AddMonths(1);
         var rows = await _db.QueryAsync<SessionDateRow>(
-            "SELECT StartedAt FROM WorkoutSessions WHERE CompletedAt IS NOT NULL");
-        return rows
-            .Where(r => r.StartedAt.Year == year && r.StartedAt.Month == month)
-            .Select(r => r.StartedAt.Day)
-            .ToHashSet();
+            "SELECT StartedAt FROM WorkoutSessions WHERE CompletedAt IS NOT NULL AND StartedAt >= ? AND StartedAt < ?",
+            start, end);
+        return rows.Select(r => r.StartedAt.Day).ToHashSet();
     }
 
     // ── Body composition ───────────────────────────────────────────────────
@@ -513,7 +514,7 @@ public class DatabaseService
     private class MuscleSetRow
     {
         public int MuscleGroup { get; set; }
-        public int RIR { get; set; }
+        public int? RIR { get; set; }
     }
 
     // ── Settings ───────────────────────────────────────────────────────────

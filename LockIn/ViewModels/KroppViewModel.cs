@@ -38,19 +38,12 @@ public partial class KroppViewModel(DatabaseService db) : ObservableObject
     public bool IsKroppTab => SelectedTab == 1;
     public bool IsHeatmapTab => SelectedTab == 2;
 
-    private static Color TabInactiveBg =>
-        Application.Current?.RequestedTheme == AppTheme.Dark
-            ? Color.FromArgb("#1A1A1A") : Color.FromArgb("#EBEBF0");
-    private static Color TabInactiveFg =>
-        Application.Current?.RequestedTheme == AppTheme.Dark
-            ? Color.FromArgb("#505058") : Color.FromArgb("#8E8E93");
-
-    public Color Tab0Bg => SelectedTab == 0 ? Color.FromArgb("#FF5A1F") : TabInactiveBg;
-    public Color Tab0Fg => SelectedTab == 0 ? Colors.White : TabInactiveFg;
-    public Color Tab1Bg => SelectedTab == 1 ? Color.FromArgb("#FF5A1F") : TabInactiveBg;
-    public Color Tab1Fg => SelectedTab == 1 ? Colors.White : TabInactiveFg;
-    public Color Tab2Bg => SelectedTab == 2 ? Color.FromArgb("#FF5A1F") : TabInactiveBg;
-    public Color Tab2Fg => SelectedTab == 2 ? Colors.White : TabInactiveFg;
+    public Color Tab0Bg => SelectedTab == 0 ? TabColorHelper.ActiveBg : TabColorHelper.InactiveBg;
+    public Color Tab0Fg => SelectedTab == 0 ? TabColorHelper.ActiveFg : TabColorHelper.InactiveFg;
+    public Color Tab1Bg => SelectedTab == 1 ? TabColorHelper.ActiveBg : TabColorHelper.InactiveBg;
+    public Color Tab1Fg => SelectedTab == 1 ? TabColorHelper.ActiveFg : TabColorHelper.InactiveFg;
+    public Color Tab2Bg => SelectedTab == 2 ? TabColorHelper.ActiveBg : TabColorHelper.InactiveBg;
+    public Color Tab2Fg => SelectedTab == 2 ? TabColorHelper.ActiveFg : TabColorHelper.InactiveFg;
 
     partial void OnSelectedTabChanged(int value)
     {
@@ -71,7 +64,15 @@ public partial class KroppViewModel(DatabaseService db) : ObservableObject
         await LoadWeightDataAsync();
         await LoadCompositionDataAsync();
         await LoadHeatmapAsync();
+        RefreshTabColors();
         IsLoading = false;
+    }
+
+    private void RefreshTabColors()
+    {
+        OnPropertyChanged(nameof(Tab0Bg)); OnPropertyChanged(nameof(Tab0Fg));
+        OnPropertyChanged(nameof(Tab1Bg)); OnPropertyChanged(nameof(Tab1Fg));
+        OnPropertyChanged(nameof(Tab2Bg)); OnPropertyChanged(nameof(Tab2Fg));
     }
 
     private async Task LoadWeightDataAsync()

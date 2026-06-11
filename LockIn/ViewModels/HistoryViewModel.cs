@@ -27,14 +27,10 @@ public partial class HistoryViewModel(DatabaseService db) : ObservableObject
 
     public event Action? CalendarChanged;
 
-    private static Color TabActiveBg  => Color.FromArgb("#FF5A1F");
-    private static Color TabActiveFg  => Colors.White;
-    private static Color TabInactiveBg =>
-        Application.Current?.RequestedTheme == AppTheme.Dark
-            ? Color.FromArgb("#1A1A1A") : Color.FromArgb("#EBEBF0");
-    private static Color TabInactiveFg =>
-        Application.Current?.RequestedTheme == AppTheme.Dark
-            ? Color.FromArgb("#505058") : Color.FromArgb("#8E8E93");
+    private static Color TabActiveBg  => TabColorHelper.ActiveBg;
+    private static Color TabActiveFg  => TabColorHelper.ActiveFg;
+    private static Color TabInactiveBg => TabColorHelper.InactiveBg;
+    private static Color TabInactiveFg => TabColorHelper.InactiveFg;
 
     // Period tab colors
     public Color Period0Bg => SelectedPeriod == 0 ? TabActiveBg : TabInactiveBg;
@@ -56,6 +52,7 @@ public partial class HistoryViewModel(DatabaseService db) : ObservableObject
         OnPropertyChanged(nameof(Period1Bg)); OnPropertyChanged(nameof(Period1Fg));
         OnPropertyChanged(nameof(Period2Bg)); OnPropertyChanged(nameof(Period2Fg));
         SelectedCalendarDay = 0;
+        CalendarChanged?.Invoke();
         ApplyFilterSort();
     }
 
@@ -78,7 +75,17 @@ public partial class HistoryViewModel(DatabaseService db) : ObservableObject
         _allSessions = await db.GetCompletedSessionsAsync();
         await RefreshCalendarAsync();
         ApplyFilterSort();
+        RefreshTabColors();
         IsLoading = false;
+    }
+
+    private void RefreshTabColors()
+    {
+        OnPropertyChanged(nameof(Period0Bg)); OnPropertyChanged(nameof(Period0Fg));
+        OnPropertyChanged(nameof(Period1Bg)); OnPropertyChanged(nameof(Period1Fg));
+        OnPropertyChanged(nameof(Period2Bg)); OnPropertyChanged(nameof(Period2Fg));
+        OnPropertyChanged(nameof(Sort0Bg)); OnPropertyChanged(nameof(Sort0Fg));
+        OnPropertyChanged(nameof(Sort1Bg)); OnPropertyChanged(nameof(Sort1Fg));
     }
 
     private async Task RefreshCalendarAsync()

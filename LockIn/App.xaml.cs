@@ -9,6 +9,9 @@ public partial class App : Application
         InitializeComponent();
         InitDbAsync(db);
         _ = notifications.RequestPermissionAsync();
+#if IOS
+        RequestedThemeChanged += (_, _) => AppDelegate.ConfigureTabBarAppearance();
+#endif
     }
 
     private static async void InitDbAsync(DatabaseService db)

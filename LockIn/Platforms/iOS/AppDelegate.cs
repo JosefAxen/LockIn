@@ -15,7 +15,7 @@ public class AppDelegate : MauiUIApplicationDelegate
 		return result;
 	}
 
-	private static void ConfigureTabBarAppearance()
+	internal static void ConfigureTabBarAppearance()
 	{
 		var accent = UIColor.FromRGB(0xFF, 0x5A, 0x1F);
 		var unselected = UIColor.FromDynamicProvider(t =>

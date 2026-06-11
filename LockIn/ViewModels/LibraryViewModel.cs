@@ -19,14 +19,10 @@ public partial class LibraryViewModel(DatabaseService db) : ObservableObject
     public bool ShowPrograms  => SelectedTab == 2;
     public bool ShowActionButton => SelectedTab < 2;
 
-    private static Color ActiveTabBg  => Color.FromArgb("#FF5A1F");
-    private static Color ActiveTabFg  => Colors.White;
-    private static Color InactiveTabBg =>
-        Application.Current?.RequestedTheme == AppTheme.Dark
-            ? Color.FromArgb("#1A1A1A") : Color.FromArgb("#EBEBF0");
-    private static Color InactiveTabFg =>
-        Application.Current?.RequestedTheme == AppTheme.Dark
-            ? Color.FromArgb("#505058") : Color.FromArgb("#8E8E93");
+    private static Color ActiveTabBg  => TabColorHelper.ActiveBg;
+    private static Color ActiveTabFg  => TabColorHelper.ActiveFg;
+    private static Color InactiveTabBg => TabColorHelper.InactiveBg;
+    private static Color InactiveTabFg => TabColorHelper.InactiveFg;
 
     public Color Tab0Bg => SelectedTab == 0 ? ActiveTabBg  : InactiveTabBg;
     public Color Tab1Bg => SelectedTab == 1 ? ActiveTabBg  : InactiveTabBg;
@@ -82,7 +78,15 @@ public partial class LibraryViewModel(DatabaseService db) : ObservableObject
 
         ApplyFilter();
         if (SelectedTab == 1) await LoadTemplatesAsync();
+        RefreshTabColors();
         IsLoading = false;
+    }
+
+    private void RefreshTabColors()
+    {
+        OnPropertyChanged(nameof(Tab0Bg)); OnPropertyChanged(nameof(Tab0Fg));
+        OnPropertyChanged(nameof(Tab1Bg)); OnPropertyChanged(nameof(Tab1Fg));
+        OnPropertyChanged(nameof(Tab2Bg)); OnPropertyChanged(nameof(Tab2Fg));
     }
 
     [RelayCommand]

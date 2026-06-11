@@ -14,7 +14,7 @@
         <Setter Property="Shell.ForegroundColor" Value="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}" />
         <Setter Property="Shell.TitleColor" Value="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}" />
         <Setter Property="Shell.DisabledColor" Value="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}" />
-        <Setter Property="Shell.UnselectedColor" Value="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}" />
+        <Setter Property="Shell.UnselectedColor" Value="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeTextSecondary}}" />
         <Setter Property="Shell.NavBarHasShadow" Value="False" />
         <Setter Property="Shell.TabBarBackgroundColor" Value="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}" />
         <Setter Property="Shell.TabBarForegroundColor" Value="{AppThemeBinding Light={StaticResource ForgeAccent}, Dark={StaticResource ForgeAccent}}" />
@@ -109,12 +109,12 @@
     <Style x:Key="CardFrame" TargetType="Border">
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}" />
         <Setter Property="StrokeShape" Value="RoundRectangle 16" />
-        <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorder}}" />
+        <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorderLight}}" />
         <Setter Property="StrokeThickness" Value="1" />
         <Setter Property="Padding" Value="0" />
         <Setter Property="Shadow">
             <Setter.Value>
-                <Shadow Brush="Black" Offset="0,2" Radius="10" Opacity="0.08" />
+                <Shadow Brush="Black" Offset="0,3" Radius="12" Opacity="0.12" />
             </Setter.Value>
         </Setter>
     </Style>
