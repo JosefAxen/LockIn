@@ -123,6 +123,31 @@
             </StackLayout>
         </ScrollView>
 
+        <!-- Active workout banner — overlay, alltid i botten -->
+        <Border x:Name="WorkoutBanner"
+                Grid.Row="0" Grid.RowSpan="2"
+                IsVisible="False"
+                BackgroundColor="{StaticResource ForgeAccent}"
+                StrokeShape="RoundRectangle 0" StrokeThickness="0"
+                Padding="20,12,20,28"
+                VerticalOptions="End"
+                ZIndex="10">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <Ellipse Grid.Column="0" Fill="White" Opacity="0.9"
+                         WidthRequest="8" HeightRequest="8"
+                         VerticalOptions="Center" Margin="0,0,10,0"/>
+                <Label Grid.Column="1" Text="PASS PÅGÅR"
+                       FontFamily="BebasNeue" FontSize="16" CharacterSpacing="2"
+                       TextColor="White" VerticalOptions="Center"/>
+                <Label Grid.Column="2" Text="ÖPPNA ›"
+                       FontFamily="BebasNeue" FontSize="14" CharacterSpacing="1"
+                       TextColor="White" Opacity="0.8" VerticalOptions="Center"/>
+            </Grid>
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnWorkoutBannerTapped"/>
+            </Border.GestureRecognizers>
+        </Border>
+
     </Grid>
 
 </ContentPage>

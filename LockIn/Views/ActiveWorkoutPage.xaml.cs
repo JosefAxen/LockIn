@@ -14,7 +14,11 @@ public partial class ActiveWorkoutPage : ContentPage
     {
         var confirmed = await DisplayAlert("Avbryt pass", "Lämna utan att avsluta?", "Ja", "Nej");
         if (confirmed)
+        {
+            var vm = BindingContext as ActiveWorkoutViewModel;
+            vm?.ForceDeactivate();
             await Shell.Current.GoToAsync("..");
+        }
     }
 
     private void OnRirTapped(object sender, TappedEventArgs e)

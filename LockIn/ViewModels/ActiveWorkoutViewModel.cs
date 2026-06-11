@@ -8,7 +8,7 @@ using System.Globalization;
 
 namespace LockIn.ViewModels;
 
-public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, RestTimerService timer, ISoundService sound)
+public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, RestTimerService timer, ISoundService sound, ActiveWorkoutStateService state, NotificationService notifications)
     : ObservableObject, IQueryAttributable
 {
     private WorkoutSession? _session;
@@ -64,6 +64,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         }
 
         StartClock();
+        state.Activate();
         IsLoading = false;
     }
 
@@ -284,6 +285,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         timer.Completed += OnTimerCompleted;
 
         timer.Start(section.RestSeconds);
+        notifications.ScheduleTimer(section.RestSeconds, section.ExerciseName);
         section.IsTimerActive = true;
         section.TimerSecondsRemaining = section.RestSeconds;
         section.TimerProgress = 1.0;
@@ -304,6 +306,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
 
     private void OnTimerCompleted()
     {
+        notifications.CancelTimer();
         var section = _currentTimerSection;
         MainThread.BeginInvokeOnMainThread(() =>
         {
@@ -315,6 +318,26 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             _activeTimerSection = null;
             _currentTimerSection = null;
         });
+    }
+
+    public void ForceDeactivate()
+    {
+        _session = null;
+        _clockCts?.Cancel();
+        timer.Tick -= OnTimerTick;
+        timer.Completed -= OnTimerCompleted;
+        timer.Cancel();
+        notifications.CancelTimer();
+        state.Deactivate();
+        Exercises.Clear();
+        TemplateName = "FRITT PASS";
+        ElapsedTime = "0:00";
+        HasPR = false;
+        PrMessage = "";
+        HasAutoProgress = false;
+        AutoProgressMessage = "";
+        _activeTimerSection = null;
+        _currentTimerSection = null;
     }
 
     [RelayCommand]
@@ -353,9 +376,14 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         _session!.CompletedAt = DateTime.Now;
         await db.SaveSessionAsync(_session);
 
+        var sessionId = _session.Id;
+        _session = null;
+        state.Deactivate();
+        notifications.CancelTimer();
+
         await Shell.Current.GoToAsync(nameof(PostWorkoutPage), new Dictionary<string, object>
         {
-            { "SessionId", _session.Id }
+            { "SessionId", sessionId }
         });
     }
 }

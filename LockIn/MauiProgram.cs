@@ -23,6 +23,8 @@ public static class MauiProgram
         builder.Services.AddSingleton<DatabaseService>();
         builder.Services.AddSingleton<PRService>();
         builder.Services.AddSingleton<RestTimerService>();
+        builder.Services.AddSingleton<ActiveWorkoutStateService>();
+        builder.Services.AddSingleton<NotificationService>();
 #if IOS
         builder.Services.AddSingleton<ISoundService, SoundService>();
 #endif
@@ -43,7 +45,7 @@ public static class MauiProgram
         builder.Services.AddTransient<ExercisePickerPage>();
         builder.Services.AddTransient<ExercisePickerViewModel>();
         builder.Services.AddTransient<ActiveWorkoutPage>();
-        builder.Services.AddTransient<ActiveWorkoutViewModel>();
+        builder.Services.AddSingleton<ActiveWorkoutViewModel>();
         builder.Services.AddTransient<PostWorkoutPage>();
         builder.Services.AddTransient<PostWorkoutViewModel>();
         builder.Services.AddTransient<SessionDetailPage>();

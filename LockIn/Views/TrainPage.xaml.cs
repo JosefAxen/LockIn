@@ -1,3 +1,4 @@
+using LockIn.Services;
 using LockIn.ViewModels;
 
 namespace LockIn.Views;
@@ -5,16 +6,23 @@ namespace LockIn.Views;
 public partial class TrainPage : ContentPage
 {
     private readonly TrainViewModel _vm;
+    private readonly ActiveWorkoutStateService _state;
 
-    public TrainPage(TrainViewModel vm)
+    public TrainPage(TrainViewModel vm, ActiveWorkoutStateService state)
     {
         InitializeComponent();
         BindingContext = _vm = vm;
+        _state = state;
     }
 
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        if (_state.IsActive)
+        {
+            await Shell.Current.GoToAsync(nameof(ActiveWorkoutPage));
+            return;
+        }
         await _vm.LoadAsync();
     }
 

@@ -4,10 +4,11 @@ namespace LockIn;
 
 public partial class App : Application
 {
-    public App(DatabaseService db)
+    public App(DatabaseService db, NotificationService notifications)
     {
         InitializeComponent();
         InitDbAsync(db);
+        _ = notifications.RequestPermissionAsync();
     }
 
     private static async void InitDbAsync(DatabaseService db)
