@@ -26,6 +26,7 @@ public partial class TemplateEditViewModel(DatabaseService db) : ObservableObjec
     private async Task LoadAsync(int templateId)
     {
         IsLoading = true;
+        TemplateId = templateId;
         if (templateId == 0)
         {
             _template = new WorkoutTemplate { Name = "" };
@@ -42,11 +43,7 @@ public partial class TemplateEditViewModel(DatabaseService db) : ObservableObjec
             foreach (var te in items)
             {
                 var exercise = await db.GetExerciseAsync(te.ExerciseId);
-                Exercises.Add(new TemplateExerciseRow
-                {
-                    TemplateExercise = te,
-                    ExerciseName = exercise?.Name ?? "Okänd övning"
-                });
+                Exercises.Add(TemplateExerciseRow.FromTemplateExercise(te, exercise?.Name ?? "Okänd övning"));
             }
         }
         IsLoading = false;
@@ -72,11 +69,7 @@ public partial class TemplateEditViewModel(DatabaseService db) : ObservableObjec
             TargetWeight = 0,
             DefaultRestSeconds = exercise.DefaultRestSeconds
         };
-        Exercises.Add(new TemplateExerciseRow
-        {
-            TemplateExercise = te,
-            ExerciseName = exercise.Name
-        });
+        Exercises.Add(TemplateExerciseRow.FromTemplateExercise(te, exercise.Name));
     }
 
     [RelayCommand]
@@ -85,6 +78,19 @@ public partial class TemplateEditViewModel(DatabaseService db) : ObservableObjec
         Exercises.Remove(row);
         for (int i = 0; i < Exercises.Count; i++)
             Exercises[i].TemplateExercise.OrderIndex = i;
+    }
+
+    [RelayCommand]
+    private async Task ChangeRestAsync(TemplateExerciseRow row)
+    {
+        var result = await Shell.Current.DisplayPromptAsync(
+            "Vilotid",
+            $"Vila i sekunder för {row.ExerciseName}:",
+            initialValue: row.RestSeconds.ToString(),
+            keyboard: Keyboard.Numeric);
+
+        if (int.TryParse(result, out var secs) && secs > 0)
+            row.RestSeconds = secs;
     }
 
     [RelayCommand]
@@ -109,24 +115,47 @@ public partial class TemplateEditViewModel(DatabaseService db) : ObservableObjec
         for (int i = 0; i < Exercises.Count; i++)
         {
             var row = Exercises[i];
-            row.TemplateExercise.TemplateId = _template.Id;
-            row.TemplateExercise.OrderIndex = i;
-            row.TemplateExercise.Id = 0;
-            await db.SaveTemplateExerciseAsync(row.TemplateExercise);
+            var te = row.TemplateExercise;
+            te.TemplateId = _template.Id;
+            te.OrderIndex = i;
+            te.Id = 0;
+            te.Sets = int.TryParse(row.SetsText, out var s) && s > 0 ? s : 3;
+            te.Reps = int.TryParse(row.RepsText, out var r) && r > 0 ? r : 8;
+            te.TargetWeight = decimal.TryParse(row.WeightText.Replace(',', '.'),
+                System.Globalization.NumberStyles.Any,
+                System.Globalization.CultureInfo.InvariantCulture, out var w) ? w : 0;
+            te.DefaultRestSeconds = row.RestSeconds;
+            await db.SaveTemplateExerciseAsync(te);
         }
 
         await Shell.Current.GoToAsync("..");
     }
 }
 
-public class TemplateExerciseRow
+public partial class TemplateExerciseRow : ObservableObject
 {
     public TemplateExercise TemplateExercise { get; set; } = new();
+    public int ExerciseId => TemplateExercise.ExerciseId;
     public string ExerciseName { get; set; } = "";
 
-    public string SetsRepsDisplay =>
-        $"{TemplateExercise.Sets} × {TemplateExercise.Reps}" +
-        (TemplateExercise.TargetWeight > 0 ? $"  @  {TemplateExercise.TargetWeight} kg" : "");
+    [ObservableProperty] private string _setsText = "3";
+    [ObservableProperty] private string _repsText = "8";
+    [ObservableProperty] private string _weightText = "";
+    [ObservableProperty] private int _restSeconds = 90;
 
-    public string RestDisplay => RestTimerService.Format(TemplateExercise.DefaultRestSeconds);
+    public string RestDisplay => RestTimerService.Format(RestSeconds);
+
+    partial void OnRestSecondsChanged(int value) =>
+        OnPropertyChanged(nameof(RestDisplay));
+
+    public static TemplateExerciseRow FromTemplateExercise(TemplateExercise te, string name) =>
+        new()
+        {
+            TemplateExercise = te,
+            ExerciseName = name,
+            SetsText = te.Sets.ToString(),
+            RepsText = te.Reps.ToString(),
+            WeightText = te.TargetWeight > 0 ? te.TargetWeight.ToString("G") : "",
+            RestSeconds = te.DefaultRestSeconds
+        };
 }

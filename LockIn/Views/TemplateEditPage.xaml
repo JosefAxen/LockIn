@@ -6,7 +6,7 @@
              x:DataType="vm:TemplateEditViewModel"
              Title="Mall">
 
-    <Grid RowDefinitions="Auto,*,Auto" Padding="0">
+    <Grid RowDefinitions="Auto,*" Padding="0">
 
         <!-- Header -->
         <Grid Grid.Row="0" Padding="16,16,16,8" ColumnDefinitions="Auto,*,Auto">
@@ -24,52 +24,161 @@
         </Grid>
 
         <ScrollView Grid.Row="1">
-            <StackLayout Padding="16,8,16,32" Spacing="16">
+            <VerticalStackLayout Padding="16,8,16,40" Spacing="12">
 
-                <!-- Name field -->
+                <!-- Template name -->
                 <Border Style="{StaticResource CardFrame}" Padding="16">
-                    <StackLayout Spacing="6">
+                    <VerticalStackLayout Spacing="6">
                         <Label Text="MALLNAMN" Style="{StaticResource SectionLabel}"/>
                         <Entry Text="{Binding TemplateName}"
                                Style="{StaticResource InputField}"
                                Placeholder="T.ex. Push A"
                                ReturnType="Done"/>
-                    </StackLayout>
+                    </VerticalStackLayout>
                 </Border>
 
-                <!-- Exercises -->
-                <Label Text="ÖVNINGAR" Style="{StaticResource SectionLabel}" Margin="4,0,0,0"/>
+                <Label Text="ÖVNINGAR" Style="{StaticResource SectionLabel}" Margin="4,4,0,0"/>
 
+                <!-- Exercise cards -->
                 <StackLayout BindableLayout.ItemsSource="{Binding Exercises}" Spacing="10">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate x:DataType="vm:TemplateExerciseRow">
                             <Border Style="{StaticResource CardFrame}">
-                                <Grid ColumnDefinitions="*,Auto" Padding="16,12">
-                                    <StackLayout Grid.Column="0" Spacing="3">
-                                        <Label Text="{Binding ExerciseName}"
-                                               FontFamily="DMSansMedium" FontSize="15"/>
-                                        <Label Text="{Binding SetsRepsDisplay}"
-                                               Style="{StaticResource MutedLabel}"/>
-                                        <Label Text="{Binding RestDisplay, StringFormat='Vila: {0}'}"
-                                               Style="{StaticResource MutedLabel}"/>
-                                    </StackLayout>
-                                    <Button Grid.Column="1" Text="✕"
-                                            BackgroundColor="Transparent"
-                                            TextColor="{StaticResource ForgeMuted}"
-                                            FontSize="18"
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TemplateEditViewModel}}, Path=RemoveExerciseCommand}"
-                                            CommandParameter="{Binding .}"/>
-                                </Grid>
+                                <VerticalStackLayout Spacing="0">
+
+                                    <!-- Exercise name + remove -->
+                                    <Grid ColumnDefinitions="*,44" Padding="16,14,6,12">
+                                        <Label Grid.Column="0"
+                                               Text="{Binding ExerciseName}"
+                                               FontFamily="DMSansMedium"
+                                               FontSize="15"
+                                               VerticalOptions="Center"/>
+                                        <Button Grid.Column="1"
+                                                Text="✕"
+                                                BackgroundColor="Transparent"
+                                                TextColor="{StaticResource ForgeMuted}"
+                                                FontSize="15"
+                                                WidthRequest="44" HeightRequest="44"
+                                                Padding="0"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TemplateEditViewModel}}, Path=RemoveExerciseCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                    </Grid>
+
+                                    <!-- Divider -->
+                                    <BoxView BackgroundColor="{StaticResource ForgeBorder}"
+                                             HeightRequest="1" Margin="0"/>
+
+                                    <!-- Editable fields row -->
+                                    <Grid ColumnDefinitions="*,*,*,*"
+                                          Padding="12,10,12,12"
+                                          ColumnSpacing="8">
+
+                                        <!-- SET -->
+                                        <VerticalStackLayout Grid.Column="0" Spacing="4">
+                                            <Label Text="SET"
+                                                   Style="{StaticResource SectionLabel}"
+                                                   HorizontalOptions="Center"/>
+                                            <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}"
+                                                    StrokeShape="RoundRectangle 8"
+                                                    Stroke="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorderLight}}"
+                                                    StrokeThickness="1"
+                                                    Padding="0"
+                                                    HeightRequest="46">
+                                                <Entry Text="{Binding SetsText, Mode=TwoWay}"
+                                                       Keyboard="Numeric"
+                                                       HorizontalTextAlignment="Center"
+                                                       FontFamily="BebasNeue"
+                                                       FontSize="22"
+                                                       TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                                                       BackgroundColor="Transparent"
+                                                       VerticalOptions="Center"/>
+                                            </Border>
+                                        </VerticalStackLayout>
+
+                                        <!-- REPS -->
+                                        <VerticalStackLayout Grid.Column="1" Spacing="4">
+                                            <Label Text="REPS"
+                                                   Style="{StaticResource SectionLabel}"
+                                                   HorizontalOptions="Center"/>
+                                            <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}"
+                                                    StrokeShape="RoundRectangle 8"
+                                                    Stroke="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorderLight}}"
+                                                    StrokeThickness="1"
+                                                    Padding="0"
+                                                    HeightRequest="46">
+                                                <Entry Text="{Binding RepsText, Mode=TwoWay}"
+                                                       Keyboard="Numeric"
+                                                       HorizontalTextAlignment="Center"
+                                                       FontFamily="BebasNeue"
+                                                       FontSize="22"
+                                                       TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                                                       BackgroundColor="Transparent"
+                                                       VerticalOptions="Center"/>
+                                            </Border>
+                                        </VerticalStackLayout>
+
+                                        <!-- KG -->
+                                        <VerticalStackLayout Grid.Column="2" Spacing="4">
+                                            <Label Text="KG"
+                                                   Style="{StaticResource SectionLabel}"
+                                                   HorizontalOptions="Center"/>
+                                            <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}"
+                                                    StrokeShape="RoundRectangle 8"
+                                                    Stroke="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorderLight}}"
+                                                    StrokeThickness="1"
+                                                    Padding="0"
+                                                    HeightRequest="46">
+                                                <Entry Text="{Binding WeightText, Mode=TwoWay}"
+                                                       Keyboard="Numeric"
+                                                       Placeholder="—"
+                                                       PlaceholderColor="{StaticResource ForgeMuted}"
+                                                       HorizontalTextAlignment="Center"
+                                                       FontFamily="BebasNeue"
+                                                       FontSize="22"
+                                                       TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                                                       BackgroundColor="Transparent"
+                                                       VerticalOptions="Center"/>
+                                            </Border>
+                                        </VerticalStackLayout>
+
+                                        <!-- VILA (tappable, shows dialog) -->
+                                        <VerticalStackLayout Grid.Column="3" Spacing="4">
+                                            <Label Text="VILA"
+                                                   Style="{StaticResource SectionLabel}"
+                                                   HorizontalOptions="Center"/>
+                                            <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}"
+                                                    StrokeShape="RoundRectangle 8"
+                                                    Stroke="{StaticResource ForgeAccentDim}"
+                                                    StrokeThickness="1"
+                                                    HeightRequest="46">
+                                                <Border.GestureRecognizers>
+                                                    <TapGestureRecognizer
+                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TemplateEditViewModel}}, Path=ChangeRestCommand}"
+                                                        CommandParameter="{Binding .}"/>
+                                                </Border.GestureRecognizers>
+                                                <Label Text="{Binding RestDisplay}"
+                                                       FontFamily="BebasNeue"
+                                                       FontSize="20"
+                                                       TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                                                       HorizontalOptions="Center"
+                                                       VerticalOptions="Center"/>
+                                            </Border>
+                                        </VerticalStackLayout>
+
+                                    </Grid>
+                                </VerticalStackLayout>
                             </Border>
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>
                 </StackLayout>
 
+                <!-- Add exercise -->
                 <Button Text="+ LÄGG TILL ÖVNING"
                         Style="{StaticResource SecondaryButton}"
+                        Margin="0,4,0,0"
                         Command="{Binding AddExerciseCommand}"/>
 
-            </StackLayout>
+            </VerticalStackLayout>
         </ScrollView>
 
     </Grid>
