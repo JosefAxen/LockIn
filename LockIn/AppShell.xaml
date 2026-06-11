@@ -4,10 +4,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:views="clr-namespace:LockIn.Views"
-    Title="LockIn"
-    Shell.TabBarSelectedColor="{AppThemeBinding Light={StaticResource LightAccent}, Dark={StaticResource ForgeAccent}}"
-    Shell.TabBarUnselectedColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeTextSecondary}}"
-    Shell.TabBarBackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}">
+    Title="LockIn">
 
     <TabBar>
         <ShellContent Title="Hem"
