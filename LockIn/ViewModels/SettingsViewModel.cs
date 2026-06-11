@@ -10,14 +10,20 @@ public partial class SettingsViewModel(DatabaseService db) : ObservableObject
     [ObservableProperty] private bool _useKg = true;
     [ObservableProperty] private string _appVersion = "";
 
+    [ObservableProperty] private bool _hapticEnabled = true;
+
     public async Task LoadAsync()
     {
         var settings = await db.GetSettingsAsync();
         UseKg = settings.WeightUnit == WeightUnit.Kg;
+        HapticEnabled = Preferences.Default.Get("haptic_enabled", true);
         AppVersion = AppInfo.VersionString;
     }
 
     partial void OnUseKgChanged(bool value) => _ = SaveSettingsAsync();
+
+    partial void OnHapticEnabledChanged(bool value) =>
+        Preferences.Default.Set("haptic_enabled", value);
 
     private async Task SaveSettingsAsync()
     {

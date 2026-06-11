@@ -234,6 +234,8 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         var section = _currentTimerSection;
         MainThread.BeginInvokeOnMainThread(() =>
         {
+            if (Preferences.Default.Get("haptic_enabled", true))
+                HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
             if (section != null) section.IsTimerActive = false;
             _activeTimerSection = null;
             _currentTimerSection = null;

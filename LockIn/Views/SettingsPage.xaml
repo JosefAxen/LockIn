@@ -35,6 +35,20 @@
                     </Grid>
                 </Border>
 
+                <!-- Haptic -->
+                <Border Style="{StaticResource CardFrame}" Padding="16,14">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <StackLayout Grid.Column="0" Spacing="2">
+                            <Label Text="Vibration vid viloTimer" FontFamily="DMSansMedium" FontSize="15"/>
+                            <Label Text="Vibrera när vilotimern är klar"
+                                   Style="{StaticResource MutedLabel}"/>
+                        </StackLayout>
+                        <Switch Grid.Column="1"
+                                IsToggled="{Binding HapticEnabled}"
+                                VerticalOptions="Center"/>
+                    </Grid>
+                </Border>
+
                 <!-- Danger zone -->
                 <Label Text="DATAHANTERING" Style="{StaticResource SectionLabel}" Margin="4,8,4,0"/>
                 <Border Style="{StaticResource CardFrame}" Padding="16,4">
