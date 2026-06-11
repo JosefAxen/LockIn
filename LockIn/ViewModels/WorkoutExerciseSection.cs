@@ -9,6 +9,7 @@ public partial class WorkoutExerciseSection : ObservableObject
     public int ExerciseId { get; set; }
     public string ExerciseName { get; set; } = "";
     public int DefaultRestSeconds { get; set; }
+    public int TargetReps { get; set; } = 0;
 
     [ObservableProperty] private int _restSeconds;
     [ObservableProperty] private bool _isTimerActive;

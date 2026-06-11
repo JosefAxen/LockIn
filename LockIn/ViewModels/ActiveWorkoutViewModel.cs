@@ -4,6 +4,7 @@ using LockIn.Models;
 using LockIn.Services;
 using LockIn.Views;
 using System.Collections.ObjectModel;
+using System.Globalization;
 
 namespace LockIn.ViewModels;
 
@@ -12,6 +13,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
 {
     private WorkoutSession? _session;
     private WorkoutExerciseSection? _activeTimerSection;
+    private WorkoutExerciseSection? _currentTimerSection;
     private DateTime _startTime;
     private CancellationTokenSource? _clockCts;
 
@@ -20,6 +22,8 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
     [ObservableProperty] private bool _isLoading;
     [ObservableProperty] private bool _hasPR;
     [ObservableProperty] private string _prMessage = "";
+    [ObservableProperty] private bool _hasAutoProgress;
+    [ObservableProperty] private string _autoProgressMessage = "";
 
     public ObservableCollection<WorkoutExerciseSection> Exercises { get; } = new();
 
@@ -80,7 +84,8 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             ExerciseId = exercise.Id,
             ExerciseName = exercise.Name,
             DefaultRestSeconds = restSeconds,
-            RestSeconds = restSeconds
+            RestSeconds = restSeconds,
+            TargetReps = reps
         };
 
         var prevSets = await db.GetLastSessionSetsAsync(exercise.Id, _session!.Id);
@@ -97,7 +102,8 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
                              (prev is { WeightKg: > 0 } ? prev.WeightKg.ToString("G") : ""),
                 RepsText = reps.ToString(),
                 PrevWeightHint = prev is { WeightKg: > 0 } ? prev.WeightKg.ToString("G") : "",
-                PrevRepsHint = prev is { Reps: > 0 } ? prev.Reps.ToString() : ""
+                PrevRepsHint = prev is { Reps: > 0 } ? prev.Reps.ToString() : "",
+                TargetReps = reps
             });
         }
 
@@ -140,7 +146,8 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             ExerciseId = section.ExerciseId,
             SetNumber = section.Sets.Count + 1,
             WeightText = last?.WeightText ?? "",
-            RepsText = last?.RepsText ?? "8"
+            RepsText = last?.RepsText ?? "8",
+            TargetReps = section.TargetReps
         });
     }
 
@@ -152,17 +159,66 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
     }
 
     [RelayCommand]
+    private async Task ChangeSetTypeAsync(LoggedSetRow set)
+    {
+        if (set.IsCompleted) return;
+
+        var current = set.SetType switch
+        {
+            SetType.Normal  => "Normal",
+            SetType.Warmup  => "Uppvärmning",
+            SetType.Time    => "Tidsbaserat",
+            SetType.Dropset => "Dropset",
+            _               => "Normal"
+        };
+
+        var choice = await Shell.Current.DisplayActionSheetAsync(
+            $"Settyp (nu: {current})", "Avbryt", null,
+            "Normal", "Uppvärmning (W)", "Tidsbaserat (⏱)", "Dropset (↓)");
+
+        set.SetType = choice switch
+        {
+            "Uppvärmning (W)"   => SetType.Warmup,
+            "Tidsbaserat (⏱)"  => SetType.Time,
+            "Dropset (↓)"      => SetType.Dropset,
+            "Normal"            => SetType.Normal,
+            _                   => set.SetType
+        };
+    }
+
+    [RelayCommand]
     private async Task CompleteSetAsync(LoggedSetRow set)
     {
-        if (!decimal.TryParse(set.WeightText.Replace(',', '.'), out var weight) ||
-            !int.TryParse(set.RepsText, out var reps) || reps <= 0)
+        decimal weight = 0;
+        int reps = 0;
+        int durationSeconds = 0;
+
+        if (set.SetType == SetType.Time)
         {
-            await Shell.Current.DisplayAlert("Fel", "Ange giltigt vikt och reps.", "OK");
-            return;
+            decimal.TryParse(set.WeightText.Replace(',', '.'),
+                NumberStyles.Number, CultureInfo.InvariantCulture, out weight);
+
+            if (!int.TryParse(set.RepsText, out durationSeconds) || durationSeconds <= 0)
+            {
+                await Shell.Current.DisplayAlert("Fel", "Ange duration i sekunder.", "OK");
+                return;
+            }
+        }
+        else
+        {
+            if (!decimal.TryParse(set.WeightText.Replace(',', '.'),
+                    NumberStyles.Number, CultureInfo.InvariantCulture, out weight) ||
+                !int.TryParse(set.RepsText, out reps) || reps <= 0)
+            {
+                await Shell.Current.DisplayAlert("Fel", "Ange giltigt vikt och reps.", "OK");
+                return;
+            }
         }
 
         var rir = set.Rir >= 0 ? set.Rir : 0;
-        var isPR = await pr.IsPRAsync(set.ExerciseId, weight, reps);
+        var isPR = set.SetType == SetType.Normal && weight > 0 && reps > 0
+            ? await pr.IsPRAsync(set.ExerciseId, weight, reps)
+            : false;
 
         var loggedSet = new LoggedSet
         {
@@ -172,7 +228,9 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             Reps = reps,
             RIR = rir,
             LoggedAt = DateTime.Now,
-            IsPR = isPR
+            IsPR = isPR,
+            SetType = set.SetType,
+            DurationSeconds = durationSeconds
         };
         await db.SaveLoggedSetAsync(loggedSet);
 
@@ -187,7 +245,36 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             PrMessage = $"Nytt PR — {name}\n{weight} kg × {reps} reps · Est. 1RM {est:F0} kg";
         }
 
-        StartTimerForSection(set.SessionExerciseId);
+        // Warmup and Dropset skip rest timer
+        if (set.SetType is SetType.Normal or SetType.Time)
+            StartTimerForSection(set.SessionExerciseId);
+
+        CheckAutoProgression(set.SessionExerciseId);
+    }
+
+    private void CheckAutoProgression(int sessionExerciseId)
+    {
+        var section = Exercises.FirstOrDefault(e => e.SessionExerciseId == sessionExerciseId);
+        if (section is null) return;
+
+        var normalSets = section.Sets.Where(s => s.SetType == SetType.Normal).ToList();
+        if (normalSets.Count == 0 || !normalSets.All(s => s.IsCompleted)) return;
+
+        if (section.TargetReps <= 0) return;
+        bool allHitTarget = normalSets.All(s =>
+            int.TryParse(s.RepsText, out var r) && r >= section.TargetReps);
+        if (!allHitTarget) return;
+
+        var maxWeight = normalSets
+            .Select(s => decimal.TryParse(s.WeightText.Replace(',', '.'),
+                NumberStyles.Number, CultureInfo.InvariantCulture, out var w) ? w : 0m)
+            .DefaultIfEmpty(0m)
+            .Max();
+
+        if (maxWeight <= 0) return;
+
+        AutoProgressMessage = $"Öka till {maxWeight + 2.5m:G} kg nästa {section.ExerciseName}-pass";
+        HasAutoProgress = true;
     }
 
     private string GetExerciseName(int sessionExerciseId) =>
@@ -214,8 +301,6 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         section.TimerSecondsRemaining = section.RestSeconds;
         section.TimerProgress = 1.0;
     }
-
-    private WorkoutExerciseSection? _currentTimerSection;
 
     private void OnTimerTick(int secs)
     {
@@ -244,6 +329,10 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             _currentTimerSection = null;
         });
     }
+
+    [RelayCommand]
+    private async Task OpenPlateCalculatorAsync() =>
+        await Shell.Current.GoToAsync(nameof(PlateCalculatorPage));
 
     private void StartClock()
     {

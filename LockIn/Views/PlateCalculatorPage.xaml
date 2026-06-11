@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:LockIn.ViewModels"
+             x:Class="LockIn.Views.PlateCalculatorPage"
+             x:DataType="vm:PlateCalculatorViewModel"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Padding="16,16,16,8" ColumnDefinitions="Auto,*">
+            <Button Grid.Column="0" Text="‹"
+                    Style="{StaticResource SecondaryButton}"
+                    WidthRequest="44" HeightRequest="44" Padding="0"
+                    Command="{Binding GoBackCommand}"/>
+            <Label Grid.Column="1" Text="PLATTKALKYLATOR"
+                   Style="{StaticResource DisplayLabel}"
+                   FontSize="22"
+                   HorizontalOptions="Center" VerticalOptions="Center"/>
+        </Grid>
+
+        <!-- Content -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="16,8,16,40" Spacing="14">
+
+                <!-- Input card -->
+                <Border Style="{StaticResource CardFrame}" Padding="16,14">
+                    <VerticalStackLayout Spacing="16">
+
+                        <!-- Målvikt -->
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="MÅLVIKT" Style="{StaticResource SectionLabel}"/>
+                            <Border BackgroundColor="{StaticResource ForgeSurface2}"
+                                    StrokeShape="RoundRectangle 10"
+                                    StrokeThickness="0">
+                                <Grid ColumnDefinitions="*,Auto" Padding="16,0,14,0">
+                                    <Entry Grid.Column="0"
+                                           Text="{Binding TargetWeightText}"
+                                           Keyboard="Numeric"
+                                           Placeholder="0"
+                                           PlaceholderColor="{StaticResource ForgeTextSecondary}"
+                                           FontFamily="BebasNeue" FontSize="34"
+                                           BackgroundColor="Transparent"
+                                           TextColor="{StaticResource ForgeText}"
+                                           HeightRequest="62"/>
+                                    <Label Grid.Column="1" Text="KG"
+                                           FontFamily="BebasNeue" FontSize="18"
+                                           TextColor="{StaticResource ForgeMuted}"
+                                           VerticalOptions="Center"/>
+                                </Grid>
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!-- Separator -->
+                        <BoxView BackgroundColor="{StaticResource ForgeBorder}"
+                                 HeightRequest="1" Margin="0"/>
+
+                        <!-- Stångvikt -->
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="STÅNGVIKT" Style="{StaticResource SectionLabel}"/>
+                            <Border BackgroundColor="{StaticResource ForgeSurface2}"
+                                    StrokeShape="RoundRectangle 10"
+                                    StrokeThickness="0">
+                                <Grid ColumnDefinitions="*,Auto" Padding="16,0,14,0">
+                                    <Entry Grid.Column="0"
+                                           Text="{Binding BarWeightText}"
+                                           Keyboard="Numeric"
+                                           FontFamily="BebasNeue" FontSize="34"
+                                           BackgroundColor="Transparent"
+                                           TextColor="{StaticResource ForgeText}"
+                                           HeightRequest="62"/>
+                                    <Label Grid.Column="1" Text="KG"
+                                           FontFamily="BebasNeue" FontSize="18"
+                                           TextColor="{StaticResource ForgeMuted}"
+                                           VerticalOptions="Center"/>
+                                </Grid>
+                            </Border>
+                        </VerticalStackLayout>
+
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Calculate button -->
+                <Button Text="BERÄKNA"
+                        Style="{StaticResource PrimaryButton}"
+                        HeightRequest="52"
+                        Command="{Binding CalculateCommand}"/>
+
+                <!-- Result card -->
+                <Border IsVisible="{Binding HasResult}"
+                        BackgroundColor="{StaticResource ForgeAccentDim}"
+                        StrokeShape="RoundRectangle 16"
+                        Stroke="{StaticResource ForgeAccent}"
+                        StrokeThickness="1"
+                        Padding="20,18">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="PLATTOR PER SIDA"
+                               Style="{StaticResource SectionLabel}"
+                               TextColor="{StaticResource ForgeAccent}"/>
+                        <Label Text="{Binding ResultText}"
+                               FontFamily="BebasNeue" FontSize="26"
+                               TextColor="{StaticResource ForgeText}"
+                               LineBreakMode="WordWrap"
+                               CharacterSpacing="0.5"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Plate reference chips -->
+                <Border Style="{StaticResource CardFrame}" Padding="16,14">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="TILLGÄNGLIGA PLATTOR" Style="{StaticResource SectionLabel}"/>
+                        <Grid ColumnDefinitions="*,*,*,*" RowDefinitions="Auto,Auto"
+                              ColumnSpacing="8" RowSpacing="8">
+                            <Border Grid.Row="0" Grid.Column="0"
+                                    BackgroundColor="{StaticResource ForgeSurface2}"
+                                    StrokeShape="RoundRectangle 8" StrokeThickness="0" Padding="0,10">
+                                <Label Text="25 kg" FontFamily="BebasNeue" FontSize="17"
+                                       TextColor="{StaticResource ForgeAccent}"
+                                       HorizontalOptions="Center"/>
+                            </Border>
+                            <Border Grid.Row="0" Grid.Column="1"
+                                    BackgroundColor="{StaticResource ForgeSurface2}"
+                                    StrokeShape="RoundRectangle 8" StrokeThickness="0" Padding="0,10">
+                                <Label Text="20 kg" FontFamily="BebasNeue" FontSize="17"
+                                       TextColor="{StaticResource ForgeAccent}"
+                                       HorizontalOptions="Center"/>
+                            </Border>
+                            <Border Grid.Row="0" Grid.Column="2"
+                                    BackgroundColor="{StaticResource ForgeSurface2}"
+                                    StrokeShape="RoundRectangle 8" StrokeThickness="0" Padding="0,10">
+                                <Label Text="15 kg" FontFamily="BebasNeue" FontSize="17"
+                                       TextColor="{StaticResource ForgeAccent}"
+                                       HorizontalOptions="Center"/>
+                            </Border>
+                            <Border Grid.Row="0" Grid.Column="3"
+                                    BackgroundColor="{StaticResource ForgeSurface2}"
+                                    StrokeShape="RoundRectangle 8" StrokeThickness="0" Padding="0,10">
+                                <Label Text="10 kg" FontFamily="BebasNeue" FontSize="17"
+                                       TextColor="{StaticResource ForgeAccent}"
+                                       HorizontalOptions="Center"/>
+                            </Border>
+                            <Border Grid.Row="1" Grid.Column="0"
+                                    BackgroundColor="{StaticResource ForgeSurface2}"
+                                    StrokeShape="RoundRectangle 8" StrokeThickness="0" Padding="0,10">
+                                <Label Text="5 kg" FontFamily="BebasNeue" FontSize="17"
+                                       TextColor="{StaticResource ForgeMuted}"
+                                       HorizontalOptions="Center"/>
+                            </Border>
+                            <Border Grid.Row="1" Grid.Column="1"
+                                    BackgroundColor="{StaticResource ForgeSurface2}"
+                                    StrokeShape="RoundRectangle 8" StrokeThickness="0" Padding="0,10">
+                                <Label Text="2.5 kg" FontFamily="BebasNeue" FontSize="17"
+                                       TextColor="{StaticResource ForgeMuted}"
+                                       HorizontalOptions="Center"/>
+                            </Border>
+                            <Border Grid.Row="1" Grid.Column="2"
+                                    BackgroundColor="{StaticResource ForgeSurface2}"
+                                    StrokeShape="RoundRectangle 8" StrokeThickness="0" Padding="0,10">
+                                <Label Text="1.25 kg" FontFamily="BebasNeue" FontSize="17"
+                                       TextColor="{StaticResource ForgeMuted}"
+                                       HorizontalOptions="Center"/>
+                            </Border>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </Grid>
+
+</ContentPage>

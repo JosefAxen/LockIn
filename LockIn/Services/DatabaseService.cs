@@ -28,6 +28,10 @@ public class DatabaseService
             await _db.CreateTableAsync<AppSettings>();
             await _db.CreateTableAsync<BodyWeightEntry>();
 
+            // Plan 3: SetType migrations
+            try { await _db.ExecuteAsync("ALTER TABLE LoggedSets ADD COLUMN SetType INTEGER NOT NULL DEFAULT 0"); } catch { }
+            try { await _db.ExecuteAsync("ALTER TABLE LoggedSets ADD COLUMN DurationSeconds INTEGER NOT NULL DEFAULT 0"); } catch { }
+
             await SeedAsync();
             _initialized = true;
         }
@@ -204,7 +208,7 @@ public class DatabaseService
               FROM LoggedSets ls
               JOIN SessionExercises se ON se.Id = ls.SessionExerciseId
               JOIN Exercises e ON e.Id = se.ExerciseId
-              WHERE se.SessionId = ?", sessionId);
+              WHERE se.SessionId = ? AND ls.SetType = 0", sessionId);
 
         return rows
             .GroupBy(r => (MuscleGroup)r.MuscleGroup)
@@ -236,7 +240,8 @@ public class DatabaseService
 
     public Task<List<SessionExerciseDetailRow>> GetSessionExerciseDetailsAsync(int sessionId) =>
         _db.QueryAsync<SessionExerciseDetailRow>(
-            @"SELECT e.Name as ExerciseName, ls.SetNumber, ls.WeightKg, ls.Reps, ls.RIR, ls.IsPR
+            @"SELECT e.Name as ExerciseName, ls.SetNumber, ls.WeightKg, ls.Reps, ls.RIR, ls.IsPR,
+                     ls.SetType, ls.DurationSeconds
               FROM SessionExercises se
               JOIN Exercises e ON e.Id = se.ExerciseId
               JOIN LoggedSets ls ON ls.SessionExerciseId = se.Id
@@ -322,6 +327,12 @@ public class DatabaseService
         public int Reps { get; set; }
         public int RIR { get; set; }
         public bool IsPR { get; set; }
+        public Models.SetType SetType { get; set; } = Models.SetType.Normal;
+        public int DurationSeconds { get; set; } = 0;
+
+        public string SetDisplay => SetType == Models.SetType.Time
+            ? $"⏱ {DurationSeconds}s"
+            : $"{WeightKg:G} kg × {Reps}";
     }
 
     private class BestSetRow

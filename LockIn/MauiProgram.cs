@@ -54,6 +54,8 @@ public static class MauiProgram
         builder.Services.AddTransient<ProgramDetailViewModel>();
         builder.Services.AddTransient<BodyWeightPage>();
         builder.Services.AddTransient<BodyWeightViewModel>();
+        builder.Services.AddTransient<PlateCalculatorPage>();
+        builder.Services.AddTransient<PlateCalculatorViewModel>();
 
 #if DEBUG
         builder.Logging.AddDebug();

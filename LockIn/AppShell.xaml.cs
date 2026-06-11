@@ -16,5 +16,6 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(ExerciseProgressPage), typeof(ExerciseProgressPage));
         Routing.RegisterRoute(nameof(ProgramDetailPage), typeof(ProgramDetailPage));
         Routing.RegisterRoute(nameof(BodyWeightPage), typeof(BodyWeightPage));
+        Routing.RegisterRoute(nameof(PlateCalculatorPage), typeof(PlateCalculatorPage));
     }
 }

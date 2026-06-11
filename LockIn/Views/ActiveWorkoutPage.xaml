@@ -14,7 +14,7 @@
     <Grid RowDefinitions="Auto,*,Auto">
 
         <!-- Top bar -->
-        <Grid Grid.Row="0" Padding="16,16,20,8" ColumnDefinitions="Auto,*,Auto">
+        <Grid Grid.Row="0" Padding="16,16,20,8" ColumnDefinitions="Auto,*,Auto,Auto">
             <Button Grid.Column="0" Text="‹"
                     Style="{StaticResource SecondaryButton}"
                     WidthRequest="44" HeightRequest="44" Padding="0"
@@ -23,7 +23,15 @@
                    Style="{StaticResource DisplayLabel}"
                    FontSize="22"
                    HorizontalOptions="Center" VerticalOptions="Center"/>
-            <Label Grid.Column="2" Text="{Binding ElapsedTime}"
+            <!-- Plate calculator button -->
+            <Button Grid.Column="2"
+                    Text="⚖"
+                    Style="{StaticResource SecondaryButton}"
+                    WidthRequest="40" HeightRequest="40" Padding="0"
+                    FontSize="18"
+                    Margin="0,0,6,0"
+                    Command="{Binding OpenPlateCalculatorCommand}"/>
+            <Label Grid.Column="3" Text="{Binding ElapsedTime}"
                    TextColor="{StaticResource ForgeAccent}"
                    FontFamily="BebasNeue" FontSize="22"
                    VerticalOptions="Center"/>
@@ -43,6 +51,21 @@
                                VerticalOptions="Center" Margin="0,0,10,0"/>
                         <Label Grid.Column="1" Text="{Binding PrMessage}"
                                TextColor="{StaticResource ForgeSuccess}"
+                               FontFamily="DMSansMedium" FontSize="13"
+                               LineBreakMode="WordWrap"/>
+                    </Grid>
+                </Border>
+
+                <!-- Auto-progression Banner -->
+                <Border IsVisible="{Binding HasAutoProgress}"
+                        BackgroundColor="{StaticResource ForgeAccentDim}"
+                        StrokeShape="RoundRectangle 12"
+                        StrokeThickness="0" Padding="14,12">
+                    <Grid ColumnDefinitions="Auto,*">
+                        <Label Grid.Column="0" Text="📈" FontSize="20"
+                               VerticalOptions="Center" Margin="0,0,10,0"/>
+                        <Label Grid.Column="1" Text="{Binding AutoProgressMessage}"
+                               TextColor="{StaticResource ForgeAccent}"
                                FontFamily="DMSansMedium" FontSize="13"
                                LineBreakMode="WordWrap"/>
                     </Grid>
@@ -88,7 +111,7 @@
                                     </Grid>
 
                                     <!-- Column headers -->
-                                    <Grid ColumnDefinitions="24,*,14,*,42,36"
+                                    <Grid ColumnDefinitions="32,*,14,*,42,36"
                                           Padding="16,0,16,6" ColumnSpacing="6">
                                         <Label Grid.Column="0" Text="SET"
                                                Style="{StaticResource SectionLabel}" FontSize="10"/>
@@ -107,13 +130,26 @@
                                     <StackLayout BindableLayout.ItemsSource="{Binding Sets}" Spacing="0">
                                         <BindableLayout.ItemTemplate>
                                             <DataTemplate x:DataType="vm:LoggedSetRow">
-                                                <Grid ColumnDefinitions="24,*,14,*,42,36"
+                                                <Grid ColumnDefinitions="32,*,14,*,42,36"
                                                       Padding="16,5,16,5" ColumnSpacing="6">
 
-                                                    <Label Grid.Column="0"
-                                                           Text="{Binding SetNumber}"
-                                                           Style="{StaticResource MutedLabel}"
-                                                           VerticalOptions="Center"/>
+                                                    <!-- Set number / type label — tap to change type -->
+                                                    <Border Grid.Column="0"
+                                                            BackgroundColor="Transparent"
+                                                            StrokeThickness="0"
+                                                            Padding="0"
+                                                            HeightRequest="36">
+                                                        <Label Text="{Binding SetLabel}"
+                                                               TextColor="{Binding SetLabelColor}"
+                                                               FontFamily="DMSansMedium" FontSize="13"
+                                                               HorizontalOptions="Center"
+                                                               VerticalOptions="Center"/>
+                                                        <Border.GestureRecognizers>
+                                                            <TapGestureRecognizer
+                                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ActiveWorkoutViewModel}}, Path=ChangeSetTypeCommand}"
+                                                                CommandParameter="{Binding .}"/>
+                                                        </Border.GestureRecognizers>
+                                                    </Border>
 
                                                     <!-- Weight -->
                                                     <Border Grid.Column="1"
@@ -131,19 +167,21 @@
                                                                HeightRequest="36" Margin="0"/>
                                                     </Border>
 
-                                                    <Label Grid.Column="2" Text="×"
+                                                    <!-- Separator (× or ⏱) -->
+                                                    <Label Grid.Column="2"
+                                                           Text="{Binding SeparatorLabel}"
                                                            Style="{StaticResource MutedLabel}"
                                                            HorizontalOptions="Center"
                                                            VerticalOptions="Center"/>
 
-                                                    <!-- Reps -->
+                                                    <!-- Reps / Duration -->
                                                     <Border Grid.Column="3"
                                                             BackgroundColor="{StaticResource ForgeSurface2}"
                                                             StrokeShape="RoundRectangle 8"
                                                             StrokeThickness="0" Padding="4,2">
                                                         <Entry Text="{Binding RepsText}"
                                                                Keyboard="Numeric"
-                                                               Placeholder="{Binding PrevRepsHint}"
+                                                               Placeholder="{Binding RepsPlaceholder}"
                                                                PlaceholderColor="{StaticResource ForgeTextSecondary}"
                                                                HorizontalTextAlignment="Center"
                                                                FontFamily="DMSansMedium" FontSize="15"
