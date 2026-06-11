@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using LockIn.Models;
 using LockIn.Services;
 using System.Collections.ObjectModel;
 using static LockIn.Services.DatabaseService;
@@ -9,6 +10,7 @@ namespace LockIn.ViewModels;
 public partial class SessionDetailViewModel(DatabaseService db) : ObservableObject, IQueryAttributable
 {
     public ObservableCollection<SessionExerciseGroup> ExerciseGroups { get; } = new();
+    public ObservableCollection<PhotoRow> Photos { get; } = new();
 
     [ObservableProperty] private string _templateName = "";
     [ObservableProperty] private string _dateDisplay = "";
@@ -19,6 +21,8 @@ public partial class SessionDetailViewModel(DatabaseService db) : ObservableObje
     [ObservableProperty] private bool _hasNotes;
     [ObservableProperty] private bool _isLoading;
 
+    private int _sessionId;
+
     public void ApplyQueryAttributes(IDictionary<string, object> query)
     {
         if (query.TryGetValue("Session", out var val) && val is SessionSummaryRow session)
@@ -28,6 +32,7 @@ public partial class SessionDetailViewModel(DatabaseService db) : ObservableObje
     private async Task LoadAsync(SessionSummaryRow session)
     {
         IsLoading = true;
+        _sessionId = session.Id;
         TemplateName = session.TemplateName;
         DateDisplay = session.StartedAt.ToString("d MMM yyyy");
         PrCountValue = session.PRCount;
@@ -53,7 +58,60 @@ public partial class SessionDetailViewModel(DatabaseService db) : ObservableObje
             ExerciseGroups.Add(g);
         }
 
+        await RefreshPhotosAsync();
         IsLoading = false;
+    }
+
+    private async Task RefreshPhotosAsync()
+    {
+        var photos = await db.GetPhotosForSessionAsync(_sessionId);
+        Photos.Clear();
+        foreach (var p in photos)
+            Photos.Add(new PhotoRow(p));
+    }
+
+    [RelayCommand]
+    private async Task AddPhotoAsync()
+    {
+        var action = await Shell.Current.DisplayActionSheet("Lägg till foto", "Avbryt", null, "Ta foto", "Välj från bibliotek");
+        FileResult? file = null;
+
+        try
+        {
+            if (action == "Ta foto")
+                file = await MediaPicker.Default.CapturePhotoAsync();
+            else if (action == "Välj från bibliotek")
+                file = await MediaPicker.Default.PickPhotoAsync();
+        }
+        catch { return; }
+
+        if (file is null) return;
+
+        var dir = Path.Combine(FileSystem.AppDataDirectory, "photos");
+        Directory.CreateDirectory(dir);
+        var destPath = Path.Combine(dir, $"session_{_sessionId}_{DateTime.Now:yyyyMMdd_HHmmss}.jpg");
+
+        using var stream = await file.OpenReadAsync();
+        using var dest = File.Create(destPath);
+        await stream.CopyToAsync(dest);
+
+        await db.SavePhotoAsync(new WorkoutPhoto
+        {
+            SessionId = _sessionId,
+            FilePath = destPath,
+            TakenAt = DateTime.Now
+        });
+
+        await RefreshPhotosAsync();
+    }
+
+    [RelayCommand]
+    private async Task DeletePhotoAsync(PhotoRow row)
+    {
+        var confirmed = await Shell.Current.DisplayAlert("Ta bort foto", "Ta bort det här fotot?", "Ta bort", "Avbryt");
+        if (!confirmed) return;
+        await db.DeletePhotoAsync(row.Photo);
+        Photos.Remove(row);
     }
 
     [RelayCommand]

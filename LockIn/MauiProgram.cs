@@ -60,6 +60,10 @@ public static class MauiProgram
         builder.Services.AddTransient<BodyWeightViewModel>();
         builder.Services.AddTransient<PlateCalculatorPage>();
         builder.Services.AddTransient<PlateCalculatorViewModel>();
+        builder.Services.AddTransient<AchievementsPage>();
+        builder.Services.AddTransient<AchievementsViewModel>();
+        builder.Services.AddTransient<ProgressPhotosPage>();
+        builder.Services.AddTransient<ProgressPhotosViewModel>();
 
 #if DEBUG
         builder.Logging.AddDebug();

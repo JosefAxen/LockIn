@@ -97,6 +97,28 @@
                     </Border.GestureRecognizers>
                 </Border>
 
+                <!-- Progress photos -->
+                <Border Style="{StaticResource CardFrame}" Padding="16,14">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                        <Border Grid.Column="0" BackgroundColor="{StaticResource ForgeAccentDim}"
+                                StrokeShape="RoundRectangle 10" StrokeThickness="0"
+                                WidthRequest="38" HeightRequest="38" VerticalOptions="Center">
+                            <Label Text="📸" FontSize="18"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Border>
+                        <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                            <Label Text="Progressfoton" FontFamily="DMSansMedium" FontSize="15"/>
+                            <Label Text="Se alla sparade träningsfoton"
+                                   Style="{StaticResource MutedLabel}"/>
+                        </StackLayout>
+                        <Label Grid.Column="2" Text="›" FontSize="22"
+                               TextColor="{StaticResource ForgeMuted}" VerticalOptions="Center"/>
+                    </Grid>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding OpenProgressPhotosCommand}"/>
+                    </Border.GestureRecognizers>
+                </Border>
+
                 <!-- Danger zone -->
                 <Label Text="DATAHANTERING" Style="{StaticResource SectionLabel}" Margin="4,8,4,0"/>
                 <Border Style="{StaticResource CardFrame}" Padding="16,14">

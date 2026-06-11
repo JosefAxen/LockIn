@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:LockIn.ViewModels"
+             x:Class="LockIn.Views.ProgressPhotosPage"
+             x:DataType="vm:ProgressPhotosViewModel"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Padding="16,16,20,12" ColumnDefinitions="Auto,*">
+            <Button Grid.Column="0" Text="‹"
+                    Style="{StaticResource SecondaryButton}"
+                    WidthRequest="44" HeightRequest="44" Padding="0"
+                    Command="{Binding GoBackCommand}"/>
+            <Label Grid.Column="1"
+                   Text="FOTON"
+                   Style="{StaticResource DisplayLabel}"
+                   FontSize="28"
+                   HorizontalOptions="Center" VerticalOptions="Center"/>
+        </Grid>
+
+        <ActivityIndicator Grid.Row="1"
+                           IsRunning="{Binding IsLoading}"
+                           IsVisible="{Binding IsLoading}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"/>
+
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding Photos}"
+                        IsVisible="{Binding IsLoading, Converter={x:Static vm:InverseBoolConverter.Instance}}"
+                        Margin="12,4,12,48"
+                        ItemsLayout="VerticalGrid, 2">
+
+            <CollectionView.EmptyView>
+                <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center"
+                                     Spacing="8" Margin="0,80,0,0">
+                    <Label Text="INGA FOTON" Style="{StaticResource DisplayLabel}"
+                           FontSize="22" TextColor="{StaticResource ForgeMuted}"
+                           HorizontalOptions="Center"/>
+                    <Label Text="Lägg till foton via ett avslutat pass"
+                           Style="{StaticResource MutedLabel}"
+                           HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="vm:PhotoRow">
+                    <Border Margin="4,4"
+                            StrokeShape="RoundRectangle 12"
+                            StrokeThickness="0"
+                            Padding="0"
+                            HeightRequest="180">
+                        <Grid RowDefinitions="*,Auto">
+                            <Image Grid.Row="0" Source="{Binding Source}"
+                                   Aspect="AspectFill"
+                                   HeightRequest="180"/>
+                            <Border Grid.Row="1"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
+                                    StrokeThickness="0" Padding="10,8">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Label Grid.Column="0"
+                                           Text="{Binding DateDisplay}"
+                                           Style="{StaticResource MutedLabel}"
+                                           FontSize="11" VerticalOptions="Center"/>
+                                    <Label Grid.Column="1" Text="✕"
+                                           TextColor="{StaticResource ForgeMuted}"
+                                           FontSize="14" VerticalOptions="Center">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ProgressPhotosViewModel}}, Path=DeletePhotoCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                        </Label.GestureRecognizers>
+                                    </Label>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </Grid>
+</ContentPage>

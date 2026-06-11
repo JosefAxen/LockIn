@@ -14,6 +14,8 @@ public partial class ExerciseProgressViewModel(DatabaseService db) : ObservableO
     [ObservableProperty] private string _estimatedOneRm = "–";
     [ObservableProperty] private string _totalSessions = "0 pass";
     [ObservableProperty] private string _exerciseNotes = "";
+    [ObservableProperty] private string _exerciseDescription = "";
+    [ObservableProperty] private bool _hasDescription;
     [ObservableProperty] private bool _isLoading;
     [ObservableProperty] private bool _hasData;
 
@@ -39,6 +41,8 @@ public partial class ExerciseProgressViewModel(DatabaseService db) : ObservableO
             ExerciseName = _exercise.Name;
             MuscleGroupName = MuscleGroupLabel(_exercise.MuscleGroup);
             ExerciseNotes = _exercise.Notes ?? "";
+            ExerciseDescription = _exercise.Description ?? "";
+            HasDescription = !string.IsNullOrWhiteSpace(ExerciseDescription);
         }
 
         var history = await db.GetBestSetPerSessionForExerciseAsync(exerciseId);

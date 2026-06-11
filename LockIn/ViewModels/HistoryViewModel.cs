@@ -69,6 +69,10 @@ public partial class HistoryViewModel(DatabaseService db) : ObservableObject
     [RelayCommand]
     private void SelectSort(int sort) => SelectedSort = sort;
 
+    [RelayCommand]
+    private async Task OpenAchievementsAsync() =>
+        await Shell.Current.GoToAsync(nameof(AchievementsPage));
+
     public async Task LoadAsync()
     {
         IsLoading = true;

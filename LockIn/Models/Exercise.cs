@@ -23,4 +23,6 @@ public class Exercise
     public MuscleGroup MuscleGroup { get; set; }
 
     public string Notes { get; set; } = "";
+
+    public string Description { get; set; } = "";
 }

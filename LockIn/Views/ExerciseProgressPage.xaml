@@ -86,6 +86,19 @@
                     </VerticalStackLayout>
                 </Border>
 
+                <!-- Description (instruktioner) -->
+                <Border Style="{StaticResource CardFrame}" Padding="16,14"
+                        IsVisible="{Binding HasDescription}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="INSTRUKTIONER" Style="{StaticResource SectionLabel}"/>
+                        <Label Text="{Binding ExerciseDescription}"
+                               FontFamily="DMSansRegular" FontSize="14"
+                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                               LineBreakMode="WordWrap"
+                               LineHeight="1.5"/>
+                    </VerticalStackLayout>
+                </Border>
+
                 <!-- Notes -->
                 <Border Style="{StaticResource CardFrame}" Padding="16,14">
                     <VerticalStackLayout Spacing="8">

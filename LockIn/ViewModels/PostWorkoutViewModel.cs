@@ -22,6 +22,8 @@ public partial class PostWorkoutViewModel(DatabaseService db) : ObservableObject
 
     public ObservableCollection<MuscleGroupRow> MuscleGroups { get; } = new();
     public ObservableCollection<PRRow> PRs { get; } = new();
+    public ObservableCollection<NewAchievementRow> NewAchievements { get; } = new();
+    public ObservableCollection<PhotoRow> Photos { get; } = new();
 
     partial void OnSessionIdChanged(int value) => _ = LoadAsync(value);
 
@@ -86,7 +88,125 @@ public partial class PostWorkoutViewModel(DatabaseService db) : ObservableObject
             });
         }
 
+        // Check achievements
+        await CheckAchievementsAsync(session, allSets);
+
+        // Load photos
+        await RefreshPhotosAsync();
+
         IsLoading = false;
+    }
+
+    private async Task CheckAchievementsAsync(WorkoutSession session, List<LoggedSet> allSets)
+    {
+        var newlyUnlocked = new List<AchievementService.AchievementDef>();
+
+        async Task TryUnlock(AchievementId id)
+        {
+            if (await db.UnlockAchievementAsync(id))
+            {
+                var def = AchievementService.Get(id);
+                if (def is not null) newlyUnlocked.Add(def);
+            }
+        }
+
+        var totalSessions = await db.GetTotalCompletedSessionCountAsync();
+        if (totalSessions >= 1)   await TryUnlock(AchievementId.FirstWorkout);
+        if (totalSessions >= 5)   await TryUnlock(AchievementId.Sessions5);
+        if (totalSessions >= 10)  await TryUnlock(AchievementId.Sessions10);
+        if (totalSessions >= 25)  await TryUnlock(AchievementId.Sessions25);
+        if (totalSessions >= 50)  await TryUnlock(AchievementId.Sessions50);
+        if (totalSessions >= 100) await TryUnlock(AchievementId.Sessions100);
+
+        var weekStreak = await db.GetCurrentWeekStreakAsync();
+        if (weekStreak >= 2)  await TryUnlock(AchievementId.WeekStreak1);
+        if (weekStreak >= 4)  await TryUnlock(AchievementId.WeekStreak4);
+        if (weekStreak >= 12) await TryUnlock(AchievementId.WeekStreak12);
+
+        var totalPRs = await db.GetTotalPRCountAsync();
+        if (totalPRs >= 1)  await TryUnlock(AchievementId.FirstPR);
+        if (totalPRs >= 10) await TryUnlock(AchievementId.PR10);
+        if (totalPRs >= 50) await TryUnlock(AchievementId.PR50);
+
+        var totalVolume = await db.GetTotalVolumeAsync();
+        if (totalVolume >= 100000)  await TryUnlock(AchievementId.TotalVolume100k);
+        if (totalVolume >= 500000)  await TryUnlock(AchievementId.TotalVolume500k);
+        if (totalVolume >= 1000000) await TryUnlock(AchievementId.TotalVolume1M);
+
+        if (await db.GetAllMuscleGroupsThisWeekAsync())
+            await TryUnlock(AchievementId.AllMuscleGroups);
+
+        if (session.CompletedAt.HasValue)
+        {
+            var duration = session.CompletedAt.Value - session.StartedAt;
+            if (duration.TotalMinutes > 90) await TryUnlock(AchievementId.LongSession);
+            if (session.StartedAt.Hour < 7)  await TryUnlock(AchievementId.EarlyBird);
+            if (session.StartedAt.Hour >= 21) await TryUnlock(AchievementId.NightOwl);
+        }
+
+        // Custom exercise check
+        var exercises = await db.GetExercisesAsync();
+        if (exercises.Any(e => e.IsCustom))
+            await TryUnlock(AchievementId.FirstCustomExercise);
+
+        NewAchievements.Clear();
+        foreach (var def in newlyUnlocked)
+            NewAchievements.Add(new NewAchievementRow { Emoji = def.Emoji, Title = def.Title });
+    }
+
+    private async Task RefreshPhotosAsync()
+    {
+        if (_loadedSession is null) return;
+        var photos = await db.GetPhotosForSessionAsync(_loadedSession.Id);
+        Photos.Clear();
+        foreach (var p in photos)
+            Photos.Add(new PhotoRow(p));
+    }
+
+    [RelayCommand]
+    private async Task AddPhotoAsync()
+    {
+        if (_loadedSession is null) return;
+
+        var action = await Shell.Current.DisplayActionSheet("Lägg till foto", "Avbryt", null, "Ta foto", "Välj från bibliotek");
+        FileResult? file = null;
+
+        try
+        {
+            if (action == "Ta foto")
+                file = await MediaPicker.Default.CapturePhotoAsync();
+            else if (action == "Välj från bibliotek")
+                file = await MediaPicker.Default.PickPhotoAsync();
+        }
+        catch { return; }
+
+        if (file is null) return;
+
+        var dir = Path.Combine(FileSystem.AppDataDirectory, "photos");
+        Directory.CreateDirectory(dir);
+        var destPath = Path.Combine(dir, $"session_{_loadedSession.Id}_{DateTime.Now:yyyyMMdd_HHmmss}.jpg");
+
+        using var stream = await file.OpenReadAsync();
+        using var dest = File.Create(destPath);
+        await stream.CopyToAsync(dest);
+
+        await db.SavePhotoAsync(new WorkoutPhoto
+        {
+            SessionId = _loadedSession.Id,
+            FilePath = destPath,
+            TakenAt = DateTime.Now
+        });
+
+        await RefreshPhotosAsync();
+    }
+
+    [RelayCommand]
+    private async Task DeletePhotoAsync(PhotoRow row)
+    {
+        var confirmed = await Shell.Current.DisplayAlert("Ta bort foto", "Ta bort det här fotot?", "Ta bort", "Avbryt");
+        if (!confirmed) return;
+        await db.DeletePhotoAsync(row.Photo);
+        Photos.Remove(row);
     }
 
     private async Task<List<LoggedSet>> GetAllSessionSetsAsync(int sessionId)
@@ -141,4 +261,18 @@ public class PRRow
     public string ExerciseName { get; set; } = "";
     public string Display { get; set; } = "";
     public string Epley1RM { get; set; } = "";
+}
+
+public class NewAchievementRow
+{
+    public string Emoji { get; set; } = "";
+    public string Title { get; set; } = "";
+}
+
+public class PhotoRow(WorkoutPhoto photo)
+{
+    public WorkoutPhoto Photo { get; } = photo;
+    public string FilePath => Photo.FilePath;
+    public ImageSource Source => ImageSource.FromFile(Photo.FilePath);
+    public string DateDisplay => Photo.TakenAt.ToString("d MMM HH:mm");
 }

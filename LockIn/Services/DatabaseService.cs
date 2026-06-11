@@ -31,8 +31,11 @@ public class DatabaseService
         await _db.CreateTableAsync<AppSettings>();
         await _db.CreateTableAsync<BodyWeightEntry>();
         await _db.CreateTableAsync<BodyCompositionEntry>();
+        await _db.CreateTableAsync<UserAchievement>();
+        await _db.CreateTableAsync<WorkoutPhoto>();
 
         try { await _db.ExecuteAsync("ALTER TABLE WorkoutTemplates ADD COLUMN ProgramId TEXT NULL"); } catch { }
+        try { await _db.ExecuteAsync("ALTER TABLE Exercises ADD COLUMN Description TEXT NOT NULL DEFAULT ''"); } catch { }
 
         // Plan 3: SetType migrations (no-op if already added by sqlite-net-pcl)
         try { await _db.ExecuteAsync("ALTER TABLE LoggedSets ADD COLUMN SetType INTEGER NOT NULL DEFAULT 0"); } catch { }
@@ -42,6 +45,50 @@ public class DatabaseService
         try { await _db.ExecuteAsync("UPDATE LoggedSets SET DurationSeconds = 0 WHERE DurationSeconds IS NULL"); } catch { }
 
         await SeedAsync();
+        await SeedExerciseDescriptionsAsync();
+    }
+
+    private async Task SeedExerciseDescriptionsAsync()
+    {
+        var hasAny = await _db.ExecuteScalarAsync<int>(
+            "SELECT COUNT(*) FROM Exercises WHERE Description != '' AND IsCustom = 0") > 0;
+        if (hasAny) return;
+
+        var descriptions = new Dictionary<string, string>
+        {
+            ["Bänkpress"]          = "Ligg på bänk med stången vid bröstet. Pressa rakt upp med axlarna nedsänkta och skulderbladen ihoptryckta. Armarna ca 45° från kroppen.",
+            ["Lutande bänkpress"]  = "Som bänkpress men bänken lutad 30–45°. Betonar övre bröstmuskeln. Använd lite lättare vikt än vanlig bänkpress.",
+            ["Kabelkorsning"]      = "Stå mitt emellan kabelmaskiner. För handtagen i en bred bågrörelse framåt och inåt. Känn sträckningen när armarna är öppna.",
+            ["Dips"]               = "Stöd på stänger, sänk kroppen tills armbågarna är 90°. Luta framåt för bröstfokus, håll kroppen rakt för tricepsfokus.",
+            ["Marklyft"]           = "Foterna höftbredd, tag om stången. Tryck golvet ifrån dig och sträck höfterna framåt. Håll ryggen rak och stången nära kroppen.",
+            ["Skivstångsrodd"]     = "Böj framåt i höften, dra stången mot naveln. Håll ryggen platt och skulderbladen ihoptryckta i toppläget.",
+            ["Latsdrag"]           = "Bred fatning, dra stången till övre bröstet. Led med armbågarna — inte händerna. Lätt bakåtlutning i ryggen.",
+            ["Chins"]              = "Häng i stången med underhandsfattning. Dra kroppen upp tills hakan passerar stången. Aktivera latsen aktivt från bottenpositionen.",
+            ["Sittande rodd"]      = "Dra handtaget mot nedre buken. Håll bröstet upp och armbågarna nära kroppen. Sträck ut ordentligt i startpositionen.",
+            ["Militärpress"]       = "Stång vid axlarna, pressa rakt upp tills armarna är helt sträckta. Spänn magen, undvik överdrivet svaj i ländryggen.",
+            ["Sidolyft"]           = "Lyft hantlar åt sidorna till axelhöjd med lätt böjda armar. Sänk kontrollerat — den excentriska fasen är minst lika viktig.",
+            ["Frontlyft"]          = "Lyft hantlar eller stång rakt framåt till axelhöjd. Lyft inte högre än axlarna för att skona rotatorkuffen.",
+            ["Facepull"]           = "Dra kabeln mot ansiktet med armbågarna högt. Rotera axlarna utåt i slutläget. Bra för axelstabilitet och hållning.",
+            ["Skivstångscurl"]     = "Håll stången med underhandsfattning, curl mot axlarna. Armbågarna stilla vid sidan. Undvik att svänga med kroppen.",
+            ["Hammarcurl"]         = "Neutralt grepp med tummen upp. Tränar brachialis och underarmarna mer än vanlig curl. Bra komplement till skivstångscurl.",
+            ["Koncentrationscurl"] = "Sittande med armbågen mot insidan av låret. Curla hela rörelseomfånget. Maximal isolering av biceps.",
+            ["Tricepspressdown"]   = "Pressa kabeln rakt ned med armbågarna nära kroppen. Lås armbågarna, spänn triceps hårt i botten.",
+            ["Skullcrusher"]       = "Ligg på bänk, sänk stången mot pannan med armbågarna pekande uppåt. Full sträckning i toppen, full böjning i botten.",
+            ["Triceps dips"]       = "Händerna bakåt på en bänk, fötterna framåt. Sänk tills armbågarna är 90°. Håll kroppen nära bänken.",
+            ["Knäböj"]             = "Fötter axelbredd, tårna lätt utåt. Sätt dig ned tills låren är parallella. Håll knäna i linje med tåriktningen och bröstet upp.",
+            ["Benpress"]           = "Tryck plattan ifrån dig med hela foten. Sänk tills knäna är 90°. Undvik att låsa ut knäna helt i toppläget.",
+            ["Rumänska marklyft"]  = "Höftgångjärn — för höfterna bakåt, böj framåt med rak rygg och lätt böjda knän. Känn sträckning i baksida lår.",
+            ["Utfall"]             = "Ta ett steg framåt, sänk bakre knät mot golvet. Håll överkroppen upprätt och det främre knät bakom tålinjen.",
+            ["Benböjning"]         = "Liggande eller sittande maskin — böj knäna och dra hälen mot skinkorna. Fokusera på baksida lår.",
+            ["Bensträckning"]      = "Sittande maskin — sträck knäna mot rak position. Fokus på framsida lår. Sänk kontrollerat för excentrisk belastning.",
+            ["Stående vadpress"]   = "Full rörelseomfång — sänk hälarna under tåplan och pressa upp på tå. Långsamt tempo för maximalt utbyte.",
+            ["Plankan"]            = "Håll kroppen rak från huvud till häl. Spänn mage, skinkor och axlar. Undvik att höfterna sjunker eller skjuter upp.",
+            ["Crunches"]           = "Kröker överkroppen mot knäna utan att lyfta hela ryggen från golvet. Fokus på övre magen. Andas ut i toppläget.",
+            ["Rysk twist"]         = "Sittande med lätt böjda knän och fötterna lätt lyfta. Rotera överkroppen från sida till sida med händerna samlade.",
+        };
+
+        foreach (var (name, desc) in descriptions)
+            await _db.ExecuteAsync("UPDATE Exercises SET Description = ? WHERE Name = ? AND IsCustom = 0", desc, name);
     }
 
     private async Task SeedAsync()
@@ -400,6 +447,12 @@ public class DatabaseService
         await _db.DeleteAllAsync<Exercise>();
         await _db.DeleteAllAsync<BodyWeightEntry>();
         await _db.DeleteAllAsync<BodyCompositionEntry>();
+        await _db.DeleteAllAsync<UserAchievement>();
+        // Delete photo files and records
+        var photos = await _db.Table<WorkoutPhoto>().ToListAsync();
+        foreach (var p in photos)
+            if (File.Exists(p.FilePath)) File.Delete(p.FilePath);
+        await _db.DeleteAllAsync<WorkoutPhoto>();
         await SeedAsync();
         return 0;
     }
@@ -515,6 +568,147 @@ public class DatabaseService
     {
         public int MuscleGroup { get; set; }
         public int? RIR { get; set; }
+    }
+
+    // ── Achievements ──────────────────────────────────────────────────────
+
+    public async Task<HashSet<int>> GetUnlockedAchievementIdsAsync()
+    {
+        await InitAsync();
+        var rows = await _db.Table<UserAchievement>().ToListAsync();
+        return rows.Select(r => r.Id).ToHashSet();
+    }
+
+    public async Task<List<UserAchievement>> GetUnlockedAchievementsAsync()
+    {
+        await InitAsync();
+        return await _db.Table<UserAchievement>().ToListAsync();
+    }
+
+    public async Task<bool> UnlockAchievementAsync(AchievementId id)
+    {
+        await InitAsync();
+        var existing = await _db.Table<UserAchievement>().Where(a => a.Id == (int)id).FirstOrDefaultAsync();
+        if (existing is not null) return false;
+        await _db.InsertAsync(new UserAchievement { Id = (int)id, UnlockedAt = DateTime.Now });
+        return true;
+    }
+
+    public async Task<int> GetTotalPRCountAsync()
+    {
+        await InitAsync();
+        return await _db.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM LoggedSets WHERE IsPR = 1");
+    }
+
+    public async Task<decimal> GetTotalVolumeAsync()
+    {
+        await InitAsync();
+        return await _db.ExecuteScalarAsync<decimal>(
+            "SELECT COALESCE(SUM(WeightKg * Reps), 0) FROM LoggedSets WHERE SetType = 0 OR SetType IS NULL");
+    }
+
+    public async Task<int> GetCurrentWeekStreakAsync()
+    {
+        await InitAsync();
+        var rows = await _db.QueryAsync<SessionDateRow>(
+            "SELECT StartedAt FROM WorkoutSessions WHERE CompletedAt IS NOT NULL ORDER BY StartedAt DESC");
+
+        var today = DateTime.Today;
+        var daysFromMonday = (int)today.DayOfWeek == 0 ? 6 : (int)today.DayOfWeek - 1;
+        var currentMonday = today.AddDays(-daysFromMonday);
+
+        var weeksWithSessions = rows
+            .Select(r => r.StartedAt.Date)
+            .Select(d => { var dow = (int)d.DayOfWeek == 0 ? 6 : (int)d.DayOfWeek - 1; return d.AddDays(-dow); })
+            .Distinct()
+            .OrderByDescending(d => d)
+            .ToList();
+
+        if (weeksWithSessions.Count == 0) return 0;
+        if (weeksWithSessions[0] < currentMonday.AddDays(-7)) return 0;
+
+        int streak = 0;
+        var expected = weeksWithSessions[0];
+        foreach (var w in weeksWithSessions)
+        {
+            if (w == expected) { streak++; expected = expected.AddDays(-7); }
+            else break;
+        }
+        return streak;
+    }
+
+    public async Task<bool> GetAllMuscleGroupsThisWeekAsync()
+    {
+        await InitAsync();
+        var cutoff = DateTime.Now.AddDays(-7);
+        var rows = await _db.QueryAsync<MuscleSetRow>(
+            @"SELECT DISTINCT e.MuscleGroup, 0 as RIR
+              FROM LoggedSets ls
+              JOIN SessionExercises se ON se.Id = ls.SessionExerciseId
+              JOIN Exercises e ON e.Id = se.ExerciseId
+              JOIN WorkoutSessions ws ON ws.Id = se.SessionId
+              WHERE ws.CompletedAt IS NOT NULL AND ws.StartedAt >= ?", cutoff);
+
+        var required = new[] { MuscleGroup.Chest, MuscleGroup.Back, MuscleGroup.Shoulders,
+                               MuscleGroup.Biceps, MuscleGroup.Triceps, MuscleGroup.Legs, MuscleGroup.Core };
+        var trained = rows.Select(r => (MuscleGroup)r.MuscleGroup).ToHashSet();
+        return required.All(mg => trained.Contains(mg));
+    }
+
+    public async Task<List<decimal>> GetWeeklyVolumeTrendAsync(int weeks)
+    {
+        await InitAsync();
+        var today = DateTime.Today;
+        var daysFromMonday = (int)today.DayOfWeek == 0 ? 6 : (int)today.DayOfWeek - 1;
+        var currentMonday = today.AddDays(-daysFromMonday);
+
+        var result = new List<decimal>();
+        for (int i = 1; i <= weeks; i++)
+        {
+            var weekStart = currentMonday.AddDays(-7 * i);
+            var weekEnd = weekStart.AddDays(7);
+            var vol = await _db.ExecuteScalarAsync<decimal>(
+                @"SELECT COALESCE(SUM(ls.WeightKg * ls.Reps), 0)
+                  FROM LoggedSets ls
+                  JOIN SessionExercises se ON se.Id = ls.SessionExerciseId
+                  JOIN WorkoutSessions ws ON ws.Id = se.SessionId
+                  WHERE ws.CompletedAt IS NOT NULL AND ws.StartedAt >= ? AND ws.StartedAt < ?
+                    AND (ls.SetType = 0 OR ls.SetType IS NULL)",
+                weekStart, weekEnd);
+            result.Add(vol);
+        }
+        return result;
+    }
+
+    // ── Photos ─────────────────────────────────────────────────────────────
+
+    public async Task<List<WorkoutPhoto>> GetPhotosForSessionAsync(int sessionId)
+    {
+        await InitAsync();
+        return await _db.Table<WorkoutPhoto>()
+            .Where(p => p.SessionId == sessionId)
+            .OrderByDescending(p => p.TakenAt)
+            .ToListAsync();
+    }
+
+    public async Task<List<WorkoutPhoto>> GetAllPhotosAsync()
+    {
+        await InitAsync();
+        return await _db.Table<WorkoutPhoto>().OrderByDescending(p => p.TakenAt).ToListAsync();
+    }
+
+    public async Task<int> SavePhotoAsync(WorkoutPhoto photo)
+    {
+        await InitAsync();
+        return photo.Id == 0 ? await _db.InsertAsync(photo) : await _db.UpdateAsync(photo);
+    }
+
+    public async Task<int> DeletePhotoAsync(WorkoutPhoto photo)
+    {
+        await InitAsync();
+        if (File.Exists(photo.FilePath))
+            File.Delete(photo.FilePath);
+        return await _db.DeleteAsync(photo);
     }
 
     // ── Settings ───────────────────────────────────────────────────────────

@@ -20,6 +20,7 @@ public partial class TrainViewModel(DatabaseService db) : ObservableObject
     [ObservableProperty] private int _weekCount;
     [ObservableProperty] private int _streak;
     [ObservableProperty] private int _totalCount;
+    [ObservableProperty] private bool _showDeloadBanner;
 
     public async Task LoadAsync()
     {
@@ -68,6 +69,9 @@ public partial class TrainViewModel(DatabaseService db) : ObservableObject
             }
         }
 
+        // Deload banner — check weekly volume trend
+        await CheckDeloadAsync();
+
         // Feature 1: Muscle score bars (senaste 7 dagarna)
         var scoreData = await db.GetMuscleScoresAsync();
         MuscleScores.Clear();
@@ -88,6 +92,32 @@ public partial class TrainViewModel(DatabaseService db) : ObservableObject
         }
 
         IsLoading = false;
+    }
+
+    private async Task CheckDeloadAsync()
+    {
+        var volumes = await db.GetWeeklyVolumeTrendAsync(4);
+        if (volumes.Count < 3) { ShowDeloadBanner = false; return; }
+
+        bool decreasing = volumes[0] < volumes[1] && volumes[1] < volumes[2];
+        bool sustainedHigh = volumes.Count >= 4 && volumes.All(v => v > 15000);
+
+        if (!decreasing && !sustainedHigh) { ShowDeloadBanner = false; return; }
+
+        var lastTicks = Preferences.Default.Get("last_deload_dismiss", 0L);
+        if (lastTicks != 0L && new DateTime(lastTicks) > DateTime.Now.AddDays(-14))
+        {
+            ShowDeloadBanner = false;
+            return;
+        }
+        ShowDeloadBanner = true;
+    }
+
+    [RelayCommand]
+    private void DismissDeload()
+    {
+        Preferences.Default.Set("last_deload_dismiss", DateTime.Now.Ticks);
+        ShowDeloadBanner = false;
     }
 
     [RelayCommand]

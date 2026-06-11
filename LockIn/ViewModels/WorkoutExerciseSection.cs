@@ -8,6 +8,8 @@ public partial class WorkoutExerciseSection : ObservableObject
     public int SessionExerciseId { get; set; }
     public int ExerciseId { get; set; }
     public string ExerciseName { get; set; } = "";
+    public string ExerciseDescription { get; set; } = "";
+    public bool HasDescription => !string.IsNullOrWhiteSpace(ExerciseDescription);
     public int DefaultRestSeconds { get; set; }
     public int TargetReps { get; set; } = 0;
 

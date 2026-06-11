@@ -86,6 +86,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             SessionExerciseId = se.Id,
             ExerciseId = exercise.Id,
             ExerciseName = exercise.Name,
+            ExerciseDescription = exercise.Description ?? "",
             DefaultRestSeconds = restSeconds,
             RestSeconds = restSeconds,
             TargetReps = reps
@@ -344,6 +345,13 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
     [RelayCommand]
     private async Task OpenPlateCalculatorAsync() =>
         await Shell.Current.GoToAsync(nameof(PlateCalculatorPage));
+
+    [RelayCommand]
+    private async Task ShowExerciseInfoAsync(WorkoutExerciseSection section)
+    {
+        if (string.IsNullOrWhiteSpace(section.ExerciseDescription)) return;
+        await Shell.Current.DisplayAlert(section.ExerciseName, section.ExerciseDescription, "OK");
+    }
 
     private void StartClock()
     {

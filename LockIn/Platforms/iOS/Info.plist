@@ -28,5 +28,11 @@
 	</array>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/appicon.appiconset</string>
+	<key>NSCameraUsageDescription</key>
+	<string>LockIn använder kameran för att ta progressfoton kopplade till dina pass.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>LockIn behöver tillgång till bildbiblioteket för att välja progressfoton.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>LockIn sparar progressfoton i ditt bildbibliotek.</string>
 </dict>
 </plist>

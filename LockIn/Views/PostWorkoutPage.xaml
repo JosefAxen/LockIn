@@ -97,6 +97,83 @@
                             Margin="12,6"/>
                 </Border>
 
+                <!-- New achievements -->
+                <Label Text="NYA ACHIEVEMENTS" Style="{StaticResource SectionLabel}"
+                       IsVisible="{Binding NewAchievements.Count, Converter={StaticResource GtzConverter}}"/>
+                <StackLayout BindableLayout.ItemsSource="{Binding NewAchievements}" Spacing="8"
+                             IsVisible="{Binding NewAchievements.Count, Converter={StaticResource GtzConverter}}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="vm:NewAchievementRow">
+                            <Border BackgroundColor="{StaticResource ForgeAccentDim}"
+                                    StrokeThickness="1"
+                                    Stroke="{StaticResource ForgeAccent}"
+                                    StrokeShape="RoundRectangle 12"
+                                    Padding="16,12">
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                                    <Label Grid.Column="0" Text="{Binding Emoji}"
+                                           FontSize="26" VerticalOptions="Center"/>
+                                    <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                        <Label Text="ACHIEVEMENT UPPLÅST"
+                                               Style="{StaticResource SectionLabel}"
+                                               TextColor="{StaticResource ForgeAccent}"
+                                               FontSize="10"/>
+                                        <Label Text="{Binding Title}"
+                                               FontFamily="BebasNeue" FontSize="18"
+                                               TextColor="{StaticResource ForgeAccent}"
+                                               CharacterSpacing="0.5"/>
+                                    </StackLayout>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </StackLayout>
+
+                <!-- Photos -->
+                <Grid ColumnDefinitions="*,Auto" Margin="0,4,0,0">
+                    <Label Grid.Column="0" Text="FOTON" Style="{StaticResource SectionLabel}"/>
+                    <Button Grid.Column="1"
+                            Text="+ FOTO"
+                            Style="{StaticResource SecondaryButton}"
+                            FontFamily="BebasNeue" FontSize="13"
+                            Padding="12,4"
+                            HeightRequest="32"
+                            Command="{Binding AddPhotoCommand}"/>
+                </Grid>
+                <CollectionView ItemsSource="{Binding Photos}"
+                                HeightRequest="120"
+                                ItemsLayout="HorizontalList"
+                                IsVisible="{Binding Photos.Count, Converter={StaticResource GtzConverter}}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="vm:PhotoRow">
+                            <Border Margin="0,0,8,0"
+                                    StrokeShape="RoundRectangle 10"
+                                    StrokeThickness="0"
+                                    WidthRequest="120" HeightRequest="120"
+                                    Padding="0">
+                                <Grid>
+                                    <Image Source="{Binding Source}"
+                                           Aspect="AspectFill"
+                                           WidthRequest="120" HeightRequest="120"/>
+                                    <Border BackgroundColor="#CC000000"
+                                            StrokeThickness="0"
+                                            VerticalOptions="End"
+                                            Padding="6,4">
+                                        <Label Text="✕"
+                                               TextColor="White" FontSize="14"
+                                               HorizontalOptions="End">
+                                            <Label.GestureRecognizers>
+                                                <TapGestureRecognizer
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:PostWorkoutViewModel}}, Path=DeletePhotoCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                            </Label.GestureRecognizers>
+                                        </Label>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
                 <!-- PRs -->
                 <Label Text="PERSONLIGA REKORD" Style="{StaticResource SectionLabel}"
                        IsVisible="{Binding PRs.Count, Converter={StaticResource GtzConverter}}"/>

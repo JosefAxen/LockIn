@@ -9,8 +9,19 @@
 
     <Grid RowDefinitions="Auto,*">
 
-        <Grid Grid.Row="0" Padding="20,20,20,8">
-            <Label Text="HISTORIK" Style="{StaticResource DisplayLabel}" FontSize="40"/>
+        <Grid Grid.Row="0" Padding="20,20,20,8" ColumnDefinitions="*,Auto">
+            <Label Grid.Column="0" Text="HISTORIK" Style="{StaticResource DisplayLabel}" FontSize="40"/>
+            <Border Grid.Column="1"
+                    BackgroundColor="{StaticResource ForgeAccentDim}"
+                    StrokeShape="RoundRectangle 10" StrokeThickness="0"
+                    Padding="12,8" VerticalOptions="Center">
+                <Label Text="🏆"
+                       FontSize="18"
+                       VerticalOptions="Center"/>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding OpenAchievementsCommand}"/>
+                </Border.GestureRecognizers>
+            </Border>
         </Grid>
 
         <Grid Grid.Row="1">

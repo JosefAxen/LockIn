@@ -42,6 +42,10 @@ public partial class SettingsViewModel(DatabaseService db) : ObservableObject
         await Shell.Current.GoToAsync(nameof(BodyWeightPage));
 
     [RelayCommand]
+    private async Task OpenProgressPhotosAsync() =>
+        await Shell.Current.GoToAsync(nameof(ProgressPhotosPage));
+
+    [RelayCommand]
     private async Task ClearAllDataAsync()
     {
         var confirmed = await Shell.Current.DisplayAlert(

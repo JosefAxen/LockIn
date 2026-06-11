@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:LockIn.ViewModels"
              xmlns:svc="clr-namespace:LockIn.Services"
+             xmlns:views="clr-namespace:LockIn.Views"
              x:Class="LockIn.Views.SessionDetailPage"
              x:DataType="vm:SessionDetailViewModel"
              Shell.NavBarIsVisible="False">
@@ -64,6 +65,48 @@
                                LineBreakMode="WordWrap"/>
                     </VerticalStackLayout>
                 </Border>
+
+                <!-- Photos -->
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0" Text="FOTON" Style="{StaticResource SectionLabel}"/>
+                    <Button Grid.Column="1"
+                            Text="+ FOTO"
+                            Style="{StaticResource SecondaryButton}"
+                            FontFamily="BebasNeue" FontSize="13"
+                            Padding="12,4" HeightRequest="32"
+                            Command="{Binding AddPhotoCommand}"/>
+                </Grid>
+                <CollectionView ItemsSource="{Binding Photos}"
+                                HeightRequest="120"
+                                ItemsLayout="HorizontalList"
+                                IsVisible="{Binding Photos.Count, Converter={x:Static vm:GreaterThanZeroConverter.Instance}}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="vm:PhotoRow">
+                            <Border Margin="0,0,8,0"
+                                    StrokeShape="RoundRectangle 10"
+                                    StrokeThickness="0"
+                                    WidthRequest="120" HeightRequest="120"
+                                    Padding="0">
+                                <Grid>
+                                    <Image Source="{Binding Source}" Aspect="AspectFill"
+                                           WidthRequest="120" HeightRequest="120"/>
+                                    <Border BackgroundColor="#CC000000"
+                                            StrokeThickness="0"
+                                            VerticalOptions="End" Padding="6,4">
+                                        <Label Text="✕" TextColor="White" FontSize="14"
+                                               HorizontalOptions="End">
+                                            <Label.GestureRecognizers>
+                                                <TapGestureRecognizer
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SessionDetailViewModel}}, Path=DeletePhotoCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                            </Label.GestureRecognizers>
+                                        </Label>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
 
                 <!-- Exercise groups -->
                 <StackLayout BindableLayout.ItemsSource="{Binding ExerciseGroups}" Spacing="10">
