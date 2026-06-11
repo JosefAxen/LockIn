@@ -5,6 +5,9 @@ namespace LockIn.Services;
 
 public class SoundService : ISoundService
 {
-    public void PlayTimerComplete() =>
-        SystemSound.PlaySystemSound(1054);
+    public void PlayTimerComplete()
+    {
+        var sound = new SystemSound(1054u);
+        sound.PlaySystemSound();
+    }
 }

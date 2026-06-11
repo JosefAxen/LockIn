@@ -18,18 +18,18 @@ public partial class HistoryViewModel(DatabaseService db) : ObservableObject
     private List<SessionSummaryRow> _allSessions = new();
 
     // Period tab colors
-    public Color Period0Bg => _selectedPeriod == 0 ? Color.FromArgb("#1AFF5A1F") : Color.FromArgb("#1A1A1A");
-    public Color Period0Fg => _selectedPeriod == 0 ? Color.FromArgb("#FF5A1F") : Color.FromArgb("#A0A0A8");
-    public Color Period1Bg => _selectedPeriod == 1 ? Color.FromArgb("#1AFF5A1F") : Color.FromArgb("#1A1A1A");
-    public Color Period1Fg => _selectedPeriod == 1 ? Color.FromArgb("#FF5A1F") : Color.FromArgb("#A0A0A8");
-    public Color Period2Bg => _selectedPeriod == 2 ? Color.FromArgb("#1AFF5A1F") : Color.FromArgb("#1A1A1A");
-    public Color Period2Fg => _selectedPeriod == 2 ? Color.FromArgb("#FF5A1F") : Color.FromArgb("#A0A0A8");
+    public Color Period0Bg => SelectedPeriod == 0 ? Color.FromArgb("#1AFF5A1F") : Color.FromArgb("#1A1A1A");
+    public Color Period0Fg => SelectedPeriod == 0 ? Color.FromArgb("#FF5A1F") : Color.FromArgb("#A0A0A8");
+    public Color Period1Bg => SelectedPeriod == 1 ? Color.FromArgb("#1AFF5A1F") : Color.FromArgb("#1A1A1A");
+    public Color Period1Fg => SelectedPeriod == 1 ? Color.FromArgb("#FF5A1F") : Color.FromArgb("#A0A0A8");
+    public Color Period2Bg => SelectedPeriod == 2 ? Color.FromArgb("#1AFF5A1F") : Color.FromArgb("#1A1A1A");
+    public Color Period2Fg => SelectedPeriod == 2 ? Color.FromArgb("#FF5A1F") : Color.FromArgb("#A0A0A8");
 
     // Sort tab colors
-    public Color Sort0Bg => _selectedSort == 0 ? Color.FromArgb("#1AFF5A1F") : Color.FromArgb("#1A1A1A");
-    public Color Sort0Fg => _selectedSort == 0 ? Color.FromArgb("#FF5A1F") : Color.FromArgb("#A0A0A8");
-    public Color Sort1Bg => _selectedSort == 1 ? Color.FromArgb("#1AFF5A1F") : Color.FromArgb("#1A1A1A");
-    public Color Sort1Fg => _selectedSort == 1 ? Color.FromArgb("#FF5A1F") : Color.FromArgb("#A0A0A8");
+    public Color Sort0Bg => SelectedSort == 0 ? Color.FromArgb("#1AFF5A1F") : Color.FromArgb("#1A1A1A");
+    public Color Sort0Fg => SelectedSort == 0 ? Color.FromArgb("#FF5A1F") : Color.FromArgb("#A0A0A8");
+    public Color Sort1Bg => SelectedSort == 1 ? Color.FromArgb("#1AFF5A1F") : Color.FromArgb("#1A1A1A");
+    public Color Sort1Fg => SelectedSort == 1 ? Color.FromArgb("#FF5A1F") : Color.FromArgb("#A0A0A8");
 
     partial void OnSelectedPeriodChanged(int value)
     {
@@ -63,7 +63,7 @@ public partial class HistoryViewModel(DatabaseService db) : ObservableObject
     private void ApplyFilterSort()
     {
         var today = DateTime.Today;
-        IEnumerable<SessionSummaryRow> filtered = _selectedPeriod switch
+        IEnumerable<SessionSummaryRow> filtered = SelectedPeriod switch
         {
             1 => _allSessions.Where(s =>
             {
@@ -75,7 +75,7 @@ public partial class HistoryViewModel(DatabaseService db) : ObservableObject
             _ => _allSessions
         };
 
-        var sorted = _selectedSort == 1
+        var sorted = SelectedSort == 1
             ? filtered.OrderByDescending(s => s.TotalVolume)
             : filtered.OrderByDescending(s => s.StartedAt);
 

@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:LockIn.ViewModels"
              xmlns:data="clr-namespace:LockIn.Data"
+             xmlns:views="clr-namespace:LockIn.Views"
              x:Class="LockIn.Views.ProgramDetailPage"
              x:DataType="vm:ProgramDetailViewModel"
              Shell.NavBarIsVisible="False">
