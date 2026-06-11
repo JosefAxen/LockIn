@@ -19,7 +19,7 @@
         <Setter Property="Shell.TabBarBackgroundColor" Value="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}" />
         <Setter Property="Shell.TabBarForegroundColor" Value="{AppThemeBinding Light={StaticResource ForgeAccent}, Dark={StaticResource ForgeAccent}}" />
         <Setter Property="Shell.TabBarTitleColor" Value="{AppThemeBinding Light={StaticResource ForgeAccent}, Dark={StaticResource ForgeAccent}}" />
-        <Setter Property="Shell.TabBarUnselectedColor" Value="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}" />
+        <Setter Property="Shell.TabBarUnselectedColor" Value="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeTextSecondary}}" />
     </Style>
 
     <!-- Base label -->
@@ -114,9 +114,18 @@
         <Setter Property="Padding" Value="0" />
         <Setter Property="Shadow">
             <Setter.Value>
-                <Shadow Brush="Black" Offset="0,6" Radius="16" Opacity="0.45" />
+                <Shadow Brush="Black" Offset="0,2" Radius="10" Opacity="0.08" />
             </Setter.Value>
         </Setter>
+    </Style>
+
+    <!-- Always-dark card — used for contexts that are always dark (active workout) -->
+    <Style x:Key="DarkCardFrame" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource ForgeSurface}" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+        <Setter Property="Stroke" Value="{StaticResource ForgeBorder}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="Padding" Value="0" />
     </Style>
 
     <!-- Elevated card with orange border glow -->

@@ -27,19 +27,28 @@ public partial class HistoryViewModel(DatabaseService db) : ObservableObject
 
     public event Action? CalendarChanged;
 
+    private static Color TabActiveBg  => Color.FromArgb("#FF5A1F");
+    private static Color TabActiveFg  => Colors.White;
+    private static Color TabInactiveBg =>
+        Application.Current?.RequestedTheme == AppTheme.Dark
+            ? Color.FromArgb("#1A1A1A") : Color.FromArgb("#EBEBF0");
+    private static Color TabInactiveFg =>
+        Application.Current?.RequestedTheme == AppTheme.Dark
+            ? Color.FromArgb("#505058") : Color.FromArgb("#8E8E93");
+
     // Period tab colors
-    public Color Period0Bg => SelectedPeriod == 0 ? Color.FromArgb("#1AFF5A1F") : Color.FromArgb("#1A1A1A");
-    public Color Period0Fg => SelectedPeriod == 0 ? Color.FromArgb("#FF5A1F") : Color.FromArgb("#A0A0A8");
-    public Color Period1Bg => SelectedPeriod == 1 ? Color.FromArgb("#1AFF5A1F") : Color.FromArgb("#1A1A1A");
-    public Color Period1Fg => SelectedPeriod == 1 ? Color.FromArgb("#FF5A1F") : Color.FromArgb("#A0A0A8");
-    public Color Period2Bg => SelectedPeriod == 2 ? Color.FromArgb("#1AFF5A1F") : Color.FromArgb("#1A1A1A");
-    public Color Period2Fg => SelectedPeriod == 2 ? Color.FromArgb("#FF5A1F") : Color.FromArgb("#A0A0A8");
+    public Color Period0Bg => SelectedPeriod == 0 ? TabActiveBg : TabInactiveBg;
+    public Color Period0Fg => SelectedPeriod == 0 ? TabActiveFg : TabInactiveFg;
+    public Color Period1Bg => SelectedPeriod == 1 ? TabActiveBg : TabInactiveBg;
+    public Color Period1Fg => SelectedPeriod == 1 ? TabActiveFg : TabInactiveFg;
+    public Color Period2Bg => SelectedPeriod == 2 ? TabActiveBg : TabInactiveBg;
+    public Color Period2Fg => SelectedPeriod == 2 ? TabActiveFg : TabInactiveFg;
 
     // Sort tab colors
-    public Color Sort0Bg => SelectedSort == 0 ? Color.FromArgb("#1AFF5A1F") : Color.FromArgb("#1A1A1A");
-    public Color Sort0Fg => SelectedSort == 0 ? Color.FromArgb("#FF5A1F") : Color.FromArgb("#A0A0A8");
-    public Color Sort1Bg => SelectedSort == 1 ? Color.FromArgb("#1AFF5A1F") : Color.FromArgb("#1A1A1A");
-    public Color Sort1Fg => SelectedSort == 1 ? Color.FromArgb("#FF5A1F") : Color.FromArgb("#A0A0A8");
+    public Color Sort0Bg => SelectedSort == 0 ? TabActiveBg : TabInactiveBg;
+    public Color Sort0Fg => SelectedSort == 0 ? TabActiveFg : TabInactiveFg;
+    public Color Sort1Bg => SelectedSort == 1 ? TabActiveBg : TabInactiveBg;
+    public Color Sort1Fg => SelectedSort == 1 ? TabActiveFg : TabInactiveFg;
 
     partial void OnSelectedPeriodChanged(int value)
     {

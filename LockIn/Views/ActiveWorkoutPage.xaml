@@ -5,10 +5,17 @@
              xmlns:views="clr-namespace:LockIn.Views"
              x:Class="LockIn.Views.ActiveWorkoutPage"
              x:DataType="vm:ActiveWorkoutViewModel"
-             Shell.NavBarIsVisible="False">
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource ForgeBackground}">
 
     <ContentPage.Resources>
         <views:BoolToColorConverter x:Key="BoolToColorConverter"/>
+        <!-- Page is always dark — override AppThemeBinding label colors -->
+        <Style TargetType="Label">
+            <Setter Property="TextColor" Value="{StaticResource ForgeText}" />
+            <Setter Property="FontFamily" Value="DMSansRegular" />
+            <Setter Property="FontSize" Value="14" />
+        </Style>
     </ContentPage.Resources>
 
     <Grid RowDefinitions="Auto,*,Auto">
@@ -17,10 +24,13 @@
         <Grid Grid.Row="0" Padding="16,16,20,8" ColumnDefinitions="Auto,*,Auto,Auto">
             <Button Grid.Column="0" Text="‹"
                     Style="{StaticResource SecondaryButton}"
+                    BackgroundColor="{StaticResource ForgeSurface2}"
+                    TextColor="{StaticResource ForgeText}"
                     WidthRequest="44" HeightRequest="44" Padding="0"
                     Clicked="OnBackClicked"/>
             <Label Grid.Column="1" Text="{Binding TemplateName}"
                    Style="{StaticResource DisplayLabel}"
+                   TextColor="{StaticResource ForgeText}"
                    FontSize="22"
                    HorizontalOptions="Center" VerticalOptions="Center"/>
             <!-- Plate calculator button -->
@@ -28,6 +38,7 @@
                     ImageSource="ic_scale.png"
                     Text=""
                     Style="{StaticResource SecondaryButton}"
+                    BackgroundColor="{StaticResource ForgeSurface2}"
                     WidthRequest="40" HeightRequest="40" Padding="9"
                     Margin="0,0,6,0"
                     Command="{Binding OpenPlateCalculatorCommand}"/>
@@ -75,7 +86,7 @@
                 <StackLayout BindableLayout.ItemsSource="{Binding Exercises}" Spacing="14">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate x:DataType="vm:WorkoutExerciseSection">
-                            <Border Style="{StaticResource CardFrame}">
+                            <Border Style="{StaticResource DarkCardFrame}">
                                 <StackLayout Spacing="0">
 
                                     <!-- Exercise header: name + rest time badge -->
@@ -233,6 +244,8 @@
                                         <Button Grid.Column="0"
                                                 Text="+ SET"
                                                 Style="{StaticResource SecondaryButton}"
+                                                BackgroundColor="{StaticResource ForgeSurface2}"
+                                                TextColor="{StaticResource ForgeMuted}"
                                                 FontFamily="BebasNeue" FontSize="14"
                                                 CharacterSpacing="1"
                                                 HeightRequest="36"
@@ -241,6 +254,8 @@
                                         <Button Grid.Column="1"
                                                 Text="− SET"
                                                 Style="{StaticResource SecondaryButton}"
+                                                BackgroundColor="{StaticResource ForgeSurface2}"
+                                                TextColor="{StaticResource ForgeMuted}"
                                                 FontFamily="BebasNeue" FontSize="14"
                                                 CharacterSpacing="1"
                                                 HeightRequest="36"
