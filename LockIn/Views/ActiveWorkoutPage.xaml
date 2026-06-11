@@ -25,10 +25,10 @@
                    HorizontalOptions="Center" VerticalOptions="Center"/>
             <!-- Plate calculator button -->
             <Button Grid.Column="2"
-                    Text="⚖"
+                    ImageSource="ic_scale.png"
+                    Text=""
                     Style="{StaticResource SecondaryButton}"
-                    WidthRequest="40" HeightRequest="40" Padding="0"
-                    FontSize="18"
+                    WidthRequest="40" HeightRequest="40" Padding="9"
                     Margin="0,0,6,0"
                     Command="{Binding OpenPlateCalculatorCommand}"/>
             <Label Grid.Column="3" Text="{Binding ElapsedTime}"
@@ -93,8 +93,8 @@
                                                 StrokeThickness="0"
                                                 Padding="10,6">
                                             <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="4">
-                                                <Label Grid.Column="0" Text="⏱"
-                                                       FontSize="12"
+                                                <Image Grid.Column="0" Source="ic_timer.png"
+                                                       WidthRequest="13" HeightRequest="13"
                                                        VerticalOptions="Center"/>
                                                 <Label Grid.Column="1"
                                                        Text="{Binding RestDisplay}"
@@ -253,9 +253,9 @@
                                           ColumnDefinitions="Auto,*,Auto"
                                           BackgroundColor="{StaticResource ForgeSurface2}"
                                           Padding="16,10,16,10" ColumnSpacing="10">
-                                        <Label Grid.Column="0" Text="⏱"
-                                               FontSize="14" VerticalOptions="Center"
-                                               TextColor="{StaticResource ForgeAccent}"/>
+                                        <Image Grid.Column="0" Source="ic_timer.png"
+                                               WidthRequest="16" HeightRequest="16"
+                                               VerticalOptions="Center"/>
                                         <ProgressBar Grid.Column="1"
                                                      Progress="{Binding TimerProgress}"
                                                      ProgressColor="{StaticResource ForgeAccent}"

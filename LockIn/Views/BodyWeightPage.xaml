@@ -83,10 +83,11 @@
                                            VerticalOptions="Center"
                                            Margin="0,0,12,0"/>
                                     <Button Grid.Column="2"
-                                            Text="✕"
+                                            ImageSource="ic_trash.png"
+                                            Text=""
                                             Style="{StaticResource SecondaryButton}"
                                             WidthRequest="36" HeightRequest="36"
-                                            Padding="0" FontSize="12"
+                                            Padding="9"
                                             Command="{Binding Source={RelativeSource AncestorType={x:Type vm:BodyWeightViewModel}}, Path=DeleteEntryCommand}"
                                             CommandParameter="{Binding .}"/>
                                 </Grid>
@@ -100,7 +101,9 @@
 
         <!-- Log button -->
         <Grid Grid.Row="2" Padding="16,8,16,36">
-            <Button Text="+ LOGGA VIKT"
+            <Button Text="LOGGA VIKT"
+                    ImageSource="ic_plus.png"
+                    ContentLayout="Left, 10"
                     Style="{StaticResource PrimaryButton}"
                     Command="{Binding LogWeightCommand}"/>
         </Grid>

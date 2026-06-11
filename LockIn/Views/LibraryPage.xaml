@@ -144,10 +144,11 @@
                                        FontFamily="DMSansMedium" FontSize="15"
                                        VerticalOptions="Center"/>
                                 <Button Grid.Column="1"
-                                        Text="▶"
+                                        ImageSource="ic_play.png"
+                                        Text=""
                                         Style="{StaticResource PrimaryButton}"
                                         HeightRequest="36" WidthRequest="44"
-                                        Padding="0" FontSize="16"
+                                        Padding="9"
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}}, Path=StartFromTemplateCommand}"
                                         CommandParameter="{Binding .}"/>
                                 <Button Grid.Column="2"
