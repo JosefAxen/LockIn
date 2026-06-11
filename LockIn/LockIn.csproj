@@ -54,6 +54,21 @@
 		<MauiImage Update="Resources\Images\tab_history.png" Resize="True" BaseSize="25,25" />
 		<MauiImage Update="Resources\Images\tab_library.png" Resize="True" BaseSize="25,25" />
 		<MauiImage Update="Resources\Images\tab_settings.png" Resize="True" BaseSize="25,25" />
+		<MauiImage Update="Resources\Images\ic_ruler.png" Resize="True" BaseSize="25,25" />
+		<MauiImage Update="Resources\Images\ic_scale.png" Resize="True" BaseSize="22,22" />
+		<MauiImage Update="Resources\Images\ic_play.png" Resize="True" BaseSize="18,18" />
+		<MauiImage Update="Resources\Images\ic_timer.png" Resize="True" BaseSize="16,16" />
+		<MauiImage Update="Resources\Images\ic_weight.png" Resize="True" BaseSize="20,20" />
+		<MauiImage Update="Resources\Images\ic_trash.png" Resize="True" BaseSize="18,18" />
+		<MauiImage Update="Resources\Images\ic_plus.png" Resize="True" BaseSize="18,18" />
+		<MauiImage Update="Resources\Images\ic_minus.png" Resize="True" BaseSize="18,18" />
+		<MauiImage Update="Resources\Images\ic_check.png" Resize="True" BaseSize="18,18" />
+		<MauiImage Update="Resources\Images\ic_barbell.png" Resize="True" BaseSize="16,16" />
+		<MauiImage Update="Resources\Images\ic_calendar.png" Resize="True" BaseSize="16,16" />
+		<MauiImage Update="Resources\Images\ic_flame.png" Resize="True" BaseSize="16,16" />
+		<MauiImage Update="Resources\Images\ic_layers.png" Resize="True" BaseSize="18,18" />
+		<MauiImage Update="Resources\Images\ic_vibration.png" Resize="True" BaseSize="18,18" />
+		<MauiImage Update="Resources\Images\ic_volume.png" Resize="True" BaseSize="18,18" />
 		
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />

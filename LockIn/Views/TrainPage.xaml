@@ -7,7 +7,7 @@
              x:DataType="vm:TrainViewModel"
              Title="Träna">
 
-    <Grid RowDefinitions="Auto,*,Auto">
+    <Grid RowDefinitions="Auto,*">
 
         <!-- Header -->
         <Grid Grid.Row="0" Padding="20,20,20,4">
@@ -16,7 +16,7 @@
 
         <!-- Content -->
         <ScrollView Grid.Row="1">
-            <StackLayout Padding="16,8,16,8" Spacing="0">
+            <StackLayout Padding="16,8,16,96" Spacing="0">
 
                 <!-- Stats row -->
                 <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8" Margin="0,0,0,16">
@@ -245,21 +245,19 @@
             </StackLayout>
         </ScrollView>
 
-        <!-- Bottom: free workout -->
-        <Grid Grid.Row="2" Padding="16,8,16,36"
-              BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource ForgeBackground}}">
-            <Grid.Background>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <GradientStop Color="Transparent" Offset="0"/>
-                    <GradientStop Color="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource ForgeBackground}}" Offset="0.3"/>
-                </LinearGradientBrush>
-            </Grid.Background>
-            <Button Text="STARTA FRITT PASS"
-                    ImageSource="ic_play.png"
-                    ContentLayout="Left, 10"
-                    Style="{StaticResource PrimaryButton}"
-                    Command="{Binding StartFreeWorkoutCommand}"/>
-        </Grid>
+        <!-- Floating FAB: starta fritt pass -->
+        <Button Grid.Row="1"
+                Text="FRITT PASS"
+                ImageSource="ic_play.png"
+                ContentLayout="Left, 8"
+                Style="{StaticResource PrimaryButton}"
+                HorizontalOptions="End"
+                VerticalOptions="End"
+                Margin="0,0,20,44"
+                HeightRequest="48"
+                WidthRequest="162"
+                CornerRadius="24"
+                Command="{Binding StartFreeWorkoutCommand}"/>
 
     </Grid>
 </ContentPage>

@@ -18,7 +18,7 @@
         </Style>
     </ContentPage.Resources>
 
-    <Grid RowDefinitions="Auto,*,Auto">
+    <Grid RowDefinitions="Auto,*">
 
         <!-- Top bar -->
         <Grid Grid.Row="0" Padding="16,16,20,8" ColumnDefinitions="Auto,*,Auto,Auto">
@@ -50,7 +50,7 @@
 
         <!-- Scrollable content -->
         <ScrollView Grid.Row="1">
-            <StackLayout Padding="16,0,16,16" Spacing="12">
+            <StackLayout Padding="16,0,16,96" Spacing="12">
 
                 <!-- PR Banner -->
                 <Border IsVisible="{Binding HasPR}"
@@ -318,12 +318,17 @@
             </StackLayout>
         </ScrollView>
 
-        <!-- Bottom bar: finish -->
-        <Grid Grid.Row="2" Padding="16,8,16,32">
-            <Button Text="AVSLUTA PASS"
-                    Style="{StaticResource PrimaryButton}"
-                    Command="{Binding FinishWorkoutCommand}"/>
-        </Grid>
+        <!-- Floating FAB: avsluta pass -->
+        <Button Grid.Row="1"
+                Text="AVSLUTA PASS"
+                Style="{StaticResource PrimaryButton}"
+                HorizontalOptions="End"
+                VerticalOptions="End"
+                Margin="0,0,20,44"
+                HeightRequest="48"
+                WidthRequest="172"
+                CornerRadius="24"
+                Command="{Binding FinishWorkoutCommand}"/>
 
     </Grid>
 

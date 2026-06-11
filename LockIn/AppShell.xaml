@@ -4,7 +4,11 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:views="clr-namespace:LockIn.Views"
-    Title="LockIn">
+    Title="LockIn"
+    Shell.TabBarSelectedColor="#FF5A1F"
+    Shell.TabBarUnselectedColor="#666666"
+    Shell.TabBarBackgroundColor="{AppThemeBinding Light=#F5F5F5, Dark=#080808}"
+    Shell.TabBarTitleColor="{AppThemeBinding Light=#666666, Dark=#666666}">
 
     <TabBar>
         <ShellContent Title="Träna"
@@ -20,7 +24,7 @@
                       Route="LibraryPage"
                       ContentTemplate="{DataTemplate views:LibraryPage}" />
         <ShellContent Title="Kropp"
-                      Icon="ic_scale.png"
+                      Icon="ic_ruler.png"
                       Route="KroppPage"
                       ContentTemplate="{DataTemplate views:KroppPage}" />
     </TabBar>
