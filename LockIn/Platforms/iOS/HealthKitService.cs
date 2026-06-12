@@ -12,24 +12,11 @@ public class HealthKitService : IHealthService
     private static readonly HKUnit s_kcal  = HKUnit.FromString("kcal");
     private static readonly HKUnit s_bpm   = HKUnit.FromString("count/min");
 
-    public async Task<bool> RequestPermissionsAsync()
+    public Task<bool> RequestPermissionsAsync()
     {
-        if (!HKHealthStore.IsHealthDataAvailable) return false;
-
-        var stepType   = HKQuantityType.Create(HKQuantityTypeIdentifier.StepCount)!;
-        var energyType = HKQuantityType.Create(HKQuantityTypeIdentifier.ActiveEnergyBurned)!;
-        var hrType     = HKQuantityType.Create(HKQuantityTypeIdentifier.HeartRate)!;
-        var readTypes  = new NSSet<HKObjectType>(new HKObjectType[] { stepType, energyType, hrType });
-
-        try
-        {
-            await _store.RequestAuthorizationAsync(null, readTypes);
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
+        // HKHealthStore.RequestAuthorization* binding changed in .NET iOS 9.
+        // Grant permissions via Settings > Privacy & Security > Health.
+        return Task.FromResult(HKHealthStore.IsHealthDataAvailable);
     }
 
     public async Task<int> GetTodayStepsAsync() =>
