@@ -5,24 +5,34 @@ namespace LockIn.Views;
 public class TrainingScoreDrawable : IDrawable
 {
     public double Score { get; set; } = 72;
-    public bool IsDark { get; set; } = true;
+
+    private static readonly Color s_trackDark  = Color.FromArgb("#252525");
+    private static readonly Color s_trackLight = Color.FromArgb("#E0E0E0");
+    private static readonly Color s_glow1      = Color.FromRgba(0x4A, 0xDE, 0x80, 45);
+    private static readonly Color s_glow2      = Color.FromRgba(0x4A, 0xDE, 0x80, 80);
+    private static readonly Color s_accent     = Color.FromArgb("#4ADE80");
+    private static readonly Color s_white      = Color.FromArgb("#FFFFFF");
+    private static readonly Color s_tickDark   = Color.FromArgb("#383838");
+    private static readonly Color s_tickLight  = Color.FromArgb("#CCCCCC");
+    private static readonly float[] s_tickAngles = { 180f, 225f, 270f, 315f, 360f };
 
     public void Draw(ICanvas canvas, RectF r)
     {
+        bool isDark = Application.Current?.RequestedTheme != AppTheme.Light;
+
         float cx = r.Width / 2f;
         float cy = r.Height * 0.90f;
         float outerR = MathF.Min(r.Width * 0.43f, r.Height * 0.84f);
         float trackThick = outerR * 0.115f;
 
         float bLeft = cx - outerR;
-        float bTop = cy - outerR;
-        float bW = outerR * 2f;
-        float bH = outerR * 2f;
+        float bTop  = cy - outerR;
+        float bW    = outerR * 2f;
+        float bH    = outerR * 2f;
 
-        // Track (full top-half arc)
         canvas.StrokeLineCap = LineCap.Round;
         canvas.StrokeSize = trackThick;
-        canvas.StrokeColor = IsDark ? Color.FromArgb("#252525") : Color.FromArgb("#E0E0E0");
+        canvas.StrokeColor = isDark ? s_trackDark : s_trackLight;
         canvas.DrawArc(bLeft, bTop, bW, bH, 180f, 360f, true, false);
 
         if (Score > 0)
@@ -30,44 +40,37 @@ public class TrainingScoreDrawable : IDrawable
             float progress = MathF.Min((float)(Score / 100.0), 1f);
             float endAngle = 180f + progress * 180f;
 
-            // Outer glow
             canvas.StrokeLineCap = LineCap.Round;
-            canvas.StrokeColor = Color.FromRgba(0x4A, 0xDE, 0x80, 45);
+            canvas.StrokeColor = s_glow1;
             canvas.StrokeSize = trackThick + 12f;
             canvas.DrawArc(bLeft, bTop, bW, bH, 180f, endAngle, true, false);
 
-            // Mid glow
-            canvas.StrokeLineCap = LineCap.Round;
-            canvas.StrokeColor = Color.FromRgba(0x4A, 0xDE, 0x80, 80);
+            canvas.StrokeColor = s_glow2;
             canvas.StrokeSize = trackThick + 4f;
             canvas.DrawArc(bLeft, bTop, bW, bH, 180f, endAngle, true, false);
 
-            // Main arc
-            canvas.StrokeLineCap = LineCap.Round;
-            canvas.StrokeColor = Color.FromArgb("#4ADE80");
+            canvas.StrokeColor = s_accent;
             canvas.StrokeSize = trackThick;
             canvas.DrawArc(bLeft, bTop, bW, bH, 180f, endAngle, true, false);
 
-            // End cap dot
             double endRad = endAngle * Math.PI / 180.0;
             float dotX = cx + outerR * (float)Math.Cos(endRad);
             float dotY = cy + outerR * (float)Math.Sin(endRad);
-            canvas.FillColor = Color.FromArgb("#FFFFFF");
+            canvas.FillColor = s_white;
             canvas.FillCircle(dotX, dotY, trackThick * 0.45f);
         }
 
-        // Scale ticks (small marks at 0, 25, 50, 75, 100 percent positions)
-        var tickAngles = new float[] { 180f, 225f, 270f, 315f, 360f };
-        foreach (var tickAngle in tickAngles)
+        var tickColor = isDark ? s_tickDark : s_tickLight;
+        foreach (var tickAngle in s_tickAngles)
         {
             double rad = tickAngle * Math.PI / 180.0;
-            float innerTickR = outerR + trackThick * 0.8f;
-            float outerTickR = outerR + trackThick * 1.8f;
-            float x1 = cx + innerTickR * (float)Math.Cos(rad);
-            float y1 = cy + innerTickR * (float)Math.Sin(rad);
-            float x2 = cx + outerTickR * (float)Math.Cos(rad);
-            float y2 = cy + outerTickR * (float)Math.Sin(rad);
-            canvas.StrokeColor = IsDark ? Color.FromArgb("#383838") : Color.FromArgb("#CCCCCC");
+            float innerR = outerR + trackThick * 0.8f;
+            float outerT  = outerR + trackThick * 1.8f;
+            float x1 = cx + innerR * (float)Math.Cos(rad);
+            float y1 = cy + innerR * (float)Math.Sin(rad);
+            float x2 = cx + outerT  * (float)Math.Cos(rad);
+            float y2 = cy + outerT  * (float)Math.Sin(rad);
+            canvas.StrokeColor = tickColor;
             canvas.StrokeSize = 1.5f;
             canvas.DrawLine(x1, y1, x2, y2);
         }

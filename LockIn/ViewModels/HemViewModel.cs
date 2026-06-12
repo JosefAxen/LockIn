@@ -1,12 +1,31 @@
+using CommunityToolkit.Mvvm.ComponentModel;
+using LockIn.Models;
+using LockIn.Services;
 using LockIn.Views;
 using Microsoft.Maui.Graphics;
 
 namespace LockIn.ViewModels;
 
-public class HemViewModel
+public partial class HemViewModel(DatabaseService db, IHealthService health) : ObservableObject
 {
-    public double TrainingScore { get; } = 72;
-    public string TrainingScoreText => ((int)TrainingScore).ToString();
+    [ObservableProperty] private double _trainingScore;
+    [ObservableProperty] private string _trainingScoreText = "–";
+    [ObservableProperty] private string _streakLabel = "–";
+    [ObservableProperty] private string _motivationText = "";
+    [ObservableProperty] private string _stepsText = "–";
+    [ObservableProperty] private string _caloriesText = "–";
+    [ObservableProperty] private string _activeText = "–";
+    [ObservableProperty] private string _heartRateText = "–";
+    [ObservableProperty] private bool _isLoading = true;
+    [ObservableProperty] private IReadOnlyList<DayStreakItem> _days = Array.Empty<DayStreakItem>();
+    [ObservableProperty] private TrainingScoreDrawable _gaugeDrawable = new();
+    [ObservableProperty] private SparklineDrawable _stepsSparkline    = new() { LineColor = Color.FromArgb("#4ADE80") };
+    [ObservableProperty] private SparklineDrawable _caloriesSparkline = new() { LineColor = Color.FromArgb("#FB7185") };
+    [ObservableProperty] private SparklineDrawable _activeSparkline   = new() { LineColor = Color.FromArgb("#38BDF8") };
+    [ObservableProperty] private SparklineDrawable _heartRateSparkline = new() { LineColor = Color.FromArgb("#A78BFA") };
+
+    public string UserName    => "Josef";
+    public string UserInitial => "J";
 
     public string Greeting
     {
@@ -20,29 +39,8 @@ public class HemViewModel
         }
     }
 
-    public string UserName => "Josef";
-    public string UserInitial => UserName.Length > 0 ? UserName[0].ToString().ToUpper() : "?";
     public string GreetingText => $"{Greeting}, {UserName}!";
-    public string MotivationText => "Stark vecka — du är 72% av veckans träningmål.";
-    public string StreakLabel => "3 DAGARS STREAK";
 
-    // Day streak
-    public IReadOnlyList<DayStreakItem> Days { get; }
-
-    // Stats
-    public string StepsText => "8 420";
-    public string CaloriesText => "612";
-    public string ActiveText => "87";
-    public string HeartRateText => "158";
-
-    // Sparklines
-    public TrainingScoreDrawable GaugeDrawable { get; }
-    public SparklineDrawable StepsSparkline { get; }
-    public SparklineDrawable CaloriesSparkline { get; }
-    public SparklineDrawable ActiveSparkline { get; }
-    public SparklineDrawable HeartRateSparkline { get; }
-
-    // AI coach prompts
     public IReadOnlyList<string> CoachPrompts { get; } = new[]
     {
         "Visa min veckosammanfattning",
@@ -50,70 +48,167 @@ public class HemViewModel
         "Föreslå nästa pass"
     };
 
-    public HemViewModel()
+    public async Task LoadAsync()
     {
-        bool isDark = Application.Current?.RequestedTheme == AppTheme.Dark;
+        IsLoading = true;
+        try
+        {
+            await health.RequestPermissionsAsync();
 
-        GaugeDrawable = new TrainingScoreDrawable { Score = TrainingScore, IsDark = isDark };
+            var weekStart    = GetMondayThisWeek();
+            var sevenAgo     = DateTime.Today.AddDays(-6);
+            var thirtyAgo    = DateTime.Today.AddDays(-30);
 
-        StepsSparkline = new SparklineDrawable
-        {
-            Values = new double[] { 5200, 7100, 4800, 9200, 6300, 8100, 8420 },
-            LineColor = Color.FromArgb("#4ADE80")
-        };
-        CaloriesSparkline = new SparklineDrawable
-        {
-            Values = new double[] { 480, 590, 320, 710, 540, 620, 612 },
-            LineColor = Color.FromArgb("#FB7185")
-        };
-        ActiveSparkline = new SparklineDrawable
-        {
-            Values = new double[] { 60, 90, 45, 110, 70, 95, 87 },
-            LineColor = Color.FromArgb("#38BDF8")
-        };
-        HeartRateSparkline = new SparklineDrawable
-        {
-            Values = new double[] { 145, 162, 138, 170, 155, 148, 158 },
-            LineColor = Color.FromArgb("#A78BFA")
-        };
+            var weekSessionsTask   = db.GetCompletedSessionsInRangeAsync(weekStart, DateTime.Now);
+            var recentSessionsTask = db.GetCompletedSessionsInRangeAsync(sevenAgo, DateTime.Now);
+            var streakSessionsTask = db.GetCompletedSessionsInRangeAsync(thirtyAgo, DateTime.Now);
+            var settingsTask       = db.GetAppSettingsAsync();
+            var stepsTask          = health.GetTodayStepsAsync();
+            var caloriesTask       = health.GetTodayActiveCaloriesAsync();
+            var heartRateTask      = health.GetTodayMaxHeartRateAsync();
+            var weeklyStepsTask    = health.GetWeeklyStepsAsync();
+            var weeklyCaloriesTask = health.GetWeeklyCaloriesAsync();
+            var weeklyMaxHRTask    = health.GetWeeklyMaxHeartRateAsync();
 
-        Days = BuildStreakDays();
+            await Task.WhenAll(weekSessionsTask, recentSessionsTask, streakSessionsTask, settingsTask,
+                stepsTask, caloriesTask, heartRateTask,
+                weeklyStepsTask, weeklyCaloriesTask, weeklyMaxHRTask);
+
+            var weekSessions   = weekSessionsTask.Result;
+            var recentSessions = recentSessionsTask.Result;
+            var streakSessions = streakSessionsTask.Result;
+            var settings       = settingsTask.Result;
+
+            // Training score
+            int goal   = settings.WeeklyWorkoutGoal > 0 ? settings.WeeklyWorkoutGoal : 4;
+            double score = Math.Min(100.0, weekSessions.Count / (double)goal * 100.0);
+            TrainingScore     = score;
+            TrainingScoreText = ((int)score).ToString();
+            MotivationText    = $"Stark vecka — du är {(int)score}% av veckans träningmål.";
+            GaugeDrawable     = new TrainingScoreDrawable { Score = score };
+
+            // Streak and calendar
+            Days       = BuildStreakDays(recentSessions);
+            int streak = CalculateStreak(streakSessions);
+            StreakLabel = streak > 0 ? $"{streak} DAGARS STREAK" : "INGEN STREAK";
+
+            // Health stats
+            var steps = stepsTask.Result;
+            StepsText     = steps > 0 ? $"{steps:N0}" : "0";
+            CaloriesText  = ((int)caloriesTask.Result).ToString();
+            ActiveText    = CalculateActiveMinutesToday(recentSessions).ToString();
+            var maxHR     = heartRateTask.Result;
+            HeartRateText = maxHR > 0 ? maxHR.ToString() : "–";
+
+            // Sparklines (create new instances to force GraphicsView rebind)
+            StepsSparkline = new SparklineDrawable
+            {
+                Values    = weeklyStepsTask.Result,
+                LineColor = Color.FromArgb("#4ADE80")
+            };
+            CaloriesSparkline = new SparklineDrawable
+            {
+                Values    = weeklyCaloriesTask.Result,
+                LineColor = Color.FromArgb("#FB7185")
+            };
+            ActiveSparkline = new SparklineDrawable
+            {
+                Values    = BuildWeeklyActiveMinutes(recentSessions),
+                LineColor = Color.FromArgb("#38BDF8")
+            };
+            HeartRateSparkline = new SparklineDrawable
+            {
+                Values    = weeklyMaxHRTask.Result,
+                LineColor = Color.FromArgb("#A78BFA")
+            };
+        }
+        finally
+        {
+            IsLoading = false;
+        }
     }
 
-    private static IReadOnlyList<DayStreakItem> BuildStreakDays()
+    private static DateTime GetMondayThisWeek()
     {
         var today = DateTime.Today;
-        var items = new List<DayStreakItem>();
-        var abbrs = new[] { "MÅN", "TIS", "ONS", "TOR", "FRE", "LÖR", "SÖN" };
+        int daysFromMonday = ((int)today.DayOfWeek + 6) % 7;
+        return today.AddDays(-daysFromMonday);
+    }
 
-        // Show current 7-day window ending today
+    private static IReadOnlyList<DayStreakItem> BuildStreakDays(List<WorkoutSession> sessions)
+    {
+        var today = DateTime.Today;
+        var completedDates = sessions
+            .Where(s => s.CompletedAt.HasValue)
+            .Select(s => s.CompletedAt!.Value.Date)
+            .ToHashSet();
+
+        var abbrs = new[] { "MÅN", "TIS", "ONS", "TOR", "FRE", "LÖR", "SÖN" };
+        var items = new List<DayStreakItem>(7);
+
         for (int i = 6; i >= 0; i--)
         {
-            var day = today.AddDays(-i);
-            int idx = ((int)day.DayOfWeek + 6) % 7; // Monday = 0
-            bool isToday = i == 0;
-            // Mock: completed last 3 days + today ongoing
-            bool isCompleted = i >= 1 && i <= 3;
-            bool isActive = isToday;
+            var day   = today.AddDays(-i);
+            int idx   = ((int)day.DayOfWeek + 6) % 7;
+            bool isToday     = i == 0;
+            bool isCompleted = completedDates.Contains(day.Date) && !isToday;
 
             items.Add(new DayStreakItem
             {
-                DayAbbr = abbrs[idx],
-                DayNum = day.Day.ToString(),
+                DayAbbr     = abbrs[idx],
+                DayNum      = day.Day.ToString(),
                 IsCompleted = isCompleted,
-                IsToday = isActive
+                IsToday     = isToday
             });
         }
         return items;
+    }
+
+    private static int CalculateStreak(List<WorkoutSession> sessions)
+    {
+        var completedDates = sessions
+            .Where(s => s.CompletedAt.HasValue)
+            .Select(s => s.CompletedAt!.Value.Date)
+            .ToHashSet();
+
+        int streak = 0;
+        var check  = DateTime.Today;
+        while (completedDates.Contains(check))
+        {
+            streak++;
+            check = check.AddDays(-1);
+        }
+        return streak;
+    }
+
+    private static int CalculateActiveMinutesToday(List<WorkoutSession> sessions)
+    {
+        var today = DateTime.Today;
+        return (int)sessions
+            .Where(s => s.CompletedAt.HasValue && s.StartedAt.Date == today)
+            .Sum(s => (s.CompletedAt!.Value - s.StartedAt).TotalMinutes);
+    }
+
+    private static double[] BuildWeeklyActiveMinutes(List<WorkoutSession> sessions)
+    {
+        var result = new double[7];
+        for (int i = 0; i < 7; i++)
+        {
+            var date  = DateTime.Today.AddDays(i - 6).Date;
+            result[i] = sessions
+                .Where(s => s.CompletedAt.HasValue && s.StartedAt.Date == date)
+                .Sum(s => (s.CompletedAt!.Value - s.StartedAt).TotalMinutes);
+        }
+        return result;
     }
 }
 
 public class DayStreakItem
 {
     public string DayAbbr { get; init; } = "";
-    public string DayNum { get; init; } = "";
+    public string DayNum  { get; init; } = "";
     public bool IsCompleted { get; init; }
-    public bool IsToday { get; init; }
+    public bool IsToday     { get; init; }
 
     public Color CircleFill => IsCompleted
         ? Color.FromArgb("#1F4ADE80")

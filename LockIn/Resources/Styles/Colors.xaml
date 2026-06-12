@@ -23,7 +23,7 @@
 
     <Color x:Key="ForgeText">#E2E8F0</Color>
     <Color x:Key="ForgeTextSecondary">#A2A2A2</Color>
-    <Color x:Key="ForgeMuted">#A2A2A2</Color>
+    <Color x:Key="ForgeMuted">#A2A2A2</Color>    <!-- intentional alias of ForgeTextSecondary -->
     <Color x:Key="ForgeBorder">#292929</Color>
     <Color x:Key="ForgeBorderLight">#393939</Color>
 
@@ -38,7 +38,7 @@
     <Color x:Key="ForgeAccentBlueDim">#1F38BDF8</Color>
     <Color x:Key="ForgeAccentPurpleDim">#1FA78BFA</Color>
 
-    <!-- Success — same hue as accent in this palette -->
+    <!-- Semantic alias of ForgeAccent — intentional, use when meaning is "success" not "brand" -->
     <Color x:Key="ForgeSuccess">#4ADE80</Color>
     <Color x:Key="ForgeSuccessDim">#1F4ADE80</Color>
 
@@ -54,6 +54,8 @@
 
     <!-- Accent / primary for light mode -->
     <Color x:Key="LightAccent">#72E3AD</Color>
+    <!-- Button background in light mode — mirrors ForgePrimary in dark -->
+    <Color x:Key="LightPrimary">#006239</Color>
     <!-- Text on primary buttons in light mode -->
     <Color x:Key="LightPrimaryForeground">#1E2723</Color>
 

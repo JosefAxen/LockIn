@@ -274,7 +274,7 @@
                             <Label Grid.Column="0"
                                    Text="✦"
                                    FontSize="16"
-                                   TextColor="{StaticResource ForgeAccent}"
+                                   TextColor="{AppThemeBinding Light={StaticResource LightAccent}, Dark={StaticResource ForgeAccent}}"
                                    VerticalOptions="Start"
                                    Margin="0,2,0,0"/>
                             <VerticalStackLayout Grid.Column="1" Spacing="2">
@@ -337,14 +337,14 @@
                                 <Border Grid.Column="1"
                                         WidthRequest="34" HeightRequest="34"
                                         StrokeShape="Ellipse"
-                                        BackgroundColor="{StaticResource ForgePrimary}"
+                                        BackgroundColor="{AppThemeBinding Light={StaticResource LightPrimary}, Dark={StaticResource ForgePrimary}}"
                                         StrokeThickness="0"
                                         HorizontalOptions="End"
                                         VerticalOptions="Center">
                                     <Label Text="↑"
                                            FontFamily="BebasNeue"
                                            FontSize="18"
-                                           TextColor="{StaticResource ForgePrimaryForeground}"
+                                           TextColor="{AppThemeBinding Light={StaticResource LightPrimaryForeground}, Dark={StaticResource ForgePrimaryForeground}}"
                                            HorizontalOptions="Center"
                                            VerticalOptions="Center"/>
                                 </Border>

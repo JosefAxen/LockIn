@@ -29,44 +29,58 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)
     {
-        if (_session is not null) return;
         int templateId = 0;
         if (query.TryGetValue("TemplateId", out var val) && val is int id)
             templateId = id;
+        // Return early only when navigating back from a sub-page during the same ongoing workout
+        if (_session is not null && _session.TemplateId == templateId)
+            return;
         _ = LoadAsync(templateId);
     }
 
     private async Task LoadAsync(int templateId)
     {
         IsLoading = true;
-        Exercises.Clear();
-
-        if (templateId != 0)
+        try
         {
-            var templates = await db.GetTemplatesAsync();
-            var template = templates.FirstOrDefault(t => t.Id == templateId);
-            TemplateName = template?.Name ?? "PASS";
-        }
+            Exercises.Clear();
 
-        _session = new WorkoutSession { TemplateId = templateId, StartedAt = DateTime.Now };
-        await db.SaveSessionAsync(_session);
-        _startTime = _session.StartedAt;
-
-        if (templateId != 0)
-        {
-            var templateExercises = await db.GetTemplateExercisesAsync(templateId);
-            for (int i = 0; i < templateExercises.Count; i++)
+            if (templateId != 0)
             {
-                var te = templateExercises[i];
-                var exercise = await db.GetExerciseAsync(te.ExerciseId);
-                await AddExerciseSectionAsync(exercise!, i, te.Sets, te.Reps,
-                    te.TargetWeight, te.DefaultRestSeconds);
+                var templates = await db.GetTemplatesAsync();
+                var template = templates.FirstOrDefault(t => t.Id == templateId);
+                TemplateName = template?.Name ?? "PASS";
             }
-        }
 
-        StartClock();
-        state.Activate();
-        IsLoading = false;
+            _session = new WorkoutSession { TemplateId = templateId, StartedAt = DateTime.Now };
+            await db.SaveSessionAsync(_session);
+            _startTime = _session.StartedAt;
+
+            if (templateId != 0)
+            {
+                var templateExercises = await db.GetTemplateExercisesAsync(templateId);
+                for (int i = 0; i < templateExercises.Count; i++)
+                {
+                    var te = templateExercises[i];
+                    var exercise = await db.GetExerciseAsync(te.ExerciseId);
+                    if (exercise is null) continue;
+                    await AddExerciseSectionAsync(exercise, i, te.Sets, te.Reps,
+                        te.TargetWeight, te.DefaultRestSeconds);
+                }
+            }
+
+            StartClock();
+            state.Activate();
+        }
+        catch
+        {
+            _session = null;
+            Exercises.Clear();
+        }
+        finally
+        {
+            IsLoading = false;
+        }
     }
 
     private async Task<WorkoutExerciseSection> AddExerciseSectionAsync(
@@ -382,7 +396,8 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         timer.Completed -= OnTimerCompleted;
         timer.Cancel();
 
-        _session!.CompletedAt = DateTime.Now;
+        if (_session is null) return;
+        _session.CompletedAt = DateTime.Now;
         await db.SaveSessionAsync(_session);
 
         var sessionId = _session.Id;

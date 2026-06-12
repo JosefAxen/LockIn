@@ -28,6 +28,8 @@
 	</array>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/appicon.appiconset</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>LockIn läser steg, kalorier och pulsvärden för att visa din dagliga aktivitetsöversikt på hemsidan.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>LockIn använder kameran för att ta progressfoton kopplade till dina pass.</string>
 	<key>NSPhotoLibraryUsageDescription</key>

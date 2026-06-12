@@ -27,6 +27,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<NotificationService>();
 #if IOS
         builder.Services.AddSingleton<ISoundService, SoundService>();
+        builder.Services.AddSingleton<IHealthService, LockIn.Platforms.iOS.HealthKitService>();
 #endif
 
         // Tab pages

@@ -34,15 +34,22 @@ public class DatabaseService
         await _db.CreateTableAsync<UserAchievement>();
         await _db.CreateTableAsync<WorkoutPhoto>();
 
-        try { await _db.ExecuteAsync("ALTER TABLE WorkoutTemplates ADD COLUMN ProgramId TEXT NULL"); } catch { }
-        try { await _db.ExecuteAsync("ALTER TABLE Exercises ADD COLUMN Description TEXT NOT NULL DEFAULT ''"); } catch { }
+        try { await _db.ExecuteAsync("ALTER TABLE WorkoutTemplates ADD COLUMN ProgramId TEXT NULL"); }
+        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
+        try { await _db.ExecuteAsync("ALTER TABLE Exercises ADD COLUMN Description TEXT NOT NULL DEFAULT ''"); }
+        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
 
-        // Plan 3: SetType migrations (no-op if already added by sqlite-net-pcl)
-        try { await _db.ExecuteAsync("ALTER TABLE LoggedSets ADD COLUMN SetType INTEGER NOT NULL DEFAULT 0"); } catch { }
-        try { await _db.ExecuteAsync("ALTER TABLE LoggedSets ADD COLUMN DurationSeconds INTEGER NOT NULL DEFAULT 0"); } catch { }
-        // Backfill NULLs that sqlite-net-pcl may have added without DEFAULT
-        try { await _db.ExecuteAsync("UPDATE LoggedSets SET SetType = 0 WHERE SetType IS NULL"); } catch { }
-        try { await _db.ExecuteAsync("UPDATE LoggedSets SET DurationSeconds = 0 WHERE DurationSeconds IS NULL"); } catch { }
+        // Plan 3: SetType migrations (idempotent — only swallows duplicate-column errors)
+        try { await _db.ExecuteAsync("ALTER TABLE LoggedSets ADD COLUMN SetType INTEGER NOT NULL DEFAULT 0"); }
+        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
+        try { await _db.ExecuteAsync("ALTER TABLE LoggedSets ADD COLUMN DurationSeconds INTEGER NOT NULL DEFAULT 0"); }
+        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
+        // Backfill NULLs from schema versions that lacked DEFAULT constraints
+        await _db.ExecuteAsync("UPDATE LoggedSets SET SetType = 0 WHERE SetType IS NULL");
+        await _db.ExecuteAsync("UPDATE LoggedSets SET DurationSeconds = 0 WHERE DurationSeconds IS NULL");
+
+        try { await _db.ExecuteAsync("ALTER TABLE AppSettings ADD COLUMN WeeklyWorkoutGoal INTEGER NOT NULL DEFAULT 4"); }
+        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
 
         await SeedAsync();
         await SeedExerciseDescriptionsAsync();
@@ -494,6 +501,30 @@ public class DatabaseService
             "SELECT StartedAt FROM WorkoutSessions WHERE CompletedAt IS NOT NULL AND StartedAt >= ? AND StartedAt < ?",
             start, end);
         return rows.Select(r => r.StartedAt.Day).ToHashSet();
+    }
+
+    // ── App settings ──────────────────────────────────────────────────────
+
+    public async Task<AppSettings> GetAppSettingsAsync()
+    {
+        await InitAsync();
+        return await _db.Table<AppSettings>().FirstOrDefaultAsync() ?? new AppSettings();
+    }
+
+    public async Task SaveAppSettingsAsync(AppSettings settings)
+    {
+        await InitAsync();
+        await _db.UpdateAsync(settings);
+    }
+
+    // ── Session range queries ─────────────────────────────────────────────
+
+    public async Task<List<WorkoutSession>> GetCompletedSessionsInRangeAsync(DateTime from, DateTime to)
+    {
+        await InitAsync();
+        return await _db.QueryAsync<WorkoutSession>(
+            "SELECT * FROM WorkoutSessions WHERE CompletedAt IS NOT NULL AND CompletedAt >= ? AND CompletedAt <= ? ORDER BY StartedAt DESC",
+            from, to);
     }
 
     // ── Body composition ───────────────────────────────────────────────────
