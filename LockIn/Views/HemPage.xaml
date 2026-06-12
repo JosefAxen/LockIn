@@ -7,9 +7,8 @@
              Title="Hem"
              Shell.NavBarIsVisible="False">
 
-    <RefreshView IsEnabled="False">
-        <ScrollView>
-            <VerticalStackLayout Spacing="0" Padding="0,0,0,120">
+    <ScrollView>
+        <VerticalStackLayout Spacing="0" Padding="0,0,0,120">
 
                 <!-- ═══ HEADER ═══ -->
                 <Grid Padding="22,56,22,4" ColumnDefinitions="*,48">
@@ -32,12 +31,14 @@
                     <Border Grid.Column="1"
                             WidthRequest="44" HeightRequest="44"
                             StrokeShape="Ellipse"
-                            BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}"
-                            Stroke="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorder}}"
-                            StrokeThickness="1"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource LightAccent}, Dark={StaticResource ForgeAccentDim}}"
+                            Stroke="{AppThemeBinding Light={StaticResource LightAccent}, Dark={StaticResource ForgeAccent}}"
+                            StrokeThickness="1.5"
                             VerticalOptions="End">
-                        <Image Source="ic_profile.png"
-                               WidthRequest="22" HeightRequest="22"
+                        <Label Text="{Binding UserInitial}"
+                               FontFamily="BebasNeue"
+                               FontSize="22"
+                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeAccent}}"
                                HorizontalOptions="Center"
                                VerticalOptions="Center"/>
                     </Border>
@@ -100,7 +101,7 @@
                         <Label Text="{Binding StreakLabel}"
                                FontFamily="DMSansMedium"
                                FontSize="13"
-                               TextColor="{StaticResource ForgeAccent}"/>
+                               TextColor="{AppThemeBinding Light={StaticResource LightAccent}, Dark={StaticResource ForgeAccentAmber}}"/>
                     </VerticalStackLayout>
                     <Label Grid.Column="1"
                            Text="SE ALLA ›"
@@ -171,7 +172,7 @@
                                    FontSize="36"
                                    CharacterSpacing="0"
                                    LineHeight="1"
-                                   TextColor="{StaticResource ForgeAccent}"/>
+                                   TextColor="{AppThemeBinding Light={StaticResource LightAccent}, Dark={StaticResource ForgeAccent}}"/>
                             <Label Text="steg idag"
                                    Style="{StaticResource MutedLabel}"
                                    Margin="0,2,0,6"/>
@@ -196,7 +197,7 @@
                                    FontSize="36"
                                    CharacterSpacing="0"
                                    LineHeight="1"
-                                   TextColor="{StaticResource ForgeAccent}"/>
+                                   TextColor="{AppThemeBinding Light={StaticResource LightAccentCoral}, Dark={StaticResource ForgeAccentCoral}}"/>
                             <Label Text="kcal"
                                    Style="{StaticResource MutedLabel}"
                                    Margin="0,2,0,6"/>
@@ -221,7 +222,7 @@
                                    FontSize="36"
                                    CharacterSpacing="0"
                                    LineHeight="1"
-                                   TextColor="{StaticResource ForgeAccent}"/>
+                                   TextColor="{AppThemeBinding Light={StaticResource LightAccentBlue}, Dark={StaticResource ForgeAccentBlue}}"/>
                             <Label Text="minuter"
                                    Style="{StaticResource MutedLabel}"
                                    Margin="0,2,0,6"/>
@@ -246,7 +247,7 @@
                                    FontSize="36"
                                    CharacterSpacing="0"
                                    LineHeight="1"
-                                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                                   TextColor="{AppThemeBinding Light={StaticResource LightAccentPurple}, Dark={StaticResource ForgeAccentPurple}}"/>
                             <Label Text="slag/min"
                                    Style="{StaticResource MutedLabel}"
                                    Margin="0,2,0,6"/>
@@ -355,6 +356,5 @@
 
             </VerticalStackLayout>
         </ScrollView>
-    </RefreshView>
 
 </ContentPage>

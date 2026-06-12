@@ -32,9 +32,9 @@ public partial class LoggedSetRow : ObservableObject
 
     public Color SetLabelColor => SetType switch
     {
-        SetType.Warmup  => Color.FromArgb("#F59E0B"),
-        SetType.Dropset => Color.FromArgb("#FF5A1F"),
-        SetType.Time    => Color.FromArgb("#6EA8DC"),
+        SetType.Warmup  => Color.FromArgb("#FBBF24"),
+        SetType.Dropset => Color.FromArgb("#FB7185"),
+        SetType.Time    => Color.FromArgb("#38BDF8"),
         _               => Color.FromArgb("#505055")
     };
 

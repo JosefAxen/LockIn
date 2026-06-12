@@ -27,6 +27,17 @@
     <Color x:Key="ForgeBorder">#292929</Color>
     <Color x:Key="ForgeBorderLight">#393939</Color>
 
+    <!-- Multi-accent palette for data cards -->
+    <Color x:Key="ForgeAccentCoral">#FB7185</Color>
+    <Color x:Key="ForgeAccentBlue">#38BDF8</Color>
+    <Color x:Key="ForgeAccentPurple">#A78BFA</Color>
+    <Color x:Key="ForgeAccentAmber">#FBBF24</Color>
+
+    <!-- Dim versions for card backgrounds / fills -->
+    <Color x:Key="ForgeAccentCoralDim">#1FFB7185</Color>
+    <Color x:Key="ForgeAccentBlueDim">#1F38BDF8</Color>
+    <Color x:Key="ForgeAccentPurpleDim">#1FA78BFA</Color>
+
     <!-- Success — same hue as accent in this palette -->
     <Color x:Key="ForgeSuccess">#4ADE80</Color>
     <Color x:Key="ForgeSuccessDim">#1F4ADE80</Color>
@@ -45,6 +56,11 @@
     <Color x:Key="LightAccent">#72E3AD</Color>
     <!-- Text on primary buttons in light mode -->
     <Color x:Key="LightPrimaryForeground">#1E2723</Color>
+
+    <!-- Light multi-accent -->
+    <Color x:Key="LightAccentCoral">#E11D48</Color>
+    <Color x:Key="LightAccentBlue">#0284C7</Color>
+    <Color x:Key="LightAccentPurple">#7C3AED</Color>
 
     <SolidColorBrush x:Key="ForgeAccentBrush" Color="{StaticResource ForgeAccent}" />
     <SolidColorBrush x:Key="ForgeSurfaceBrush" Color="{StaticResource ForgeSurface}" />

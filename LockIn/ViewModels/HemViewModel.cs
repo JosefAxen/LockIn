@@ -21,6 +21,7 @@ public class HemViewModel
     }
 
     public string UserName => "Josef";
+    public string UserInitial => UserName.Length > 0 ? UserName[0].ToString().ToUpper() : "?";
     public string GreetingText => $"{Greeting}, {UserName}!";
     public string MotivationText => "Stark vecka — du är 72% av veckans träningmål.";
     public string StreakLabel => "3 DAGARS STREAK";
@@ -55,28 +56,25 @@ public class HemViewModel
 
         GaugeDrawable = new TrainingScoreDrawable { Score = TrainingScore, IsDark = isDark };
 
-        var accentColor = Color.FromArgb("#4ADE80");
-        var mutedColor = Color.FromArgb("#606060");
-
         StepsSparkline = new SparklineDrawable
         {
             Values = new double[] { 5200, 7100, 4800, 9200, 6300, 8100, 8420 },
-            LineColor = accentColor
+            LineColor = Color.FromArgb("#4ADE80")
         };
         CaloriesSparkline = new SparklineDrawable
         {
             Values = new double[] { 480, 590, 320, 710, 540, 620, 612 },
-            LineColor = accentColor
+            LineColor = Color.FromArgb("#FB7185")
         };
         ActiveSparkline = new SparklineDrawable
         {
             Values = new double[] { 60, 90, 45, 110, 70, 95, 87 },
-            LineColor = accentColor
+            LineColor = Color.FromArgb("#38BDF8")
         };
         HeartRateSparkline = new SparklineDrawable
         {
             Values = new double[] { 145, 162, 138, 170, 155, 148, 158 },
-            LineColor = mutedColor
+            LineColor = Color.FromArgb("#A78BFA")
         };
 
         Days = BuildStreakDays();
@@ -126,13 +124,13 @@ public class DayStreakItem
     public Color CircleStroke => IsCompleted
         ? Color.FromArgb("#4ADE80")
         : IsToday
-            ? Color.FromArgb("#888888")
+            ? Color.FromArgb("#FBBF24")
             : Color.FromArgb("#2A2A2A");
 
     public Color DayNumColor => IsCompleted
         ? Color.FromArgb("#4ADE80")
         : IsToday
-            ? Color.FromArgb("#E2E8F0")
+            ? Color.FromArgb("#FBBF24")
             : Color.FromArgb("#484848");
 
     public Color DayAbbrColor => IsToday
