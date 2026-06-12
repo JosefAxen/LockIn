@@ -12,21 +12,24 @@ public class HealthKitService : IHealthService
     private static readonly HKUnit s_kcal  = HKUnit.FromString("kcal");
     private static readonly HKUnit s_bpm   = HKUnit.FromString("count/min");
 
-    public Task<bool> RequestPermissionsAsync()
+    public async Task<bool> RequestPermissionsAsync()
     {
-        if (!HKHealthStore.IsHealthDataAvailable)
-            return Task.FromResult(false);
+        if (!HKHealthStore.IsHealthDataAvailable) return false;
 
-        var readTypes = new NSSet<HKObjectType>(
-            HKObjectType.GetQuantityType(HKQuantityTypeIdentifier.StepCount)!,
-            HKObjectType.GetQuantityType(HKQuantityTypeIdentifier.ActiveEnergyBurned)!,
-            HKObjectType.GetQuantityType(HKQuantityTypeIdentifier.HeartRate)!
-        );
+        var stepType   = HKQuantityType.Create(HKQuantityTypeIdentifier.StepCount)!;
+        var energyType = HKQuantityType.Create(HKQuantityTypeIdentifier.ActiveEnergyBurned)!;
+        var hrType     = HKQuantityType.Create(HKQuantityTypeIdentifier.HeartRate)!;
+        var readTypes  = new NSSet<HKObjectType>(new HKObjectType[] { stepType, energyType, hrType });
 
-        var tcs = new TaskCompletionSource<bool>();
-        _store.RequestAuthorization(null, readTypes, (success, error) =>
-            tcs.TrySetResult(success));
-        return tcs.Task;
+        try
+        {
+            await _store.RequestAuthorizationAsync(null, readTypes);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     public async Task<int> GetTodayStepsAsync() =>
@@ -47,10 +50,10 @@ public class HealthKitService : IHealthService
     public Task<double[]> GetWeeklyMaxHeartRateAsync() =>
         GetDailyStatsAsync(HKQuantityTypeIdentifier.HeartRate, s_bpm, HKStatisticsOptions.DiscreteMax);
 
-    private Task<double> GetTodaySumAsync(NSString typeId, HKUnit unit)
+    private Task<double> GetTodaySumAsync(HKQuantityTypeIdentifier typeId, HKUnit unit)
     {
         if (!HKHealthStore.IsHealthDataAvailable) return Task.FromResult(0.0);
-        var type = HKObjectType.GetQuantityType(typeId);
+        var type = HKQuantityType.Create(typeId);
         if (type is null) return Task.FromResult(0.0);
 
         var start = ToNSDate(DateTime.Today);
@@ -64,10 +67,10 @@ public class HealthKitService : IHealthService
         return tcs.Task;
     }
 
-    private Task<double> GetTodayDiscreteMaxAsync(NSString typeId, HKUnit unit)
+    private Task<double> GetTodayDiscreteMaxAsync(HKQuantityTypeIdentifier typeId, HKUnit unit)
     {
         if (!HKHealthStore.IsHealthDataAvailable) return Task.FromResult(0.0);
-        var type = HKObjectType.GetQuantityType(typeId);
+        var type = HKQuantityType.Create(typeId);
         if (type is null) return Task.FromResult(0.0);
 
         var start = ToNSDate(DateTime.Today);
@@ -81,38 +84,35 @@ public class HealthKitService : IHealthService
         return tcs.Task;
     }
 
-    private Task<double[]> GetDailyStatsAsync(NSString typeId, HKUnit unit, HKStatisticsOptions options)
+    // Uses 7 separate HKStatisticsQuery (one per day) to avoid HKStatisticsCollectionQuery.Statistics
+    // which changed from a method to a property in .NET iOS 9.
+    private Task<double[]> GetDailyStatsAsync(HKQuantityTypeIdentifier typeId, HKUnit unit, HKStatisticsOptions options)
     {
         if (!HKHealthStore.IsHealthDataAvailable) return Task.FromResult(new double[7]);
-        var type = HKObjectType.GetQuantityType(typeId);
+        var type = HKQuantityType.Create(typeId);
         if (type is null) return Task.FromResult(new double[7]);
 
-        var anchorDate = ToNSDate(DateTime.Today.AddDays(-6));
-        var endDate    = ToNSDate(DateTime.Now);
-        var pred       = HKQuery.GetPredicateForSamples(anchorDate, endDate, HKQueryOptions.StrictStartDate);
-        var interval   = new NSDateComponents { Day = 1 };
-
-        var tcs = new TaskCompletionSource<double[]>();
-        var query = new HKStatisticsCollectionQuery(type, pred, options, anchorDate, interval);
-
-        query.InitialResultsHandler = (q, collection, error) =>
+        var tasks = new Task<double>[7];
+        for (int i = 0; i < 7; i++)
         {
-            if (collection is null) { tcs.TrySetResult(new double[7]); return; }
+            var dayStart = ToNSDate(DateTime.Today.AddDays(i - 6));
+            var dayEnd   = ToNSDate(DateTime.Today.AddDays(i - 5));
+            var pred     = HKQuery.GetPredicateForSamples(dayStart, dayEnd, HKQueryOptions.StrictStartDate);
 
-            var result = new double[7];
-            for (int i = 0; i < 7; i++)
-            {
-                var dayDate = ToNSDate(DateTime.Today.AddDays(i - 6));
-                var stats   = collection.Statistics(dayDate);
-                result[i] = options == HKStatisticsOptions.CumulativeSum
-                    ? stats?.SumQuantity()?.GetDoubleValue(unit) ?? 0
-                    : stats?.MaximumQuantity()?.GetDoubleValue(unit) ?? 0;
-            }
-            tcs.TrySetResult(result);
-        };
+            var tcs = new TaskCompletionSource<double>();
+            var query = new HKStatisticsQuery(type, pred, options,
+                (q, result, error) =>
+                {
+                    var val = options == HKStatisticsOptions.CumulativeSum
+                        ? result?.SumQuantity()?.GetDoubleValue(unit) ?? 0
+                        : result?.MaximumQuantity()?.GetDoubleValue(unit) ?? 0;
+                    tcs.TrySetResult(val);
+                });
+            _store.ExecuteQuery(query);
+            tasks[i] = tcs.Task;
+        }
 
-        _store.ExecuteQuery(query);
-        return tcs.Task;
+        return Task.WhenAll(tasks);
     }
 
     private static NSDate ToNSDate(DateTime dt)
