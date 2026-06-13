@@ -72,7 +72,7 @@ public partial class HistoryPage : ContentPage
             var border = new Border
             {
                 StrokeShape = new Microsoft.Maui.Controls.Shapes.Ellipse(),
-                BackgroundColor = (trained || selected) ? Color.FromArgb("#FF5A1F") : Colors.Transparent,
+                BackgroundColor = (trained || selected) ? Color.FromArgb("#006239") : Colors.Transparent,
                 Stroke = (today && !trained && !selected) ? Color.FromArgb("#F0F0F5") : Colors.Transparent,
                 StrokeThickness = (today && !trained && !selected) ? 1.5 : 0,
                 Margin = new Thickness(3),

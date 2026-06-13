@@ -161,6 +161,6 @@ public class MuscleScoreRow
     public double ScaleFraction => Score / 10.0;
     public string ScoreText => Score >= 0.05 ? Score.ToString("F1") : "—";
     public Color ScoreColor => Score >= 0.05
-        ? Color.FromArgb("#FF5A1F")
+        ? Color.FromArgb("#4ADE80")
         : Color.FromArgb("#303038");
 }

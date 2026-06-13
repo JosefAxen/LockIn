@@ -8,7 +8,7 @@ public class BoolToColorConverter : IValueConverter
     {
         bool completed = value is true;
         return completed
-            ? Color.FromArgb("#FF5A1F")
+            ? Color.FromArgb("#4ADE80")
             : Color.FromArgb("#222224");
     }
 

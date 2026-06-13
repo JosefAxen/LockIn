@@ -33,7 +33,7 @@ public partial class ActiveWorkoutPage : ContentPage
             {
                 label.Text = row.RirDisplay;
                 label.TextColor = row.Rir >= 0
-                    ? Color.FromArgb("#FF5A1F")
+                    ? Color.FromArgb("#4ADE80")
                     : Color.FromArgb("#505055");
             }
         }

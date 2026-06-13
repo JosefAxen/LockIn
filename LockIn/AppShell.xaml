@@ -7,7 +7,7 @@
     Title="LockIn"
     Shell.TabBarForegroundColor="{AppThemeBinding Light={StaticResource LightAccent}, Dark={StaticResource ForgeAccent}}"
     Shell.TabBarTitleColor="{AppThemeBinding Light={StaticResource LightAccent}, Dark={StaticResource ForgeAccent}}"
-    Shell.TabBarUnselectedColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeTextSecondary}}"
+    Shell.TabBarUnselectedColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeText}}"
     Shell.TabBarBackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}">
 
     <TabBar>

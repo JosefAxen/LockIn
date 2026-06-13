@@ -56,7 +56,7 @@ public class ExerciseProgressDrawable : IDrawable
                 area.LineTo(MapX(i), MapY(pts[i].Epley1RM));
             area.LineTo(MapX(pts.Count - 1), padT + plotH);
             area.Close();
-            canvas.FillColor = Color.FromArgb("#1AFF5A1F");
+            canvas.FillColor = Color.FromArgb("#1A4ADE80");
             canvas.FillPath(area);
         }
 
@@ -67,7 +67,7 @@ public class ExerciseProgressDrawable : IDrawable
             line.MoveTo(MapX(0), MapY(pts[0].Epley1RM));
             for (int i = 1; i < pts.Count; i++)
                 line.LineTo(MapX(i), MapY(pts[i].Epley1RM));
-            canvas.StrokeColor = Color.FromArgb("#FF5A1F");
+            canvas.StrokeColor = Color.FromArgb("#4ADE80");
             canvas.StrokeSize = 2;
             canvas.DrawPath(line);
         }
@@ -78,7 +78,7 @@ public class ExerciseProgressDrawable : IDrawable
             float x = MapX(i), y = MapY(pts[i].Epley1RM);
             canvas.FillColor = pts[i].IsPR
                 ? Color.FromArgb("#4ADE80")
-                : Color.FromArgb("#FF5A1F");
+                : Color.FromArgb("#4ADE80");
             canvas.FillCircle(x, y, 4.5f);
             canvas.StrokeColor = Color.FromArgb("#111111");
             canvas.StrokeSize = 1.5f;

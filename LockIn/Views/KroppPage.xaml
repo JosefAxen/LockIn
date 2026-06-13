@@ -15,7 +15,7 @@
                    Text="KROPP"
                    Style="{StaticResource DisplayLabel}" FontSize="40"/>
             <Border Grid.Column="1"
-                    BackgroundColor="{StaticResource ForgeSurface2}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}"
                     StrokeShape="RoundRectangle 12" StrokeThickness="0"
                     WidthRequest="44" HeightRequest="44"
                     VerticalOptions="Center">
