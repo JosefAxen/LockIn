@@ -19,7 +19,13 @@ public partial class SettingsPage : ContentPage
     {
         base.OnAppearing();
         WorkoutBanner.IsVisible = _state.IsActive;
-        await _vm.LoadAsync();
+        Content.Opacity = 0;
+        Content.TranslationY = 8;
+        await Task.WhenAll(
+            _vm.LoadAsync(),
+            Content.FadeTo(1, 220, Easing.CubicOut),
+            Content.TranslateTo(0, 0, 220, Easing.CubicOut)
+        );
     }
 
     private async void OnWorkoutBannerTapped(object sender, TappedEventArgs e)

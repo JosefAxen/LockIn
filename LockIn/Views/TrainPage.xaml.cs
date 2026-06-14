@@ -40,10 +40,12 @@ public partial class TrainPage : ContentPage
         }
         else
         {
-            Content.TranslationY = 5;
+            Content.Opacity = 0;
+            Content.TranslationY = 8;
             await Task.WhenAll(
                 _vm.LoadAsync(),
-                Content.TranslateTo(0, 0, 200, Easing.CubicOut)
+                Content.FadeTo(1, 220, Easing.CubicOut),
+                Content.TranslateTo(0, 0, 220, Easing.CubicOut)
             );
         }
     }
