@@ -185,9 +185,9 @@
                                        FontFamily="DMSansMedium" FontSize="15"
                                        VerticalOptions="Center"/>
                                 <Border Grid.Column="1"
-                                        WidthRequest="44" HeightRequest="36"
+                                        WidthRequest="36" HeightRequest="36"
                                         BackgroundColor="{StaticResource ForgeAccent}"
-                                        StrokeShape="RoundRectangle 12" StrokeThickness="0">
+                                        StrokeShape="Ellipse" StrokeThickness="0">
                                     <views:AppIcon Source="ic_play.png"
                                                    WidthRequest="18" HeightRequest="18"
                                                    ForceTint="White"

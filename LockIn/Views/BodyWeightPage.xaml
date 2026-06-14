@@ -85,7 +85,7 @@
                                     <Border Grid.Column="2"
                                             WidthRequest="36" HeightRequest="36"
                                             BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}"
-                                            StrokeShape="RoundRectangle 10" StrokeThickness="0">
+                                            StrokeShape="Ellipse" StrokeThickness="0">
                                         <views:AppIcon Source="ic_trash.png"
                                                        WidthRequest="16" HeightRequest="16"
                                                        HorizontalOptions="Center" VerticalOptions="Center"/>
