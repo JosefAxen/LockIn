@@ -1,46 +1,34 @@
+using Plugin.LocalNotification;
+
 namespace LockIn.Services;
 
 public class NotificationService
 {
-    private const string TimerId = "rest_timer";
+    private const int TimerId = 100;
 
     public async Task RequestPermissionAsync()
     {
-#if IOS
-        var center = UserNotifications.UNUserNotificationCenter.Current;
-        await center.RequestAuthorizationAsync(
-            UserNotifications.UNAuthorizationOptions.Alert |
-            UserNotifications.UNAuthorizationOptions.Sound);
-#else
-        await Task.CompletedTask;
-#endif
+        await LocalNotificationCenter.Current.RequestNotificationPermissionAsync();
     }
 
     public void ScheduleTimer(int seconds, string exerciseName)
     {
-#if IOS
         CancelTimer();
-        var content = new UserNotifications.UNMutableNotificationContent
+        var request = new NotificationRequest
         {
-            Title = "Vilotimer klar!",
-            Body = $"Dags för nästa set – {exerciseName}",
-            Sound = UserNotifications.UNNotificationSound.Default
+            NotificationId = TimerId,
+            Title          = "Vilotimer klar!",
+            Description    = $"Dags för nästa set – {exerciseName}",
+            Schedule       = new NotificationRequestSchedule
+            {
+                NotifyTime = DateTime.Now.AddSeconds(seconds)
+            }
         };
-        var trigger = UserNotifications.UNTimeIntervalNotificationTrigger
-            .CreateTrigger(seconds, false);
-        var request = UserNotifications.UNNotificationRequest
-            .FromIdentifier(TimerId, content, trigger);
-        _ = UserNotifications.UNUserNotificationCenter.Current
-            .AddNotificationRequestAsync(request);
-#endif
+        _ = LocalNotificationCenter.Current.Show(request);
     }
 
     public void CancelTimer()
     {
-#if IOS
-        var center = UserNotifications.UNUserNotificationCenter.Current;
-        center.RemovePendingNotificationRequests(new[] { TimerId });
-        center.RemoveDeliveredNotifications(new[] { TimerId });
-#endif
+        LocalNotificationCenter.Current.Cancel(TimerId);
     }
 }

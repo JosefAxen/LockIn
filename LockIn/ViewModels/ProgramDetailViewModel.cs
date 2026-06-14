@@ -1,3 +1,5 @@
+using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn.Data;
@@ -88,10 +90,7 @@ public partial class ProgramDetailViewModel(DatabaseService db) : ObservableObje
 
         IsActivating = false;
 
-        await Shell.Current.DisplayAlert(
-            "Klart",
-            $"{_program.Days.Count} mallar skapade! Hitta dem under Mallar i Bibliotek.",
-            "OK");
+        await Toast.Make($"{_program.Days.Count} mallar skapade! Hitta dem under Mallar i Bibliotek.", ToastDuration.Long).Show();
 
         await Shell.Current.GoToAsync("..");
     }

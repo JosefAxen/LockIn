@@ -1,3 +1,4 @@
+using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn.Models;
@@ -98,7 +99,7 @@ public partial class TemplateEditViewModel(DatabaseService db) : ObservableObjec
     {
         if (string.IsNullOrWhiteSpace(TemplateName))
         {
-            await Shell.Current.DisplayAlert("Saknar namn", "Ange ett namn för mallen.", "OK");
+            await Toast.Make("Ange ett namn för mallen.").Show();
             return;
         }
 

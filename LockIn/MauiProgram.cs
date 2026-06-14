@@ -1,7 +1,9 @@
+using CommunityToolkit.Maui;
 using LockIn.Services;
 using LockIn.ViewModels;
 using LockIn.Views;
 using Microsoft.Extensions.Logging;
+using Plugin.LocalNotification;
 using SkiaSharp.Views.Maui.Controls.Hosting;
 
 namespace LockIn;
@@ -13,6 +15,8 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
+            .UseMauiCommunityToolkit()
+            .UseLocalNotification()
             .UseSkiaSharp()
             .ConfigureFonts(fonts =>
             {

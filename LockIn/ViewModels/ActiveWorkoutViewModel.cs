@@ -1,3 +1,4 @@
+using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn.Models;
@@ -204,7 +205,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
 
             if (!int.TryParse(set.RepsText, out durationSeconds) || durationSeconds <= 0)
             {
-                await Shell.Current.DisplayAlert("Fel", "Ange duration i sekunder.", "OK");
+                await Toast.Make("Ange duration i sekunder.").Show();
                 return;
             }
         }
@@ -214,7 +215,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
                     NumberStyles.Number, CultureInfo.InvariantCulture, out weight) ||
                 !int.TryParse(set.RepsText, out reps) || reps <= 0)
             {
-                await Shell.Current.DisplayAlert("Fel", "Ange giltigt vikt och reps.", "OK");
+                await Toast.Make("Ange giltigt vikt och reps.").Show();
                 return;
             }
         }

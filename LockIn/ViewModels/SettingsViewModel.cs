@@ -1,3 +1,4 @@
+using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn.Models;
@@ -77,6 +78,6 @@ public partial class SettingsViewModel(DatabaseService db) : ObservableObject
         if (!confirmed) return;
 
         await db.DeleteAllDataAsync();
-        await Shell.Current.DisplayAlert("Klart", "All data har rensats.", "OK");
+        await Toast.Make("All data har rensats.").Show();
     }
 }
