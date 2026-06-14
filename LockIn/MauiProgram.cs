@@ -17,7 +17,14 @@ public static class MauiProgram
                 fonts.AddFont("BebasNeue-Regular.ttf", "BebasNeue");
                 fonts.AddFont("DMSans-Regular.ttf", "DMSansRegular");
                 fonts.AddFont("DMSans-Medium.ttf", "DMSansMedium");
-            });
+            })
+#if IOS
+            .ConfigureMauiHandlers(handlers =>
+            {
+                handlers.AddHandler<LockIn.Views.AppIcon, LockIn.Platforms.iOS.AppIconHandler>();
+            })
+#endif
+            ;
 
         // Services
         builder.Services.AddSingleton<DatabaseService>();
@@ -70,6 +77,22 @@ public static class MauiProgram
 
 #if DEBUG
         builder.Logging.AddDebug();
+#endif
+
+#if IOS
+        // Tint button icon images white — they sit on coloured button backgrounds.
+        Microsoft.Maui.Handlers.ButtonHandler.Mapper.AppendToMapping(
+            nameof(Microsoft.Maui.IButton.ImageSource), (handler, _) =>
+        {
+            var img = handler.PlatformView.ImageForState(UIKit.UIControlState.Normal);
+            if (img is not null && img.RenderingMode != UIKit.UIImageRenderingMode.AlwaysTemplate)
+            {
+                handler.PlatformView.SetImage(
+                    img.ImageWithRenderingMode(UIKit.UIImageRenderingMode.AlwaysTemplate),
+                    UIKit.UIControlState.Normal);
+                handler.PlatformView.TintColor = UIKit.UIColor.White;
+            }
+        });
 #endif
 
         return builder.Build();

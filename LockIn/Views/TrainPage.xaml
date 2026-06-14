@@ -23,8 +23,8 @@
                 <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8" Margin="0,0,0,16">
                     <Border Grid.Column="0" Style="{StaticResource CardFrame}" Padding="14,12">
                         <StackLayout Spacing="2">
-                            <Image Source="ic_calendar.png" WidthRequest="16" HeightRequest="16"
-                                   HorizontalOptions="Start" Margin="0,0,0,2"/>
+                            <views:AppIcon Source="ic_calendar.png" WidthRequest="16" HeightRequest="16"
+                                          HorizontalOptions="Start" Margin="0,0,0,2"/>
                             <Label Text="{Binding WeekCount}"
                                    FontFamily="BebasNeue" FontSize="28"
                                    TextColor="{StaticResource ForgeAccent}"/>
@@ -33,8 +33,8 @@
                     </Border>
                     <Border Grid.Column="1" Style="{StaticResource CardFrame}" Padding="14,12">
                         <StackLayout Spacing="2">
-                            <Image Source="ic_flame.png" WidthRequest="16" HeightRequest="16"
-                                   HorizontalOptions="Start" Margin="0,0,0,2"/>
+                            <views:AppIcon Source="ic_flame.png" WidthRequest="16" HeightRequest="16"
+                                          HorizontalOptions="Start" Margin="0,0,0,2"/>
                             <Label Text="{Binding Streak}"
                                    FontFamily="BebasNeue" FontSize="28"
                                    TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
@@ -43,8 +43,8 @@
                     </Border>
                     <Border Grid.Column="2" Style="{StaticResource CardFrame}" Padding="14,12">
                         <StackLayout Spacing="2">
-                            <Image Source="ic_barbell.png" WidthRequest="16" HeightRequest="16"
-                                   HorizontalOptions="Start" Margin="0,0,0,2"/>
+                            <views:AppIcon Source="ic_barbell.png" WidthRequest="16" HeightRequest="16"
+                                          HorizontalOptions="Start" Margin="0,0,0,2"/>
                             <Label Text="{Binding TotalCount}"
                                    FontFamily="BebasNeue" FontSize="28"
                                    TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
@@ -229,10 +229,10 @@
                                                 <Label Text="TRYCK FÖR ATT STARTA"
                                                        Style="{StaticResource SectionLabel}" FontSize="10"/>
                                             </StackLayout>
-                                            <Image Grid.Column="1"
-                                                   Source="ic_play.png"
-                                                   WidthRequest="18" HeightRequest="18"
-                                                   VerticalOptions="Center"/>
+                                            <views:AppIcon Grid.Column="1"
+                                                          Source="ic_play.png"
+                                                          WidthRequest="18" HeightRequest="18"
+                                                          VerticalOptions="Center"/>
                                         </Grid>
                                     </Grid>
                                     <Border.GestureRecognizers>

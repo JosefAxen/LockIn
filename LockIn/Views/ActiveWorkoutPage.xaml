@@ -129,9 +129,9 @@
                                                 StrokeThickness="0"
                                                 Padding="10,6">
                                             <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="4">
-                                                <Image Grid.Column="0" Source="ic_timer.png"
-                                                       WidthRequest="13" HeightRequest="13"
-                                                       VerticalOptions="Center"/>
+                                                <views:AppIcon Grid.Column="0" Source="ic_timer.png"
+                                                              WidthRequest="13" HeightRequest="13"
+                                                              VerticalOptions="Center"/>
                                                 <Label Grid.Column="1"
                                                        Text="{Binding RestDisplay}"
                                                        TextColor="{StaticResource ForgeAccent}"

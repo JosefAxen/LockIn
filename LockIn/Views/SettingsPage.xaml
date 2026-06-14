@@ -27,7 +27,7 @@
                         <Border Grid.Column="0" BackgroundColor="{StaticResource ForgeAccentDim}"
                                 StrokeShape="RoundRectangle 10" StrokeThickness="0"
                                 WidthRequest="38" HeightRequest="38" VerticalOptions="Center">
-                            <Image Source="ic_calendar.png" WidthRequest="20" HeightRequest="20"
+                            <views:AppIcon Source="ic_calendar.png" WidthRequest="20" HeightRequest="20"
                                    HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Border>
                         <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
@@ -50,7 +50,7 @@
                         <Border Grid.Column="0" BackgroundColor="{StaticResource ForgeAccentDim}"
                                 StrokeShape="RoundRectangle 10" StrokeThickness="0"
                                 WidthRequest="38" HeightRequest="38" VerticalOptions="Center">
-                            <Image Source="ic_ruler.png" WidthRequest="20" HeightRequest="20"
+                            <views:AppIcon Source="ic_ruler.png" WidthRequest="20" HeightRequest="20"
                                    HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Border>
                         <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
@@ -69,7 +69,7 @@
                         <Border Grid.Column="0" BackgroundColor="{StaticResource ForgeAccent}"
                                 StrokeShape="RoundRectangle 10" StrokeThickness="0"
                                 WidthRequest="38" HeightRequest="38" VerticalOptions="Center">
-                            <Image Source="ic_vibration.png" WidthRequest="20" HeightRequest="20"
+                            <views:AppIcon Source="ic_vibration.png" WidthRequest="20" HeightRequest="20"
                                    HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Border>
                         <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
@@ -85,7 +85,7 @@
                         <Border Grid.Column="0" BackgroundColor="{StaticResource ForgeAccent}"
                                 StrokeShape="RoundRectangle 10" StrokeThickness="0"
                                 WidthRequest="38" HeightRequest="38" VerticalOptions="Center">
-                            <Image Source="ic_volume.png" WidthRequest="20" HeightRequest="20"
+                            <views:AppIcon Source="ic_volume.png" WidthRequest="20" HeightRequest="20"
                                    HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Border>
                         <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
@@ -126,7 +126,7 @@
                         <Border Grid.Column="0" BackgroundColor="{StaticResource ForgeAccentDim}"
                                 StrokeShape="RoundRectangle 10" StrokeThickness="0"
                                 WidthRequest="38" HeightRequest="38" VerticalOptions="Center">
-                            <Image Source="ic_weight.png" WidthRequest="20" HeightRequest="20"
+                            <views:AppIcon Source="ic_weight.png" WidthRequest="20" HeightRequest="20"
                                    HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Border>
                         <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
@@ -171,7 +171,7 @@
                         <Border Grid.Column="0" BackgroundColor="{StaticResource ForgeDestructive}"
                                 StrokeShape="RoundRectangle 10" StrokeThickness="0"
                                 WidthRequest="38" HeightRequest="38" VerticalOptions="Center">
-                            <Image Source="ic_trash.png" WidthRequest="20" HeightRequest="20"
+                            <views:AppIcon Source="ic_trash.png" WidthRequest="20" HeightRequest="20"
                                    HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Border>
                         <Button Grid.Column="1" Text="Rensa all data"
