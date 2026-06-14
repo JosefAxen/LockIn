@@ -12,21 +12,23 @@ public class HealthKitService : IHealthService
     private static readonly HKUnit s_kcal  = HKUnit.FromString("kcal");
     private static readonly HKUnit s_bpm   = HKUnit.FromString("count/min");
 
-    public Task<bool> RequestPermissionsAsync()
+    public async Task<bool> RequestPermissionsAsync()
     {
         if (!HKHealthStore.IsHealthDataAvailable)
-            return Task.FromResult(false);
+            return false;
 
-        var readTypes = NSSet.FromNSObjects(
+        var readTypes = new NSSet<HKObjectType>(
             HKQuantityType.Create(HKQuantityTypeIdentifier.StepCount)!,
             HKQuantityType.Create(HKQuantityTypeIdentifier.ActiveEnergyBurned)!,
             HKQuantityType.Create(HKQuantityTypeIdentifier.HeartRate)!
         );
 
-        var tcs = new TaskCompletionSource<bool>();
-        _store.RequestAuthorization(new NSSet(), readTypes, (success, error) =>
-            tcs.TrySetResult(success));
-        return tcs.Task;
+        try
+        {
+            await _store.RequestAuthorizationToShareAsync(null, readTypes);
+        }
+        catch { }
+        return true;
     }
 
     public async Task<int> GetTodayStepsAsync() =>
