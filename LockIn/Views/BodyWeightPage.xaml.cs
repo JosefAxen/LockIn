@@ -10,7 +10,6 @@ public partial class BodyWeightPage : ContentPage
     {
         InitializeComponent();
         BindingContext = _vm = vm;
-        _vm.ChartInvalidated += () => MainThread.BeginInvokeOnMainThread(() => ChartView.Invalidate());
     }
 
     protected override async void OnAppearing()

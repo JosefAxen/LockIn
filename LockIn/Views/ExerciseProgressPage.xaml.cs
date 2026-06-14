@@ -4,13 +4,10 @@ namespace LockIn.Views;
 
 public partial class ExerciseProgressPage : ContentPage
 {
-    private readonly ExerciseProgressViewModel _vm;
-
     public ExerciseProgressPage(ExerciseProgressViewModel vm)
     {
         InitializeComponent();
-        BindingContext = _vm = vm;
-        _vm.ChartInvalidated += () => MainThread.BeginInvokeOnMainThread(() => ChartView.Invalidate());
+        BindingContext = vm;
     }
 
     private async void OnBackClicked(object sender, EventArgs e) =>

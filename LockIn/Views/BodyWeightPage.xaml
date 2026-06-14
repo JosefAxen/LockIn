@@ -4,6 +4,7 @@
              xmlns:vm="clr-namespace:LockIn.ViewModels"
              xmlns:models="clr-namespace:LockIn.Models"
              xmlns:views="clr-namespace:LockIn.Views"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
              x:Class="LockIn.Views.BodyWeightPage"
              x:DataType="vm:BodyWeightViewModel"
              Shell.NavBarIsVisible="False">
@@ -56,9 +57,12 @@
                         <Label Text="VIKTUTVECKLING"
                                Style="{StaticResource SectionLabel}"
                                Margin="4,0,0,0"/>
-                        <GraphicsView x:Name="ChartView"
-                                      Drawable="{Binding ChartDrawable}"
-                                      HeightRequest="180"/>
+                        <lvc:CartesianChart
+                            Series="{Binding Series}"
+                            XAxes="{Binding XAxes}"
+                            YAxes="{Binding YAxes}"
+                            HeightRequest="180"
+                            BackgroundColor="Transparent"/>
                     </VerticalStackLayout>
                 </Border>
 

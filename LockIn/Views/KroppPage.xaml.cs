@@ -15,14 +15,12 @@ public partial class KroppPage : ContentPage
         BindingContext = _vm = vm;
         _state = state;
 
-        WeightChartView.Drawable = _vm.WeightChartDrawable;
     }
 
     protected override async void OnAppearing()
     {
         base.OnAppearing();
         WorkoutBanner.IsVisible = _state.IsActive;
-        _vm.ChartInvalidated += OnChartInvalidated;
         _vm.HeatmapReady += BuildHeatmapGrid;
 
         if (!_hasLoaded)
@@ -51,12 +49,9 @@ public partial class KroppPage : ContentPage
     protected override void OnDisappearing()
     {
         base.OnDisappearing();
-        _vm.ChartInvalidated -= OnChartInvalidated;
         _vm.HeatmapReady -= BuildHeatmapGrid;
     }
 
-    private void OnChartInvalidated() =>
-        MainThread.BeginInvokeOnMainThread(() => WeightChartView?.Invalidate());
 
     private void BuildHeatmapGrid() =>
         MainThread.BeginInvokeOnMainThread(BuildHeatmap);

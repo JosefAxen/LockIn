@@ -1,9 +1,11 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Painting;
 using LockIn;
 using LockIn.Models;
 using LockIn.Services;
-using LockIn.Views;
-using Microsoft.Maui.Graphics;
+using SkiaSharp;
 
 namespace LockIn.ViewModels;
 
@@ -21,10 +23,15 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
     [ObservableProperty] private IReadOnlyList<DayStreakItem> _days = Array.Empty<DayStreakItem>();
     [ObservableProperty] private IReadOnlyList<HeatmapTile> _heatmapItems = Array.Empty<HeatmapTile>();
     [ObservableProperty] private TrainingScoreDrawable _gaugeDrawable = new();
-    [ObservableProperty] private SparklineDrawable _stepsSparkline    = new() { LineColor = Color.FromArgb("#4ADE80") };
-    [ObservableProperty] private SparklineDrawable _caloriesSparkline = new() { LineColor = Color.FromArgb("#FB7185") };
-    [ObservableProperty] private SparklineDrawable _activeSparkline   = new() { LineColor = Color.FromArgb("#38BDF8") };
-    [ObservableProperty] private SparklineDrawable _heartRateSparkline = new() { LineColor = Color.FromArgb("#A78BFA") };
+    [ObservableProperty] private ISeries[] _stepsSeries     = [];
+    [ObservableProperty] private ISeries[] _caloriesSeries  = [];
+    [ObservableProperty] private ISeries[] _activeSeries    = [];
+    [ObservableProperty] private ISeries[] _heartRateSeries = [];
+
+    public static Axis[] HiddenAxes { get; } =
+    [
+        new Axis { IsVisible = false, ShowSeparatorLines = false }
+    ];
 
     public string UserName    => "Josef";
     public string UserInitial => "J";
@@ -105,33 +112,29 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
             var maxHR     = heartRateTask.Result;
             HeartRateText = maxHR > 0 ? maxHR.ToString() : "–";
 
-            // Sparklines (create new instances to force GraphicsView rebind)
-            StepsSparkline = new SparklineDrawable
-            {
-                Values    = weeklyStepsTask.Result,
-                LineColor = Color.FromArgb("#4ADE80")
-            };
-            CaloriesSparkline = new SparklineDrawable
-            {
-                Values    = weeklyCaloriesTask.Result,
-                LineColor = Color.FromArgb("#FB7185")
-            };
-            ActiveSparkline = new SparklineDrawable
-            {
-                Values    = BuildWeeklyActiveMinutes(recentSessions),
-                LineColor = Color.FromArgb("#38BDF8")
-            };
-            HeartRateSparkline = new SparklineDrawable
-            {
-                Values    = weeklyMaxHRTask.Result,
-                LineColor = Color.FromArgb("#A78BFA")
-            };
+            StepsSeries     = MakeSpark(weeklyStepsTask.Result,              new SKColor(0x4A, 0xDE, 0x80));
+            CaloriesSeries  = MakeSpark(weeklyCaloriesTask.Result,            new SKColor(0xFB, 0x71, 0x85));
+            ActiveSeries    = MakeSpark(BuildWeeklyActiveMinutes(recentSessions), new SKColor(0x38, 0xBD, 0xF8));
+            HeartRateSeries = MakeSpark(weeklyMaxHRTask.Result,               new SKColor(0xA7, 0x8B, 0xFA));
         }
         finally
         {
             IsLoading = false;
         }
     }
+
+    private static ISeries[] MakeSpark(IEnumerable<double> values, SKColor color) =>
+    [
+        new LineSeries<double>
+        {
+            Values         = values.ToArray(),
+            Stroke         = new SolidColorPaint(color, 1.8f),
+            Fill           = new SolidColorPaint(color.WithAlpha(35)),
+            GeometrySize   = 0,
+            LineSmoothness = 0.4,
+            DataPadding    = new LiveChartsCore.Drawing.LvcPoint(0, 0),
+        }
+    ];
 
     private static DateTime GetMondayThisWeek()
     {
