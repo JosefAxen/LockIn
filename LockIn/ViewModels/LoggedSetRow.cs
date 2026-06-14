@@ -21,7 +21,7 @@ public partial class LoggedSetRow : ObservableObject
     public string PrevRepsHint { get; init; } = "";
     public int TargetReps { get; init; } = 0;
 
-    public string RirDisplay => _rir >= 0 ? _rir.ToString() : "RIR";
+    public string RirDisplay => Rir >= 0 ? Rir.ToString() : "RIR";
 
     public string SetLabel => SetType switch
     {
