@@ -16,55 +16,48 @@ public class TrainingScoreDrawable : IDrawable
 
         float cx     = r.Width / 2f;
         float cy     = r.Height * 0.97f;
-        float outerR = MathF.Min(r.Width * 0.50f, cy - 2f);
-        float trackThick = MathF.Max(3f, outerR * 0.040f);
+        float radius = MathF.Min(r.Width * 0.50f, cy - 2f);
+        float thick  = MathF.Max(6f, radius * 0.055f);
 
-        // Track arc
+        // Track arc — full background semicircle
         canvas.StrokeLineCap = LineCap.Round;
-        canvas.StrokeSize  = trackThick;
-        canvas.StrokeColor = isDark ? s_trackDark : s_trackLight;
-        canvas.DrawArc(cx - outerR, cy - outerR, outerR * 2f, outerR * 2f, 180f, 360f, true, false);
+        canvas.StrokeSize    = thick;
+        canvas.StrokeColor   = isDark ? s_trackDark : s_trackLight;
+        canvas.DrawArc(cx - radius, cy - radius, radius * 2f, radius * 2f,
+                       180f, 360f, true, false);
 
-        if (Score > 0)
+        if (Score <= 0) return;
+
+        float progress = MathF.Min((float)(Score / 100.0), 1f);
+        float totalDeg = progress * 180f;
+        const int segs = 60;
+        float segSize  = totalDeg / segs;
+
+        // Draw gradient arc using individual DrawArc calls (not PathF — different angle convention).
+        // LineCap.Butt = flat ends, no bleed between adjacent segments.
+        canvas.StrokeLineCap = LineCap.Butt;
+        canvas.StrokeSize    = thick + 0.5f; // fractionally wider to seal AA seams
+
+        for (int i = 0; i < segs; i++)
         {
-            float innerR   = outerR - trackThick;
-            float progress = MathF.Min((float)(Score / 100.0), 1f);
-            float totalDeg = progress * 180f;
-            const int segments = 72;
-            float segSize = totalDeg / segments;
+            float t     = segs > 1 ? (float)i / (segs - 1) : 0f;
+            float start = 180f + i * segSize;
+            float end   = start + segSize + 0.4f; // tiny overlap to prevent AA gaps
 
-            for (int s = 0; s < segments; s++)
-            {
-                float t        = segments > 1 ? (float)s / (segments - 1) : 0f;
-                float segStart = 180f + s * segSize;
-                float segEnd   = segStart + segSize;
+            int rr = (int)(239 - 165 * t);
+            int gg = (int)(68  + 154 * t);
+            int bb = (int)(68  +  60 * t);
 
-                int rr = (int)(239 - 165 * t);
-                int gg = (int)(68  + 154 * t);
-                int bb = (int)(68  +  60 * t);
-
-                float sRad = segStart * MathF.PI / 180f;
-                float eRad = segEnd   * MathF.PI / 180f;
-
-                var path = new PathF();
-                path.MoveTo(cx + outerR * MathF.Cos(sRad), cy + outerR * MathF.Sin(sRad));
-                path.AddArc(cx - outerR, cy - outerR, outerR * 2f, outerR * 2f, segStart, segEnd, true);
-                path.LineTo(cx + innerR * MathF.Cos(eRad), cy + innerR * MathF.Sin(eRad));
-                path.AddArc(cx - innerR, cy - innerR, innerR * 2f, innerR * 2f, segEnd, segStart, false);
-                path.Close();
-
-                canvas.FillColor = Color.FromRgb(rr, gg, bb);
-                canvas.FillPath(path);
-            }
-
-            // White indicator dot at tip
-            float endAngle = 180f + totalDeg;
-            double endRad  = endAngle * Math.PI / 180.0;
-            float  midR    = (outerR + innerR) / 2f;
-            float  dotX    = cx + midR * (float)Math.Cos(endRad);
-            float  dotY    = cy + midR * (float)Math.Sin(endRad);
-            canvas.FillColor = s_white;
-            canvas.FillCircle(dotX, dotY, trackThick * 1.15f);
+            canvas.StrokeColor = Color.FromRgb(rr, gg, bb);
+            canvas.DrawArc(cx - radius, cy - radius, radius * 2f, radius * 2f,
+                           start, end, true, false);
         }
+
+        // White indicator dot at the progress tip
+        float endRad = (180f + totalDeg) * MathF.PI / 180f;
+        float dotX   = cx + radius * MathF.Cos(endRad);
+        float dotY   = cy + radius * MathF.Sin(endRad);
+        canvas.FillColor = s_white;
+        canvas.FillCircle(dotX, dotY, thick * 0.85f);
     }
 }
