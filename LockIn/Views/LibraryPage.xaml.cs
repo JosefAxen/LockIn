@@ -26,16 +26,19 @@ public partial class LibraryPage : ContentPage
         {
             Content.Opacity = 0;
             Content.TranslationY = 10;
-        }
-
-        await _vm.LoadAsync();
-
-        if (!_hasLoaded)
-        {
+            await _vm.LoadAsync();
             _hasLoaded = true;
             await Task.WhenAll(
                 Content.FadeTo(1, 280, Easing.CubicOut),
                 Content.TranslateTo(0, 0, 280, Easing.CubicOut)
+            );
+        }
+        else
+        {
+            Content.TranslationY = 5;
+            await Task.WhenAll(
+                _vm.LoadAsync(),
+                Content.TranslateTo(0, 0, 200, Easing.CubicOut)
             );
         }
     }
