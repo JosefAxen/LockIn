@@ -2,6 +2,9 @@
 
 	<PropertyGroup Condition="$(TargetFramework.Contains('-ios'))">
 		<CodesignEntitlements>Platforms\iOS\Entitlements.plist</CodesignEntitlements>
+		<!-- LiveChartsCore 2.0.0-rc2 transitively pulls in SkiaSharp.Views.Maui.Controls.Compatibility
+		     which fails iOS AOT with SDK net9.0_18.5. Tell mtouch to interpret that assembly instead. -->
+		<MtouchInterpreter>SkiaSharp.Views.Maui.Controls.Compatibility</MtouchInterpreter>
 	</PropertyGroup>
 
 	<PropertyGroup>
