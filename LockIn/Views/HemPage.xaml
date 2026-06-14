@@ -131,7 +131,7 @@
                                    FontFamily="BebasNeue" FontSize="36" CharacterSpacing="0" LineHeight="1"
                                    TextColor="{AppThemeBinding Light={StaticResource LightAccent}, Dark={StaticResource ForgeAccent}}"/>
                             <Label Text="steg idag" Style="{StaticResource MutedLabel}" Margin="0,2,0,6"/>
-                            <lvc:CartesianChart Series="{Binding StepsSeries}" XAxes="{Binding HiddenAxes}" YAxes="{Binding HiddenAxes}" HeightRequest="38" BackgroundColor="Transparent"/>
+                            <lvc:CartesianChart Series="{Binding StepsSeries}" XAxes="{x:Static vm:HemViewModel.HiddenAxes}" YAxes="{x:Static vm:HemViewModel.HiddenAxes}" HeightRequest="38" BackgroundColor="Transparent"/>
                         </VerticalStackLayout>
                     </Border>
 
@@ -146,7 +146,7 @@
                                    FontFamily="BebasNeue" FontSize="36" CharacterSpacing="0" LineHeight="1"
                                    TextColor="{AppThemeBinding Light={StaticResource LightAccentCoral}, Dark={StaticResource ForgeAccentCoral}}"/>
                             <Label Text="kcal" Style="{StaticResource MutedLabel}" Margin="0,2,0,6"/>
-                            <lvc:CartesianChart Series="{Binding CaloriesSeries}" XAxes="{Binding HiddenAxes}" YAxes="{Binding HiddenAxes}" HeightRequest="38" BackgroundColor="Transparent"/>
+                            <lvc:CartesianChart Series="{Binding CaloriesSeries}" XAxes="{x:Static vm:HemViewModel.HiddenAxes}" YAxes="{x:Static vm:HemViewModel.HiddenAxes}" HeightRequest="38" BackgroundColor="Transparent"/>
                         </VerticalStackLayout>
                     </Border>
 
@@ -161,7 +161,7 @@
                                    FontFamily="BebasNeue" FontSize="36" CharacterSpacing="0" LineHeight="1"
                                    TextColor="{AppThemeBinding Light={StaticResource LightAccentBlue}, Dark={StaticResource ForgeAccentBlue}}"/>
                             <Label Text="minuter" Style="{StaticResource MutedLabel}" Margin="0,2,0,6"/>
-                            <lvc:CartesianChart Series="{Binding ActiveSeries}" XAxes="{Binding HiddenAxes}" YAxes="{Binding HiddenAxes}" HeightRequest="38" BackgroundColor="Transparent"/>
+                            <lvc:CartesianChart Series="{Binding ActiveSeries}" XAxes="{x:Static vm:HemViewModel.HiddenAxes}" YAxes="{x:Static vm:HemViewModel.HiddenAxes}" HeightRequest="38" BackgroundColor="Transparent"/>
                         </VerticalStackLayout>
                     </Border>
 
@@ -176,7 +176,7 @@
                                    FontFamily="BebasNeue" FontSize="36" CharacterSpacing="0" LineHeight="1"
                                    TextColor="{AppThemeBinding Light={StaticResource LightAccentPurple}, Dark={StaticResource ForgeAccentPurple}}"/>
                             <Label Text="slag/min" Style="{StaticResource MutedLabel}" Margin="0,2,0,6"/>
-                            <lvc:CartesianChart Series="{Binding HeartRateSeries}" XAxes="{Binding HiddenAxes}" YAxes="{Binding HiddenAxes}" HeightRequest="38" BackgroundColor="Transparent"/>
+                            <lvc:CartesianChart Series="{Binding HeartRateSeries}" XAxes="{x:Static vm:HemViewModel.HiddenAxes}" YAxes="{x:Static vm:HemViewModel.HiddenAxes}" HeightRequest="38" BackgroundColor="Transparent"/>
                         </VerticalStackLayout>
                     </Border>
                 </Grid>
