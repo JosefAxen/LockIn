@@ -22,7 +22,6 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
     [ObservableProperty] private bool _isLoading = true;
     [ObservableProperty] private IReadOnlyList<DayStreakItem> _days = Array.Empty<DayStreakItem>();
     [ObservableProperty] private IReadOnlyList<HeatmapTile> _heatmapItems = Array.Empty<HeatmapTile>();
-    [ObservableProperty] private TrainingScoreDrawable _gaugeDrawable = new();
     [ObservableProperty] private ISeries[] _stepsSeries     = [];
     [ObservableProperty] private ISeries[] _caloriesSeries  = [];
     [ObservableProperty] private ISeries[] _activeSeries    = [];
