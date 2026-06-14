@@ -18,141 +18,167 @@ public class WeeklyGoalGauge : SKCanvasView
 
     private const float StartAngleDeg = 120f;
     private const float TotalSweepDeg = 300f;
-    private const float StrokeWidth = 14f;
     private const int GradientSegments = 80;
+
+    // Logical dp — multiplied by display density at render time
+    private const float StrokeWidthDp  = 20f;
+    private const float ScoreTextDp    = 58f;
+    private const float SubTextDp      = 17f;
+
+    private float _scale = 1f;
 
     protected override void OnPaintSurface(SKPaintSurfaceEventArgs e)
     {
         var canvas = e.Surface.Canvas;
-        var info = e.Info;
+        var info   = e.Info;
         canvas.Clear();
 
-        float cx = info.Width / 2f;
-        float cy = info.Height / 2f;
-        float radius = Math.Min(cx, cy) - StrokeWidth - 4f;
+        _scale = info.Width > 0 && Width > 0 ? (float)(info.Width / Width) : 1f;
 
-        DrawTrack(canvas, cx, cy, radius);
-        DrawActiveArc(canvas, cx, cy, radius);
-        DrawEndpointDot(canvas, cx, cy, radius);
+        float sw     = StrokeWidthDp * _scale;
+        float cx     = info.Width  / 2f;
+        float cy     = info.Height / 2f;
+        float radius = Math.Min(cx, cy) - sw - 4f * _scale;
+
+        DrawTrack(canvas, cx, cy, radius, sw);
+        DrawActiveArc(canvas, cx, cy, radius, sw);
+        DrawEndpointDot(canvas, cx, cy, radius, sw);
         DrawCenterText(canvas, cx, cy);
     }
 
-    private void DrawTrack(SKCanvas canvas, float cx, float cy, float radius)
+    private static void DrawTrack(SKCanvas canvas, float cx, float cy, float radius, float sw)
     {
         using var paint = new SKPaint
         {
             IsAntialias = true,
-            Style = SKPaintStyle.Stroke,
-            StrokeWidth = StrokeWidth,
-            StrokeCap = SKStrokeCap.Round,
-            Color = new SKColor(0x25, 0x25, 0x25)
+            Style       = SKPaintStyle.Stroke,
+            StrokeWidth = sw,
+            StrokeCap   = SKStrokeCap.Round,
+            Color       = new SKColor(0x25, 0x25, 0x25)
         };
         using var path = BuildArcPath(cx, cy, radius, StartAngleDeg, TotalSweepDeg);
         canvas.DrawPath(path, paint);
     }
 
-    private void DrawActiveArc(SKCanvas canvas, float cx, float cy, float radius)
+    private static void DrawActiveArc(SKCanvas canvas, float cx, float cy, float radius, float sw, float progress)
     {
-        if (Progress <= 0f) return;
+        if (progress <= 0f) return;
 
-        float activeSweep = TotalSweepDeg * Progress;
+        float activeSweep     = TotalSweepDeg * progress;
         float sweepPerSegment = activeSweep / GradientSegments;
 
         for (int i = 0; i < GradientSegments; i++)
         {
-            float t = (float)i / GradientSegments;
+            float t        = (float)i / GradientSegments;
             float segStart = StartAngleDeg + i * sweepPerSegment;
-            float segEnd = segStart + sweepPerSegment + 0.5f;
+            float segEnd   = segStart + sweepPerSegment + 0.5f;
 
             using var paint = new SKPaint
             {
                 IsAntialias = true,
-                Style = SKPaintStyle.Stroke,
-                StrokeWidth = StrokeWidth,
-                StrokeCap = SKStrokeCap.Butt,
-                Color = InterpolateColor(t)
+                Style       = SKPaintStyle.Stroke,
+                StrokeWidth = sw,
+                StrokeCap   = SKStrokeCap.Butt,
+                Color       = InterpolateColor(t)
             };
             using var path = BuildArcPath(cx, cy, radius, segStart, segEnd - segStart);
             canvas.DrawPath(path, paint);
         }
 
-        // Round cap vid start
         using var startPaint = new SKPaint
         {
             IsAntialias = true,
-            Style = SKPaintStyle.Stroke,
-            StrokeWidth = StrokeWidth,
-            StrokeCap = SKStrokeCap.Round,
-            Color = InterpolateColor(0f)
+            Style       = SKPaintStyle.Stroke,
+            StrokeWidth = sw,
+            StrokeCap   = SKStrokeCap.Round,
+            Color       = InterpolateColor(0f)
         };
         using var startPath = BuildArcPath(cx, cy, radius, StartAngleDeg, sweepPerSegment);
         canvas.DrawPath(startPath, startPaint);
 
-        // Round cap vid slut
         float lastStart = StartAngleDeg + activeSweep - sweepPerSegment;
         using var endPaint = new SKPaint
         {
             IsAntialias = true,
-            Style = SKPaintStyle.Stroke,
-            StrokeWidth = StrokeWidth,
-            StrokeCap = SKStrokeCap.Round,
-            Color = InterpolateColor(1f)
+            Style       = SKPaintStyle.Stroke,
+            StrokeWidth = sw,
+            StrokeCap   = SKStrokeCap.Round,
+            Color       = InterpolateColor(1f)
         };
         using var endPath = BuildArcPath(cx, cy, radius, lastStart, sweepPerSegment);
         canvas.DrawPath(endPath, endPaint);
     }
 
-    private void DrawEndpointDot(SKCanvas canvas, float cx, float cy, float radius)
+    private static void DrawEndpointDot(SKCanvas canvas, float cx, float cy, float radius, float sw, float progress)
     {
-        if (Progress <= 0f) return;
+        if (progress <= 0f) return;
 
-        float endAngleRad = (StartAngleDeg + TotalSweepDeg * Progress) * MathF.PI / 180f;
+        float endAngleRad = (StartAngleDeg + TotalSweepDeg * progress) * MathF.PI / 180f;
         float dotX = cx + radius * MathF.Cos(endAngleRad);
         float dotY = cy + radius * MathF.Sin(endAngleRad);
 
         using var glowPaint = new SKPaint
         {
-            IsAntialias = true,
-            Style = SKPaintStyle.Fill,
-            Color = new SKColor(0xFF, 0xFF, 0xFF, 0x55),
-            MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, StrokeWidth * 0.5f)
+            IsAntialias  = true,
+            Style        = SKPaintStyle.Fill,
+            Color        = new SKColor(0xFF, 0xFF, 0xFF, 0x55),
+            MaskFilter   = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, sw * 0.5f)
         };
-        canvas.DrawCircle(dotX, dotY, StrokeWidth * 0.75f, glowPaint);
+        canvas.DrawCircle(dotX, dotY, sw * 0.75f, glowPaint);
 
         using var dotPaint = new SKPaint
         {
             IsAntialias = true,
-            Style = SKPaintStyle.Fill,
-            Color = SKColors.White
+            Style       = SKPaintStyle.Fill,
+            Color       = SKColors.White
         };
-        canvas.DrawCircle(dotX, dotY, StrokeWidth * 0.48f, dotPaint);
+        canvas.DrawCircle(dotX, dotY, sw * 0.48f, dotPaint);
     }
 
     private void DrawCenterText(SKCanvas canvas, float cx, float cy)
     {
-        int pct = (int)Math.Round(Progress * 100);
+        int   pct     = (int)Math.Round(Progress * 100);
+        float scoreTs = ScoreTextDp * _scale;
+        float subTs   = SubTextDp   * _scale;
 
-        // Stor siffra
         using var scorePaint = new SKPaint
         {
             IsAntialias = true,
-            Color = SKColors.White,
-            TextSize = 64f,
+            Color       = SKColors.White,
+            TextSize    = scoreTs,
             FakeBoldText = true,
-            TextAlign = SKTextAlign.Center
+            TextAlign   = SKTextAlign.Center
         };
-        canvas.DrawText(pct.ToString(), cx, cy - 4f, scorePaint);
-
-        // / 100
         using var subPaint = new SKPaint
         {
             IsAntialias = true,
-            Color = new SKColor(0x55, 0x55, 0x55),
-            TextSize = 20f,
-            TextAlign = SKTextAlign.Center
+            Color       = new SKColor(0x88, 0x88, 0x88),
+            TextSize    = subTs,
+            TextAlign   = SKTextAlign.Center
         };
-        canvas.DrawText("/ 100", cx, cy + 32f, subPaint);
+
+        scorePaint.GetFontMetrics(out var sm);
+        subPaint.GetFontMetrics(out var pm);
+
+        float scoreH = sm.Descent - sm.Ascent;
+        float subH   = pm.Descent - pm.Ascent;
+        float gap    = subTs * 0.25f;
+
+        float totalH     = scoreH + gap + subH;
+        float blockTop   = cy - totalH / 2f;
+        float scoreBase  = blockTop - sm.Ascent;
+        float subBase    = blockTop + scoreH + gap - pm.Ascent;
+
+        canvas.DrawText(pct.ToString(), cx, scoreBase, scorePaint);
+        canvas.DrawText("/ 100",        cx, subBase,   subPaint);
     }
+
+    // Overloads to bridge instance Progress to static helpers
+    private void DrawActiveArc(SKCanvas c, float cx, float cy, float r, float sw)
+        => DrawActiveArc(c, cx, cy, r, sw, Progress);
+
+    private void DrawEndpointDot(SKCanvas c, float cx, float cy, float r, float sw)
+        => DrawEndpointDot(c, cx, cy, r, sw, Progress);
 
     private static SKPath BuildArcPath(float cx, float cy, float radius, float startDeg, float sweepDeg)
     {
@@ -169,16 +195,12 @@ public class WeeklyGoalGauge : SKCanvasView
         if (t < 0.5f)
         {
             float l = t / 0.5f;
-            r = Lerp(192, 142, l);
-            g = Lerp(57, 68, l);
-            b = Lerp(43, 173, l);
+            r = Lerp(192, 142, l); g = Lerp(57, 68, l); b = Lerp(43, 173, l);
         }
         else
         {
             float l = (t - 0.5f) / 0.5f;
-            r = Lerp(142, 52, l);
-            g = Lerp(68, 152, l);
-            b = Lerp(173, 219, l);
+            r = Lerp(142, 52, l); g = Lerp(68, 152, l); b = Lerp(173, 219, l);
         }
         return new SKColor((byte)r, (byte)g, (byte)b);
     }
