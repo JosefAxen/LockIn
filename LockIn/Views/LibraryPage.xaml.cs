@@ -7,6 +7,7 @@ public partial class LibraryPage : ContentPage
 {
     private readonly LibraryViewModel _vm;
     private readonly ActiveWorkoutStateService _state;
+    private bool _hasLoaded;
 
     public LibraryPage(LibraryViewModel vm, ActiveWorkoutStateService state)
     {
@@ -20,7 +21,23 @@ public partial class LibraryPage : ContentPage
         base.OnAppearing();
         WorkoutBanner.IsVisible = _state.IsActive;
         _state.StateChanged += OnWorkoutStateChanged;
+
+        if (!_hasLoaded)
+        {
+            Content.Opacity = 0;
+            Content.TranslationY = 10;
+        }
+
         await _vm.LoadAsync();
+
+        if (!_hasLoaded)
+        {
+            _hasLoaded = true;
+            await Task.WhenAll(
+                Content.FadeTo(1, 280, Easing.CubicOut),
+                Content.TranslateTo(0, 0, 280, Easing.CubicOut)
+            );
+        }
     }
 
     protected override void OnDisappearing()

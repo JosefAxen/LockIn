@@ -7,6 +7,7 @@ public partial class KroppPage : ContentPage
 {
     private readonly KroppViewModel _vm;
     private readonly ActiveWorkoutStateService _state;
+    private bool _hasLoaded;
 
     public KroppPage(KroppViewModel vm, ActiveWorkoutStateService state)
     {
@@ -23,7 +24,23 @@ public partial class KroppPage : ContentPage
         WorkoutBanner.IsVisible = _state.IsActive;
         _vm.ChartInvalidated += OnChartInvalidated;
         _vm.HeatmapReady += BuildHeatmapGrid;
+
+        if (!_hasLoaded)
+        {
+            Content.Opacity = 0;
+            Content.TranslationY = 10;
+        }
+
         await _vm.LoadAsync();
+
+        if (!_hasLoaded)
+        {
+            _hasLoaded = true;
+            await Task.WhenAll(
+                Content.FadeTo(1, 280, Easing.CubicOut),
+                Content.TranslateTo(0, 0, 280, Easing.CubicOut)
+            );
+        }
     }
 
     protected override void OnDisappearing()

@@ -8,6 +8,7 @@ public partial class HistoryPage : ContentPage
 {
     private readonly HistoryViewModel _vm;
     private readonly ActiveWorkoutStateService _state;
+    private bool _hasLoaded;
 
     public HistoryPage(HistoryViewModel vm, ActiveWorkoutStateService state)
     {
@@ -21,7 +22,23 @@ public partial class HistoryPage : ContentPage
         base.OnAppearing();
         WorkoutBanner.IsVisible = _state.IsActive;
         _vm.CalendarChanged += RebuildCalendar;
+
+        if (!_hasLoaded)
+        {
+            Content.Opacity = 0;
+            Content.TranslationY = 10;
+        }
+
         await _vm.LoadAsync();
+
+        if (!_hasLoaded)
+        {
+            _hasLoaded = true;
+            await Task.WhenAll(
+                Content.FadeTo(1, 280, Easing.CubicOut),
+                Content.TranslateTo(0, 0, 280, Easing.CubicOut)
+            );
+        }
     }
 
     protected override void OnDisappearing()
