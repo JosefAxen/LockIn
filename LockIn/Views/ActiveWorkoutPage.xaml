@@ -57,7 +57,7 @@
         </Grid>
 
         <!-- Scrollable content -->
-        <ScrollView Grid.Row="1">
+        <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Never">
             <StackLayout Padding="16,0,16,120" Spacing="12">
 
                 <!-- PR Banner -->
@@ -170,7 +170,8 @@
                                         <BindableLayout.ItemTemplate>
                                             <DataTemplate x:DataType="vm:LoggedSetRow">
                                                 <Grid ColumnDefinitions="32,*,14,*,42,36"
-                                                      Padding="16,5,16,5" ColumnSpacing="6">
+                                                      Padding="16,5,16,5" ColumnSpacing="6"
+                                                      HeightRequest="46">
 
                                                     <!-- Set number / type label — tap to change type -->
                                                     <Border Grid.Column="0"

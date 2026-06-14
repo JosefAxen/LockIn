@@ -29,7 +29,7 @@
             </StackLayout>
         </Grid>
 
-        <ScrollView Grid.Row="1">
+        <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Never">
             <VerticalStackLayout Padding="16,4,16,40" Spacing="12">
 
                 <!-- Chart card -->

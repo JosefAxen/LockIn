@@ -88,7 +88,9 @@
                         ItemsSource="{Binding MuscleChips}"
                         SelectionMode="None"
                         HeightRequest="40"
-                        Margin="16,0,16,6">
+                        Margin="16,0,16,6"
+                        HorizontalScrollBarVisibility="Never"
+                        VerticalScrollBarVisibility="Never">
             <CollectionView.ItemsLayout>
                 <LinearItemsLayout Orientation="Horizontal" ItemSpacing="6"/>
             </CollectionView.ItemsLayout>
@@ -121,7 +123,9 @@
         <CollectionView Grid.Row="4"
                         IsVisible="{Binding ShowExercises}"
                         ItemsSource="{Binding Groups}"
-                        IsGrouped="True">
+                        IsGrouped="True"
+                        HorizontalScrollBarVisibility="Never"
+                        VerticalScrollBarVisibility="Never">
             <CollectionView.GroupHeaderTemplate>
                 <DataTemplate x:DataType="vm:ExerciseGroup">
                     <Label Text="{Binding Title}"
@@ -169,7 +173,9 @@
 
         <!-- Tab 1: Templates -->
         <Grid Grid.Row="4" IsVisible="{Binding ShowTemplates}">
-            <CollectionView ItemsSource="{Binding Templates}">
+            <CollectionView ItemsSource="{Binding Templates}"
+                            HorizontalScrollBarVisibility="Never"
+                            VerticalScrollBarVisibility="Never">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:WorkoutTemplate">
                         <Border Margin="16,0,16,10"
@@ -225,7 +231,7 @@
         </Grid>
 
         <!-- Tab 2: Programs -->
-        <ScrollView Grid.Row="4" IsVisible="{Binding ShowPrograms}">
+        <ScrollView Grid.Row="4" IsVisible="{Binding ShowPrograms}" VerticalScrollBarVisibility="Never">
             <StackLayout BindableLayout.ItemsSource="{Binding Programs}"
                          Padding="16,0,16,40" Spacing="12">
                 <BindableLayout.ItemTemplate>

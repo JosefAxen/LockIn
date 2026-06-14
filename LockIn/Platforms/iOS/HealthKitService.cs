@@ -14,9 +14,19 @@ public class HealthKitService : IHealthService
 
     public Task<bool> RequestPermissionsAsync()
     {
-        // HKHealthStore.RequestAuthorization* binding unavailable in .NET iOS 9.
-        // User grants access via Settings → Privacy → Health (see "Apple Hälsa" in app Settings).
-        return Task.FromResult(HKHealthStore.IsHealthDataAvailable);
+        if (!HKHealthStore.IsHealthDataAvailable)
+            return Task.FromResult(false);
+
+        var readTypes = NSSet.FromNSObjects(
+            HKQuantityType.Create(HKQuantityTypeIdentifier.StepCount)!,
+            HKQuantityType.Create(HKQuantityTypeIdentifier.ActiveEnergyBurned)!,
+            HKQuantityType.Create(HKQuantityTypeIdentifier.HeartRate)!
+        );
+
+        var tcs = new TaskCompletionSource<bool>();
+        _store.RequestAuthorization(new NSSet(), readTypes, (success, error) =>
+            tcs.TrySetResult(success));
+        return tcs.Task;
     }
 
     public async Task<int> GetTodayStepsAsync() =>

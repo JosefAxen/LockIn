@@ -17,7 +17,7 @@
             <Label Text="INSTÄLLNINGAR" Style="{StaticResource DisplayLabel}" FontSize="28"/>
         </Grid>
 
-        <ScrollView Grid.Row="1">
+        <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Never">
             <StackLayout Padding="16,8,16,48" Spacing="16">
 
                 <!-- Weekly goal -->

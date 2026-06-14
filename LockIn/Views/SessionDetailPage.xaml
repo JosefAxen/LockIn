@@ -23,7 +23,7 @@
                    HorizontalOptions="Center" VerticalOptions="Center"/>
         </Grid>
 
-        <ScrollView Grid.Row="1">
+        <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Never">
             <StackLayout Padding="16,0,16,32" Spacing="12">
 
                 <!-- Stats card -->
@@ -79,7 +79,9 @@
                 <CollectionView ItemsSource="{Binding Photos}"
                                 HeightRequest="120"
                                 ItemsLayout="HorizontalList"
-                                IsVisible="{Binding Photos.Count, Converter={x:Static vm:GreaterThanZeroConverter.Instance}}">
+                                IsVisible="{Binding Photos.Count, Converter={x:Static vm:GreaterThanZeroConverter.Instance}}"
+                                HorizontalScrollBarVisibility="Never"
+                                VerticalScrollBarVisibility="Never">
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="vm:PhotoRow">
                             <Border Margin="0,0,8,0"

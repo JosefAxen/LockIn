@@ -25,22 +25,22 @@ public partial class LibraryPage : ContentPage
         if (!_hasLoaded)
         {
             Content.Opacity = 0;
-            Content.TranslationY = 10;
+            Content.TranslationY = 16;
             await _vm.LoadAsync();
             _hasLoaded = true;
             await Task.WhenAll(
-                Content.FadeTo(1, 280, Easing.CubicOut),
-                Content.TranslateTo(0, 0, 280, Easing.CubicOut)
+                Content.FadeTo(1, 400, Easing.CubicOut),
+                Content.TranslateTo(0, 0, 400, Easing.CubicOut)
             );
         }
         else
         {
             Content.Opacity = 0;
-            Content.TranslationY = 8;
+            Content.TranslationY = 12;
             await Task.WhenAll(
                 _vm.LoadAsync(),
-                Content.FadeTo(1, 220, Easing.CubicOut),
-                Content.TranslateTo(0, 0, 220, Easing.CubicOut)
+                Content.FadeTo(1, 320, Easing.CubicOut),
+                Content.TranslateTo(0, 0, 320, Easing.CubicOut)
             );
         }
     }

@@ -11,7 +11,7 @@
 
     <Grid>
 
-        <ScrollView>
+        <ScrollView VerticalScrollBarVisibility="Never">
             <VerticalStackLayout Spacing="0" Padding="0,0,0,120">
 
                 <!-- ═══ HEADER ═══ -->
@@ -86,7 +86,8 @@
                 <!-- ═══ DAY STREAK TRACKER ═══ -->
                 <CollectionView ItemsSource="{Binding Days}"
                                 Margin="12,0" HeightRequest="76"
-                                HorizontalScrollBarVisibility="Never">
+                                HorizontalScrollBarVisibility="Never"
+                                VerticalScrollBarVisibility="Never">
                     <CollectionView.ItemsLayout>
                         <LinearItemsLayout Orientation="Horizontal" ItemSpacing="6"/>
                     </CollectionView.ItemsLayout>
@@ -190,7 +191,7 @@
                     <VerticalStackLayout Spacing="12">
                         <Label Text="MUSKLER · 7 DAGAR" Style="{StaticResource SectionLabel}"/>
                         <CollectionView ItemsSource="{Binding HeatmapItems}"
-                                        HeightRequest="220"
+                                        HeightRequest="120"
                                         HorizontalScrollBarVisibility="Never"
                                         VerticalScrollBarVisibility="Never">
                             <CollectionView.ItemsLayout>

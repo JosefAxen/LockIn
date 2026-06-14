@@ -28,7 +28,9 @@
                         ItemsSource="{Binding MuscleChips}"
                         SelectionMode="None"
                         HeightRequest="40"
-                        Margin="16,0,16,8">
+                        Margin="16,0,16,8"
+                        HorizontalScrollBarVisibility="Never"
+                        VerticalScrollBarVisibility="Never">
             <CollectionView.ItemsLayout>
                 <LinearItemsLayout Orientation="Horizontal" ItemSpacing="6"/>
             </CollectionView.ItemsLayout>
@@ -78,7 +80,9 @@
 
         <CollectionView Grid.Row="4"
                         ItemsSource="{Binding FilteredExercises}"
-                        SelectionMode="None">
+                        SelectionMode="None"
+                        HorizontalScrollBarVisibility="Never"
+                        VerticalScrollBarVisibility="Never">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="vm:ExercisePickerRow">
                     <Border Style="{StaticResource CardFrame}" Margin="16,0,16,6" Padding="0">

@@ -31,7 +31,8 @@
                                HorizontalOptions="Center"
                                VerticalOptions="Center"/>
 
-            <ScrollView IsVisible="{Binding IsLoading, Converter={x:Static vm:InverseBoolConverter.Instance}}">
+            <ScrollView IsVisible="{Binding IsLoading, Converter={x:Static vm:InverseBoolConverter.Instance}}"
+                        VerticalScrollBarVisibility="Never">
                 <VerticalStackLayout Padding="16,4,16,100" Spacing="12">
 
                     <!-- Kalender -->

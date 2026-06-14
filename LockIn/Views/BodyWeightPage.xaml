@@ -28,7 +28,7 @@
                    HorizontalOptions="Center" VerticalOptions="Center"/>
         </Grid>
 
-        <ScrollView Grid.Row="1">
+        <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Never">
             <VerticalStackLayout Padding="16,4,16,32" Spacing="12">
 
                 <!-- Latest weight hero -->
