@@ -8,9 +8,6 @@ public class TrainingScoreDrawable : IDrawable
 
     private static readonly Color s_trackDark  = Color.FromArgb("#252525");
     private static readonly Color s_trackLight = Color.FromArgb("#E0E0E0");
-    private static readonly Color s_glow1      = Color.FromRgba(0x4A, 0xDE, 0x80, 45);
-    private static readonly Color s_glow2      = Color.FromRgba(0x4A, 0xDE, 0x80, 80);
-    private static readonly Color s_accent     = Color.FromArgb("#4ADE80");
     private static readonly Color s_white      = Color.FromArgb("#FFFFFF");
     private static readonly Color s_tickDark   = Color.FromArgb("#383838");
     private static readonly Color s_tickLight  = Color.FromArgb("#CCCCCC");
@@ -39,8 +36,10 @@ public class TrainingScoreDrawable : IDrawable
         {
             float progress = MathF.Min((float)(Score / 100.0), 1f);
             float totalDeg = progress * 180f;
-            const int segments = 24;
+            const int segments = 36;
             float segSize = totalDeg / segments;
+            canvas.StrokeLineCap = LineCap.Butt;
+            canvas.StrokeSize = trackThick;
 
             for (int s = 0; s < segments; s++)
             {
@@ -53,17 +52,7 @@ public class TrainingScoreDrawable : IDrawable
                 int gg = (int)(68  + 154 * t);
                 int bb = (int)(68  +  60 * t);
 
-                canvas.StrokeLineCap = LineCap.Butt;
-                canvas.StrokeColor = Color.FromRgba(rr, gg, bb, 45);
-                canvas.StrokeSize = trackThick + 12f;
-                canvas.DrawArc(bLeft, bTop, bW, bH, segStart, segEnd, true, false);
-
-                canvas.StrokeColor = Color.FromRgba(rr, gg, bb, 80);
-                canvas.StrokeSize = trackThick + 4f;
-                canvas.DrawArc(bLeft, bTop, bW, bH, segStart, segEnd, true, false);
-
                 canvas.StrokeColor = Color.FromRgb(rr, gg, bb);
-                canvas.StrokeSize = trackThick;
                 canvas.DrawArc(bLeft, bTop, bW, bH, segStart, segEnd, true, false);
             }
 

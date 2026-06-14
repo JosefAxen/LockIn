@@ -14,7 +14,7 @@ public partial class ExercisePickerViewModel(DatabaseService db) : ObservableObj
 
     public Action<Exercise>? CallbackAction { get; set; }
 
-    public ObservableCollection<Exercise> FilteredExercises { get; } = new();
+    public ObservableCollection<ExercisePickerRow> FilteredExercises { get; } = new();
     public ObservableCollection<MuscleGroupChip> MuscleChips { get; } = new();
 
     [ObservableProperty] private string _searchText = "";
@@ -58,13 +58,13 @@ public partial class ExercisePickerViewModel(DatabaseService db) : ObservableObj
 
         FilteredExercises.Clear();
         foreach (var e in source.OrderBy(e => e.Name))
-            FilteredExercises.Add(e);
+            FilteredExercises.Add(new ExercisePickerRow(e, MuscleGroupLabel(e.MuscleGroup), GetMuscleColor(e.MuscleGroup)));
     }
 
     [RelayCommand]
-    private async Task SelectExerciseAsync(Exercise exercise)
+    private async Task SelectExerciseAsync(ExercisePickerRow row)
     {
-        CallbackAction?.Invoke(exercise);
+        CallbackAction?.Invoke(row.Exercise);
         await Shell.Current.GoToAsync("..");
     }
 
@@ -80,6 +80,35 @@ public partial class ExercisePickerViewModel(DatabaseService db) : ObservableObj
         MuscleGroup.FullBody  => "Helkropp",
         _                     => "Övrigt"
     };
+
+    private static Color GetMuscleColor(MuscleGroup mg) => mg switch
+    {
+        MuscleGroup.Chest     => Color.FromArgb("#FB7185"),
+        MuscleGroup.Back      => Color.FromArgb("#38BDF8"),
+        MuscleGroup.Shoulders => Color.FromArgb("#A78BFA"),
+        MuscleGroup.Biceps    => Color.FromArgb("#4ADE80"),
+        MuscleGroup.Triceps   => Color.FromArgb("#FBBF24"),
+        MuscleGroup.Legs      => Color.FromArgb("#F97316"),
+        MuscleGroup.Core      => Color.FromArgb("#EC4899"),
+        MuscleGroup.FullBody  => Color.FromArgb("#EF4444"),
+        _                     => Color.FromArgb("#52525E"),
+    };
+}
+
+public class ExercisePickerRow
+{
+    public Exercise Exercise { get; }
+    public string Name => Exercise.Name;
+    public bool IsCustom => Exercise.IsCustom;
+    public string MuscleLabel { get; }
+    public Color MuscleColor { get; }
+
+    public ExercisePickerRow(Exercise exercise, string muscleLabel, Color muscleColor)
+    {
+        Exercise = exercise;
+        MuscleLabel = muscleLabel;
+        MuscleColor = muscleColor;
+    }
 }
 
 public partial class MuscleGroupChip : ObservableObject

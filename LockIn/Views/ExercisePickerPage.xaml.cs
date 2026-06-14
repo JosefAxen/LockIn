@@ -1,4 +1,5 @@
 using LockIn.ViewModels;
+using Microsoft.Maui.Devices;
 
 namespace LockIn.Views;
 
@@ -20,4 +21,17 @@ public partial class ExercisePickerPage : ContentPage
 
     private async void OnBackClicked(object sender, EventArgs e) =>
         await Shell.Current.GoToAsync("..");
+
+    private static async void OnExercisePointerPressed(object? sender, PointerEventArgs e)
+    {
+        HapticFeedback.Default.Perform(HapticFeedbackType.Click);
+        if (sender is PointerGestureRecognizer pgr && pgr.Parent is VisualElement ve)
+            await ve.ScaleTo(0.97, 65, Easing.CubicOut);
+    }
+
+    private static async void OnExercisePointerReleased(object? sender, PointerEventArgs e)
+    {
+        if (sender is PointerGestureRecognizer pgr && pgr.Parent is VisualElement ve)
+            await ve.ScaleTo(1.0, 230, Easing.SpringOut);
+    }
 }

@@ -78,6 +78,5 @@ public static class DesignTokens
         }
     }
 
-    public static Color HeatmapText(double normalizedScore) =>
-        normalizedScore > 0.55 ? Colors.White : TextMuted;
+    public static Color HeatmapText(double normalizedScore) => Colors.White;
 }

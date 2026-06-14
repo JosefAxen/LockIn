@@ -19,7 +19,14 @@ public partial class LibraryPage : ContentPage
     {
         base.OnAppearing();
         WorkoutBanner.IsVisible = _state.IsActive;
+        _state.StateChanged += OnWorkoutStateChanged;
         await _vm.LoadAsync();
+    }
+
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+        _state.StateChanged -= OnWorkoutStateChanged;
     }
 
     protected override async void OnNavigatedTo(NavigatedToEventArgs args)
@@ -28,6 +35,9 @@ public partial class LibraryPage : ContentPage
         await _vm.LoadAsync();
     }
 
+    private void OnWorkoutStateChanged(object? sender, EventArgs e)
+        => MainThread.BeginInvokeOnMainThread(() => WorkoutBanner.IsVisible = _state.IsActive);
+
     private async void OnWorkoutBannerTapped(object sender, TappedEventArgs e)
-        => await Shell.Current.GoToAsync("//TrainPage");
+        => await Shell.Current.GoToAsync(nameof(ActiveWorkoutPage));
 }

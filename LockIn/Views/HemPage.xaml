@@ -195,7 +195,7 @@
                     <VerticalStackLayout Spacing="12">
                         <Label Text="MUSKLER · 7 DAGAR" Style="{StaticResource SectionLabel}"/>
                         <CollectionView ItemsSource="{Binding HeatmapItems}"
-                                        HeightRequest="162"
+                                        HeightRequest="220"
                                         HorizontalScrollBarVisibility="Never"
                                         VerticalScrollBarVisibility="Never">
                             <CollectionView.ItemsLayout>

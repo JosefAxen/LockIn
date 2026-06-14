@@ -56,7 +56,8 @@ public partial class SettingsViewModel(DatabaseService db) : ObservableObject
     }
 
     [RelayCommand]
-    private void OpenHealthSettings() => AppInfo.ShowSettingsUI();
+    private async Task OpenHealthSettingsAsync()
+        => await Launcher.OpenAsync("x-apple-health://");
 
     [RelayCommand]
     private async Task OpenBodyWeightAsync() =>

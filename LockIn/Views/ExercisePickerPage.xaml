@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:LockIn.ViewModels"
-             xmlns:models="clr-namespace:LockIn.Models"
+             xmlns:views="clr-namespace:LockIn.Views"
              x:Class="LockIn.Views.ExercisePickerPage"
              x:DataType="vm:ExercisePickerViewModel"
              Title="Välj övning">
@@ -55,23 +55,36 @@
                         ItemsSource="{Binding FilteredExercises}"
                         SelectionMode="None">
             <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="models:Exercise">
-                    <Border Style="{StaticResource CardFrame}" Margin="16,0,16,8">
-                        <Grid ColumnDefinitions="*,Auto" Padding="16,14">
-                            <StackLayout Grid.Column="0" Spacing="2">
-                                <Label Text="{Binding Name}"
-                                       FontFamily="DMSansMedium" FontSize="15"/>
-                                <Label Text="{Binding MuscleGroup}"
-                                       Style="{StaticResource MutedLabel}"/>
-                            </StackLayout>
-                            <Label Grid.Column="1" Text="›" FontSize="22"
-                                   TextColor="{StaticResource ForgeMuted}"
-                                   VerticalOptions="Center"/>
+                <DataTemplate x:DataType="vm:ExercisePickerRow">
+                    <Border Style="{StaticResource CardFrame}" Margin="16,0,16,6" Padding="0">
+                        <Grid ColumnDefinitions="4,*">
+                            <BoxView Grid.Column="0" BackgroundColor="{Binding MuscleColor}"/>
+                            <Grid Grid.Column="1" ColumnDefinitions="*,Auto" Padding="14,12,14,12">
+                                <VerticalStackLayout Grid.Column="0" Spacing="3" VerticalOptions="Center">
+                                    <Label Text="{Binding Name}"
+                                           FontFamily="DMSansMedium" FontSize="15"/>
+                                    <Label Text="{Binding MuscleLabel}"
+                                           FontSize="12"
+                                           TextColor="{Binding MuscleColor}"/>
+                                </VerticalStackLayout>
+                                <Border Grid.Column="1"
+                                        IsVisible="{Binding IsCustom}"
+                                        BackgroundColor="{StaticResource ForgeAccentDim}"
+                                        StrokeShape="RoundRectangle 6"
+                                        StrokeThickness="0" Padding="8,4"
+                                        VerticalOptions="Center">
+                                    <Label Text="CUSTOM" TextColor="{StaticResource ForgeAccent}"
+                                           FontSize="10" FontFamily="BebasNeue" CharacterSpacing="1"/>
+                                </Border>
+                            </Grid>
                         </Grid>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ExercisePickerViewModel}}, Path=SelectExerciseCommand}"
                                 CommandParameter="{Binding .}"/>
+                            <PointerGestureRecognizer
+                                PointerPressed="OnExercisePointerPressed"
+                                PointerReleased="OnExercisePointerReleased"/>
                         </Border.GestureRecognizers>
                     </Border>
                 </DataTemplate>
