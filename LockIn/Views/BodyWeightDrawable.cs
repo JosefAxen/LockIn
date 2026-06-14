@@ -1,3 +1,4 @@
+using LockIn;
 using Microsoft.Maui.Graphics;
 
 namespace LockIn.Views;
@@ -10,7 +11,7 @@ public class BodyWeightDrawable : IDrawable
     {
         if (Points.Count == 0)
         {
-            canvas.FontColor = Color.FromArgb("#A0A0A8");
+            canvas.FontColor = DesignTokens.GraphAxisText;
             canvas.FontSize = 13;
             canvas.DrawString("Ingen data ännu", dirtyRect.Width / 2, dirtyRect.Height / 2,
                 HorizontalAlignment.Center);
@@ -28,7 +29,7 @@ public class BodyWeightDrawable : IDrawable
         if (range < 1) range = 1;
 
         // Grid lines
-        canvas.StrokeColor = Color.FromArgb("#222222");
+        canvas.StrokeColor = DesignTokens.GraphGrid;
         canvas.StrokeSize = 1;
         for (int i = 0; i <= 4; i++)
         {
@@ -65,13 +66,13 @@ public class BodyWeightDrawable : IDrawable
         {
             canvas.FillColor = Color.FromArgb("#6EA8DC");
             canvas.FillCircle(x, y, 4);
-            canvas.StrokeColor = Color.FromArgb("#111111");
+            canvas.StrokeColor = DesignTokens.GraphDotStroke;
             canvas.StrokeSize = 1.5f;
             canvas.DrawCircle(x, y, 4);
         }
 
         // X-axis dates (first, middle, last)
-        canvas.FontColor = Color.FromArgb("#A0A0A8");
+        canvas.FontColor = DesignTokens.GraphAxisText;
         canvas.FontSize = 10;
         if (ordered.Count >= 1)
             canvas.DrawString(ordered[0].Date.ToString("d/M"), pts[0].x, bottom + 4, HorizontalAlignment.Center);

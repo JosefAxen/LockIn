@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using LockIn;
 using LockIn.Models;
 using LockIn.Services;
 using System.Collections.ObjectModel;
@@ -87,17 +88,8 @@ public partial class MuscleGroupChip : ObservableObject
     public MuscleGroup? MuscleGroup { get; set; }
     [ObservableProperty] private bool _isSelected;
 
-    private static readonly Color SelectedBg = Color.FromArgb("#006239");
-    private static Color UnselectedBg =>
-        Application.Current?.RequestedTheme == AppTheme.Dark
-            ? Color.FromArgb("#1A1A1A") : Color.FromArgb("#EBEBF0");
-    private static readonly Color SelectedFg = Color.FromArgb("#FFFFFF");
-    private static Color UnselectedFg =>
-        Application.Current?.RequestedTheme == AppTheme.Dark
-            ? Color.FromArgb("#A0A0A8") : Color.FromArgb("#60606A");
-
-    public Color Background => IsSelected ? SelectedBg : UnselectedBg;
-    public Color Foreground => IsSelected ? SelectedFg : UnselectedFg;
+    public Color Background => IsSelected ? DesignTokens.ChipActiveBg : DesignTokens.ChipInactiveBg;
+    public Color Foreground => IsSelected ? DesignTokens.ChipActiveFg : DesignTokens.ChipInactiveFg;
 
     partial void OnIsSelectedChanged(bool value)
     {

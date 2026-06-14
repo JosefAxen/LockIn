@@ -1,3 +1,4 @@
+using LockIn;
 using Microsoft.Maui.Graphics;
 
 namespace LockIn.Views;
@@ -12,7 +13,7 @@ public class ExerciseProgressDrawable : IDrawable
 
         if (Points.Count == 0)
         {
-            canvas.FontColor = Color.FromArgb("#484850");
+            canvas.FontColor = DesignTokens.GraphAxisText;
             canvas.FontSize = 13;
             canvas.DrawString("Logga ett pass för att se progress",
                 dirty.Left + dirty.Width / 2, dirty.Top + dirty.Height / 2 - 6,
@@ -34,7 +35,7 @@ public class ExerciseProgressDrawable : IDrawable
         float MapX(int i) => padL + (pts.Count == 1 ? plotW / 2 : i * plotW / (pts.Count - 1));
 
         // Grid lines
-        canvas.StrokeColor = Color.FromArgb("#1E1E22");
+        canvas.StrokeColor = DesignTokens.GraphGrid;
         canvas.StrokeSize = 1;
         for (int g = 0; g <= 4; g++)
         {
@@ -42,7 +43,7 @@ public class ExerciseProgressDrawable : IDrawable
             float y = MapY(val);
             canvas.DrawLine(padL, y, padL + plotW, y);
 
-            canvas.FontColor = Color.FromArgb("#484850");
+            canvas.FontColor = DesignTokens.GraphAxisText;
             canvas.FontSize = 9;
             canvas.DrawString($"{(int)val}", padL - 6, y, HorizontalAlignment.Right);
         }
@@ -80,13 +81,13 @@ public class ExerciseProgressDrawable : IDrawable
                 ? Color.FromArgb("#4ADE80")
                 : Color.FromArgb("#4ADE80");
             canvas.FillCircle(x, y, 4.5f);
-            canvas.StrokeColor = Color.FromArgb("#111111");
+            canvas.StrokeColor = DesignTokens.GraphDotStroke;
             canvas.StrokeSize = 1.5f;
             canvas.DrawCircle(x, y, 4.5f);
         }
 
         // X-axis date labels
-        canvas.FontColor = Color.FromArgb("#484850");
+        canvas.FontColor = DesignTokens.GraphAxisText;
         canvas.FontSize = 9;
         var show = new HashSet<int> { 0, pts.Count - 1 };
         if (pts.Count >= 5) show.Add(pts.Count / 2);

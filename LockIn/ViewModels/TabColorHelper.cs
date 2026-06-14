@@ -1,13 +1,11 @@
+using LockIn;
+
 namespace LockIn.ViewModels;
 
 internal static class TabColorHelper
 {
-    public static Color ActiveBg  => Color.FromArgb("#006239");
-    public static Color ActiveFg  => Colors.White;
-    public static Color InactiveBg =>
-        Application.Current?.RequestedTheme == AppTheme.Dark
-            ? Color.FromArgb("#1A1A1A") : Color.FromArgb("#EBEBF0");
-    public static Color InactiveFg =>
-        Application.Current?.RequestedTheme == AppTheme.Dark
-            ? Color.FromArgb("#505058") : Color.FromArgb("#8E8E93");
+    public static Color ActiveBg   => DesignTokens.ChipActiveBg;
+    public static Color ActiveFg   => DesignTokens.ChipActiveFg;
+    public static Color InactiveBg => DesignTokens.ChipInactiveBg;
+    public static Color InactiveFg => DesignTokens.ChipInactiveFg;
 }

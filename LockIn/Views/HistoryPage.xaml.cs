@@ -1,3 +1,4 @@
+using LockIn;
 using LockIn.Services;
 using LockIn.ViewModels;
 
@@ -73,7 +74,7 @@ public partial class HistoryPage : ContentPage
             {
                 StrokeShape = new Microsoft.Maui.Controls.Shapes.Ellipse(),
                 BackgroundColor = (trained || selected) ? Color.FromArgb("#006239") : Colors.Transparent,
-                Stroke = (today && !trained && !selected) ? Color.FromArgb("#F0F0F5") : Colors.Transparent,
+                Stroke = (today && !trained && !selected) ? DesignTokens.CalTodayStroke : Colors.Transparent,
                 StrokeThickness = (today && !trained && !selected) ? 1.5 : 0,
                 Margin = new Thickness(3),
                 Padding = new Thickness(0),
@@ -87,8 +88,8 @@ public partial class HistoryPage : ContentPage
                 FontFamily = "DMSansMedium",
                 FontSize = 13,
                 TextColor = (trained || selected) ? Colors.White
-                    : today ? Color.FromArgb("#F0F0F5")
-                    : Color.FromArgb("#505058"),
+                    : today ? DesignTokens.CalTodayText
+                    : DesignTokens.CalNormalText,
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.Center,
             };

@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using LockIn;
 using LockIn.Models;
 using LockIn.Services;
 using LockIn.Views;
@@ -211,24 +212,24 @@ public class DayStreakItem
     public bool IsToday     { get; init; }
 
     public Color CircleFill => IsCompleted
-        ? Color.FromArgb("#1F4ADE80")
+        ? DesignTokens.CalTrainedFill
         : IsToday
-            ? Color.FromArgb("#2A2A2A")
-            : Color.FromArgb("#1A1A1A");
+            ? DesignTokens.CalTodayFill
+            : Colors.Transparent;
 
     public Color CircleStroke => IsCompleted
-        ? Color.FromArgb("#4ADE80")
+        ? DesignTokens.CalTrainedStroke
         : IsToday
-            ? Color.FromArgb("#FBBF24")
-            : Color.FromArgb("#2A2A2A");
+            ? DesignTokens.CalTodayStroke
+            : Colors.Transparent;
 
     public Color DayNumColor => IsCompleted
-        ? Color.FromArgb("#4ADE80")
+        ? DesignTokens.CalTrainedText
         : IsToday
-            ? Color.FromArgb("#FBBF24")
-            : Color.FromArgb("#484848");
+            ? DesignTokens.CalTodayText
+            : DesignTokens.CalNormalText;
 
     public Color DayAbbrColor => IsToday
-        ? Color.FromArgb("#A2A2A2")
-        : Color.FromArgb("#383838");
+        ? DesignTokens.TextSecondary
+        : DesignTokens.TextMuted;
 }

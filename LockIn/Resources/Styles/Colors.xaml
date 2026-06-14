@@ -5,10 +5,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <!-- ═══ Dark palette ═══ -->
-    <Color x:Key="ForgeBackground">#121212</Color>
-    <Color x:Key="ForgeSurface">#171717</Color>
-    <Color x:Key="ForgeSurface2">#242424</Color>
-    <Color x:Key="ForgeSurface3">#313131</Color>
+    <Color x:Key="ForgeBackground">#0E0E10</Color>
+    <Color x:Key="ForgeSurface">#161618</Color>
+    <Color x:Key="ForgeSurface2">#222228</Color>
+    <Color x:Key="ForgeSurface3">#2E2E36</Color>
 
     <!-- Accent: ring / highlight color — used for text, indicators, progress bars -->
     <Color x:Key="ForgeAccent">#4ADE80</Color>
@@ -24,8 +24,12 @@
     <Color x:Key="ForgeText">#E2E8F0</Color>
     <Color x:Key="ForgeTextSecondary">#A2A2A2</Color>
     <Color x:Key="ForgeMuted">#A2A2A2</Color>    <!-- intentional alias of ForgeTextSecondary -->
-    <Color x:Key="ForgeBorder">#292929</Color>
-    <Color x:Key="ForgeBorderLight">#393939</Color>
+    <Color x:Key="ForgeBorder">#252530</Color>
+    <Color x:Key="ForgeBorderLight">#323240</Color>
+
+    <!-- Icon tinting — apply as TintColor on PNG icons -->
+    <Color x:Key="ForgeIconTint">#C8C8D2</Color>
+    <Color x:Key="LightIconTint">#3A3A44</Color>
 
     <!-- Multi-accent palette for data cards -->
     <Color x:Key="ForgeAccentCoral">#FB7185</Color>

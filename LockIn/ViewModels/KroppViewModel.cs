@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using LockIn;
 using LockIn.Models;
 using LockIn.Services;
 using LockIn.Views;
@@ -136,28 +137,12 @@ public partial class KroppViewModel(DatabaseService db) : ObservableObject
         {
             var score = scores.TryGetValue(mg, out var s) ? s : 0.0;
             var t = score / 10.0;
-            Color tileColor;
-            Color textColor;
-            if (score < 0.05)
-            {
-                tileColor = Color.FromArgb("#141414");
-                textColor = Color.FromArgb("#505058");
-            }
-            else
-            {
-                var r = (int)(26 + 229 * t);
-                var g = (int)(26 + 64 * t);
-                var b = (int)(26 + 5 * t);
-                tileColor = Color.FromRgb(r, g, b);
-                textColor = t > 0.55 ? Colors.White : Color.FromArgb("#D09080");
-            }
-
             HeatmapTiles.Add(new HeatmapTile
             {
                 Name = name,
                 Score = score,
-                TileColor = tileColor,
-                TextColor = textColor,
+                TileColor = DesignTokens.HeatmapTile(t),
+                TextColor = DesignTokens.HeatmapText(t),
             });
         }
         HeatmapReady?.Invoke();

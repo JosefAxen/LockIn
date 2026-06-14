@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using LockIn;
 using LockIn.Models;
 
 namespace LockIn.ViewModels;
@@ -35,7 +36,7 @@ public partial class LoggedSetRow : ObservableObject
         SetType.Warmup  => Color.FromArgb("#FBBF24"),
         SetType.Dropset => Color.FromArgb("#FB7185"),
         SetType.Time    => Color.FromArgb("#38BDF8"),
-        _               => Color.FromArgb("#505055")
+        _               => DesignTokens.SetNormal
     };
 
     public string SeparatorLabel => SetType == SetType.Time ? "⏱" : "×";
