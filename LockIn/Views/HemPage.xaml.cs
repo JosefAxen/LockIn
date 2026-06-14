@@ -43,6 +43,24 @@ public partial class HemPage : ContentPage
                 Content.TranslateTo(0, 0, 200, Easing.CubicOut)
             );
         }
+
+        AnimateGauge();
+    }
+
+    private void AnimateGauge()
+    {
+        var drawable = _vm.GaugeDrawable;
+        double target = drawable.Score;
+        drawable.Score = 0;
+        GaugeView.Invalidate();
+
+        var anim = new Animation(v =>
+        {
+            drawable.Score = v;
+            GaugeView.Invalidate();
+        }, 0, target);
+
+        anim.Commit(this, "GaugeAnim", length: 1000, easing: Easing.CubicOut);
     }
 
     protected override void OnDisappearing()
