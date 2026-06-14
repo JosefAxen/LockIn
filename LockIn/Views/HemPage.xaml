@@ -53,15 +53,6 @@
                     <VerticalStackLayout Padding="24,20,24,16" Spacing="0">
                         <Label Text="TRÄNINGSSCORE · IDAG"
                                Style="{StaticResource SectionLabel}" Margin="0,0,0,8"/>
-                        <Label Text="{Binding TrainingScoreText}"
-                               FontFamily="BebasNeue" FontSize="82" CharacterSpacing="0" LineHeight="1"
-                               HorizontalOptions="Center"
-                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
-                        <Label Text="/ 100"
-                               FontFamily="BebasNeue" FontSize="17" CharacterSpacing="1"
-                               HorizontalOptions="Center"
-                               TextColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"
-                               Margin="0,-4,0,0"/>
                         <Label Text="{Binding MotivationText}"
                                Style="{StaticResource MutedLabel}"
                                HorizontalTextAlignment="Center" Margin="0,8,0,10"/>
