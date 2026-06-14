@@ -158,8 +158,10 @@ public class WeeklyGoalGauge : SKCanvasView
         float scoreBase  = blockTop - sm.Ascent;
         float subBase    = blockTop + scoreH + gap - pm.Ascent;
 
-        canvas.DrawText(pct.ToString(), cx, scoreBase, SKTextAlign.Center, scoreFont, scorePaint);
-        canvas.DrawText("/ 100",        cx, subBase,   SKTextAlign.Center, subFont,   subPaint);
+        float scoreW = scoreFont.MeasureText(pct.ToString());
+        float subW   = subFont.MeasureText("/ 100");
+        canvas.DrawText(pct.ToString(), cx - scoreW / 2f, scoreBase, scoreFont, scorePaint);
+        canvas.DrawText("/ 100",        cx - subW   / 2f, subBase,   subFont,   subPaint);
     }
 
     // Overloads to bridge instance Progress to static helpers
