@@ -49,26 +49,24 @@
                     <Border.Shadow>
                         <Shadow Brush="Black" Offset="0,2" Radius="20" Opacity="0.10"/>
                     </Border.Shadow>
-                    <VerticalStackLayout Padding="24,22,24,20" Spacing="0">
+                    <VerticalStackLayout Padding="24,20,24,16" Spacing="0">
                         <Label Text="TRÄNINGSSCORE · IDAG"
-                               Style="{StaticResource SectionLabel}" Margin="0,0,0,4"/>
-                        <Grid HeightRequest="186">
-                            <GraphicsView x:Name="GaugeView" Drawable="{Binding GaugeDrawable}"/>
-                            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="End"
-                                                 Spacing="0" Margin="0,0,0,12">
-                                <Label Text="{Binding TrainingScoreText}"
-                                       FontFamily="BebasNeue" FontSize="86" CharacterSpacing="0" LineHeight="1"
-                                       HorizontalOptions="Center"
-                                       TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
-                                <Label Text="/ 100"
-                                       FontFamily="BebasNeue" FontSize="18" CharacterSpacing="1"
-                                       HorizontalOptions="Center"
-                                       TextColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"/>
-                            </VerticalStackLayout>
-                        </Grid>
+                               Style="{StaticResource SectionLabel}" Margin="0,0,0,8"/>
+                        <Label Text="{Binding TrainingScoreText}"
+                               FontFamily="BebasNeue" FontSize="82" CharacterSpacing="0" LineHeight="1"
+                               HorizontalOptions="Center"
+                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                        <Label Text="/ 100"
+                               FontFamily="BebasNeue" FontSize="17" CharacterSpacing="1"
+                               HorizontalOptions="Center"
+                               TextColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"
+                               Margin="0,-4,0,0"/>
                         <Label Text="{Binding MotivationText}"
                                Style="{StaticResource MutedLabel}"
-                               HorizontalTextAlignment="Center" Margin="0,10,0,0"/>
+                               HorizontalTextAlignment="Center" Margin="0,8,0,10"/>
+                        <GraphicsView x:Name="GaugeView"
+                                      Drawable="{Binding GaugeDrawable}"
+                                      HeightRequest="118"/>
                     </VerticalStackLayout>
                 </Border>
 
