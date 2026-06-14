@@ -20,6 +20,29 @@
         <ScrollView Grid.Row="1">
             <StackLayout Padding="16,8,16,48" Spacing="16">
 
+                <!-- Weekly goal -->
+                <Label Text="TRÄNING" Style="{StaticResource SectionLabel}" Margin="4,0"/>
+                <Border Style="{StaticResource CardFrame}" Padding="16,14">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                        <Border Grid.Column="0" BackgroundColor="{StaticResource ForgeAccentDim}"
+                                StrokeShape="RoundRectangle 10" StrokeThickness="0"
+                                WidthRequest="38" HeightRequest="38" VerticalOptions="Center">
+                            <Image Source="ic_calendar.png" WidthRequest="20" HeightRequest="20"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Border>
+                        <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                            <Label Text="Veckans mål" FontFamily="DMSansMedium" FontSize="15"/>
+                            <Label Text="{Binding WeeklyGoal, StringFormat='{0} pass / vecka'}"
+                                   Style="{StaticResource MutedLabel}"/>
+                        </StackLayout>
+                        <Label Grid.Column="2" Text="›" FontSize="22"
+                               TextColor="{StaticResource ForgeMuted}" VerticalOptions="Center"/>
+                    </Grid>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding EditWeeklyGoalCommand}"/>
+                    </Border.GestureRecognizers>
+                </Border>
+
                 <!-- Weight unit -->
                 <Label Text="ENHETER" Style="{StaticResource SectionLabel}" Margin="4,0"/>
                 <Border Style="{StaticResource CardFrame}" Padding="16,14">
@@ -74,8 +97,30 @@
                     </Grid>
                 </Border>
 
-                <!-- Body weight -->
+                <!-- Health -->
                 <Label Text="HÄLSA" Style="{StaticResource SectionLabel}" Margin="4,0"/>
+                <Border Style="{StaticResource CardFrame}" Padding="16,14">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                        <Border Grid.Column="0" BackgroundColor="{StaticResource ForgeAccentCoralDim}"
+                                StrokeShape="RoundRectangle 10" StrokeThickness="0"
+                                WidthRequest="38" HeightRequest="38" VerticalOptions="Center">
+                            <Label Text="♥" FontSize="18" TextColor="{StaticResource ForgeAccentCoral}"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Border>
+                        <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                            <Label Text="Apple Hälsa" FontFamily="DMSansMedium" FontSize="15"/>
+                            <Label Text="Öppna Inställningar för att ge åtkomst"
+                                   Style="{StaticResource MutedLabel}"/>
+                        </StackLayout>
+                        <Label Grid.Column="2" Text="›" FontSize="22"
+                               TextColor="{StaticResource ForgeMuted}" VerticalOptions="Center"/>
+                    </Grid>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding OpenHealthSettingsCommand}"/>
+                    </Border.GestureRecognizers>
+                </Border>
+
+                <!-- Body weight -->
                 <Border Style="{StaticResource CardFrame}" Padding="16,14">
                     <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
                         <Border Grid.Column="0" BackgroundColor="{StaticResource ForgeAccentDim}"
@@ -149,21 +194,28 @@
         <Border x:Name="WorkoutBanner"
                 Grid.Row="0" Grid.RowSpan="2"
                 IsVisible="False"
-                BackgroundColor="{StaticResource ForgeAccent}"
-                StrokeShape="RoundRectangle 0" StrokeThickness="0"
-                Padding="20,12,20,28"
+                BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
+                Stroke="{StaticResource ForgeAccent}"
+                StrokeThickness="1.5"
+                StrokeShape="RoundRectangle 18,18,0,0"
+                Padding="20,14,20,36"
                 VerticalOptions="End"
                 ZIndex="10">
-            <Grid ColumnDefinitions="Auto,*,Auto">
-                <Ellipse Grid.Column="0" Fill="White" Opacity="0.9"
+            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                <Ellipse Grid.Column="0"
+                         Fill="{StaticResource ForgeAccent}"
                          WidthRequest="8" HeightRequest="8"
-                         VerticalOptions="Center" Margin="0,0,10,0"/>
-                <Label Grid.Column="1" Text="PASS PÅGÅR"
+                         VerticalOptions="Center"/>
+                <Label Grid.Column="1"
+                       Text="PASS PÅGÅR"
                        FontFamily="BebasNeue" FontSize="16" CharacterSpacing="2"
-                       TextColor="White" VerticalOptions="Center"/>
-                <Label Grid.Column="2" Text="ÖPPNA ›"
+                       TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                       VerticalOptions="Center"/>
+                <Label Grid.Column="2"
+                       Text="ÖPPNA ›"
                        FontFamily="BebasNeue" FontSize="14" CharacterSpacing="1"
-                       TextColor="White" Opacity="0.8" VerticalOptions="Center"/>
+                       TextColor="{StaticResource ForgeAccent}"
+                       VerticalOptions="Center"/>
             </Grid>
             <Border.GestureRecognizers>
                 <TapGestureRecognizer Tapped="OnWorkoutBannerTapped"/>

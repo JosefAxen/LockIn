@@ -19,6 +19,7 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
     [ObservableProperty] private string _heartRateText = "–";
     [ObservableProperty] private bool _isLoading = true;
     [ObservableProperty] private IReadOnlyList<DayStreakItem> _days = Array.Empty<DayStreakItem>();
+    [ObservableProperty] private IReadOnlyList<HeatmapTile> _heatmapItems = Array.Empty<HeatmapTile>();
     [ObservableProperty] private TrainingScoreDrawable _gaugeDrawable = new();
     [ObservableProperty] private SparklineDrawable _stepsSparkline    = new() { LineColor = Color.FromArgb("#4ADE80") };
     [ObservableProperty] private SparklineDrawable _caloriesSparkline = new() { LineColor = Color.FromArgb("#FB7185") };
@@ -93,6 +94,9 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
             int streak = CalculateStreak(streakSessions);
             StreakLabel = streak > 0 ? $"{streak} DAGARS STREAK" : "INGEN STREAK";
 
+            // Heatmap
+            await LoadHeatmapAsync();
+
             // Health stats
             var steps = stepsTask.Result;
             StepsText     = steps > 0 ? $"{steps:N0}" : "0";
@@ -134,6 +138,33 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
         var today = DateTime.Today;
         int daysFromMonday = ((int)today.DayOfWeek + 6) % 7;
         return today.AddDays(-daysFromMonday);
+    }
+
+    private async Task LoadHeatmapAsync()
+    {
+        var scores = await db.GetMuscleScoresAsync();
+        var muscles = new (MuscleGroup mg, string name)[]
+        {
+            (MuscleGroup.Chest,     "BRÖST"),
+            (MuscleGroup.Back,      "RYGG"),
+            (MuscleGroup.Shoulders, "AXLAR"),
+            (MuscleGroup.Biceps,    "BICEPS"),
+            (MuscleGroup.Triceps,   "TRICEPS"),
+            (MuscleGroup.Legs,      "BEN"),
+            (MuscleGroup.Core,      "CORE"),
+        };
+        HeatmapItems = muscles.Select(m =>
+        {
+            var score = scores.TryGetValue(m.mg, out var s) ? s : 0.0;
+            var t = score / 10.0;
+            return new HeatmapTile
+            {
+                Name      = m.name,
+                Score     = score,
+                TileColor = DesignTokens.HeatmapTile(t),
+                TextColor = DesignTokens.HeatmapText(t),
+            };
+        }).ToList();
     }
 
     private static IReadOnlyList<DayStreakItem> BuildStreakDays(List<WorkoutSession> sessions)

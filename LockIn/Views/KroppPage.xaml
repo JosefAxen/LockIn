@@ -255,21 +255,28 @@
             <!-- Workout banner -->
             <Border x:Name="WorkoutBanner"
                     IsVisible="False"
-                    BackgroundColor="{StaticResource ForgeAccent}"
-                    StrokeShape="RoundRectangle 0" StrokeThickness="0"
-                    Padding="20,12,20,28"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
+                    Stroke="{StaticResource ForgeAccent}"
+                    StrokeThickness="1.5"
+                    StrokeShape="RoundRectangle 18,18,0,0"
+                    Padding="20,14,20,36"
                     VerticalOptions="End"
                     ZIndex="10">
-                <Grid ColumnDefinitions="Auto,*,Auto">
-                    <Ellipse Grid.Column="0" Fill="White" Opacity="0.9"
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                    <Ellipse Grid.Column="0"
+                             Fill="{StaticResource ForgeAccent}"
                              WidthRequest="8" HeightRequest="8"
-                             VerticalOptions="Center" Margin="0,0,10,0"/>
-                    <Label Grid.Column="1" Text="PASS PÅGÅR"
+                             VerticalOptions="Center"/>
+                    <Label Grid.Column="1"
+                           Text="PASS PÅGÅR"
                            FontFamily="BebasNeue" FontSize="16" CharacterSpacing="2"
-                           TextColor="White" VerticalOptions="Center"/>
-                    <Label Grid.Column="2" Text="ÖPPNA ›"
+                           TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                           VerticalOptions="Center"/>
+                    <Label Grid.Column="2"
+                           Text="ÖPPNA ›"
                            FontFamily="BebasNeue" FontSize="14" CharacterSpacing="1"
-                           TextColor="White" Opacity="0.8" VerticalOptions="Center"/>
+                           TextColor="{StaticResource ForgeAccent}"
+                           VerticalOptions="Center"/>
                 </Grid>
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Tapped="OnWorkoutBannerTapped"/>

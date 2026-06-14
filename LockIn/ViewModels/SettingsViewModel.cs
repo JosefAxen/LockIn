@@ -12,14 +12,16 @@ public partial class SettingsViewModel(DatabaseService db) : ObservableObject
     [ObservableProperty] private string _appVersion = "";
     [ObservableProperty] private bool _hapticEnabled = true;
     [ObservableProperty] private bool _soundEnabled = true;
+    [ObservableProperty] private int _weeklyGoal = 4;
 
     public async Task LoadAsync()
     {
         var settings = await db.GetSettingsAsync();
-        UseKg = settings.WeightUnit == WeightUnit.Kg;
+        UseKg      = settings.WeightUnit == WeightUnit.Kg;
+        WeeklyGoal = settings.WeeklyWorkoutGoal > 0 ? settings.WeeklyWorkoutGoal : 4;
         HapticEnabled = Preferences.Default.Get("haptic_enabled", true);
-        SoundEnabled = Preferences.Default.Get("sound_enabled", true);
-        AppVersion = AppInfo.VersionString;
+        SoundEnabled  = Preferences.Default.Get("sound_enabled", true);
+        AppVersion    = AppInfo.VersionString;
     }
 
     partial void OnUseKgChanged(bool value) => _ = SaveSettingsAsync();
@@ -36,6 +38,25 @@ public partial class SettingsViewModel(DatabaseService db) : ObservableObject
         settings.WeightUnit = UseKg ? WeightUnit.Kg : WeightUnit.Lbs;
         await db.SaveSettingsAsync(settings);
     }
+
+    [RelayCommand]
+    private async Task EditWeeklyGoalAsync()
+    {
+        var result = await Shell.Current.DisplayPromptAsync(
+            "Veckans träningsmål",
+            "Hur många pass per vecka vill du träna? (1–7)",
+            keyboard: Keyboard.Numeric,
+            initialValue: WeeklyGoal.ToString(),
+            maxLength: 1);
+        if (!int.TryParse(result, out var goal) || goal < 1 || goal > 7) return;
+        WeeklyGoal = goal;
+        var settings = await db.GetSettingsAsync();
+        settings.WeeklyWorkoutGoal = goal;
+        await db.SaveSettingsAsync(settings);
+    }
+
+    [RelayCommand]
+    private void OpenHealthSettings() => AppInfo.ShowSettingsUI();
 
     [RelayCommand]
     private async Task OpenBodyWeightAsync() =>

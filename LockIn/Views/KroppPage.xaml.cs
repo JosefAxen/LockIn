@@ -98,5 +98,5 @@ public partial class KroppPage : ContentPage
     }
 
     private async void OnWorkoutBannerTapped(object sender, TappedEventArgs e)
-        => await Shell.Current.GoToAsync("//TrainPage");
+        => await Shell.Current.GoToAsync(nameof(ActiveWorkoutPage));
 }

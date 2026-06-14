@@ -38,21 +38,36 @@ public class TrainingScoreDrawable : IDrawable
         if (Score > 0)
         {
             float progress = MathF.Min((float)(Score / 100.0), 1f);
-            float endAngle = 180f + progress * 180f;
+            float totalDeg = progress * 180f;
+            const int segments = 24;
+            float segSize = totalDeg / segments;
 
-            canvas.StrokeLineCap = LineCap.Round;
-            canvas.StrokeColor = s_glow1;
-            canvas.StrokeSize = trackThick + 12f;
-            canvas.DrawArc(bLeft, bTop, bW, bH, 180f, endAngle, true, false);
+            for (int s = 0; s < segments; s++)
+            {
+                float t = segments > 1 ? (float)s / (segments - 1) : 0f;
+                float segStart = 180f + s * segSize;
+                float segEnd   = segStart + segSize;
 
-            canvas.StrokeColor = s_glow2;
-            canvas.StrokeSize = trackThick + 4f;
-            canvas.DrawArc(bLeft, bTop, bW, bH, 180f, endAngle, true, false);
+                // Red #EF4444 → Green #4ADE80
+                int rr = (int)(239 - 165 * t);
+                int gg = (int)(68  + 154 * t);
+                int bb = (int)(68  +  60 * t);
 
-            canvas.StrokeColor = s_accent;
-            canvas.StrokeSize = trackThick;
-            canvas.DrawArc(bLeft, bTop, bW, bH, 180f, endAngle, true, false);
+                canvas.StrokeLineCap = LineCap.Butt;
+                canvas.StrokeColor = Color.FromRgba(rr, gg, bb, 45);
+                canvas.StrokeSize = trackThick + 12f;
+                canvas.DrawArc(bLeft, bTop, bW, bH, segStart, segEnd, true, false);
 
+                canvas.StrokeColor = Color.FromRgba(rr, gg, bb, 80);
+                canvas.StrokeSize = trackThick + 4f;
+                canvas.DrawArc(bLeft, bTop, bW, bH, segStart, segEnd, true, false);
+
+                canvas.StrokeColor = Color.FromRgb(rr, gg, bb);
+                canvas.StrokeSize = trackThick;
+                canvas.DrawArc(bLeft, bTop, bW, bH, segStart, segEnd, true, false);
+            }
+
+            float endAngle = 180f + totalDeg;
             double endRad = endAngle * Math.PI / 180.0;
             float dotX = cx + outerR * (float)Math.Cos(endRad);
             float dotY = cy + outerR * (float)Math.Sin(endRad);

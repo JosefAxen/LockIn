@@ -15,15 +15,16 @@ public partial class TrainPage : ContentPage
         _state = state;
     }
 
-    protected override async void OnAppearing()
+    protected override void OnAppearing()
     {
         base.OnAppearing();
         if (_state.IsActive)
         {
-            await Shell.Current.GoToAsync(nameof(ActiveWorkoutPage));
+            Dispatcher.Dispatch(async () =>
+                await Shell.Current.GoToAsync(nameof(ActiveWorkoutPage)));
             return;
         }
-        await _vm.LoadAsync();
+        Dispatcher.Dispatch(async () => await _vm.LoadAsync());
     }
 
     internal async void OnTemplateTapped(object sender, TappedEventArgs e)
