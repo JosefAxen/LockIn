@@ -1,4 +1,5 @@
 using LockIn.ViewModels;
+using Microsoft.Maui.Devices;
 
 namespace LockIn.Views;
 
@@ -21,21 +22,42 @@ public partial class ActiveWorkoutPage : ContentPage
         }
     }
 
+    // RIR tap — logic only; animation handled by PointerGestureRecognizer
     private void OnRirTapped(object sender, TappedEventArgs e)
     {
-        if (sender is not BindableObject bo) return;
-        if (bo.BindingContext is not LoggedSetRow row) return;
+        if (sender is not TapGestureRecognizer tap) return;
+        if (tap.BindingContext is not LoggedSetRow row) return;
         row.Rir = row.Rir >= 5 || row.Rir < 0 ? 0 : row.Rir + 1;
-        if (bo is Border border)
+    }
+
+    // Generic border press animation (scale 0.93)
+    private static async void OnElemPointerPressed(object? sender, PointerEventArgs e)
+    {
+        HapticFeedback.Default.Perform(HapticFeedbackType.Click);
+        if (sender is PointerGestureRecognizer pgr && pgr.Parent is VisualElement ve)
+            await ve.ScaleTo(0.93, 65, Easing.CubicOut);
+    }
+
+    private static async void OnElemPointerReleased(object? sender, PointerEventArgs e)
+    {
+        if (sender is PointerGestureRecognizer pgr && pgr.Parent is VisualElement ve)
+            await ve.ScaleTo(1.0, 230, Easing.SpringOut);
+    }
+
+    // Done-button press animation (deeper + bounce)
+    private static async void OnDonePointerPressed(object? sender, PointerEventArgs e)
+    {
+        HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
+        if (sender is PointerGestureRecognizer pgr && pgr.Parent is VisualElement ve)
+            await ve.ScaleTo(0.88, 70, Easing.CubicOut);
+    }
+
+    private static async void OnDonePointerReleased(object? sender, PointerEventArgs e)
+    {
+        if (sender is PointerGestureRecognizer pgr && pgr.Parent is VisualElement ve)
         {
-            var label = border.Content as Label;
-            if (label is not null)
-            {
-                label.Text = row.RirDisplay;
-                label.TextColor = row.Rir >= 0
-                    ? Color.FromArgb("#4ADE80")
-                    : Color.FromArgb("#505055");
-            }
+            await ve.ScaleTo(1.12, 180, Easing.SpringOut);
+            await ve.ScaleTo(1.0, 100, Easing.CubicIn);
         }
     }
 }

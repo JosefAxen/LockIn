@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:LockIn.ViewModels"
              xmlns:models="clr-namespace:LockIn.Models"
+             xmlns:views="clr-namespace:LockIn.Views"
              x:Class="LockIn.Views.TrainPage"
              x:DataType="vm:TrainViewModel"
              Title="Träna">
@@ -179,7 +180,11 @@
                                                                 Style="{StaticResource PrimaryButton}"
                                                                 HeightRequest="36" WidthRequest="44" Padding="9"
                                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TrainViewModel}}, Path=StartWorkoutCommand}"
-                                                                CommandParameter="{Binding .}"/>
+                                                                CommandParameter="{Binding .}">
+                                                            <Button.Behaviors>
+                                                                <views:AnimatedButtonBehavior/>
+                                                            </Button.Behaviors>
+                                                        </Button>
                                                     </Grid>
                                                 </DataTemplate>
                                             </BindableLayout.ItemTemplate>
@@ -257,7 +262,11 @@
                 HeightRequest="48"
                 WidthRequest="162"
                 CornerRadius="24"
-                Command="{Binding StartFreeWorkoutCommand}"/>
+                Command="{Binding StartFreeWorkoutCommand}">
+            <Button.Behaviors>
+                <views:AnimatedButtonBehavior/>
+            </Button.Behaviors>
+        </Button>
 
     </Grid>
 </ContentPage>

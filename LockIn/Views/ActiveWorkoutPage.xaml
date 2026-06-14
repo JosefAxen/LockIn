@@ -27,7 +27,11 @@
                     BackgroundColor="{StaticResource ForgeSurface2}"
                     TextColor="{StaticResource ForgeText}"
                     WidthRequest="44" HeightRequest="44" Padding="0"
-                    Clicked="OnBackClicked"/>
+                    Clicked="OnBackClicked">
+                <Button.Behaviors>
+                    <views:AnimatedButtonBehavior/>
+                </Button.Behaviors>
+            </Button>
             <Label Grid.Column="1" Text="{Binding TemplateName}"
                    Style="{StaticResource DisplayLabel}"
                    TextColor="{StaticResource ForgeText}"
@@ -41,7 +45,11 @@
                     BackgroundColor="{StaticResource ForgeSurface2}"
                     WidthRequest="40" HeightRequest="40" Padding="9"
                     Margin="0,0,6,0"
-                    Command="{Binding OpenPlateCalculatorCommand}"/>
+                    Command="{Binding OpenPlateCalculatorCommand}">
+                <Button.Behaviors>
+                    <views:AnimatedButtonBehavior/>
+                </Button.Behaviors>
+            </Button>
             <Label Grid.Column="3" Text="{Binding ElapsedTime}"
                    TextColor="{StaticResource ForgeAccent}"
                    FontFamily="BebasNeue" FontSize="22"
@@ -134,6 +142,9 @@
                                                 <TapGestureRecognizer
                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ActiveWorkoutViewModel}}, Path=ChangeRestTimeCommand}"
                                                     CommandParameter="{Binding .}"/>
+                                                <PointerGestureRecognizer
+                                                    PointerPressed="OnElemPointerPressed"
+                                                    PointerReleased="OnElemPointerReleased"/>
                                             </Border.GestureRecognizers>
                                         </Border>
                                     </Grid>
@@ -176,6 +187,9 @@
                                                             <TapGestureRecognizer
                                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ActiveWorkoutViewModel}}, Path=ChangeSetTypeCommand}"
                                                                 CommandParameter="{Binding .}"/>
+                                                            <PointerGestureRecognizer
+                                                                PointerPressed="OnElemPointerPressed"
+                                                                PointerReleased="OnElemPointerReleased"/>
                                                         </Border.GestureRecognizers>
                                                     </Border>
 
@@ -227,9 +241,12 @@
                                                                HorizontalOptions="Center"
                                                                VerticalOptions="Center"
                                                                FontFamily="DMSansMedium" FontSize="13"
-                                                               TextColor="{StaticResource ForgeMuted}"/>
+                                                               TextColor="{Binding RirColor}"/>
                                                         <Border.GestureRecognizers>
                                                             <TapGestureRecognizer Tapped="OnRirTapped"/>
+                                                            <PointerGestureRecognizer
+                                                                PointerPressed="OnElemPointerPressed"
+                                                                PointerReleased="OnElemPointerReleased"/>
                                                         </Border.GestureRecognizers>
                                                     </Border>
 
@@ -247,6 +264,9 @@
                                                             <TapGestureRecognizer
                                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ActiveWorkoutViewModel}}, Path=CompleteSetCommand}"
                                                                 CommandParameter="{Binding .}"/>
+                                                            <PointerGestureRecognizer
+                                                                PointerPressed="OnDonePointerPressed"
+                                                                PointerReleased="OnDonePointerReleased"/>
                                                         </Border.GestureRecognizers>
                                                     </Border>
 
@@ -267,7 +287,11 @@
                                                 CharacterSpacing="1"
                                                 HeightRequest="36"
                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ActiveWorkoutViewModel}}, Path=AddSetCommand}"
-                                                CommandParameter="{Binding .}"/>
+                                                CommandParameter="{Binding .}">
+                                            <Button.Behaviors>
+                                                <views:AnimatedButtonBehavior/>
+                                            </Button.Behaviors>
+                                        </Button>
                                         <Button Grid.Column="1"
                                                 Text="− SET"
                                                 Style="{StaticResource SecondaryButton}"
@@ -277,7 +301,11 @@
                                                 CharacterSpacing="1"
                                                 HeightRequest="36"
                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ActiveWorkoutViewModel}}, Path=RemoveSetCommand}"
-                                                CommandParameter="{Binding .}"/>
+                                                CommandParameter="{Binding .}">
+                                            <Button.Behaviors>
+                                                <views:AnimatedButtonBehavior/>
+                                            </Button.Behaviors>
+                                        </Button>
                                     </Grid>
 
                                     <!-- Rest timer progress bar (active only) -->
@@ -313,7 +341,11 @@
                         FontFamily="BebasNeue" FontSize="16"
                         CharacterSpacing="1"
                         HeightRequest="48"
-                        Command="{Binding AddExerciseCommand}"/>
+                        Command="{Binding AddExerciseCommand}">
+                    <Button.Behaviors>
+                        <views:AnimatedButtonBehavior/>
+                    </Button.Behaviors>
+                </Button>
 
             </StackLayout>
         </ScrollView>
@@ -328,7 +360,11 @@
                 HeightRequest="48"
                 WidthRequest="172"
                 CornerRadius="24"
-                Command="{Binding FinishWorkoutCommand}"/>
+                Command="{Binding FinishWorkoutCommand}">
+            <Button.Behaviors>
+                <views:AnimatedButtonBehavior/>
+            </Button.Behaviors>
+        </Button>
 
     </Grid>
 

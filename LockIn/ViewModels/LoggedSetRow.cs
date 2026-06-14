@@ -22,6 +22,13 @@ public partial class LoggedSetRow : ObservableObject
     public int TargetReps { get; init; } = 0;
 
     public string RirDisplay => Rir >= 0 ? Rir.ToString() : "RIR";
+    public Color  RirColor   => Rir >= 0 ? Color.FromArgb("#4ADE80") : DesignTokens.SetNormal;
+
+    partial void OnRirChanged(int value)
+    {
+        OnPropertyChanged(nameof(RirDisplay));
+        OnPropertyChanged(nameof(RirColor));
+    }
 
     public string SetLabel => SetType switch
     {
