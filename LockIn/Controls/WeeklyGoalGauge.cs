@@ -141,24 +141,13 @@ public class WeeklyGoalGauge : SKCanvasView
         float scoreTs = ScoreTextDp * _scale;
         float subTs   = SubTextDp   * _scale;
 
-        using var scorePaint = new SKPaint
-        {
-            IsAntialias = true,
-            Color       = SKColors.White,
-            TextSize    = scoreTs,
-            FakeBoldText = true,
-            TextAlign   = SKTextAlign.Center
-        };
-        using var subPaint = new SKPaint
-        {
-            IsAntialias = true,
-            Color       = new SKColor(0x88, 0x88, 0x88),
-            TextSize    = subTs,
-            TextAlign   = SKTextAlign.Center
-        };
+        using var scoreFont  = new SKFont { Size = scoreTs, Embolden = true };
+        using var subFont    = new SKFont { Size = subTs };
+        using var scorePaint = new SKPaint { IsAntialias = true, Color = SKColors.White };
+        using var subPaint   = new SKPaint { IsAntialias = true, Color = new SKColor(0x88, 0x88, 0x88) };
 
-        scorePaint.GetFontMetrics(out var sm);
-        subPaint.GetFontMetrics(out var pm);
+        scoreFont.GetFontMetrics(out var sm);
+        subFont.GetFontMetrics(out var pm);
 
         float scoreH = sm.Descent - sm.Ascent;
         float subH   = pm.Descent - pm.Ascent;
@@ -169,8 +158,8 @@ public class WeeklyGoalGauge : SKCanvasView
         float scoreBase  = blockTop - sm.Ascent;
         float subBase    = blockTop + scoreH + gap - pm.Ascent;
 
-        canvas.DrawText(pct.ToString(), cx, scoreBase, scorePaint);
-        canvas.DrawText("/ 100",        cx, subBase,   subPaint);
+        canvas.DrawText(pct.ToString(), cx, scoreBase, SKTextAlign.Center, scoreFont, scorePaint);
+        canvas.DrawText("/ 100",        cx, subBase,   SKTextAlign.Center, subFont,   subPaint);
     }
 
     // Overloads to bridge instance Progress to static helpers

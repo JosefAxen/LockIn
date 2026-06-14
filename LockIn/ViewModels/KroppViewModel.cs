@@ -8,6 +8,7 @@ using LockIn;
 using LockIn.Models;
 using LockIn.Services;
 using SkiaSharp;
+using LockIn.Views;
 using System.Collections.ObjectModel;
 
 namespace LockIn.ViewModels;

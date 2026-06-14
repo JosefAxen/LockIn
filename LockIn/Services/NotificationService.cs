@@ -6,10 +6,7 @@ public class NotificationService
 {
     private const int TimerId = 100;
 
-    public async Task RequestPermissionAsync()
-    {
-        await LocalNotificationCenter.Current.RequestNotificationPermissionAsync();
-    }
+    public Task RequestPermissionAsync() => Task.CompletedTask;
 
     public void ScheduleTimer(int seconds, string exerciseName)
     {

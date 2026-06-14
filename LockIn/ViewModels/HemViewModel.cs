@@ -32,6 +32,8 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
         new Axis { IsVisible = false, ShowSeparatorLines = false }
     ];
 
+    public float GaugeProgress => (float)(TrainingScore / 100.0);
+
     public string UserName    => "Josef";
     public string UserInitial => "J";
 
@@ -93,7 +95,7 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
             TrainingScore     = score;
             TrainingScoreText = ((int)score).ToString();
             MotivationText    = $"Stark vecka — du är {(int)score}% av veckans träningmål.";
-            GaugeDrawable     = new TrainingScoreDrawable { Score = score };
+            OnPropertyChanged(nameof(GaugeProgress));
 
             // Streak and calendar
             Days       = BuildStreakDays(recentSessions);

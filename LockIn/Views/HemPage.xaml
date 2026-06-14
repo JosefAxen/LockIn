@@ -58,6 +58,7 @@
                                Style="{StaticResource MutedLabel}"
                                HorizontalTextAlignment="Center" Margin="0,8,0,10"/>
                         <controls:WeeklyGoalGauge x:Name="Gauge"
+                                                  Progress="{Binding GaugeProgress}"
                                                   HeightRequest="260"
                                                   WidthRequest="260"
                                                   HorizontalOptions="Center"/>
