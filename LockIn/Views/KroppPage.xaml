@@ -148,11 +148,22 @@
                             </StackLayout>
                         </Border>
 
-                        <Button Text="LOGGA VIKT"
-                                ImageSource="ic_plus.png"
-                                ContentLayout="Left, 10"
-                                Style="{StaticResource PrimaryButton}"
-                                Command="{Binding LogWeightCommand}"/>
+                        <Border BackgroundColor="{StaticResource ForgeAccent}"
+                                StrokeShape="RoundRectangle 26" StrokeThickness="0"
+                                HeightRequest="56" HorizontalOptions="Fill">
+                            <HorizontalStackLayout Spacing="10"
+                                                   HorizontalOptions="Center" VerticalOptions="Center">
+                                <views:AppIcon Source="ic_plus.png"
+                                               WidthRequest="18" HeightRequest="18"
+                                               ForceTint="White" VerticalOptions="Center"/>
+                                <Label Text="LOGGA VIKT"
+                                       FontFamily="BebasNeue" FontSize="20" CharacterSpacing="3"
+                                       TextColor="White" VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding LogWeightCommand}"/>
+                            </Border.GestureRecognizers>
+                        </Border>
 
                     </VerticalStackLayout>
 
@@ -243,11 +254,22 @@
                             </StackLayout>
                         </Border>
 
-                        <Button Text="LOGGA MÅTT"
-                                ImageSource="ic_plus.png"
-                                ContentLayout="Left, 10"
-                                Style="{StaticResource PrimaryButton}"
-                                Command="{Binding LogCompositionCommand}"/>
+                        <Border BackgroundColor="{StaticResource ForgeAccent}"
+                                StrokeShape="RoundRectangle 26" StrokeThickness="0"
+                                HeightRequest="56" HorizontalOptions="Fill">
+                            <HorizontalStackLayout Spacing="10"
+                                                   HorizontalOptions="Center" VerticalOptions="Center">
+                                <views:AppIcon Source="ic_plus.png"
+                                               WidthRequest="18" HeightRequest="18"
+                                               ForceTint="White" VerticalOptions="Center"/>
+                                <Label Text="LOGGA MÅTT"
+                                       FontFamily="BebasNeue" FontSize="20" CharacterSpacing="3"
+                                       TextColor="White" VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding LogCompositionCommand}"/>
+                            </Border.GestureRecognizers>
+                        </Border>
 
                     </VerticalStackLayout>
 
