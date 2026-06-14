@@ -2,6 +2,7 @@ using LockIn.Services;
 using LockIn.ViewModels;
 using LockIn.Views;
 using Microsoft.Extensions.Logging;
+using SkiaSharp.Views.Maui.Controls.Hosting;
 
 namespace LockIn;
 
