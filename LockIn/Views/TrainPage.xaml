@@ -175,16 +175,21 @@
                                                         <Label Grid.Column="0" Text="{Binding Name}"
                                                                FontFamily="DMSansMedium" FontSize="14"
                                                                VerticalOptions="Center"/>
-                                                        <Button Grid.Column="1"
-                                                                ImageSource="ic_play.png" Text=""
-                                                                Style="{StaticResource PrimaryButton}"
-                                                                HeightRequest="36" WidthRequest="44" Padding="9"
-                                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TrainViewModel}}, Path=StartWorkoutCommand}"
-                                                                CommandParameter="{Binding .}">
-                                                            <Button.Behaviors>
-                                                                <views:AnimatedButtonBehavior/>
-                                                            </Button.Behaviors>
-                                                        </Button>
+                                                        <Border Grid.Column="1"
+                                                                WidthRequest="44" HeightRequest="36"
+                                                                BackgroundColor="{StaticResource ForgeAccent}"
+                                                                StrokeShape="RoundRectangle 12" StrokeThickness="0">
+                                                            <views:AppIcon Source="ic_play.png"
+                                                                           WidthRequest="18" HeightRequest="18"
+                                                                           ForceTint="White"
+                                                                           HorizontalOptions="Center"
+                                                                           VerticalOptions="Center"/>
+                                                            <Border.GestureRecognizers>
+                                                                <TapGestureRecognizer
+                                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TrainViewModel}}, Path=StartWorkoutCommand}"
+                                                                    CommandParameter="{Binding .}"/>
+                                                            </Border.GestureRecognizers>
+                                                        </Border>
                                                     </Grid>
                                                 </DataTemplate>
                                             </BindableLayout.ItemTemplate>
@@ -251,22 +256,26 @@
         </ScrollView>
 
         <!-- Floating FAB: starta fritt pass -->
-        <Button Grid.Row="1"
-                Text="FRITT PASS"
-                ImageSource="ic_play.png"
-                ContentLayout="Left, 8"
-                Style="{StaticResource PrimaryButton}"
-                HorizontalOptions="End"
-                VerticalOptions="End"
+        <Border Grid.Row="1"
+                BackgroundColor="{StaticResource ForgeAccent}"
+                StrokeShape="RoundRectangle 24" StrokeThickness="0"
+                HorizontalOptions="End" VerticalOptions="End"
                 Margin="0,0,20,44"
-                HeightRequest="48"
-                WidthRequest="162"
-                CornerRadius="24"
-                Command="{Binding StartFreeWorkoutCommand}">
-            <Button.Behaviors>
-                <views:AnimatedButtonBehavior/>
-            </Button.Behaviors>
-        </Button>
+                HeightRequest="48" WidthRequest="162"
+                Padding="18,0">
+            <HorizontalStackLayout Spacing="8" HorizontalOptions="Center" VerticalOptions="Center">
+                <views:AppIcon Source="ic_play.png"
+                               WidthRequest="16" HeightRequest="16"
+                               ForceTint="White"
+                               VerticalOptions="Center"/>
+                <Label Text="FRITT PASS"
+                       FontFamily="BebasNeue" FontSize="16" CharacterSpacing="1"
+                       TextColor="White" VerticalOptions="Center"/>
+            </HorizontalStackLayout>
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding StartFreeWorkoutCommand}"/>
+            </Border.GestureRecognizers>
+        </Border>
 
     </Grid>
 </ContentPage>

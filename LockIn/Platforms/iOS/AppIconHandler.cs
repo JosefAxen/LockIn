@@ -33,7 +33,8 @@ public class AppIconHandler : ImageHandler
         if (PlatformView?.Image is null) return;
         if (PlatformView.Image.RenderingMode != UIImageRenderingMode.AlwaysTemplate)
             PlatformView.Image = PlatformView.Image.ImageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate);
-        PlatformView.TintColor = DesignTokens.IconTint.ToPlatform();
+        var forceTint = (VirtualView as LockIn.Views.AppIcon)?.ForceTint;
+        PlatformView.TintColor = (forceTint ?? DesignTokens.IconTint).ToPlatform();
     }
 
     private void OnThemeChanged(object? sender, AppThemeChangedEventArgs e)

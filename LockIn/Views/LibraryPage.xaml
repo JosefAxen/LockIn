@@ -184,14 +184,21 @@
                                        Text="{Binding Name}"
                                        FontFamily="DMSansMedium" FontSize="15"
                                        VerticalOptions="Center"/>
-                                <Button Grid.Column="1"
-                                        ImageSource="ic_play.png"
-                                        Text=""
-                                        Style="{StaticResource PrimaryButton}"
-                                        HeightRequest="36" WidthRequest="44"
-                                        Padding="9"
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}}, Path=StartFromTemplateCommand}"
-                                        CommandParameter="{Binding .}"/>
+                                <Border Grid.Column="1"
+                                        WidthRequest="44" HeightRequest="36"
+                                        BackgroundColor="{StaticResource ForgeAccent}"
+                                        StrokeShape="RoundRectangle 12" StrokeThickness="0">
+                                    <views:AppIcon Source="ic_play.png"
+                                                   WidthRequest="18" HeightRequest="18"
+                                                   ForceTint="White"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center"/>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}}, Path=StartFromTemplateCommand}"
+                                            CommandParameter="{Binding .}"/>
+                                    </Border.GestureRecognizers>
+                                </Border>
                                 <Button Grid.Column="2"
                                         Text="✕"
                                         BackgroundColor="Transparent"
