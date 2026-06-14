@@ -82,14 +82,19 @@
                                            TextColor="{AppThemeBinding Light={StaticResource LightAccent}, Dark={StaticResource ForgeAccent}}"
                                            VerticalOptions="Center"
                                            Margin="0,0,12,0"/>
-                                    <Button Grid.Column="2"
-                                            ImageSource="ic_trash.png"
-                                            Text=""
-                                            Style="{StaticResource SecondaryButton}"
+                                    <Border Grid.Column="2"
                                             WidthRequest="36" HeightRequest="36"
-                                            Padding="9"
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:BodyWeightViewModel}}, Path=DeleteEntryCommand}"
-                                            CommandParameter="{Binding .}"/>
+                                            BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}"
+                                            StrokeShape="RoundRectangle 10" StrokeThickness="0">
+                                        <views:AppIcon Source="ic_trash.png"
+                                                       WidthRequest="16" HeightRequest="16"
+                                                       HorizontalOptions="Center" VerticalOptions="Center"/>
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:BodyWeightViewModel}}, Path=DeleteEntryCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                        </Border.GestureRecognizers>
+                                    </Border>
                                 </Grid>
                             </DataTemplate>
                         </BindableLayout.ItemTemplate>

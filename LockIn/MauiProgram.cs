@@ -82,18 +82,21 @@ public static class MauiProgram
 #endif
 
 #if IOS
-        // Tint button icon images white — they sit on coloured button backgrounds.
+        // Tint button icon images white. Deferred to next run-loop so the image
+        // is guaranteed to be loaded when we call ImageForState.
         Microsoft.Maui.Handlers.ButtonHandler.Mapper.AppendToMapping(
             "ImageSource", (handler, _) =>
         {
-            var img = handler.PlatformView.ImageForState(UIKit.UIControlState.Normal);
-            if (img is not null && img.RenderingMode != UIKit.UIImageRenderingMode.AlwaysTemplate)
+            var platformView = handler.PlatformView;
+            Microsoft.Maui.ApplicationModel.MainThread.BeginInvokeOnMainThread(() =>
             {
-                handler.PlatformView.SetImage(
+                var img = platformView.ImageForState(UIKit.UIControlState.Normal);
+                if (img is null || img.RenderingMode == UIKit.UIImageRenderingMode.AlwaysTemplate) return;
+                platformView.SetImage(
                     img.ImageWithRenderingMode(UIKit.UIImageRenderingMode.AlwaysTemplate),
                     UIKit.UIControlState.Normal);
-                handler.PlatformView.TintColor = UIKit.UIColor.White;
-            }
+                platformView.TintColor = UIKit.UIColor.White;
+            });
         });
 #endif
 
