@@ -82,7 +82,7 @@ public static class MauiProgram
 #if IOS
         // Tint button icon images white — they sit on coloured button backgrounds.
         Microsoft.Maui.Handlers.ButtonHandler.Mapper.AppendToMapping(
-            nameof(Microsoft.Maui.IButton.ImageSource), (handler, _) =>
+            "ImageSource", (handler, _) =>
         {
             var img = handler.PlatformView.ImageForState(UIKit.UIControlState.Normal);
             if (img is not null && img.RenderingMode != UIKit.UIImageRenderingMode.AlwaysTemplate)

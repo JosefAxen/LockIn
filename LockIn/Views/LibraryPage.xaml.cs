@@ -35,7 +35,7 @@ public partial class LibraryPage : ContentPage
         await _vm.LoadAsync();
     }
 
-    private void OnWorkoutStateChanged(object? sender, EventArgs e)
+    private void OnWorkoutStateChanged()
         => MainThread.BeginInvokeOnMainThread(() => WorkoutBanner.IsVisible = _state.IsActive);
 
     private async void OnWorkoutBannerTapped(object sender, TappedEventArgs e)
