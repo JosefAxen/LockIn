@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:LockIn.ViewModels"
              xmlns:views="clr-namespace:LockIn.Views"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+             xmlns:controls="clr-namespace:LockIn.Controls"
              x:Class="LockIn.Views.ExerciseProgressPage"
              x:DataType="vm:ExerciseProgressViewModel"
              Shell.NavBarIsVisible="False">
@@ -38,12 +38,7 @@
                         <Label Text="EST. 1RM PROGRESSION"
                                Style="{StaticResource SectionLabel}"
                                Margin="4,0,0,0"/>
-                        <lvc:CartesianChart
-                            Series="{Binding Series}"
-                            XAxes="{Binding XAxes}"
-                            YAxes="{Binding YAxes}"
-                            HeightRequest="200"
-                            BackgroundColor="Transparent"/>
+                        <controls:LineChartView Points="{Binding ChartPoints}" StrokeColor="#4ADE80" HeightRequest="200" BackgroundColor="Transparent"/>
                     </VerticalStackLayout>
                 </Border>
 

@@ -4,7 +4,6 @@
              xmlns:vm="clr-namespace:LockIn.ViewModels"
              xmlns:views="clr-namespace:LockIn.Views"
              xmlns:controls="clr-namespace:LockIn.Controls"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
              x:Class="LockIn.Views.HemPage"
              x:DataType="vm:HemViewModel"
              Title="Hem"
@@ -131,7 +130,7 @@
                                    FontFamily="BebasNeue" FontSize="36" CharacterSpacing="0" LineHeight="1"
                                    TextColor="{AppThemeBinding Light={StaticResource LightAccent}, Dark={StaticResource ForgeAccent}}"/>
                             <Label Text="steg idag" Style="{StaticResource MutedLabel}" Margin="0,2,0,6"/>
-                            <lvc:CartesianChart Series="{Binding StepsSeries}" XAxes="{Binding HiddenAxes}" YAxes="{Binding HiddenAxes}" HeightRequest="38" BackgroundColor="Transparent"/>
+                            <controls:SparklineView Values="{Binding StepsValues}" StrokeColor="#4ADE80" HeightRequest="38" BackgroundColor="Transparent"/>
                         </VerticalStackLayout>
                     </Border>
 
@@ -146,7 +145,7 @@
                                    FontFamily="BebasNeue" FontSize="36" CharacterSpacing="0" LineHeight="1"
                                    TextColor="{AppThemeBinding Light={StaticResource LightAccentCoral}, Dark={StaticResource ForgeAccentCoral}}"/>
                             <Label Text="kcal" Style="{StaticResource MutedLabel}" Margin="0,2,0,6"/>
-                            <lvc:CartesianChart Series="{Binding CaloriesSeries}" XAxes="{Binding HiddenAxes}" YAxes="{Binding HiddenAxes}" HeightRequest="38" BackgroundColor="Transparent"/>
+                            <controls:SparklineView Values="{Binding CaloriesValues}" StrokeColor="#FB7185" HeightRequest="38" BackgroundColor="Transparent"/>
                         </VerticalStackLayout>
                     </Border>
 
@@ -161,7 +160,7 @@
                                    FontFamily="BebasNeue" FontSize="36" CharacterSpacing="0" LineHeight="1"
                                    TextColor="{AppThemeBinding Light={StaticResource LightAccentBlue}, Dark={StaticResource ForgeAccentBlue}}"/>
                             <Label Text="minuter" Style="{StaticResource MutedLabel}" Margin="0,2,0,6"/>
-                            <lvc:CartesianChart Series="{Binding ActiveSeries}" XAxes="{Binding HiddenAxes}" YAxes="{Binding HiddenAxes}" HeightRequest="38" BackgroundColor="Transparent"/>
+                            <controls:SparklineView Values="{Binding ActiveValues}" StrokeColor="#38BDF8" HeightRequest="38" BackgroundColor="Transparent"/>
                         </VerticalStackLayout>
                     </Border>
 
@@ -176,7 +175,7 @@
                                    FontFamily="BebasNeue" FontSize="36" CharacterSpacing="0" LineHeight="1"
                                    TextColor="{AppThemeBinding Light={StaticResource LightAccentPurple}, Dark={StaticResource ForgeAccentPurple}}"/>
                             <Label Text="slag/min" Style="{StaticResource MutedLabel}" Margin="0,2,0,6"/>
-                            <lvc:CartesianChart Series="{Binding HeartRateSeries}" XAxes="{Binding HiddenAxes}" YAxes="{Binding HiddenAxes}" HeightRequest="38" BackgroundColor="Transparent"/>
+                            <controls:SparklineView Values="{Binding HeartRateValues}" StrokeColor="#A78BFA" HeightRequest="38" BackgroundColor="Transparent"/>
                         </VerticalStackLayout>
                     </Border>
                 </Grid>

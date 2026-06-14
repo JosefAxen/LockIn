@@ -4,7 +4,7 @@
              xmlns:vm="clr-namespace:LockIn.ViewModels"
              xmlns:models="clr-namespace:LockIn.Models"
              xmlns:views="clr-namespace:LockIn.Views"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+             xmlns:controls="clr-namespace:LockIn.Controls"
              x:Class="LockIn.Views.KroppPage"
              x:DataType="vm:KroppViewModel"
              Title="Kropp">
@@ -105,12 +105,7 @@
                                 <Label Text="VIKTUTVECKLING"
                                        Style="{StaticResource SectionLabel}"
                                        Margin="4,0,0,0"/>
-                                <lvc:CartesianChart
-                                    Series="{Binding WeightSeries}"
-                                    XAxes="{Binding WeightXAxes}"
-                                    YAxes="{Binding WeightYAxes}"
-                                    HeightRequest="180"
-                                    BackgroundColor="Transparent"/>
+                                <controls:LineChartView Points="{Binding WeightChartPoints}" StrokeColor="#6EA8DC" HeightRequest="180" BackgroundColor="Transparent"/>
                             </VerticalStackLayout>
                         </Border>
 

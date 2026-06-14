@@ -1,13 +1,8 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using LiveChartsCore;
-using LiveChartsCore.Defaults;
-using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Painting;
 using LockIn;
 using LockIn.Models;
 using LockIn.Services;
-using SkiaSharp;
 using LockIn.Views;
 using System.Collections.ObjectModel;
 
@@ -18,20 +13,12 @@ public partial class KroppViewModel(DatabaseService db) : ObservableObject
     [ObservableProperty] private int _selectedTab = 0;
     [ObservableProperty] private bool _isLoading;
 
-    private static readonly SKColor ChartBlue = new(0x6E, 0xA8, 0xDC);
-
     // VIKT
     public ObservableCollection<BodyWeightEntry> WeightEntries { get; } = new();
     [ObservableProperty] private string _latestWeight = "—";
     [ObservableProperty] private string _latestWeightDate = "";
     [ObservableProperty] private bool _hasWeightData;
-    [ObservableProperty] private ISeries[] _weightSeries = [];
-    [ObservableProperty] private Axis[] _weightXAxes = [];
-    public Axis[] WeightYAxes { get; } =
-    [
-        new Axis { LabelsPaint = null, TicksPaint = null,
-                   SeparatorsPaint = new SolidColorPaint(new SKColor(0x2A, 0x2A, 0x2A)) }
-    ];
+    [ObservableProperty] private IReadOnlyList<ChartPoint> _weightChartPoints = [];
 
     // KROPP
     public ObservableCollection<BodyCompositionEntry> CompositionEntries { get; } = new();
@@ -102,32 +89,9 @@ public partial class KroppViewModel(DatabaseService db) : ObservableObject
             var latest = entries[0];
             LatestWeight = $"{latest.WeightKg:F1} kg";
             LatestWeightDate = latest.LoggedAt.ToString("d MMM yyyy");
-            var pts = entries.OrderBy(e => e.LoggedAt)
-                .Select(e => new DateTimePoint(e.LoggedAt, (double)e.WeightKg))
-                .ToArray();
-            WeightSeries =
-            [
-                new LineSeries<DateTimePoint>
-                {
-                    Values         = pts,
-                    Stroke         = new SolidColorPaint(ChartBlue, 2),
-                    Fill           = new SolidColorPaint(ChartBlue.WithAlpha(30)),
-                    GeometryFill   = new SolidColorPaint(ChartBlue),
-                    GeometryStroke = new SolidColorPaint(new SKColor(0x12, 0x12, 0x12), 1.5f),
-                    GeometrySize   = 8,
-                    LineSmoothness = 0.3,
-                }
-            ];
-            WeightXAxes =
-            [
-                new DateTimeAxis(TimeSpan.FromDays(1), d => d.ToString("d/M"))
-                {
-                    TextSize        = 9,
-                    LabelsPaint     = new SolidColorPaint(new SKColor(0x88, 0x88, 0x88)),
-                    SeparatorsPaint = new SolidColorPaint(new SKColor(0x2A, 0x2A, 0x2A)),
-                    TicksPaint      = null,
-                }
-            ];
+            WeightChartPoints = entries.OrderBy(e => e.LoggedAt)
+                .Select(e => new ChartPoint(e.LoggedAt, (double)e.WeightKg))
+                .ToList();
         }
     }
 

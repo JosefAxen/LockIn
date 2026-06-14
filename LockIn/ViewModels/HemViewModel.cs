@@ -1,11 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
-using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Painting;
 using LockIn;
 using LockIn.Models;
 using LockIn.Services;
-using SkiaSharp;
 
 namespace LockIn.ViewModels;
 
@@ -22,15 +18,10 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
     [ObservableProperty] private bool _isLoading = true;
     [ObservableProperty] private IReadOnlyList<DayStreakItem> _days = Array.Empty<DayStreakItem>();
     [ObservableProperty] private IReadOnlyList<HeatmapTile> _heatmapItems = Array.Empty<HeatmapTile>();
-    [ObservableProperty] private ISeries[] _stepsSeries     = [];
-    [ObservableProperty] private ISeries[] _caloriesSeries  = [];
-    [ObservableProperty] private ISeries[] _activeSeries    = [];
-    [ObservableProperty] private ISeries[] _heartRateSeries = [];
-
-    public Axis[] HiddenAxes { get; } =
-    [
-        new Axis { IsVisible = false, ShowSeparatorLines = false }
-    ];
+    [ObservableProperty] private double[] _stepsValues     = [];
+    [ObservableProperty] private double[] _caloriesValues  = [];
+    [ObservableProperty] private double[] _activeValues    = [];
+    [ObservableProperty] private double[] _heartRateValues = [];
 
     public float GaugeProgress => (float)(TrainingScore / 100.0);
 
@@ -113,29 +104,16 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
             var maxHR     = heartRateTask.Result;
             HeartRateText = maxHR > 0 ? maxHR.ToString() : "–";
 
-            StepsSeries     = MakeSpark(weeklyStepsTask.Result,              new SKColor(0x4A, 0xDE, 0x80));
-            CaloriesSeries  = MakeSpark(weeklyCaloriesTask.Result,            new SKColor(0xFB, 0x71, 0x85));
-            ActiveSeries    = MakeSpark(BuildWeeklyActiveMinutes(recentSessions), new SKColor(0x38, 0xBD, 0xF8));
-            HeartRateSeries = MakeSpark(weeklyMaxHRTask.Result,               new SKColor(0xA7, 0x8B, 0xFA));
+            StepsValues     = weeklyStepsTask.Result.ToArray();
+            CaloriesValues  = weeklyCaloriesTask.Result.ToArray();
+            ActiveValues    = BuildWeeklyActiveMinutes(recentSessions);
+            HeartRateValues = weeklyMaxHRTask.Result.ToArray();
         }
         finally
         {
             IsLoading = false;
         }
     }
-
-    private static ISeries[] MakeSpark(IEnumerable<double> values, SKColor color) =>
-    [
-        new LineSeries<double>
-        {
-            Values         = values.ToArray(),
-            Stroke         = new SolidColorPaint(color, 1.8f),
-            Fill           = new SolidColorPaint(color.WithAlpha(35)),
-            GeometrySize   = 0,
-            LineSmoothness = 0.4,
-            DataPadding    = new LiveChartsCore.Drawing.LvcPoint(0, 0),
-        }
-    ];
 
     private static DateTime GetMondayThisWeek()
     {
