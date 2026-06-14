@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:LockIn.ViewModels"
              xmlns:views="clr-namespace:LockIn.Views"
+             xmlns:controls="clr-namespace:LockIn.Controls"
              x:Class="LockIn.Views.HemPage"
              x:DataType="vm:HemViewModel"
              Title="Hem"
@@ -64,9 +65,10 @@
                         <Label Text="{Binding MotivationText}"
                                Style="{StaticResource MutedLabel}"
                                HorizontalTextAlignment="Center" Margin="0,8,0,10"/>
-                        <GraphicsView x:Name="GaugeView"
-                                      Drawable="{Binding GaugeDrawable}"
-                                      HeightRequest="220"/>
+                        <controls:WeeklyGoalGauge x:Name="Gauge"
+                                                  HeightRequest="260"
+                                                  WidthRequest="260"
+                                                  HorizontalOptions="Center"/>
                     </VerticalStackLayout>
                 </Border>
 

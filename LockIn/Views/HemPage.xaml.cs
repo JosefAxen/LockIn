@@ -49,18 +49,9 @@ public partial class HemPage : ContentPage
 
     private void AnimateGauge()
     {
-        var drawable = _vm.GaugeDrawable;
-        double target = drawable.Score;
-        drawable.Score = 0;
-        GaugeView.Invalidate();
-
-        var anim = new Animation(v =>
-        {
-            drawable.Score = v;
-            GaugeView.Invalidate();
-        }, 0, target);
-
-        anim.Commit(this, "GaugeAnim", length: 1000, easing: Easing.CubicOut);
+        float target = (float)(_vm.TrainingScore / 100.0);
+        var animation = new Animation(v => Gauge.Progress = (float)v, 0, target, Easing.CubicOut);
+        animation.Commit(this, "GaugeAnim", length: 1200);
     }
 
     protected override void OnDisappearing()
