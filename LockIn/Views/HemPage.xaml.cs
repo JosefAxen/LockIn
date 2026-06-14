@@ -37,6 +37,9 @@ public partial class HemPage : ContentPage
     private void OnSeAllaHistorik(object sender, TappedEventArgs e)
         => Shell.Current.GoToAsync("//HistoryPage");
 
+    private async void OnAvatarTapped(object sender, TappedEventArgs e)
+        => await Shell.Current.GoToAsync("//KroppPage");
+
     private async void OnWorkoutBannerTapped(object sender, TappedEventArgs e)
         => await Shell.Current.GoToAsync(nameof(ActiveWorkoutPage));
 

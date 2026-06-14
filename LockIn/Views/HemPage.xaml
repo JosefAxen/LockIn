@@ -34,6 +34,9 @@
                                FontFamily="BebasNeue" FontSize="22"
                                TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeAccent}}"
                                HorizontalOptions="Center" VerticalOptions="Center"/>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnAvatarTapped"/>
+                        </Border.GestureRecognizers>
                     </Border>
                 </Grid>
 
@@ -207,7 +210,7 @@
                                     <Border BackgroundColor="{Binding TileColor}"
                                             StrokeShape="RoundRectangle 12"
                                             StrokeThickness="0"
-                                            Padding="4,14">
+                                            Padding="4,10,4,4">
                                         <VerticalStackLayout Spacing="3" HorizontalOptions="Center">
                                             <Label Text="{Binding Name}"
                                                    FontFamily="BebasNeue" FontSize="8" CharacterSpacing="0.5"

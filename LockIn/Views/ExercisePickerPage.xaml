@@ -7,7 +7,7 @@
              x:DataType="vm:ExercisePickerViewModel"
              Title="Välj övning">
 
-    <Grid RowDefinitions="Auto,Auto,Auto,*">
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,*">
 
         <Grid Grid.Row="0" Padding="16,16,16,8" ColumnDefinitions="Auto,*">
             <Button Grid.Column="0" Text="‹ Avbryt"
@@ -51,7 +51,32 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <CollectionView Grid.Row="3"
+        <!-- Add custom exercise row -->
+        <Border Grid.Row="3"
+                Margin="16,0,16,6"
+                StrokeShape="RoundRectangle 14"
+                BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
+                Stroke="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorder}}"
+                StrokeThickness="1"
+                Padding="14,12">
+            <Grid ColumnDefinitions="28,*">
+                <Label Grid.Column="0"
+                       Text="+"
+                       FontFamily="BebasNeue" FontSize="24"
+                       TextColor="{StaticResource ForgeAccent}"
+                       VerticalOptions="Center" HorizontalOptions="Center"/>
+                <Label Grid.Column="1"
+                       Text="Lägg till custom övning"
+                       FontFamily="DMSansMedium" FontSize="15"
+                       TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                       VerticalOptions="Center"/>
+            </Grid>
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnAddCustomExerciseTapped"/>
+            </Border.GestureRecognizers>
+        </Border>
+
+        <CollectionView Grid.Row="4"
                         ItemsSource="{Binding FilteredExercises}"
                         SelectionMode="None">
             <CollectionView.ItemTemplate>

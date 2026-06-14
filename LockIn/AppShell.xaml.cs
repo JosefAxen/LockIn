@@ -20,5 +20,6 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(SettingsPage), typeof(SettingsPage));
         Routing.RegisterRoute(nameof(AchievementsPage), typeof(AchievementsPage));
         Routing.RegisterRoute(nameof(ProgressPhotosPage), typeof(ProgressPhotosPage));
+        Routing.RegisterRoute(nameof(CreateExercisePage), typeof(CreateExercisePage));
     }
 }

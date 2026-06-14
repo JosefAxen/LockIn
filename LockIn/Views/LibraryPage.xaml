@@ -4,9 +4,15 @@
              xmlns:vm="clr-namespace:LockIn.ViewModels"
              xmlns:models="clr-namespace:LockIn.Models"
              xmlns:data="clr-namespace:LockIn.Data"
+             xmlns:views="clr-namespace:LockIn.Views"
              x:Class="LockIn.Views.LibraryPage"
              x:DataType="vm:LibraryViewModel"
              Title="Bibliotek">
+
+    <ContentPage.Resources>
+        <vm:MuscleGroupColorConverter x:Key="MuscleGroupColorConverter"/>
+        <vm:MuscleGroupLabelConverter x:Key="MuscleGroupLabelConverter"/>
+    </ContentPage.Resources>
 
     <Grid RowDefinitions="Auto,Auto,Auto,Auto,*">
 
@@ -127,28 +133,34 @@
                 <DataTemplate x:DataType="models:Exercise">
                     <Border Margin="16,0,16,8"
                             Style="{StaticResource CardFrame}"
-                            Padding="16,12">
+                            Padding="0">
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}}, Path=OpenExerciseProgressCommand}"
                                 CommandParameter="{Binding .}"/>
                         </Border.GestureRecognizers>
-                        <Grid ColumnDefinitions="*,Auto">
-                            <StackLayout Grid.Column="0" Spacing="2">
-                                <Label Text="{Binding Name}"
-                                       FontFamily="DMSansMedium" FontSize="15"/>
-                                <Label Text="{Binding DefaultRestSeconds, StringFormat='Vila: {0}s'}"
-                                       Style="{StaticResource MutedLabel}"/>
-                            </StackLayout>
-                            <Border Grid.Column="1"
-                                    IsVisible="{Binding IsCustom}"
-                                    BackgroundColor="{StaticResource ForgeAccentDim}"
-                                    StrokeShape="RoundRectangle 6"
-                                    StrokeThickness="0" Padding="8,4">
-                                <Label Text="EGEN" TextColor="{StaticResource ForgeAccent}"
-                                       FontSize="11" FontFamily="BebasNeue"
-                                       CharacterSpacing="1"/>
-                            </Border>
+                        <Grid ColumnDefinitions="4,*">
+                            <BoxView Grid.Column="0"
+                                     BackgroundColor="{Binding MuscleGroup, Converter={StaticResource MuscleGroupColorConverter}}"/>
+                            <Grid Grid.Column="1" ColumnDefinitions="*,Auto" Padding="14,12,14,12">
+                                <VerticalStackLayout Grid.Column="0" Spacing="3" VerticalOptions="Center">
+                                    <Label Text="{Binding Name}"
+                                           FontFamily="DMSansMedium" FontSize="15"/>
+                                    <Label Text="{Binding MuscleGroup, Converter={StaticResource MuscleGroupLabelConverter}}"
+                                           FontSize="12"
+                                           TextColor="{Binding MuscleGroup, Converter={StaticResource MuscleGroupColorConverter}}"/>
+                                </VerticalStackLayout>
+                                <Border Grid.Column="1"
+                                        IsVisible="{Binding IsCustom}"
+                                        BackgroundColor="{StaticResource ForgeAccentDim}"
+                                        StrokeShape="RoundRectangle 6"
+                                        StrokeThickness="0" Padding="8,4"
+                                        VerticalOptions="Center">
+                                    <Label Text="EIGEN" TextColor="{StaticResource ForgeAccent}"
+                                           FontSize="10" FontFamily="BebasNeue"
+                                           CharacterSpacing="1"/>
+                                </Border>
+                            </Grid>
                         </Grid>
                     </Border>
                 </DataTemplate>

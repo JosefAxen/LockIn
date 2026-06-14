@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:LockIn.ViewModels"
+             x:Class="LockIn.Views.CreateExercisePage"
+             x:DataType="vm:CreateExerciseViewModel"
+             Title="Ny övning"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="*,Auto">
+
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Padding="16,0,16,8" Spacing="12">
+
+                <!-- Header -->
+                <Grid Padding="0,16,0,4" ColumnDefinitions="Auto,*">
+                    <Button Grid.Column="0" Text="‹ Avbryt"
+                            Style="{StaticResource SecondaryButton}"
+                            Padding="12,8"
+                            Command="{Binding CancelCommand}"/>
+                    <Label Grid.Column="1" Text="NY ÖVNING"
+                           Style="{StaticResource DisplayLabel}"
+                           FontSize="22" HorizontalOptions="Center" VerticalOptions="Center"/>
+                </Grid>
+
+                <!-- Name -->
+                <Border Style="{StaticResource CardFrame}" Padding="16,14">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="NAMN" Style="{StaticResource SectionLabel}"/>
+                        <Entry Text="{Binding Name}"
+                               Placeholder="T.ex. Kabelflyes"
+                               PlaceholderColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"
+                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                               BackgroundColor="Transparent"
+                               FontFamily="DMSansRegular" FontSize="16"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Muscle group -->
+                <Border Style="{StaticResource CardFrame}" Padding="16,14">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="MUSKELGRUPP" Style="{StaticResource SectionLabel}"/>
+                        <CollectionView ItemsSource="{Binding MuscleGroups}"
+                                        SelectionMode="None"
+                                        HeightRequest="112">
+                            <CollectionView.ItemsLayout>
+                                <GridItemsLayout Orientation="Vertical" Span="4"
+                                                 HorizontalItemSpacing="8" VerticalItemSpacing="8"/>
+                            </CollectionView.ItemsLayout>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="vm:MuscleGroupOption">
+                                    <Border BackgroundColor="{Binding BackgroundColor}"
+                                            Stroke="{Binding BorderColor}"
+                                            StrokeShape="RoundRectangle 12"
+                                            StrokeThickness="1.5"
+                                            Padding="4,10">
+                                        <VerticalStackLayout Spacing="5" HorizontalOptions="Center">
+                                            <Ellipse WidthRequest="8" HeightRequest="8"
+                                                     Fill="{Binding AccentColor}"
+                                                     HorizontalOptions="Center"/>
+                                            <Label Text="{Binding Label}"
+                                                   FontFamily="BebasNeue" FontSize="9" CharacterSpacing="0.5"
+                                                   TextColor="{Binding AccentColor}"
+                                                   HorizontalOptions="Center"/>
+                                        </VerticalStackLayout>
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CreateExerciseViewModel}}, Path=SelectMuscleCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                        </Border.GestureRecognizers>
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Rest time -->
+                <Border Style="{StaticResource CardFrame}" Padding="16,14">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="VILA" Style="{StaticResource SectionLabel}"/>
+                        <Grid ColumnDefinitions="52,*,52" ColumnSpacing="0">
+                            <Button Grid.Column="0" Text="−"
+                                    Style="{StaticResource SecondaryButton}"
+                                    FontSize="20" HeightRequest="52" WidthRequest="52"
+                                    Command="{Binding DecreaseRestCommand}"/>
+                            <VerticalStackLayout Grid.Column="1" Spacing="0"
+                                                 HorizontalOptions="Center" VerticalOptions="Center">
+                                <Label Text="{Binding RestSeconds}"
+                                       FontFamily="BebasNeue" FontSize="38" CharacterSpacing="1"
+                                       TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                                       HorizontalOptions="Center"/>
+                                <Label Text="SEK"
+                                       Style="{StaticResource SectionLabel}"
+                                       HorizontalOptions="Center"/>
+                            </VerticalStackLayout>
+                            <Button Grid.Column="2" Text="+"
+                                    Style="{StaticResource SecondaryButton}"
+                                    FontSize="20" HeightRequest="52" WidthRequest="52"
+                                    Command="{Binding IncreaseRestCommand}"/>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Notes -->
+                <Border Style="{StaticResource CardFrame}" Padding="16,14">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="ANTECKNINGAR (VALFRITT)" Style="{StaticResource SectionLabel}"/>
+                        <Editor Text="{Binding Notes}"
+                                Placeholder="Tekniknoteringar, varianter..."
+                                PlaceholderColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"
+                                TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                                BackgroundColor="Transparent"
+                                FontFamily="DMSansRegular" FontSize="14"
+                                AutoSize="TextChanges"
+                                MinimumHeightRequest="72"/>
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Save button -->
+        <Button Grid.Row="1"
+                Text="SPARA ÖVNING"
+                Style="{StaticResource PrimaryButton}"
+                Margin="16,12,16,36"
+                IsEnabled="{Binding IsNameValid}"
+                Command="{Binding SaveCommand}"/>
+
+    </Grid>
+
+</ContentPage>

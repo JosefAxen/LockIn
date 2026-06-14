@@ -34,12 +34,11 @@ public class TrainingScoreDrawable : IDrawable
 
         if (Score > 0)
         {
+            float innerR = outerR - trackThick;
             float progress = MathF.Min((float)(Score / 100.0), 1f);
             float totalDeg = progress * 180f;
             const int segments = 36;
             float segSize = totalDeg / segments;
-            canvas.StrokeLineCap = LineCap.Butt;
-            canvas.StrokeSize = trackThick;
 
             for (int s = 0; s < segments; s++)
             {
@@ -52,16 +51,27 @@ public class TrainingScoreDrawable : IDrawable
                 int gg = (int)(68  + 154 * t);
                 int bb = (int)(68  +  60 * t);
 
-                canvas.StrokeColor = Color.FromRgb(rr, gg, bb);
-                canvas.DrawArc(bLeft, bTop, bW, bH, segStart, segEnd, true, false);
+                float sRad = segStart * MathF.PI / 180f;
+                float eRad = segEnd   * MathF.PI / 180f;
+
+                var path = new PathF();
+                path.MoveTo(cx + outerR * MathF.Cos(sRad), cy + outerR * MathF.Sin(sRad));
+                path.AddArc(cx - outerR, cy - outerR, outerR * 2f, outerR * 2f, segStart, segEnd, true);
+                path.LineTo(cx + innerR * MathF.Cos(eRad), cy + innerR * MathF.Sin(eRad));
+                path.AddArc(cx - innerR, cy - innerR, innerR * 2f, innerR * 2f, segEnd, segStart, false);
+                path.Close();
+
+                canvas.FillColor = Color.FromRgb(rr, gg, bb);
+                canvas.FillPath(path);
             }
 
             float endAngle = 180f + totalDeg;
-            double endRad = endAngle * Math.PI / 180.0;
-            float dotX = cx + outerR * (float)Math.Cos(endRad);
-            float dotY = cy + outerR * (float)Math.Sin(endRad);
+            double endRad  = endAngle * Math.PI / 180.0;
+            float  midR    = (outerR + innerR) / 2f;
+            float  dotX    = cx + midR * (float)Math.Cos(endRad);
+            float  dotY    = cy + midR * (float)Math.Sin(endRad);
             canvas.FillColor = s_white;
-            canvas.FillCircle(dotX, dotY, trackThick * 0.45f);
+            canvas.FillCircle(dotX, dotY, trackThick * 0.55f);
         }
 
         var tickColor = isDark ? s_tickDark : s_tickLight;

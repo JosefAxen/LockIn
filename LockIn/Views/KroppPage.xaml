@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:LockIn.ViewModels"
              xmlns:models="clr-namespace:LockIn.Models"
+             xmlns:views="clr-namespace:LockIn.Views"
              x:Class="LockIn.Views.KroppPage"
              x:DataType="vm:KroppViewModel"
              Title="Kropp">
@@ -19,9 +20,9 @@
                     StrokeShape="RoundRectangle 12" StrokeThickness="0"
                     WidthRequest="44" HeightRequest="44"
                     VerticalOptions="Center">
-                <Image Source="tab_settings.png"
-                       WidthRequest="20" HeightRequest="20"
-                       HorizontalOptions="Center" VerticalOptions="Center"/>
+                <views:AppIcon Source="tab_settings.png"
+                              WidthRequest="20" HeightRequest="20"
+                              HorizontalOptions="Center" VerticalOptions="Center"/>
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding OpenSettingsCommand}"/>
                 </Border.GestureRecognizers>

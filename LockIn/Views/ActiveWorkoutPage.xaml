@@ -313,9 +313,9 @@
                                           ColumnDefinitions="Auto,*,Auto"
                                           BackgroundColor="{StaticResource ForgeSurface2}"
                                           Padding="16,10,16,10" ColumnSpacing="10">
-                                        <Image Grid.Column="0" Source="ic_timer.png"
-                                               WidthRequest="16" HeightRequest="16"
-                                               VerticalOptions="Center"/>
+                                        <views:AppIcon Grid.Column="0" Source="ic_timer.png"
+                                                      WidthRequest="16" HeightRequest="16"
+                                                      VerticalOptions="Center"/>
                                         <ProgressBar Grid.Column="1"
                                                      Progress="{Binding TimerProgress}"
                                                      ProgressColor="{StaticResource ForgeAccent}"

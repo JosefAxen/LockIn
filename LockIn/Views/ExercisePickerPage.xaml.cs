@@ -22,6 +22,9 @@ public partial class ExercisePickerPage : ContentPage
     private async void OnBackClicked(object sender, EventArgs e) =>
         await Shell.Current.GoToAsync("..");
 
+    private async void OnAddCustomExerciseTapped(object sender, TappedEventArgs e) =>
+        await Shell.Current.GoToAsync(nameof(CreateExercisePage));
+
     private static async void OnExercisePointerPressed(object? sender, PointerEventArgs e)
     {
         HapticFeedback.Default.Perform(HapticFeedbackType.Click);

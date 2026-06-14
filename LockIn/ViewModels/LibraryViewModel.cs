@@ -128,22 +128,7 @@ public partial class LibraryViewModel(DatabaseService db) : ObservableObject
 
     [RelayCommand]
     private async Task AddCustomExerciseAsync()
-    {
-        var name = await Shell.Current.DisplayPromptAsync(
-            "Ny övning", "Namn på övningen:", "Lägg till", "Avbryt");
-        if (string.IsNullOrWhiteSpace(name)) return;
-
-        var exercise = new Exercise
-        {
-            Name = name.Trim(),
-            IsCustom = true,
-            DefaultRestSeconds = 120,
-            MuscleGroup = MuscleGroup.Other
-        };
-        await db.SaveExerciseAsync(exercise);
-        _allExercises = await db.GetExercisesAsync();
-        ApplyFilter();
-    }
+        => await Shell.Current.GoToAsync(nameof(CreateExercisePage));
 
     // ── Templates tab ──────────────────────────────────────────────────────
 

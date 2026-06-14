@@ -74,6 +74,8 @@ public static class MauiProgram
         builder.Services.AddTransient<AchievementsViewModel>();
         builder.Services.AddTransient<ProgressPhotosPage>();
         builder.Services.AddTransient<ProgressPhotosViewModel>();
+        builder.Services.AddTransient<CreateExercisePage>();
+        builder.Services.AddTransient<CreateExerciseViewModel>();
 
 #if DEBUG
         builder.Logging.AddDebug();
