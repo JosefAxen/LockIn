@@ -27,7 +27,7 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
     [ObservableProperty] private ISeries[] _activeSeries    = [];
     [ObservableProperty] private ISeries[] _heartRateSeries = [];
 
-    public static Axis[] HiddenAxes { get; } =
+    public Axis[] HiddenAxes { get; } =
     [
         new Axis { IsVisible = false, ShowSeparatorLines = false }
     ];
