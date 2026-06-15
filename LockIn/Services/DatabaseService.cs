@@ -53,6 +53,7 @@ public class DatabaseService
 
         await SeedAsync();
         await SeedExerciseDescriptionsAsync();
+        await SeedForearmExercisesAsync();
     }
 
     private async Task SeedExerciseDescriptionsAsync()
@@ -96,6 +97,25 @@ public class DatabaseService
 
         foreach (var (name, desc) in descriptions)
             await _db.ExecuteAsync("UPDATE Exercises SET Description = ? WHERE Name = ? AND IsCustom = 0", desc, name);
+    }
+
+    private async Task SeedForearmExercisesAsync()
+    {
+        var exists = await _db.ExecuteScalarAsync<int>(
+            "SELECT COUNT(*) FROM Exercises WHERE MuscleGroup = ? AND IsCustom = 0",
+            (int)MuscleGroup.Forearms) > 0;
+        if (exists) return;
+
+        var exercises = new List<Exercise>
+        {
+            new() { Name = "Handledsrullning", MuscleGroup = MuscleGroup.Forearms, DefaultRestSeconds = 60,
+                Description = "Håll stången med underhandsgrepp. Rulla handlederna uppåt och sänk kontrollerat. Tränar armböjarna i underarmen." },
+            new() { Name = "Omvänd curl", MuscleGroup = MuscleGroup.Forearms, DefaultRestSeconds = 60,
+                Description = "Curla stången med överhandsgrepp (knogarna upp). Betonar brachioradialis och extensorerna i underarmen." },
+            new() { Name = "Hantelcurl neutral", MuscleGroup = MuscleGroup.Forearms, DefaultRestSeconds = 60,
+                Description = "Neutralt grepp med tummen framåt. Full rörelse — sänk hela vägen. Tränar underarmarna och brachialis." },
+        };
+        await _db.InsertAllAsync(exercises);
     }
 
     private async Task SeedAsync()

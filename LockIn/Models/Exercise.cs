@@ -4,7 +4,7 @@ namespace LockIn.Models;
 
 public enum MuscleGroup
 {
-    Chest, Back, Shoulders, Biceps, Triceps, Legs, Core, FullBody, Other
+    Chest, Back, Shoulders, Biceps, Triceps, Legs, Core, FullBody, Other, Forearms
 }
 
 [Table("Exercises")]

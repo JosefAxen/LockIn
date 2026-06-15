@@ -142,6 +142,14 @@
         </Setter>
     </Style>
 
+    <!-- Implicit Entry — ensures DMSans is used everywhere without explicit style -->
+    <Style TargetType="Entry">
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}" />
+        <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}" />
+        <Setter Property="FontFamily" Value="DMSansRegular" />
+        <Setter Property="FontSize" Value="14" />
+    </Style>
+
     <Style x:Key="InputField" TargetType="Entry">
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}" />
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}" />

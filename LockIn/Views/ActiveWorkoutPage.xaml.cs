@@ -22,12 +22,30 @@ public partial class ActiveWorkoutPage : ContentPage
         }
     }
 
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        (BindingContext as ActiveWorkoutViewModel)?.RefreshTimerState();
+    }
+
     // RIR tap — logic only; animation handled by PointerGestureRecognizer
+    // sender is the Border the gesture is attached to, not the TapGestureRecognizer itself
     private void OnRirTapped(object sender, TappedEventArgs e)
     {
-        if (sender is not TapGestureRecognizer tap) return;
-        if (tap.BindingContext is not LoggedSetRow row) return;
+        if (sender is not VisualElement ve) return;
+        if (ve.BindingContext is not LoggedSetRow row) return;
         row.Rir = row.Rir >= 5 || row.Rir < 0 ? 0 : row.Rir + 1;
+    }
+
+    private static async void OnSetRowLoaded(object sender, EventArgs e)
+    {
+        if (sender is not VisualElement ve) return;
+        ve.Opacity = 0;
+        ve.TranslationY = -6;
+        await Task.WhenAll(
+            ve.FadeTo(1, 180, Easing.CubicOut),
+            ve.TranslateTo(0, 0, 180, Easing.CubicOut)
+        );
     }
 
     // Generic border press animation (scale 0.93)

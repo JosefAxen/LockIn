@@ -195,15 +195,16 @@ public partial class LibraryViewModel(DatabaseService db) : ObservableObject
 
     private static string MuscleGroupLabel(MuscleGroup mg) => mg switch
     {
-        MuscleGroup.Chest    => "Bröst",
-        MuscleGroup.Back     => "Rygg",
+        MuscleGroup.Chest     => "Bröst",
+        MuscleGroup.Back      => "Rygg",
         MuscleGroup.Shoulders => "Axlar",
-        MuscleGroup.Biceps   => "Biceps",
-        MuscleGroup.Triceps  => "Triceps",
-        MuscleGroup.Legs     => "Ben",
-        MuscleGroup.Core     => "Core",
-        MuscleGroup.FullBody => "Helkropp",
-        _                    => "Övrigt"
+        MuscleGroup.Biceps    => "Biceps",
+        MuscleGroup.Triceps   => "Triceps",
+        MuscleGroup.Forearms  => "Underarmar",
+        MuscleGroup.Legs      => "Ben",
+        MuscleGroup.Core      => "Core",
+        MuscleGroup.FullBody  => "Helkropp",
+        _                     => "Övrigt"
     };
 }
 

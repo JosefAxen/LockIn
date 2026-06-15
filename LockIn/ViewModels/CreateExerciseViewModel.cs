@@ -49,14 +49,16 @@ public partial class CreateExerciseViewModel : ObservableObject
         _db = db;
         _muscleGroups =
         [
-            new("BRÖST",    MuscleGroup.Chest,     Color.FromArgb("#FB7185")),
-            new("RYGG",     MuscleGroup.Back,      Color.FromArgb("#38BDF8")),
-            new("AXLAR",    MuscleGroup.Shoulders, Color.FromArgb("#A78BFA")),
-            new("BICEPS",   MuscleGroup.Biceps,    Color.FromArgb("#4ADE80")),
-            new("TRICEPS",  MuscleGroup.Triceps,   Color.FromArgb("#FBBF24")),
-            new("BEN",      MuscleGroup.Legs,      Color.FromArgb("#F97316")),
-            new("CORE",     MuscleGroup.Core,      Color.FromArgb("#EC4899")),
-            new("HELKROPP", MuscleGroup.FullBody,  Color.FromArgb("#EF4444")),
+            new("BRÖST",      MuscleGroup.Chest,     Color.FromArgb("#FB7185")),
+            new("RYGG",       MuscleGroup.Back,      Color.FromArgb("#38BDF8")),
+            new("AXLAR",      MuscleGroup.Shoulders, Color.FromArgb("#A78BFA")),
+            new("BICEPS",     MuscleGroup.Biceps,    Color.FromArgb("#4ADE80")),
+            new("TRICEPS",    MuscleGroup.Triceps,   Color.FromArgb("#FBBF24")),
+            new("UNDERARMAR", MuscleGroup.Forearms,  Color.FromArgb("#34D399")),
+            new("BEN",        MuscleGroup.Legs,      Color.FromArgb("#F97316")),
+            new("CORE",       MuscleGroup.Core,      Color.FromArgb("#EC4899")),
+            new("HELKROPP",   MuscleGroup.FullBody,  Color.FromArgb("#EF4444")),
+            new("ÖVRIGT",     MuscleGroup.Other,     Color.FromArgb("#94A3B8")),
         ];
         _muscleGroups[0].IsSelected = true;
     }

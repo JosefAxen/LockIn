@@ -211,11 +211,11 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         }
         else
         {
-            if (!decimal.TryParse(set.WeightText.Replace(',', '.'),
-                    NumberStyles.Number, CultureInfo.InvariantCulture, out weight) ||
-                !int.TryParse(set.RepsText, out reps) || reps <= 0)
+            decimal.TryParse(set.WeightText.Replace(',', '.'),
+                NumberStyles.Number, CultureInfo.InvariantCulture, out weight);
+            if (!int.TryParse(set.RepsText, out reps) || reps <= 0)
             {
-                await Toast.Make("Ange giltigt vikt och reps.").Show();
+                await Toast.Make("Ange antal reps.").Show();
                 return;
             }
         }
@@ -334,6 +334,26 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             if (section != null) section.IsTimerActive = false;
             _activeTimerSection = null;
             _currentTimerSection = null;
+        });
+    }
+
+    public void RefreshTimerState()
+    {
+        var section = _currentTimerSection;
+        if (section is null || !timer.IsRunning) return;
+        var secs = timer.SecondsRemaining;
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            section.TimerSecondsRemaining = secs;
+            section.TimerProgress = section.RestSeconds > 0
+                ? (double)secs / section.RestSeconds : 0;
+            section.RefreshTimerDisplay();
+            if (secs <= 0)
+            {
+                section.IsTimerActive = false;
+                _activeTimerSection = null;
+                _currentTimerSection = null;
+            }
         });
     }
 

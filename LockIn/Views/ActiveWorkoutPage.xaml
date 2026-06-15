@@ -171,7 +171,8 @@
                                             <DataTemplate x:DataType="vm:LoggedSetRow">
                                                 <Grid ColumnDefinitions="32,*,14,*,42,36"
                                                       Padding="16,5,16,5" ColumnSpacing="6"
-                                                      HeightRequest="46">
+                                                      HeightRequest="46"
+                                                      Loaded="OnSetRowLoaded">
 
                                                     <!-- Set number / type label — tap to change type -->
                                                     <Border Grid.Column="0"
