@@ -24,6 +24,8 @@ public partial class HemPage : ContentPage
         WorkoutBanner.IsVisible = _state.IsActive;
         _state.StateChanged += OnWorkoutStateChanged;
 
+        StickyHeader.Opacity = 0;
+
         if (!_hasLoaded)
         {
             Content.Opacity = 0;
@@ -64,6 +66,9 @@ public partial class HemPage : ContentPage
 
     private void OnWorkoutStateChanged()
         => MainThread.BeginInvokeOnMainThread(() => WorkoutBanner.IsVisible = _state.IsActive);
+
+    private void OnScrolled(object sender, ScrolledEventArgs e)
+        => StickyHeader.Opacity = Math.Clamp((e.ScrollY - 80.0) / 40.0, 0, 1);
 
     private void OnSeAllaHistorik(object sender, TappedEventArgs e)
         => Shell.Current.GoToAsync("//HistoryPage");

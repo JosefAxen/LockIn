@@ -28,6 +28,21 @@ public partial class SettingsPage : ContentPage
         );
     }
 
+    private async void OnBackClicked(object sender, EventArgs e)
+        => await Shell.Current.GoToAsync("..");
+
+    private static async void OnBackPointerPressed(object? sender, PointerEventArgs e)
+    {
+        if (sender is PointerGestureRecognizer pgr && pgr.Parent is VisualElement ve)
+            await ve.ScaleTo(0.88, 65, Easing.CubicOut);
+    }
+
+    private static async void OnBackPointerReleased(object? sender, PointerEventArgs e)
+    {
+        if (sender is PointerGestureRecognizer pgr && pgr.Parent is VisualElement ve)
+            await ve.ScaleTo(1.0, 180, Easing.SpringOut);
+    }
+
     private async void OnWorkoutBannerTapped(object sender, TappedEventArgs e)
         => await Shell.Current.GoToAsync(nameof(ActiveWorkoutPage));
 }

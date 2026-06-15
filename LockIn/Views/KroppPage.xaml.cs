@@ -14,7 +14,6 @@ public partial class KroppPage : ContentPage
         InitializeComponent();
         BindingContext = _vm = vm;
         _state = state;
-
     }
 
     protected override async void OnAppearing()
@@ -22,6 +21,8 @@ public partial class KroppPage : ContentPage
         base.OnAppearing();
         WorkoutBanner.IsVisible = _state.IsActive;
         _vm.HeatmapReady += BuildHeatmapGrid;
+
+        StickyHeader.Opacity = 0;
 
         if (!_hasLoaded)
         {
@@ -52,6 +53,8 @@ public partial class KroppPage : ContentPage
         _vm.HeatmapReady -= BuildHeatmapGrid;
     }
 
+    private void OnScrolled(object sender, ScrolledEventArgs e)
+        => StickyHeader.Opacity = Math.Clamp((e.ScrollY - 80.0) / 40.0, 0, 1);
 
     private void BuildHeatmapGrid() =>
         MainThread.BeginInvokeOnMainThread(BuildHeatmap);

@@ -12,7 +12,22 @@ public class AppDelegate : MauiUIApplicationDelegate
 	{
 		var result = base.FinishedLaunching(application, launchOptions);
 		ConfigureTabBarAppearance();
+		ConfigureWindowBackground(application);
 		return result;
+	}
+
+	private static void ConfigureWindowBackground(UIApplication application)
+	{
+		var bgColor = UIColor.FromDynamicProvider(t =>
+			t.UserInterfaceStyle == UIUserInterfaceStyle.Dark
+				? UIColor.FromRGB(0x0E, 0x0E, 0x10)
+				: UIColor.FromRGB(0xFC, 0xFC, 0xFC));
+
+		MainThread.BeginInvokeOnMainThread(() =>
+		{
+			foreach (var win in application.Windows)
+				win.BackgroundColor = bgColor;
+		});
 	}
 
 	internal static void ConfigureTabBarAppearance()

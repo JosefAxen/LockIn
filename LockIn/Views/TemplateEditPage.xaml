@@ -4,12 +4,13 @@
              xmlns:vm="clr-namespace:LockIn.ViewModels"
              x:Class="LockIn.Views.TemplateEditPage"
              x:DataType="vm:TemplateEditViewModel"
-             Title="Mall">
+             Title="Mall"
+             Shell.NavBarIsVisible="False">
 
     <Grid RowDefinitions="Auto,*" Padding="0">
 
         <!-- Header -->
-        <Grid Grid.Row="0" Padding="16,16,16,8" ColumnDefinitions="Auto,*,Auto">
+        <Grid Grid.Row="0" Padding="16,56,16,8" ColumnDefinitions="Auto,*,Auto">
             <Button Grid.Column="0" Text="‹ Tillbaka"
                     Style="{StaticResource SecondaryButton}"
                     Padding="12,8"

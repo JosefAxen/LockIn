@@ -27,6 +27,8 @@ public partial class TrainPage : ContentPage
             return;
         }
 
+        StickyHeader.Opacity = 0;
+
         if (!_hasLoaded)
         {
             Content.Opacity = 0;
@@ -49,6 +51,9 @@ public partial class TrainPage : ContentPage
             );
         }
     }
+
+    private void OnScrolled(object sender, ScrolledEventArgs e)
+        => StickyHeader.Opacity = Math.Clamp((e.ScrollY - 80.0) / 40.0, 0, 1);
 
     internal async void OnTemplateTapped(object sender, TappedEventArgs e)
         => await AnimationHelper.PressAsync(sender);

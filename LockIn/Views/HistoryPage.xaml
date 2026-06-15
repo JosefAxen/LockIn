@@ -1,30 +1,37 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:LockIn.ViewModels"
              xmlns:svc="clr-namespace:LockIn.Services"
              x:Class="LockIn.Views.HistoryPage"
              x:DataType="vm:HistoryViewModel"
-             Title="Historik">
+             Title="Historik"
+             Shell.NavBarIsVisible="False">
 
-    <Grid RowDefinitions="Auto,*">
+    <Grid>
 
-        <Grid Grid.Row="0" Padding="20,20,20,8" ColumnDefinitions="*,Auto">
-            <Label Grid.Column="0" Text="HISTORIK" Style="{StaticResource DisplayLabel}" FontSize="40"/>
-            <Border Grid.Column="1"
-                    BackgroundColor="{StaticResource ForgeAccentDim}"
-                    StrokeShape="RoundRectangle 10" StrokeThickness="0"
-                    Padding="12,8" VerticalOptions="Center">
-                <Label Text="🏆"
-                       FontSize="18"
+        <!-- Sticky header (fades in on scroll) -->
+        <Grid x:Name="StickyHeader" VerticalOptions="Start" ZIndex="20" Opacity="0"
+              BackgroundColor="{AppThemeBinding Light=#CCFCFCFC, Dark=#CC0E0E10}">
+            <BoxView HeightRequest="0.5" VerticalOptions="End"
+                     BackgroundColor="{AppThemeBinding Light=#1A000000, Dark=#26FFFFFF}"/>
+            <Grid Padding="20,56,16,12" ColumnDefinitions="*,Auto">
+                <Label Grid.Column="0" Text="HISTORIK"
+                       Style="{StaticResource DisplayLabel}" FontSize="18"
                        VerticalOptions="Center"/>
-                <Border.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding OpenAchievementsCommand}"/>
-                </Border.GestureRecognizers>
-            </Border>
+                <Border Grid.Column="1"
+                        BackgroundColor="{StaticResource ForgeAccentDim}"
+                        StrokeShape="RoundRectangle 10" StrokeThickness="0"
+                        Padding="12,8" VerticalOptions="Center">
+                    <Label Text="🏆" FontSize="18" VerticalOptions="Center"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding OpenAchievementsCommand}"/>
+                    </Border.GestureRecognizers>
+                </Border>
+            </Grid>
         </Grid>
 
-        <Grid Grid.Row="1">
+        <Grid>
 
             <ActivityIndicator IsRunning="{Binding IsLoading}"
                                IsVisible="{Binding IsLoading}"
@@ -32,8 +39,9 @@
                                VerticalOptions="Center"/>
 
             <ScrollView IsVisible="{Binding IsLoading, Converter={x:Static vm:InverseBoolConverter.Instance}}"
-                        VerticalScrollBarVisibility="Never">
-                <VerticalStackLayout Padding="16,4,16,100" Spacing="12">
+                        VerticalScrollBarVisibility="Never"
+                   Scrolled="OnScrolled">
+                <VerticalStackLayout Padding="16,56,16,100" Spacing="12">
 
                     <!-- Kalender -->
                     <Border Style="{StaticResource CardFrame}" Padding="14,12">
@@ -243,6 +251,15 @@
             </Border>
 
         </Grid>
+    <!-- Bottom gradient fade behind floating tab bar -->
+    <BoxView Grid.RowSpan="99" InputTransparent="True" VerticalOptions="End" HeightRequest="140">
+        <BoxView.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Color="Transparent" Offset="0"/>
+                <GradientStop Color="{AppThemeBinding Light=#FCFCFC, Dark=#0E0E10}" Offset="1"/>
+            </LinearGradientBrush>
+        </BoxView.Background>
+    </BoxView>
 
     </Grid>
 </ContentPage>

@@ -23,6 +23,8 @@ public partial class HistoryPage : ContentPage
         WorkoutBanner.IsVisible = _state.IsActive;
         _vm.CalendarChanged += RebuildCalendar;
 
+        StickyHeader.Opacity = 0;
+
         if (!_hasLoaded)
         {
             Content.Opacity = 0;
@@ -46,6 +48,9 @@ public partial class HistoryPage : ContentPage
         }
     }
 
+    private void OnScrolled(object sender, ScrolledEventArgs e)
+        => StickyHeader.Opacity = Math.Clamp((e.ScrollY - 80.0) / 40.0, 0, 1);
+
     protected override void OnDisappearing()
     {
         base.OnDisappearing();
@@ -63,7 +68,7 @@ public partial class HistoryPage : ContentPage
 
         var firstDay = new DateTime(_vm.CalendarYear, _vm.CalendarMonth, 1);
         var dayOfWeek = (int)firstDay.DayOfWeek;
-        var offset = dayOfWeek == 0 ? 6 : dayOfWeek - 1; // Monday-first
+        var offset = dayOfWeek == 0 ? 6 : dayOfWeek - 1;
 
         int daysInMonth = DateTime.DaysInMonth(_vm.CalendarYear, _vm.CalendarMonth);
         int totalCells = offset + daysInMonth;

@@ -11,7 +11,20 @@
 
     <Grid>
 
-        <ScrollView VerticalScrollBarVisibility="Never">
+        <!-- Sticky header (fades in on scroll) -->
+        <Grid x:Name="StickyHeader" VerticalOptions="Start" ZIndex="20" Opacity="0"
+              BackgroundColor="{AppThemeBinding Light=#CCFCFCFC, Dark=#CC0E0E10}">
+            <BoxView HeightRequest="0.5" VerticalOptions="End"
+                     BackgroundColor="{AppThemeBinding Light=#1A000000, Dark=#26FFFFFF}"/>
+            <Grid Padding="22,56,48,12" ColumnDefinitions="*,48">
+                <Label Grid.Column="0" Text="{Binding UserName}"
+                       FontFamily="BebasNeue" FontSize="18" CharacterSpacing="1"
+                       VerticalOptions="Center"
+                       TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+            </Grid>
+        </Grid>
+
+        <ScrollView VerticalScrollBarVisibility="Never" Scrolled="OnScrolled">
             <VerticalStackLayout Spacing="0" Padding="0,0,0,120">
 
                 <!-- ═══ HEADER ═══ -->
@@ -257,7 +270,15 @@
                     PointerReleased="OnBannerPointerReleased"/>
             </Border.GestureRecognizers>
         </Border>
+    <!-- Bottom gradient fade behind floating tab bar -->
+    <BoxView Grid.RowSpan="99" InputTransparent="True" VerticalOptions="End" HeightRequest="140">
+        <BoxView.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Color="Transparent" Offset="0"/>
+                <GradientStop Color="{AppThemeBinding Light=#FCFCFC, Dark=#0E0E10}" Offset="1"/>
+            </LinearGradientBrush>
+        </BoxView.Background>
+    </BoxView>
 
     </Grid>
-
 </ContentPage>

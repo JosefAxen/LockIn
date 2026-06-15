@@ -5,7 +5,8 @@
              xmlns:views="clr-namespace:LockIn.Views"
              x:Class="LockIn.Views.SettingsPage"
              x:DataType="vm:SettingsViewModel"
-             Title="Inställningar">
+             Title="Inställningar"
+             Shell.NavBarIsVisible="False">
 
     <ContentPage.Resources>
         <views:WeightUnitConverter x:Key="WeightUnitConverter"/>
@@ -13,8 +14,26 @@
 
     <Grid RowDefinitions="Auto,*">
 
-        <Grid Grid.Row="0" Padding="20,16,20,8">
-            <Label Text="INSTÄLLNINGAR" Style="{StaticResource DisplayLabel}" FontSize="28"/>
+        <Grid Grid.Row="0" Padding="16,56,16,8" ColumnDefinitions="48,*">
+            <Border Grid.Column="0"
+                    WidthRequest="40" HeightRequest="40"
+                    StrokeShape="RoundRectangle 13"
+                    BackgroundColor="{AppThemeBinding Light=#1A000000, Dark=#26FFFFFF}"
+                    Stroke="{AppThemeBinding Light=#0D000000, Dark=#33FFFFFF}"
+                    StrokeThickness="0.5"
+                    VerticalOptions="Center">
+                <Label Text="‹" FontSize="24" FontFamily="DMSansMedium"
+                       HorizontalOptions="Center" VerticalOptions="Center"
+                       TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnBackClicked"/>
+                    <PointerGestureRecognizer PointerPressed="OnBackPointerPressed" PointerReleased="OnBackPointerReleased"/>
+                </Border.GestureRecognizers>
+            </Border>
+            <Label Grid.Column="1"
+                   Text="INSTÄLLNINGAR"
+                   Style="{StaticResource DisplayLabel}" FontSize="28"
+                   VerticalOptions="End" Margin="4,0,0,0"/>
         </Grid>
 
         <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Never">

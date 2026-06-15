@@ -5,11 +5,12 @@
              xmlns:views="clr-namespace:LockIn.Views"
              x:Class="LockIn.Views.ExercisePickerPage"
              x:DataType="vm:ExercisePickerViewModel"
-             Title="Välj övning">
+             Title="Välj övning"
+             Shell.NavBarIsVisible="False">
 
     <Grid RowDefinitions="Auto,Auto,Auto,Auto,*">
 
-        <Grid Grid.Row="0" Padding="16,16,16,8" ColumnDefinitions="Auto,*">
+        <Grid Grid.Row="0" Padding="16,56,16,8" ColumnDefinitions="Auto,*">
             <Button Grid.Column="0" Text="‹ Avbryt"
                     Style="{StaticResource SecondaryButton}"
                     Padding="12,8" Clicked="OnBackClicked"/>
