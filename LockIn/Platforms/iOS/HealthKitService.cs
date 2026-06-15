@@ -12,23 +12,41 @@ public class HealthKitService : IHealthService
     private static readonly HKUnit s_kcal  = HKUnit.FromString("kcal");
     private static readonly HKUnit s_bpm   = HKUnit.FromString("count/min");
 
+    private static readonly HKObjectType[] s_readTypes =
+    [
+        HKQuantityType.Create(HKQuantityTypeIdentifier.StepCount)!,
+        HKQuantityType.Create(HKQuantityTypeIdentifier.ActiveEnergyBurned)!,
+        HKQuantityType.Create(HKQuantityTypeIdentifier.HeartRate)!,
+    ];
+
     public async Task<bool> RequestPermissionsAsync()
     {
         if (!HKHealthStore.IsHealthDataAvailable)
+        {
+            System.Diagnostics.Debug.WriteLine("[HealthKit] Inte tillgängligt (simulator?)");
             return false;
+        }
 
-        var readTypes = new NSSet<HKObjectType>(
-            HKQuantityType.Create(HKQuantityTypeIdentifier.StepCount)!,
-            HKQuantityType.Create(HKQuantityTypeIdentifier.ActiveEnergyBurned)!,
-            HKQuantityType.Create(HKQuantityTypeIdentifier.HeartRate)!
-        );
+        var readSet  = new NSSet<HKObjectType>(s_readTypes);
+        var writeSet = new NSSet(); // inga skrivrättigheter
 
         try
         {
-            await _store.RequestAuthorizationToShareAsync(null, readTypes);
+            var result = await _store.RequestAuthorizationToShareAsync(writeSet, readSet);
+
+            if (result.Item2 is { } error)
+                System.Diagnostics.Debug.WriteLine($"[HealthKit] Auth-fel: {error.LocalizedDescription}");
+            else
+                System.Diagnostics.Debug.WriteLine($"[HealthKit] Behörighet begärd OK, success={result.Item1}");
+
+            // iOS returnerar alltid "true" även om användaren nekar — frågor returnerar 0 vid nekad åtkomst.
+            return true;
         }
-        catch { }
-        return true;
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[HealthKit] Undantag vid auth: {ex}");
+            return false;
+        }
     }
 
     public async Task<int> GetTodayStepsAsync() =>
@@ -59,9 +77,14 @@ public class HealthKitService : IHealthService
         var end   = ToNSDate(DateTime.Now);
         var pred  = HKQuery.GetPredicateForSamples(start, end, HKQueryOptions.StrictStartDate);
 
-        var tcs = new TaskCompletionSource<double>();
+        var tcs   = new TaskCompletionSource<double>();
         var query = new HKStatisticsQuery(type, pred, HKStatisticsOptions.CumulativeSum,
-            (q, result, error) => tcs.TrySetResult(result?.SumQuantity()?.GetDoubleValue(unit) ?? 0));
+            (_, result, err) =>
+            {
+                if (err is not null)
+                    System.Diagnostics.Debug.WriteLine($"[HealthKit] Frågefel {typeId}: {err.LocalizedDescription}");
+                tcs.TrySetResult(result?.SumQuantity()?.GetDoubleValue(unit) ?? 0);
+            });
         _store.ExecuteQuery(query);
         return tcs.Task;
     }
@@ -76,15 +99,20 @@ public class HealthKitService : IHealthService
         var end   = ToNSDate(DateTime.Now);
         var pred  = HKQuery.GetPredicateForSamples(start, end, HKQueryOptions.StrictStartDate);
 
-        var tcs = new TaskCompletionSource<double>();
+        var tcs   = new TaskCompletionSource<double>();
         var query = new HKStatisticsQuery(type, pred, HKStatisticsOptions.DiscreteMax,
-            (q, result, error) => tcs.TrySetResult(result?.MaximumQuantity()?.GetDoubleValue(unit) ?? 0));
+            (_, result, err) =>
+            {
+                if (err is not null)
+                    System.Diagnostics.Debug.WriteLine($"[HealthKit] Frågefel {typeId}: {err.LocalizedDescription}");
+                tcs.TrySetResult(result?.MaximumQuantity()?.GetDoubleValue(unit) ?? 0);
+            });
         _store.ExecuteQuery(query);
         return tcs.Task;
     }
 
-    // Uses 7 separate HKStatisticsQuery (one per day) to avoid HKStatisticsCollectionQuery.Statistics
-    // which changed from a method to a property in .NET iOS 9.
+    // 7 separata queries (en per dag) — undviker HKStatisticsCollectionQuery.Statistics
+    // som ändrades från metod till property i .NET iOS 9.
     private Task<double[]> GetDailyStatsAsync(HKQuantityTypeIdentifier typeId, HKUnit unit, HKStatisticsOptions options)
     {
         if (!HKHealthStore.IsHealthDataAvailable) return Task.FromResult(new double[7]);
@@ -98,9 +126,9 @@ public class HealthKitService : IHealthService
             var dayEnd   = ToNSDate(DateTime.Today.AddDays(i - 5));
             var pred     = HKQuery.GetPredicateForSamples(dayStart, dayEnd, HKQueryOptions.StrictStartDate);
 
-            var tcs = new TaskCompletionSource<double>();
+            var tcs   = new TaskCompletionSource<double>();
             var query = new HKStatisticsQuery(type, pred, options,
-                (q, result, error) =>
+                (_, result, _) =>
                 {
                     var val = options == HKStatisticsOptions.CumulativeSum
                         ? result?.SumQuantity()?.GetDoubleValue(unit) ?? 0
