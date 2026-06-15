@@ -4,16 +4,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project: LockIn
 
-iOS-träningsapp byggd med **.NET MAUI 9**, target `net9.0-ios`. CI publicerar till TestFlight via GitHub Actions med `Microsoft.iOS.Sdk.net9.0_18.5`. Appen är på svenska.
+iOS-träningsapp byggd med **.NET MAUI 10**, target `net10.0-ios`. CI publicerar till GitHub Releases via GitHub Actions. SDK `10.0.x` + `dotnet workload install maui-ios`. Appen är på svenska.
 
 ## Bygga och köra
 
 ```bash
-# Bygga för iOS (Release) — kräver Mac med Xcode
-dotnet build LockIn/LockIn.csproj -f net9.0-ios -c Release
+# Bygga för iOS (Release) — kräver Mac med Xcode 26.x
+dotnet build LockIn/LockIn.csproj -f net10.0-ios -c Release
 
 # Bygga Debug (för simulator)
-dotnet build LockIn/LockIn.csproj -f net9.0-ios -c Debug
+dotnet build LockIn/LockIn.csproj -f net10.0-ios -c Debug
 ```
 
 Det finns inget test-projekt. Verifiera ändringar genom att bygga och köra appen på enhet/simulator.
@@ -117,9 +117,9 @@ Enum-värden lagras som int i SQLite. Lägg **alltid** till nya värden i slutet
 
 ### NuGet-paket (viktiga)
 - `SkiaSharp 3.116.1` + `SkiaSharp.Views.Maui.Controls 3.116.1` — custom grafik
-- `CommunityToolkit.Maui 9.1.1` — Toast, Alerts, Behaviors
+- `CommunityToolkit.Maui 14.2.0` — Toast, Alerts, Behaviors
 - `CommunityToolkit.Mvvm 8.4.2` — ObservableObject, RelayCommand
-- `Plugin.LocalNotification 11.1.2` — push-notiser för vilotimer
+- `Plugin.LocalNotification 14.1.0` — push-notiser för vilotimer
 - `sqlite-net-pcl 1.9.172` — lokal databas
 
 **Varning:** LiveChartsCore är INTE installerat — det kompilerade inte med iOS AOT. Alla grafer implementeras med custom SkiaSharp-kontroller.
