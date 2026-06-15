@@ -3,7 +3,6 @@ using LockIn.Services;
 using LockIn.ViewModels;
 using LockIn.Views;
 using Microsoft.Extensions.Logging;
-using Plugin.LocalNotification;
 using SkiaSharp.Views.Maui.Controls.Hosting;
 
 namespace LockIn;
@@ -16,8 +15,7 @@ public static class MauiProgram
         builder
             .UseMauiApp<App>()
             .UseMauiCommunityToolkit()
-            .UseLocalNotification()
-            .UseSkiaSharp()
+.UseSkiaSharp()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("BebasNeue-Regular.ttf", "BebasNeue");

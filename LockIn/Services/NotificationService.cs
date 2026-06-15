@@ -1,31 +1,43 @@
-using Plugin.LocalNotification;
+#if IOS
+using UserNotifications;
+#endif
 
 namespace LockIn.Services;
 
 public class NotificationService
 {
-    private const int TimerId = 100;
+    private const string TimerId = "rest_timer";
 
-    public Task RequestPermissionAsync() => Task.CompletedTask;
+    public async Task RequestPermissionAsync()
+    {
+#if IOS
+        await UNUserNotificationCenter.Current.RequestAuthorizationAsync(
+            UNAuthorizationOptions.Alert | UNAuthorizationOptions.Sound | UNAuthorizationOptions.Badge);
+#else
+        await Task.CompletedTask;
+#endif
+    }
 
     public void ScheduleTimer(int seconds, string exerciseName)
     {
         CancelTimer();
-        var request = new NotificationRequest
+#if IOS
+        var content = new UNMutableNotificationContent
         {
-            NotificationId = TimerId,
-            Title          = "Vilotimer klar!",
-            Description    = $"Dags för nästa set – {exerciseName}",
-            Schedule       = new NotificationRequestSchedule
-            {
-                NotifyTime = DateTime.Now.AddSeconds(seconds)
-            }
+            Title = "Vilotimer klar!",
+            Body = $"Dags för nästa set – {exerciseName}",
+            Sound = UNNotificationSound.Default
         };
-        _ = LocalNotificationCenter.Current.Show(request);
+        var trigger = UNTimeIntervalNotificationTrigger.CreateTrigger(seconds, repeats: false);
+        var request = UNNotificationRequest.FromIdentifier(TimerId, content, trigger);
+        UNUserNotificationCenter.Current.AddNotificationRequest(request, null);
+#endif
     }
 
     public void CancelTimer()
     {
-        LocalNotificationCenter.Current.Cancel(TimerId);
+#if IOS
+        UNUserNotificationCenter.Current.RemovePendingNotificationRequests(new[] { TimerId });
+#endif
     }
 }
