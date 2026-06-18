@@ -25,8 +25,8 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
 
     public float GaugeProgress => (float)(TrainingScore / 100.0);
 
-    public string UserName    => "Josef";
-    public string UserInitial => "J";
+    [ObservableProperty] private string _userName = "";
+    public string UserInitial => UserName.Length > 0 ? UserName[0].ToString().ToUpper() : "?";
 
     public string Greeting
     {
@@ -40,7 +40,7 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
         }
     }
 
-    public string GreetingText => $"{Greeting}, {UserName}!";
+    public string GreetingText => UserName.Length > 0 ? $"{Greeting}, {UserName.Split(' ')[0].ToUpper()}!" : $"{Greeting}!";
 
     public IReadOnlyList<string> CoachPrompts { get; } = new[]
     {
@@ -81,6 +81,10 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
             var settings       = settingsTask.Result;
 
             // Training score
+            UserName = settings.UserName;
+            OnPropertyChanged(nameof(UserInitial));
+            OnPropertyChanged(nameof(GreetingText));
+
             int goal   = settings.WeeklyWorkoutGoal > 0 ? settings.WeeklyWorkoutGoal : 4;
             double score = Math.Min(100.0, weekSessions.Count / (double)goal * 100.0);
             TrainingScore     = score;

@@ -18,10 +18,11 @@ public partial class PostWorkoutPage : ContentPage
         _sound = sound;
     }
 
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
         base.OnAppearing();
         _vm.NewAchievements.CollectionChanged += OnAchievementsChanged;
+        await AnimationHelper.PageEntryAsync(this);
     }
 
     protected override void OnDisappearing()

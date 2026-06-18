@@ -23,6 +23,7 @@ public partial class LibraryPage : ContentPage
         _state.StateChanged += OnWorkoutStateChanged;
 
         StickyHeader.Opacity = 0;
+        PageTitleRow.Opacity = 1;
 
         if (!_hasLoaded)
         {
@@ -63,10 +64,18 @@ public partial class LibraryPage : ContentPage
         => MainThread.BeginInvokeOnMainThread(() => WorkoutBanner.IsVisible = _state.IsActive);
 
     private void OnExercisesScrolled(object sender, ItemsViewScrolledEventArgs e)
-        => StickyHeader.Opacity = Math.Clamp(e.VerticalOffset / 40.0, 0, 1);
+    {
+        var opacity = Math.Clamp(e.VerticalOffset / 40.0, 0, 1);
+        StickyHeader.Opacity = opacity;
+        PageTitleRow.Opacity = 1 - opacity;
+    }
 
     private void OnProgramsScrolled(object sender, ScrolledEventArgs e)
-        => StickyHeader.Opacity = Math.Clamp((e.ScrollY - 80.0) / 40.0, 0, 1);
+    {
+        var opacity = Math.Clamp((e.ScrollY - 80.0) / 40.0, 0, 1);
+        StickyHeader.Opacity = opacity;
+        PageTitleRow.Opacity = 1 - opacity;
+    }
 
     private async void OnWorkoutBannerTapped(object sender, TappedEventArgs e)
         => await Shell.Current.GoToAsync(nameof(ActiveWorkoutPage));

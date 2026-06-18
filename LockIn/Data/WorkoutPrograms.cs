@@ -135,5 +135,56 @@ public static class WorkoutPrograms
                     new("Marklyft", 1, 5, 240),
                 ]),
             ]),
+
+        new("texasmethod", "Texas Method",
+            "Klassiskt mellannivåprogram med volymdag, återhämtningsdag och intensitetsdag. Linjär progression vecka för vecka.",
+            3,
+            [
+                new("Måndag — Volym", [
+                    new("Knäböj", 5, 5, 180),
+                    new("Bänkpress", 5, 5, 150),
+                    new("Skivstångsrodd", 4, 5, 120),
+                    new("Facepull", 3, 15, 60),
+                ]),
+                new("Onsdag — Återhämtning", [
+                    new("Knäböj", 2, 5, 150),
+                    new("Militärpress", 3, 5, 150),
+                    new("Marklyft", 1, 5, 240),
+                    new("Chins", 3, 8, 90),
+                ]),
+                new("Fredag — Intensitet", [
+                    new("Knäböj", 1, 5, 240),
+                    new("Bänkpress", 1, 5, 240),
+                    new("Marklyft", 1, 3, 300),
+                    new("Skivstångsrodd", 3, 5, 120),
+                ]),
+            ]),
+
+        new("531bbb", "5/3/1 BBB",
+            "Jim Wendlers 5/3/1 med Boring But Big-tillägget. Bygg styrka med de tunga seten och massa med 5×10-volymarbetet.",
+            3,
+            [
+                new("Pass A — Knäböj & Bänkpress", [
+                    new("Knäböj", 3, 5, 240),
+                    new("Knäböj", 5, 10, 120),
+                    new("Bänkpress", 3, 5, 180),
+                    new("Bänkpress", 5, 10, 90),
+                    new("Chins", 5, 10, 60),
+                ]),
+                new("Pass B — Marklyft & Militärpress", [
+                    new("Marklyft", 3, 5, 300),
+                    new("Marklyft", 5, 10, 180),
+                    new("Militärpress", 3, 5, 180),
+                    new("Militärpress", 5, 10, 90),
+                    new("Skivstångsrodd", 5, 10, 60),
+                ]),
+                new("Pass C — Styrka & Accessoarer", [
+                    new("Knäböj", 1, 1, 300),
+                    new("Bänkpress", 1, 1, 300),
+                    new("Marklyft", 1, 1, 300),
+                    new("Tricepspressdown", 4, 15, 60),
+                    new("Hammarcurl", 4, 15, 60),
+                ]),
+            ]),
     ];
 }

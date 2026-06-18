@@ -32,3 +32,39 @@ public class PRColorConverter : IValueConverter
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
         throw new NotImplementedException();
 }
+
+public class DotWidthConverter : IValueConverter
+{
+    public static readonly DotWidthConverter Instance = new();
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        value is true ? 20.0 : 6.0;
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        throw new NotImplementedException();
+}
+
+public class DotColorConverter : IValueConverter
+{
+    public static readonly DotColorConverter Instance = new();
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        value is true ? Color.FromArgb("#4ADE80") : Color.FromArgb("#222228");
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        throw new NotImplementedException();
+}
+
+public class OnboardingButtonColorConverter : IValueConverter
+{
+    public static readonly OnboardingButtonColorConverter Instance = new();
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        value is true ? Color.FromArgb("#4ADE80") : Color.FromArgb("#2A2A32");
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        throw new NotImplementedException();
+}
+
+public class CompletedOpacityConverter : IValueConverter
+{
+    public static readonly CompletedOpacityConverter Instance = new();
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        value is true ? 0.52 : 1.0;
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        throw new NotImplementedException();
+}

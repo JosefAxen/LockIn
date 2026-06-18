@@ -9,4 +9,10 @@ public partial class SessionDetailPage : ContentPage
         InitializeComponent();
         BindingContext = vm;
     }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        await AnimationHelper.PageEntryAsync(this);
+    }
 }

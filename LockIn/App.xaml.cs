@@ -1,27 +1,24 @@
 using LockIn.Services;
+using LockIn.Views;
 
 namespace LockIn;
 
 public partial class App : Application
 {
-    public App(DatabaseService db, NotificationService notifications)
+    public App()
     {
         InitializeComponent();
-        InitDbAsync(db);
-        _ = notifications.RequestPermissionAsync();
 #if IOS
         RequestedThemeChanged += (_, _) => AppDelegate.ConfigureTabBarAppearance();
 #endif
     }
 
-    private static async void InitDbAsync(DatabaseService db)
-    {
-        await db.InitAsync();
-    }
-
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        var window = new Window(new AppShell());
+        // Start with dark blank page to avoid flash, then navigate based on onboarding state
+        var splash = new ContentPage { BackgroundColor = Color.FromArgb("#0E0E10") };
+        var window = new Window(splash);
+
         window.HandlerChanged += (_, _) =>
         {
 #if IOS
@@ -37,6 +34,35 @@ public partial class App : Application
             }
 #endif
         };
+
+        _ = InitNavigationAsync(window);
+
         return window;
+    }
+
+    private static async Task InitNavigationAsync(Window window)
+    {
+        var services = IPlatformApplication.Current!.Services;
+        var db       = services.GetRequiredService<DatabaseService>();
+        var notifs   = services.GetRequiredService<NotificationService>();
+
+        await db.InitAsync();
+        _ = notifs.RequestPermissionAsync();
+
+        var settings = await db.GetAppSettingsAsync();
+
+        // Auto-complete onboarding for existing installs that already have data
+        if (!settings.HasCompletedOnboarding && await db.HasAnyCompletedSessionsAsync())
+        {
+            settings.HasCompletedOnboarding = true;
+            await db.SaveAppSettingsAsync(settings);
+        }
+
+        await MainThread.InvokeOnMainThreadAsync(() =>
+        {
+            window.Page = settings.HasCompletedOnboarding
+                ? (Page)new AppShell()
+                : services.GetRequiredService<OnboardingPage>();
+        });
     }
 }

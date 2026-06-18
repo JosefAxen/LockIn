@@ -4,12 +4,14 @@
              xmlns:vm="clr-namespace:LockIn.ViewModels"
              x:Class="LockIn.Views.AchievementsPage"
              x:DataType="vm:AchievementsViewModel"
-             Shell.NavBarIsVisible="False">
+             xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+             Shell.NavBarIsVisible="False"
+             ios:Page.UseSafeArea="False">
 
     <Grid RowDefinitions="Auto,*">
 
         <!-- Header -->
-        <Grid Grid.Row="0" Padding="16,16,20,12" ColumnDefinitions="Auto,*,Auto">
+        <Grid Grid.Row="0" Padding="16,56,20,12" ColumnDefinitions="Auto,*,Auto">
             <Button Grid.Column="0" Text="‹"
                     Style="{StaticResource SecondaryButton}"
                     WidthRequest="44" HeightRequest="44" Padding="0"

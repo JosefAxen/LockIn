@@ -15,6 +15,12 @@ public partial class BodyWeightPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        await _vm.LoadAsync();
+        Content.Opacity = 0;
+        Content.TranslationY = 14;
+        await Task.WhenAll(
+            _vm.LoadAsync(),
+            Content.FadeTo(1, 280, Easing.CubicOut),
+            Content.TranslateTo(0, 0, 280, Easing.CubicOut)
+        );
     }
 }

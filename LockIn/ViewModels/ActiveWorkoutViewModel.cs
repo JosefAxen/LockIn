@@ -26,6 +26,8 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
     [ObservableProperty] private bool _hasAutoProgress;
     [ObservableProperty] private string _autoProgressMessage = "";
 
+    public event EventHandler? PRScored;
+
     public ObservableCollection<WorkoutExerciseSection> Exercises { get; } = new();
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)
@@ -104,7 +106,8 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             ExerciseDescription = exercise.Description ?? "",
             DefaultRestSeconds = restSeconds,
             RestSeconds = restSeconds,
-            TargetReps = reps
+            TargetReps = reps,
+            MuscleGroup = exercise.MuscleGroup,
         };
 
         var prevSets = await db.GetLastSessionSetsAsync(exercise.Id, _session!.Id);
@@ -248,6 +251,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             var name = GetExerciseName(set.SessionExerciseId);
             var est = PRService.CalculateEpley1RM(weight, reps);
             PrMessage = $"Nytt PR — {name}\n{weight} kg × {reps} reps · Est. 1RM {est:F0} kg";
+            PRScored?.Invoke(this, EventArgs.Empty);
         }
 
         // Warmup and Dropset skip rest timer

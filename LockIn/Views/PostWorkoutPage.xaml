@@ -6,7 +6,9 @@
              xmlns:controls="clr-namespace:LockIn.Controls"
              x:Class="LockIn.Views.PostWorkoutPage"
              x:DataType="vm:PostWorkoutViewModel"
-             Shell.NavBarIsVisible="False">
+             xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+             Shell.NavBarIsVisible="False"
+             ios:Page.UseSafeArea="False">
 
     <ContentPage.Resources>
         <views:GreaterThanZeroConverter x:Key="GtzConverter"/>
@@ -16,7 +18,7 @@
 
     <Grid RowDefinitions="Auto,*,Auto">
 
-        <Grid Grid.Row="0" Padding="20,16,20,8">
+        <Grid Grid.Row="0" Padding="20,56,20,8">
             <Label Text="{Binding TemplateName}"
                    Style="{StaticResource DisplayLabel}"
                    FontSize="28"/>

@@ -13,4 +13,8 @@ public class AppSettings
     public WeightUnit WeightUnit { get; set; } = WeightUnit.Kg;
 
     public int WeeklyWorkoutGoal { get; set; } = 4;
+
+    public string UserName { get; set; } = "";
+
+    public bool HasCompletedOnboarding { get; set; } = false;
 }

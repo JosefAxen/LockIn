@@ -10,10 +10,16 @@ public partial class ProgressPhotosPage : ContentPage
         BindingContext = vm;
     }
 
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
         base.OnAppearing();
         var vm = BindingContext as ProgressPhotosViewModel;
-        _ = vm?.LoadAsync();
+        Content.Opacity = 0;
+        Content.TranslationY = 14;
+        await Task.WhenAll(
+            vm?.LoadAsync() ?? Task.CompletedTask,
+            Content.FadeTo(1, 280, Easing.CubicOut),
+            Content.TranslateTo(0, 0, 280, Easing.CubicOut)
+        );
     }
 }

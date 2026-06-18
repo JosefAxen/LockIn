@@ -22,4 +22,15 @@ internal static class AnimationHelper
         await view.ScaleTo(0.93, 65, Easing.CubicOut);
         await view.ScaleTo(1.0, 230, Easing.SpringOut);
     }
+
+    internal static async Task PageEntryAsync(ContentPage page)
+    {
+        if (page.Content is null) return;
+        page.Content.Opacity = 0;
+        page.Content.TranslationY = 14;
+        await Task.WhenAll(
+            page.Content.FadeTo(1, 280, Easing.CubicOut),
+            page.Content.TranslateTo(0, 0, 280, Easing.CubicOut)
+        );
+    }
 }

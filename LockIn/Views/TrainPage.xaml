@@ -4,27 +4,43 @@
              xmlns:vm="clr-namespace:LockIn.ViewModels"
              xmlns:models="clr-namespace:LockIn.Models"
              xmlns:views="clr-namespace:LockIn.Views"
+             xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
              x:Class="LockIn.Views.TrainPage"
              x:DataType="vm:TrainViewModel"
              Title="Träna"
-             Shell.NavBarIsVisible="False">
+             Shell.NavBarIsVisible="False"
+             ios:Page.UseSafeArea="False">
 
     <Grid>
 
         <!-- Sticky header (fades in on scroll) -->
         <Grid x:Name="StickyHeader" VerticalOptions="Start" ZIndex="20" Opacity="0"
-              BackgroundColor="{AppThemeBinding Light=#CCFCFCFC, Dark=#CC0E0E10}">
-            <BoxView HeightRequest="0.5" VerticalOptions="End"
-                     BackgroundColor="{AppThemeBinding Light=#1A000000, Dark=#26FFFFFF}"/>
+              HeightRequest="120">
+            <BoxView InputTransparent="True">
+                <BoxView.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="{AppThemeBinding Light=#FAFCFCFC, Dark=#FA0E0E10}" Offset="0.0"/>
+                        <GradientStop Color="{AppThemeBinding Light=#E0FCFCFC, Dark=#E00E0E10}" Offset="0.5"/>
+                        <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark=#000E0E10}" Offset="1.0"/>
+                    </LinearGradientBrush>
+                </BoxView.Background>
+            </BoxView>
             <Label Text="TRÄNA"
                    Padding="20,56,20,12"
                    Style="{StaticResource DisplayLabel}" FontSize="18"
-                   HorizontalOptions="Start"/>
+                   HorizontalOptions="Fill" HorizontalTextAlignment="Center"
+                   VerticalOptions="Start"/>
         </Grid>
 
         <!-- Content -->
         <ScrollView VerticalScrollBarVisibility="Never" Scrolled="OnScrolled">
             <StackLayout Padding="16,56,16,120" Spacing="0">
+
+                <!-- Page title (visible at top, scrolls away before sticky header appears) -->
+                <Label Text="TRÄNA"
+                       FontFamily="BebasNeue" FontSize="34" CharacterSpacing="1"
+                       TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                       Margin="4,0,0,8"/>
 
                 <!-- Stats row -->
                 <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8" Margin="0,0,0,16">

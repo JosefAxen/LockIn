@@ -5,28 +5,38 @@
              xmlns:models="clr-namespace:LockIn.Models"
              xmlns:data="clr-namespace:LockIn.Data"
              xmlns:views="clr-namespace:LockIn.Views"
+             xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
              x:Class="LockIn.Views.LibraryPage"
              x:DataType="vm:LibraryViewModel"
              Title="Bibliotek"
-             Shell.NavBarIsVisible="False">
+             Shell.NavBarIsVisible="False"
+             ios:Page.UseSafeArea="False">
 
     <ContentPage.Resources>
         <vm:MuscleGroupColorConverter x:Key="MuscleGroupColorConverter"/>
         <vm:MuscleGroupLabelConverter x:Key="MuscleGroupLabelConverter"/>
     </ContentPage.Resources>
 
-    <Grid RowDefinitions="Auto,Auto,Auto,*">
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,*">
 
         <!-- Sticky header (fades in on scroll) -->
-        <Grid x:Name="StickyHeader" Grid.RowSpan="5" VerticalOptions="Start" ZIndex="20" Opacity="0"
-              BackgroundColor="{AppThemeBinding Light=#CCFCFCFC, Dark=#CC0E0E10}">
-            <BoxView HeightRequest="0.5" VerticalOptions="End"
-                     BackgroundColor="{AppThemeBinding Light=#1A000000, Dark=#26FFFFFF}"/>
-            <Grid Padding="20,56,16,12" ColumnDefinitions="*,Auto">
-                <Label Grid.Column="0" Text="BIBLIOTEK"
+        <Grid x:Name="StickyHeader" Grid.RowSpan="6" VerticalOptions="Start" ZIndex="20" Opacity="0"
+              HeightRequest="120">
+            <BoxView InputTransparent="True">
+                <BoxView.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="{AppThemeBinding Light=#FAFCFCFC, Dark=#FA0E0E10}" Offset="0.0"/>
+                        <GradientStop Color="{AppThemeBinding Light=#E0FCFCFC, Dark=#E00E0E10}" Offset="0.5"/>
+                        <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark=#000E0E10}" Offset="1.0"/>
+                    </LinearGradientBrush>
+                </BoxView.Background>
+            </BoxView>
+            <Grid Padding="20,56,16,12" VerticalOptions="Start">
+                <Label Text="BIBLIOTEK"
+                       HorizontalOptions="Center" HorizontalTextAlignment="Center"
                        Style="{StaticResource DisplayLabel}" FontSize="18"
                        VerticalOptions="Center"/>
-                <Button Grid.Column="1"
+                <Button HorizontalOptions="End" VerticalOptions="Center"
                         IsVisible="{Binding ShowActionButton}"
                         Text="+ Lägg till"
                         Style="{StaticResource SecondaryButton}"
@@ -35,8 +45,23 @@
             </Grid>
         </Grid>
 
+        <!-- Page title (crossfades with sticky header) -->
+        <Grid x:Name="PageTitleRow" Grid.Row="0" Padding="16,56,16,8" ColumnDefinitions="*,Auto">
+            <Label Grid.Column="0" Text="BIBLIOTEK"
+                   FontFamily="BebasNeue" FontSize="34" CharacterSpacing="1"
+                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                   VerticalOptions="Center"/>
+            <Button Grid.Column="1"
+                    IsVisible="{Binding ShowActionButton}"
+                    Text="+ Lägg till"
+                    Style="{StaticResource SecondaryButton}"
+                    Padding="12,8" HeightRequest="36"
+                    Command="{Binding ActionButtonCommand}"
+                    VerticalOptions="Center"/>
+        </Grid>
+
         <!-- Tab segment control -->
-        <Grid Grid.Row="0" ColumnDefinitions="*,*,*" Padding="16,56,16,10" ColumnSpacing="6">
+        <Grid Grid.Row="1" ColumnDefinitions="*,*,*" Padding="16,8,16,10" ColumnSpacing="6">
 
             <Border Grid.Column="0"
                     BackgroundColor="{Binding Tab0Bg}"
@@ -83,14 +108,14 @@
         </Grid>
 
         <!-- Search bar (exercises only) -->
-        <SearchBar Grid.Row="1"
+        <SearchBar Grid.Row="2"
                    IsVisible="{Binding ShowExercises}"
                    Text="{Binding SearchText}"
                    Placeholder="Sök övning..."
                    Margin="16,0,16,8"/>
 
         <!-- Muscle chips (exercises only) -->
-        <CollectionView Grid.Row="2"
+        <CollectionView Grid.Row="3"
                         IsVisible="{Binding ShowExercises}"
                         ItemsSource="{Binding MuscleChips}"
                         SelectionMode="None"
@@ -121,13 +146,13 @@
         </CollectionView>
 
         <!-- Loading indicator -->
-        <ActivityIndicator Grid.Row="3"
+        <ActivityIndicator Grid.Row="4"
                            IsRunning="{Binding IsLoading}"
                            IsVisible="{Binding IsLoading}"
                            HorizontalOptions="Center"/>
 
         <!-- Tab 0: Exercises -->
-        <CollectionView Grid.Row="3"
+        <CollectionView Grid.Row="4"
                         IsVisible="{Binding ShowExercises}"
                         ItemsSource="{Binding Groups}"
                         IsGrouped="True"
@@ -180,7 +205,7 @@
         </CollectionView>
 
         <!-- Tab 1: Templates -->
-        <Grid Grid.Row="3" IsVisible="{Binding ShowTemplates}">
+        <Grid Grid.Row="4" IsVisible="{Binding ShowTemplates}">
             <CollectionView ItemsSource="{Binding Templates}"
                             HorizontalScrollBarVisibility="Never"
                             VerticalScrollBarVisibility="Never">
@@ -239,7 +264,7 @@
         </Grid>
 
         <!-- Tab 2: Programs -->
-        <ScrollView Grid.Row="3" IsVisible="{Binding ShowPrograms}" VerticalScrollBarVisibility="Never"
+        <ScrollView Grid.Row="4" IsVisible="{Binding ShowPrograms}" VerticalScrollBarVisibility="Never"
                     Scrolled="OnProgramsScrolled">
             <StackLayout BindableLayout.ItemsSource="{Binding Programs}"
                          Padding="16,0,16,40" Spacing="12">
@@ -282,7 +307,7 @@
 
         <!-- Active workout banner — overlay, alltid i botten -->
         <Border x:Name="WorkoutBanner"
-                Grid.Row="0" Grid.RowSpan="4"
+                Grid.Row="0" Grid.RowSpan="5"
                 IsVisible="False"
                 BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
                 Stroke="{StaticResource ForgeAccent}"

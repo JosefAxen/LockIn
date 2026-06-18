@@ -80,6 +80,8 @@ public static class MauiProgram
         builder.Services.AddTransient<ProgressPhotosViewModel>();
         builder.Services.AddTransient<CreateExercisePage>();
         builder.Services.AddTransient<CreateExerciseViewModel>();
+        builder.Services.AddTransient<OnboardingPage>();
+        builder.Services.AddTransient<OnboardingViewModel>();
 
 #if DEBUG
         builder.Logging.AddDebug();

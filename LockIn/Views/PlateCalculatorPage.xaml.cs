@@ -17,4 +17,10 @@ public partial class PlateCalculatorPage : ContentPage
             MainThread.BeginInvokeOnMainThread(() => BarbellView.Invalidate());
         };
     }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        await AnimationHelper.PageEntryAsync(this);
+    }
 }

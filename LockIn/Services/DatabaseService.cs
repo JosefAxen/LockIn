@@ -51,6 +51,12 @@ public class DatabaseService
         try { await _db.ExecuteAsync("ALTER TABLE AppSettings ADD COLUMN WeeklyWorkoutGoal INTEGER NOT NULL DEFAULT 4"); }
         catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
 
+        try { await _db.ExecuteAsync("ALTER TABLE AppSettings ADD COLUMN UserName TEXT NOT NULL DEFAULT ''"); }
+        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
+
+        try { await _db.ExecuteAsync("ALTER TABLE AppSettings ADD COLUMN HasCompletedOnboarding INTEGER NOT NULL DEFAULT 0"); }
+        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
+
         await SeedAsync();
         await SeedExerciseDescriptionsAsync();
         await SeedForearmExercisesAsync();
@@ -364,6 +370,13 @@ public class DatabaseService
             @"SELECT ls.* FROM LoggedSets ls
               JOIN SessionExercises se ON se.Id = ls.SessionExerciseId
               WHERE se.SessionId = ? AND ls.IsPR = 1", sessionId);
+    }
+
+    public async Task<bool> HasAnyCompletedSessionsAsync()
+    {
+        await InitAsync();
+        return await _db.ExecuteScalarAsync<int>(
+            "SELECT COUNT(*) FROM WorkoutSessions WHERE CompletedAt IS NOT NULL") > 0;
     }
 
     public async Task<List<SessionSummaryRow>> GetCompletedSessionsAsync()
@@ -774,5 +787,49 @@ public class DatabaseService
     {
         await InitAsync();
         return await _db.UpdateAsync(settings);
+    }
+
+    // ── Program activation ─────────────────────────────────────────────────
+
+    public async Task ActivateProgramAsync(Data.WorkoutProgram program)
+    {
+        await InitAsync();
+        var allExercises = await GetExercisesAsync();
+        var exerciseMap  = allExercises.ToDictionary(e => e.Name.ToLowerInvariant(), e => e);
+
+        foreach (var day in program.Days)
+        {
+            var template = new Models.WorkoutTemplate { Name = day.Label, ProgramId = program.Id };
+            await SaveTemplateAsync(template);
+
+            for (int i = 0; i < day.Exercises.Count; i++)
+            {
+                var pe  = day.Exercises[i];
+                var key = pe.ExerciseName.ToLowerInvariant();
+
+                if (!exerciseMap.TryGetValue(key, out var exercise))
+                {
+                    exercise = new Models.Exercise
+                    {
+                        Name               = pe.ExerciseName,
+                        IsCustom           = true,
+                        DefaultRestSeconds = pe.RestSeconds,
+                        MuscleGroup        = Models.MuscleGroup.Other
+                    };
+                    await SaveExerciseAsync(exercise);
+                    exerciseMap[key] = exercise;
+                }
+
+                await SaveTemplateExerciseAsync(new Models.TemplateExercise
+                {
+                    TemplateId         = template.Id,
+                    ExerciseId         = exercise.Id,
+                    OrderIndex         = i,
+                    Sets               = pe.Sets,
+                    Reps               = pe.Reps,
+                    DefaultRestSeconds = pe.RestSeconds
+                });
+            }
+        }
     }
 }

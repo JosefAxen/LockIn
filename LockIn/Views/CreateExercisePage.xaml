@@ -5,7 +5,9 @@
              x:Class="LockIn.Views.CreateExercisePage"
              x:DataType="vm:CreateExerciseViewModel"
              Title="Ny övning"
-             Shell.NavBarIsVisible="False">
+             xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+             Shell.NavBarIsVisible="False"
+             ios:Page.UseSafeArea="False">
 
     <Grid RowDefinitions="*,Auto">
 
@@ -13,7 +15,7 @@
             <VerticalStackLayout Padding="16,0,16,8" Spacing="12">
 
                 <!-- Header -->
-                <Grid Padding="0,16,0,4" ColumnDefinitions="Auto,*">
+                <Grid Padding="0,56,0,4" ColumnDefinitions="Auto,*">
                     <Button Grid.Column="0" Text="‹ Avbryt"
                             Style="{StaticResource SecondaryButton}"
                             Padding="12,8"

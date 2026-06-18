@@ -14,6 +14,7 @@ public partial class SettingsViewModel(DatabaseService db) : ObservableObject
     [ObservableProperty] private bool _hapticEnabled = true;
     [ObservableProperty] private bool _soundEnabled = true;
     [ObservableProperty] private int _weeklyGoal = 4;
+    [ObservableProperty] private string _userName = "";
 
     public async Task LoadAsync()
     {
@@ -23,6 +24,7 @@ public partial class SettingsViewModel(DatabaseService db) : ObservableObject
         HapticEnabled = Preferences.Default.Get("haptic_enabled", true);
         SoundEnabled  = Preferences.Default.Get("sound_enabled", true);
         AppVersion    = AppInfo.VersionString;
+        UserName      = settings.UserName ?? "";
     }
 
     partial void OnUseKgChanged(bool value) => _ = SaveSettingsAsync();
@@ -37,6 +39,23 @@ public partial class SettingsViewModel(DatabaseService db) : ObservableObject
     {
         var settings = await db.GetSettingsAsync();
         settings.WeightUnit = UseKg ? WeightUnit.Kg : WeightUnit.Lbs;
+        await db.SaveSettingsAsync(settings);
+    }
+
+    [RelayCommand]
+    private async Task EditUserNameAsync()
+    {
+        var result = await Shell.Current.DisplayPromptAsync(
+            "Ditt namn",
+            "Vad heter du?",
+            initialValue: UserName,
+            maxLength: 30);
+        if (result is null) return;
+        var trimmed = result.Trim();
+        if (trimmed.Length == 0) return;
+        UserName = trimmed;
+        var settings = await db.GetSettingsAsync();
+        settings.UserName = trimmed;
         await db.SaveSettingsAsync(settings);
     }
 

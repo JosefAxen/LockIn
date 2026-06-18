@@ -3,13 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:LockIn.ViewModels"
              xmlns:views="clr-namespace:LockIn.Views"
+             xmlns:controls="clr-namespace:LockIn.Controls"
              x:Class="LockIn.Views.ActiveWorkoutPage"
              x:DataType="vm:ActiveWorkoutViewModel"
+             xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
              Shell.NavBarIsVisible="False"
-             BackgroundColor="{StaticResource ForgeBackground}">
+             BackgroundColor="{StaticResource ForgeBackground}"
+             ios:Page.UseSafeArea="False">
 
     <ContentPage.Resources>
         <views:BoolToColorConverter x:Key="BoolToColorConverter"/>
+        <vm:CompletedOpacityConverter x:Key="CompletedOpacityConverter"/>
         <!-- Page is always dark — override AppThemeBinding label colors -->
         <Style TargetType="Label">
             <Setter Property="TextColor" Value="{StaticResource ForgeText}" />
@@ -21,7 +25,7 @@
     <Grid RowDefinitions="Auto,*">
 
         <!-- Top bar -->
-        <Grid Grid.Row="0" Padding="16,16,20,8" ColumnDefinitions="Auto,*,Auto,Auto">
+        <Grid Grid.Row="0" Padding="16,56,20,8" ColumnDefinitions="Auto,*,Auto,Auto">
             <Button Grid.Column="0" Text="‹"
                     Style="{StaticResource SecondaryButton}"
                     BackgroundColor="{StaticResource ForgeSurface2}"
@@ -94,8 +98,17 @@
                 <StackLayout BindableLayout.ItemsSource="{Binding Exercises}" Spacing="14">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate x:DataType="vm:WorkoutExerciseSection">
-                            <Border Style="{StaticResource DarkCardFrame}">
-                                <StackLayout Spacing="0">
+                            <Border Style="{StaticResource DarkCardFrame}"
+                                    Stroke="{Binding AccentBrush}"
+                                    StrokeThickness="0.5">
+                                <Border.Shadow>
+                                    <Shadow Brush="{Binding AccentBrush}" Offset="0,0" Radius="28" Opacity="0.20"/>
+                                </Border.Shadow>
+                                <Grid ColumnDefinitions="4,*">
+                                    <BoxView Grid.Column="0"
+                                             BackgroundColor="{Binding AccentColor}"
+                                             CornerRadius="16,0,0,16"/>
+                                <StackLayout Grid.Column="1" Spacing="0">
 
                                     <!-- Exercise header: name + info + rest time badge -->
                                     <Grid ColumnDefinitions="*,Auto,Auto"
@@ -172,6 +185,7 @@
                                                 <Grid ColumnDefinitions="32,*,14,*,42,36"
                                                       Padding="16,5,16,5" ColumnSpacing="6"
                                                       HeightRequest="46"
+                                                      Opacity="{Binding IsCompleted, Converter={StaticResource CompletedOpacityConverter}}"
                                                       Loaded="OnSetRowLoaded">
 
                                                     <!-- Set number / type label — tap to change type -->
@@ -180,11 +194,21 @@
                                                             StrokeThickness="0"
                                                             Padding="0"
                                                             HeightRequest="36">
-                                                        <Label Text="{Binding SetLabel}"
-                                                               TextColor="{Binding SetLabelColor}"
-                                                               FontFamily="DMSansMedium" FontSize="13"
-                                                               HorizontalOptions="Center"
-                                                               VerticalOptions="Center"/>
+                                                        <Grid>
+                                                            <Label Text="{Binding SetLabel}"
+                                                                   TextColor="{Binding SetLabelColor}"
+                                                                   FontFamily="DMSansMedium" FontSize="13"
+                                                                   HorizontalOptions="Center"
+                                                                   VerticalOptions="Center"/>
+                                                            <!-- PR star badge -->
+                                                            <Label Text="★"
+                                                                   FontSize="8"
+                                                                   TextColor="#FBBF24"
+                                                                   HorizontalOptions="End"
+                                                                   VerticalOptions="Start"
+                                                                   Margin="0,2,0,0"
+                                                                   IsVisible="{Binding IsPR}"/>
+                                                        </Grid>
                                                         <Border.GestureRecognizers>
                                                             <TapGestureRecognizer
                                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ActiveWorkoutViewModel}}, Path=ChangeSetTypeCommand}"
@@ -330,6 +354,7 @@
                                     </Grid>
 
                                 </StackLayout>
+                                </Grid>
                             </Border>
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>
@@ -351,6 +376,14 @@
 
             </StackLayout>
         </ScrollView>
+
+        <!-- Confetti overlay — full screen, triggered on PR -->
+        <controls:ConfettiView x:Name="Confetti"
+                               Grid.Row="0" Grid.RowSpan="2"
+                               InputTransparent="True"
+                               ZIndex="50"
+                               HorizontalOptions="Fill"
+                               VerticalOptions="Fill"/>
 
         <!-- Floating FAB: avsluta pass -->
         <Button Grid.Row="1"

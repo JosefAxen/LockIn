@@ -7,7 +7,9 @@
              xmlns:controls="clr-namespace:LockIn.Controls"
              x:Class="LockIn.Views.BodyWeightPage"
              x:DataType="vm:BodyWeightViewModel"
-             Shell.NavBarIsVisible="False">
+             xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+             Shell.NavBarIsVisible="False"
+             ios:Page.UseSafeArea="False">
 
     <ContentPage.Resources>
         <views:InvertedBoolConverter x:Key="InvertedBoolConverter"/>
@@ -16,7 +18,7 @@
     <Grid RowDefinitions="Auto,*,Auto">
 
         <!-- Header -->
-        <Grid Grid.Row="0" Padding="16,16,16,8" ColumnDefinitions="Auto,*">
+        <Grid Grid.Row="0" Padding="16,56,16,8" ColumnDefinitions="Auto,*">
             <Button Grid.Column="0" Text="‹"
                     Style="{StaticResource SecondaryButton}"
                     WidthRequest="44" HeightRequest="44" Padding="0"

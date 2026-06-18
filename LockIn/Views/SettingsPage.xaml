@@ -6,7 +6,9 @@
              x:Class="LockIn.Views.SettingsPage"
              x:DataType="vm:SettingsViewModel"
              Title="Inställningar"
-             Shell.NavBarIsVisible="False">
+             xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+             Shell.NavBarIsVisible="False"
+             ios:Page.UseSafeArea="False">
 
     <ContentPage.Resources>
         <views:WeightUnitConverter x:Key="WeightUnitConverter"/>
@@ -38,6 +40,28 @@
 
         <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Never">
             <StackLayout Padding="16,8,16,48" Spacing="16">
+
+                <!-- Profile -->
+                <Label Text="PROFIL" Style="{StaticResource SectionLabel}" Margin="4,0"/>
+                <Border Style="{StaticResource CardFrame}" Padding="16,14">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                        <Border Grid.Column="0" BackgroundColor="{StaticResource ForgeAccentDim}"
+                                StrokeShape="RoundRectangle 10" StrokeThickness="0"
+                                WidthRequest="38" HeightRequest="38" VerticalOptions="Center">
+                            <Label Text="👤" FontSize="18"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Border>
+                        <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                            <Label Text="Namn" FontFamily="DMSansMedium" FontSize="15"/>
+                            <Label Text="{Binding UserName}" Style="{StaticResource MutedLabel}"/>
+                        </StackLayout>
+                        <Label Grid.Column="2" Text="›" FontSize="22"
+                               TextColor="{StaticResource ForgeMuted}" VerticalOptions="Center"/>
+                    </Grid>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding EditUserNameCommand}"/>
+                    </Border.GestureRecognizers>
+                </Border>
 
                 <!-- Weekly goal -->
                 <Label Text="TRÄNING" Style="{StaticResource SectionLabel}" Margin="4,0"/>

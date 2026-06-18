@@ -9,4 +9,10 @@ public partial class CreateExercisePage : ContentPage
         InitializeComponent();
         BindingContext = vm;
     }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        await AnimationHelper.PageEntryAsync(this);
+    }
 }

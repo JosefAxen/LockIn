@@ -36,6 +36,41 @@ Data/            — Statisk data (WorkoutPrograms — hårdkodade träningsprog
 
 Modala/push-sidor registreras i `AppShell.xaml.cs` och navigeras till med `Shell.Current.GoToAsync(nameof(SidanPage), parametrar)`. Query-attribut används för att skicka data (`IQueryAttributable`).
 
+### Alla sidor (Views/)
+
+**Tab-sidor** (5 st):
+| Fil | Titel |
+|-----|-------|
+| `HemPage.xaml` | Hem |
+| `TrainPage.xaml` | Träna |
+| `HistoryPage.xaml` | Historik |
+| `LibraryPage.xaml` | Bibliotek |
+| `KroppPage.xaml` | Kropp |
+
+**Push/modala sidor** (13 st):
+| Fil | Nås från |
+|-----|----------|
+| `ActiveWorkoutPage.xaml` | TrainPage → starta pass |
+| `PostWorkoutPage.xaml` | ActiveWorkoutPage → avsluta pass |
+| `SessionDetailPage.xaml` | HistoryPage → tap session |
+| `ExercisePickerPage.xaml` | TemplateEditPage / ActiveWorkoutPage |
+| `TemplateEditPage.xaml` | LibraryPage → redigera mall |
+| `ExerciseProgressPage.xaml` | LibraryPage → tap övning |
+| `CreateExercisePage.xaml` | ExercisePickerPage → ny övning |
+| `ProgramDetailPage.xaml` | LibraryPage → tap program |
+| `SettingsPage.xaml` | KroppPage |
+| `BodyWeightPage.xaml` | KroppPage |
+| `AchievementsPage.xaml` | HistoryPage |
+| `PlateCalculatorPage.xaml` | ActiveWorkoutPage |
+| `ProgressPhotosPage.xaml` | KroppPage / PostWorkoutPage |
+| `OnboardingPage.xaml` | App-start (första körning) |
+
+**Global konvention för alla sidor:**
+- Alla sidor har `Shell.NavBarIsVisible="False"` + `ios:Page.UseSafeArea="False"` (bakgrund fyller hela skärmen inkl. Dynamic Island)
+- Header-raden har `Padding="...,56,..."` som manuell safe area-offset för Dynamic Island
+- Om en ändring misstänks kunna gälla alla sidor: fråga användaren innan du applicerar den på alla 19 sidor
+- När en sida läggs till eller tas bort: uppdatera tabellerna ovan OCH räkna om antalet (just nu 19 sidor totalt)
+
 ### Databas
 `DatabaseService` är en singleton som wrappar `SQLiteAsyncConnection`. Init sker via `Lazy<Task>` — varje publik metod kallar `await InitAsync()` som säkerställer idempotent initiering.
 

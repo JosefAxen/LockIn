@@ -1,0 +1,207 @@
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using LockIn.Data;
+using LockIn.Services;
+
+namespace LockIn.ViewModels;
+
+public partial class OnboardingViewModel(DatabaseService db) : ObservableObject
+{
+    [ObservableProperty] private int    _currentStep        = 0;
+    [ObservableProperty] private string _userNameInput      = "";
+    [ObservableProperty] private int    _selectedWeeklyGoal = 4;
+    [ObservableProperty] private int    _selectedExperience = -1;
+    [ObservableProperty] private int    _selectedGoal       = -1;
+
+    // ── Step visibility ────────────────────────────────────────────────────
+
+    public bool IsStep0 => CurrentStep == 0;
+    public bool IsStep1 => CurrentStep == 1;
+    public bool IsStep2 => CurrentStep == 2;
+    public bool IsStep3 => CurrentStep == 3;
+    public bool IsStep4 => CurrentStep == 4;
+
+    partial void OnCurrentStepChanged(int value)
+    {
+        OnPropertyChanged(nameof(IsStep0));
+        OnPropertyChanged(nameof(IsStep1));
+        OnPropertyChanged(nameof(IsStep2));
+        OnPropertyChanged(nameof(IsStep3));
+        OnPropertyChanged(nameof(IsStep4));
+        OnPropertyChanged(nameof(CanGoNext));
+        OnPropertyChanged(nameof(ShowBackButton));
+    }
+
+    partial void OnUserNameInputChanged(string value) => OnPropertyChanged(nameof(CanGoNext));
+
+    partial void OnSelectedExperienceChanged(int value)
+    {
+        OnPropertyChanged(nameof(CanGoNext));
+        RefreshExperienceColors();
+    }
+
+    partial void OnSelectedGoalChanged(int value)
+    {
+        OnPropertyChanged(nameof(CanGoNext));
+        RefreshGoalColors();
+        OnPropertyChanged(nameof(RecommendedProgram));
+        OnPropertyChanged(nameof(RecommendedDescription));
+    }
+
+    // ── Navigation ─────────────────────────────────────────────────────────
+
+    public bool ShowBackButton => CurrentStep > 0;
+
+    public bool CanGoNext => CurrentStep switch
+    {
+        0 => UserNameInput.Trim().Length > 0,
+        1 => SelectedWeeklyGoal >= 2,
+        2 => SelectedExperience >= 0,
+        3 => SelectedGoal >= 0,
+        _ => false
+    };
+
+    [RelayCommand]
+    private void Next()
+    {
+        if (CanGoNext && CurrentStep < 4)
+            CurrentStep++;
+    }
+
+    [RelayCommand]
+    private void Back()
+    {
+        if (CurrentStep > 0)
+            CurrentStep--;
+    }
+
+    // ── Weekly goal selection (2–6) ────────────────────────────────────────
+
+    [RelayCommand]
+    private void SelectWeeklyGoal(int days)
+    {
+        SelectedWeeklyGoal = days;
+        RefreshWeeklyGoalColors();
+        OnPropertyChanged(nameof(CanGoNext));
+    }
+
+    // ── Experience & goal selection ────────────────────────────────────────
+
+    [RelayCommand]
+    private void SelectExperience(int level) => SelectedExperience = level;
+
+    [RelayCommand]
+    private void SelectGoal(int goal) => SelectedGoal = goal;
+
+    // ── Recommendation ─────────────────────────────────────────────────────
+
+    public WorkoutProgram? RecommendedProgram
+    {
+        get
+        {
+            if (SelectedExperience < 0 || SelectedGoal < 0) return null;
+            var id = (SelectedExperience, SelectedGoal) switch
+            {
+                (0, 0) => "startingstrength",
+                (0, 1) => "fullbody",
+                (1, 0) => "texasmethod",
+                (1, 1) => "upperlower",
+                (2, 0) => "531bbb",
+                (2, 1) => "ppl",
+                _      => "fullbody"
+            };
+            return WorkoutPrograms.All.FirstOrDefault(p => p.Id == id);
+        }
+    }
+
+    public string RecommendedDescription =>
+        RecommendedProgram is { } p ? $"{p.DaysPerWeek} dagar/vecka · {p.Days.Count} pass" : "";
+
+    // ── Completion ─────────────────────────────────────────────────────────
+
+    [RelayCommand]
+    private async Task ActivateProgramAsync()
+    {
+        await FinishOnboardingAsync(activateProgram: true);
+    }
+
+    [RelayCommand]
+    private async Task SkipProgramAsync()
+    {
+        await FinishOnboardingAsync(activateProgram: false);
+    }
+
+    private async Task FinishOnboardingAsync(bool activateProgram)
+    {
+        var settings = await db.GetAppSettingsAsync();
+        settings.UserName               = UserNameInput.Trim();
+        settings.WeeklyWorkoutGoal      = SelectedWeeklyGoal;
+        settings.HasCompletedOnboarding = true;
+        await db.SaveAppSettingsAsync(settings);
+
+        if (activateProgram && RecommendedProgram is { } program)
+            await db.ActivateProgramAsync(program);
+
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            Application.Current!.Windows[0].Page = new AppShell();
+        });
+    }
+
+    // ── Card colors ────────────────────────────────────────────────────────
+
+    private static Color SelBg  => Color.FromArgb("#4ADE80");
+    private static Color SelFg  => Color.FromArgb("#0E0E10");
+    private static Color IdleBg => Color.FromArgb("#222228");
+    private static Color IdleFg => Color.FromArgb("#E2E8F0");
+
+    // Weekly goal (2–6)
+    public Color Wk2Bg => SelectedWeeklyGoal == 2 ? SelBg : IdleBg;
+    public Color Wk3Bg => SelectedWeeklyGoal == 3 ? SelBg : IdleBg;
+    public Color Wk4Bg => SelectedWeeklyGoal == 4 ? SelBg : IdleBg;
+    public Color Wk5Bg => SelectedWeeklyGoal == 5 ? SelBg : IdleBg;
+    public Color Wk6Bg => SelectedWeeklyGoal == 6 ? SelBg : IdleBg;
+    public Color Wk2Fg => SelectedWeeklyGoal == 2 ? SelFg : IdleFg;
+    public Color Wk3Fg => SelectedWeeklyGoal == 3 ? SelFg : IdleFg;
+    public Color Wk4Fg => SelectedWeeklyGoal == 4 ? SelFg : IdleFg;
+    public Color Wk5Fg => SelectedWeeklyGoal == 5 ? SelFg : IdleFg;
+    public Color Wk6Fg => SelectedWeeklyGoal == 6 ? SelFg : IdleFg;
+
+    private void RefreshWeeklyGoalColors()
+    {
+        OnPropertyChanged(nameof(Wk2Bg)); OnPropertyChanged(nameof(Wk2Fg));
+        OnPropertyChanged(nameof(Wk3Bg)); OnPropertyChanged(nameof(Wk3Fg));
+        OnPropertyChanged(nameof(Wk4Bg)); OnPropertyChanged(nameof(Wk4Fg));
+        OnPropertyChanged(nameof(Wk5Bg)); OnPropertyChanged(nameof(Wk5Fg));
+        OnPropertyChanged(nameof(Wk6Bg)); OnPropertyChanged(nameof(Wk6Fg));
+    }
+
+    // Experience level
+    public Color Exp0Bg => SelectedExperience == 0 ? SelBg : IdleBg;
+    public Color Exp1Bg => SelectedExperience == 1 ? SelBg : IdleBg;
+    public Color Exp2Bg => SelectedExperience == 2 ? SelBg : IdleBg;
+    public Color Exp0Fg => SelectedExperience == 0 ? SelFg : IdleFg;
+    public Color Exp1Fg => SelectedExperience == 1 ? SelFg : IdleFg;
+    public Color Exp2Fg => SelectedExperience == 2 ? SelFg : IdleFg;
+
+    private void RefreshExperienceColors()
+    {
+        OnPropertyChanged(nameof(Exp0Bg)); OnPropertyChanged(nameof(Exp0Fg));
+        OnPropertyChanged(nameof(Exp1Bg)); OnPropertyChanged(nameof(Exp1Fg));
+        OnPropertyChanged(nameof(Exp2Bg)); OnPropertyChanged(nameof(Exp2Fg));
+    }
+
+    // Training goal
+    public Color GoalStrengthBg => SelectedGoal == 0 ? SelBg : IdleBg;
+    public Color GoalStrengthFg => SelectedGoal == 0 ? SelFg : IdleFg;
+    public Color GoalHyperBg    => SelectedGoal == 1 ? SelBg : IdleBg;
+    public Color GoalHyperFg    => SelectedGoal == 1 ? SelFg : IdleFg;
+
+    private void RefreshGoalColors()
+    {
+        OnPropertyChanged(nameof(GoalStrengthBg));
+        OnPropertyChanged(nameof(GoalStrengthFg));
+        OnPropertyChanged(nameof(GoalHyperBg));
+        OnPropertyChanged(nameof(GoalHyperFg));
+    }
+}

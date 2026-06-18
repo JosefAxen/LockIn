@@ -5,10 +5,13 @@ namespace LockIn.Views;
 
 public partial class ActiveWorkoutPage : ContentPage
 {
+    private bool _hasAppeared;
+
     public ActiveWorkoutPage(ActiveWorkoutViewModel vm)
     {
         InitializeComponent();
         BindingContext = vm;
+        vm.PRScored += (_, _) => MainThread.BeginInvokeOnMainThread(() => Confetti.Start());
     }
 
     private async void OnBackClicked(object sender, EventArgs e)
@@ -22,10 +25,15 @@ public partial class ActiveWorkoutPage : ContentPage
         }
     }
 
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
         base.OnAppearing();
         (BindingContext as ActiveWorkoutViewModel)?.RefreshTimerState();
+        if (!_hasAppeared)
+        {
+            _hasAppeared = true;
+            await AnimationHelper.PageEntryAsync(this);
+        }
     }
 
     // RIR tap — logic only; animation handled by PointerGestureRecognizer

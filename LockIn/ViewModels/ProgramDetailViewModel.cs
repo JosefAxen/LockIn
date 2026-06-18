@@ -3,7 +3,6 @@ using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn.Data;
-using LockIn.Models;
 using LockIn.Services;
 
 namespace LockIn.ViewModels;
@@ -47,47 +46,7 @@ public partial class ProgramDetailViewModel(DatabaseService db) : ObservableObje
         if (!confirmed) return;
 
         IsActivating = true;
-
-        var allExercises = await db.GetExercisesAsync();
-        var exerciseMap = allExercises.ToDictionary(
-            e => e.Name.ToLowerInvariant(), e => e);
-
-        foreach (var day in _program.Days)
-        {
-            var template = new WorkoutTemplate { Name = day.Label, ProgramId = _program.Id };
-            await db.SaveTemplateAsync(template);
-
-            for (int i = 0; i < day.Exercises.Count; i++)
-            {
-                var pe = day.Exercises[i];
-                var key = pe.ExerciseName.ToLowerInvariant();
-
-                if (!exerciseMap.TryGetValue(key, out var exercise))
-                {
-                    exercise = new Exercise
-                    {
-                        Name = pe.ExerciseName,
-                        IsCustom = true,
-                        DefaultRestSeconds = pe.RestSeconds,
-                        MuscleGroup = MuscleGroup.Other
-                    };
-                    await db.SaveExerciseAsync(exercise);
-                    exerciseMap[key] = exercise;
-                }
-
-                var te = new TemplateExercise
-                {
-                    TemplateId = template.Id,
-                    ExerciseId = exercise.Id,
-                    OrderIndex = i,
-                    Sets = pe.Sets,
-                    Reps = pe.Reps,
-                    DefaultRestSeconds = pe.RestSeconds
-                };
-                await db.SaveTemplateExerciseAsync(te);
-            }
-        }
-
+        await db.ActivateProgramAsync(_program);
         IsActivating = false;
 
         await Toast.Make($"{_program.Days.Count} mallar skapade! Hitta dem under Mallar i Bibliotek.", ToastDuration.Long).Show();

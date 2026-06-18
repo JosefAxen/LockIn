@@ -5,7 +5,9 @@
              x:Class="LockIn.Views.TemplateEditPage"
              x:DataType="vm:TemplateEditViewModel"
              Title="Mall"
-             Shell.NavBarIsVisible="False">
+             xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+             Shell.NavBarIsVisible="False"
+             ios:Page.UseSafeArea="False">
 
     <Grid RowDefinitions="Auto,*" Padding="0">
 
