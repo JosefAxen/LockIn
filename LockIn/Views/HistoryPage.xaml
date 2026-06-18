@@ -8,6 +8,7 @@
              x:DataType="vm:HistoryViewModel"
              Title="Historik"
              Shell.NavBarIsVisible="False"
+             BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource ForgeBackground}}"
              ios:Page.UseSafeArea="False">
 
     <Grid>

@@ -9,6 +9,7 @@
              x:DataType="vm:HemViewModel"
              Title="Hem"
              Shell.NavBarIsVisible="False"
+             BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource ForgeBackground}}"
              ios:Page.UseSafeArea="False">
 
     <Grid>

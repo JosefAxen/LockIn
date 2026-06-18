@@ -37,14 +37,12 @@ public class AppDelegate : MauiUIApplicationDelegate
 			t.UserInterfaceStyle == UIUserInterfaceStyle.Dark
 				? UIColor.FromRGB(0xA0, 0xA0, 0xA8)
 				: UIColor.FromRGB(0x8E, 0x8E, 0x93));
-		var tabBg = UIColor.FromDynamicProvider(t =>
-			t.UserInterfaceStyle == UIUserInterfaceStyle.Dark
-				? UIColor.FromRGB(0x11, 0x11, 0x11)
-				: UIColor.White);
 
 		var appearance = new UITabBarAppearance();
-		appearance.ConfigureWithOpaqueBackground();
-		appearance.BackgroundColor = tabBg;
+		// Transparent background — content bleeds behind the tab bar
+		appearance.ConfigureWithTransparentBackground();
+		appearance.BackgroundColor = UIColor.Clear;
+		appearance.ShadowColor     = UIColor.Clear;  // remove top separator line
 
 		var item = new UITabBarItemAppearance();
 		item.Normal.IconColor = unselected;
@@ -52,8 +50,8 @@ public class AppDelegate : MauiUIApplicationDelegate
 		item.Selected.IconColor = accent;
 		item.Selected.TitleTextAttributes = new UIStringAttributes { ForegroundColor = accent };
 
-		appearance.StackedLayoutAppearance    = item;
-		appearance.InlineLayoutAppearance     = item;
+		appearance.StackedLayoutAppearance       = item;
+		appearance.InlineLayoutAppearance        = item;
 		appearance.CompactInlineLayoutAppearance = item;
 
 		UITabBar.Appearance.StandardAppearance = appearance;
