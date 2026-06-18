@@ -30,11 +30,15 @@ public class AppDelegate : MauiUIApplicationDelegate
 
 	// Walk the VC tree and set ExtendedLayoutIncludesOpaqueBars so content
 	// fills behind the (hidden) nav bar and the transparent tab bar.
+	// Container VCs (UINavigationController, UITabBarController) get a transparent
+	// background so their system-gray default never bleeds through.
 	internal static void ApplyEdgeToEdge(UIViewController? root)
 	{
 		if (root is null) return;
 		root.ExtendedLayoutIncludesOpaqueBars = true;
 		root.EdgesForExtendedLayout = UIRectEdge.All;
+		if (root is UINavigationController or UITabBarController)
+			root.View?.BackgroundColor = UIColor.Clear;
 		foreach (var child in root.ChildViewControllers)
 			ApplyEdgeToEdge(child);
 	}

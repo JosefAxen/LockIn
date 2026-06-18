@@ -88,6 +88,15 @@ public static class MauiProgram
 #endif
 
 #if IOS
+        // Prevent iOS from auto-adding safe-area contentInset to scroll views.
+        // We handle all top/bottom padding manually in XAML.
+        Microsoft.Maui.Handlers.ScrollViewHandler.Mapper.AppendToMapping(
+            "NoInsetAdjustment", (handler, _) =>
+            {
+                handler.PlatformView.ContentInsetAdjustmentBehavior =
+                    UIKit.UIScrollViewContentInsetAdjustmentBehavior.Never;
+            });
+
         // Tint button icon images white. Deferred to next run-loop so the image
         // is guaranteed to be loaded when we call ImageForState.
         Microsoft.Maui.Handlers.ButtonHandler.Mapper.AppendToMapping(
