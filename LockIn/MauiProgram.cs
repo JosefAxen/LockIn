@@ -88,6 +88,19 @@ public static class MauiProgram
 #endif
 
 #if IOS
+        // Set edge-to-edge layout properties on every ContentPage VC BEFORE the
+        // view is laid out. OnAppearing fires after layout — too late for these to
+        // take effect. PageHandler.Mapper fires at handler creation time.
+        Microsoft.Maui.Handlers.PageHandler.Mapper.AppendToMapping(
+            "EdgeToEdge", (handler, _) =>
+            {
+                if (handler.ViewController is { } vc)
+                {
+                    vc.ExtendedLayoutIncludesOpaqueBars = true;
+                    vc.EdgesForExtendedLayout = UIKit.UIRectEdge.All;
+                }
+            });
+
         // Prevent iOS from auto-adding safe-area contentInset to scroll views.
         // We handle all top/bottom padding manually in XAML.
         Microsoft.Maui.Handlers.ScrollViewHandler.Mapper.AppendToMapping(
