@@ -94,7 +94,10 @@ public static class MauiProgram
         Microsoft.Maui.Handlers.PageHandler.Mapper.AppendToMapping(
             "EdgeToEdge", (handler, _) =>
             {
-                if (handler.ViewController is { } vc)
+                // IPageHandler doesn't expose ViewController — cast to the iOS-specific
+                // IPlatformViewHandler which does.
+                var vc = (handler as Microsoft.Maui.IPlatformViewHandler)?.ViewController;
+                if (vc != null)
                 {
                     vc.ExtendedLayoutIncludesOpaqueBars = true;
                     vc.EdgesForExtendedLayout = UIKit.UIRectEdge.All;
