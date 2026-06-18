@@ -31,11 +31,6 @@ public partial class App : Application
                     CancelsTouchesInView = false
                 };
                 uiView.AddGestureRecognizer(tap);
-
-                // Apply edge-to-edge after the VC tree is built
-                MainThread.BeginInvokeOnMainThread(() =>
-                    AppDelegate.ApplyEdgeToEdge(
-                        uiView.Window?.RootViewController));
             }
 #endif
         };
@@ -68,6 +63,14 @@ public partial class App : Application
             window.Page = settings.HasCompletedOnboarding
                 ? (Page)new AppShell()
                 : services.GetRequiredService<OnboardingPage>();
+
+#if IOS
+            // Apply after the new root VC is set. BeginInvokeOnMainThread queues
+            // for the next run loop so the VC transition has completed.
+            MainThread.BeginInvokeOnMainThread(() =>
+                AppDelegate.ApplyEdgeToEdge(
+                    (window.Handler?.PlatformView as UIKit.UIView)?.Window?.RootViewController));
+#endif
         });
     }
 }

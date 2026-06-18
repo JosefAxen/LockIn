@@ -20,6 +20,10 @@ public partial class HistoryPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+#if IOS
+        AppDelegate.ApplyEdgeToEdge(
+            (Handler?.PlatformView as UIKit.UIView)?.Window?.RootViewController);
+#endif
         WorkoutBanner.IsVisible = _state.IsActive;
         _vm.CalendarChanged += RebuildCalendar;
 
