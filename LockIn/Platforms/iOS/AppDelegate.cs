@@ -12,8 +12,31 @@ public class AppDelegate : MauiUIApplicationDelegate
 	{
 		var result = base.FinishedLaunching(application, launchOptions);
 		ConfigureTabBarAppearance();
+		ConfigureNavBarAppearance();
 		ConfigureWindowBackground(application);
 		return result;
+	}
+
+	private static void ConfigureNavBarAppearance()
+	{
+		var appearance = new UINavigationBarAppearance();
+		appearance.ConfigureWithTransparentBackground();
+		appearance.ShadowColor = UIColor.Clear;
+		UINavigationBar.Appearance.StandardAppearance     = appearance;
+		UINavigationBar.Appearance.ScrollEdgeAppearance   = appearance;
+		if (UIDevice.CurrentDevice.CheckSystemVersion(15, 0))
+			UINavigationBar.Appearance.CompactScrollEdgeAppearance = appearance;
+	}
+
+	// Walk the VC tree and set ExtendedLayoutIncludesOpaqueBars so content
+	// fills behind the (hidden) nav bar and the transparent tab bar.
+	internal static void ApplyEdgeToEdge(UIViewController? root)
+	{
+		if (root is null) return;
+		root.ExtendedLayoutIncludesOpaqueBars = true;
+		root.EdgesForExtendedLayout = UIRectEdge.All;
+		foreach (var child in root.ChildViewControllers)
+			ApplyEdgeToEdge(child);
 	}
 
 	private static void ConfigureWindowBackground(UIApplication application)

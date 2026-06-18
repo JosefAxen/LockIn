@@ -31,6 +31,11 @@ public partial class App : Application
                     CancelsTouchesInView = false
                 };
                 uiView.AddGestureRecognizer(tap);
+
+                // Apply edge-to-edge after the VC tree is built
+                MainThread.BeginInvokeOnMainThread(() =>
+                    AppDelegate.ApplyEdgeToEdge(
+                        uiView.Window?.RootViewController));
             }
 #endif
         };
