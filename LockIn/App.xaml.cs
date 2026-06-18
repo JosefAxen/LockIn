@@ -31,6 +31,15 @@ public partial class App : Application
                     CancelsTouchesInView = false
                 };
                 uiView.AddGestureRecognizer(tap);
+
+                // application.Windows is empty in scene-based iOS apps during FinishedLaunching
+                // (UIScene connects AFTER that callback), so ConfigureWindowBackground's loop is
+                // dead code. Set the UIWindow background here where uiView.Window is guaranteed.
+                if (uiView.Window is { } nativeWindow)
+                    nativeWindow.BackgroundColor = UIKit.UIColor.FromDynamicProvider(t =>
+                        t.UserInterfaceStyle == UIKit.UIUserInterfaceStyle.Dark
+                            ? UIKit.UIColor.FromRGB(0x0E, 0x0E, 0x10)
+                            : UIKit.UIColor.FromRGB(0xFC, 0xFC, 0xFC));
             }
 #endif
         };

@@ -50,10 +50,15 @@ public class AppDelegate : MauiUIApplicationDelegate
 				? UIColor.FromRGB(0x0E, 0x0E, 0x10)
 				: UIColor.FromRGB(0xFC, 0xFC, 0xFC));
 
+		// application.Windows is deprecated and empty in scene-based apps at
+		// FinishedLaunching time. Use ConnectedScenes instead, deferred to the next
+		// run loop when scene connection may have completed.
 		MainThread.BeginInvokeOnMainThread(() =>
 		{
-			foreach (var win in application.Windows)
-				win.BackgroundColor = bgColor;
+			foreach (var scene in application.ConnectedScenes)
+				if (scene is UIWindowScene ws)
+					foreach (var win in ws.Windows)
+						win.BackgroundColor = bgColor;
 		});
 	}
 
