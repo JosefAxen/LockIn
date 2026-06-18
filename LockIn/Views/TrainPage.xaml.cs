@@ -19,10 +19,6 @@ public partial class TrainPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-#if IOS
-        LockIn.AppDelegate.ApplyEdgeToEdge(
-            (Handler?.PlatformView as UIKit.UIView)?.Window?.RootViewController);
-#endif
         if (_state.IsActive)
         {
             Dispatcher.Dispatch(async () =>

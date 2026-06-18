@@ -73,13 +73,6 @@ public partial class App : Application
                 ? (Page)new AppShell()
                 : services.GetRequiredService<OnboardingPage>();
 
-#if IOS
-            // Apply after the new root VC is set. BeginInvokeOnMainThread queues
-            // for the next run loop so the VC transition has completed.
-            MainThread.BeginInvokeOnMainThread(() =>
-                AppDelegate.ApplyEdgeToEdge(
-                    (window.Handler?.PlatformView as UIKit.UIView)?.Window?.RootViewController));
-#endif
         });
     }
 }

@@ -28,29 +28,6 @@ public class AppDelegate : MauiUIApplicationDelegate
 			UINavigationBar.Appearance.CompactScrollEdgeAppearance = appearance;
 	}
 
-	// Walk the VC tree so content fills the full screen including behind the
-	// status bar and transparent tab bar.
-	// Shell.NavBarIsVisible="False" in MAUI hides the bar visually but may not
-	// call SetNavigationBarHidden — which means the nav controller still reserves
-	// layout space for it. We call it explicitly here to reclaim that space.
-	internal static void ApplyEdgeToEdge(UIViewController? root)
-	{
-		if (root is null) return;
-		root.ExtendedLayoutIncludesOpaqueBars = true;
-		root.EdgesForExtendedLayout = UIRectEdge.All;
-		if (root is UINavigationController navVC)
-		{
-			navVC.SetNavigationBarHidden(true, false);
-			navVC.View?.BackgroundColor = UIColor.Clear;
-		}
-		else if (root is UITabBarController)
-		{
-			root.View?.BackgroundColor = UIColor.Clear;
-		}
-		foreach (var child in root.ChildViewControllers)
-			ApplyEdgeToEdge(child);
-	}
-
 	private static void ConfigureWindowBackground(UIApplication application)
 	{
 		var bgColor = UIColor.FromDynamicProvider(t =>

@@ -21,10 +21,6 @@ public partial class HemPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-#if IOS
-        LockIn.AppDelegate.ApplyEdgeToEdge(
-            (Handler?.PlatformView as UIKit.UIView)?.Window?.RootViewController);
-#endif
         WorkoutBanner.IsVisible = _state.IsActive;
         _state.StateChanged += OnWorkoutStateChanged;
 

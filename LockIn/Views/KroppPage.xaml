@@ -13,7 +13,7 @@
              BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource ForgeBackground}}"
              ios:Page.UseSafeArea="False">
 
-    <Grid>
+    <Grid SafeAreaEdges="None">
 
         <!-- Sticky header (fades in on scroll) -->
         <Grid x:Name="StickyHeader" VerticalOptions="Start" ZIndex="20" Opacity="0"

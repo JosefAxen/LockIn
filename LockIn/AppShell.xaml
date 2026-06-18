@@ -7,7 +7,7 @@
     xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
     Title="LockIn"
     Shell.NavBarIsVisible="False"
-    ios:Page.UseSafeArea="False"
+    SafeAreaEdges="None"
     BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource ForgeBackground}}"
     Shell.TabBarForegroundColor="{AppThemeBinding Light={StaticResource LightAccent}, Dark={StaticResource ForgeAccent}}"
     Shell.TabBarTitleColor="{AppThemeBinding Light={StaticResource LightAccent}, Dark={StaticResource ForgeAccent}}"
