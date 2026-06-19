@@ -36,14 +36,14 @@
             <BoxView InputTransparent="True">
                 <BoxView.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                        <GradientStop Color="{AppThemeBinding Light=#BCFCFCFC, Dark=#BC0E0E10}" Offset="0.0"/>
-                        <GradientStop Color="{AppThemeBinding Light=#70FCFCFC, Dark=#700E0E10}" Offset="0.38"/>
-                        <GradientStop Color="{AppThemeBinding Light=#28FCFCFC, Dark=#280E0E10}" Offset="0.68"/>
+                        <GradientStop Color="{AppThemeBinding Light=#D8FCFCFC, Dark=#D80E0E10}" Offset="0.0"/>
+                        <GradientStop Color="{AppThemeBinding Light=#90FCFCFC, Dark=#900E0E10}" Offset="0.35"/>
+                        <GradientStop Color="{AppThemeBinding Light=#38FCFCFC, Dark=#380E0E10}" Offset="0.65"/>
                         <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark=#000E0E10}" Offset="1.0"/>
                     </LinearGradientBrush>
                 </BoxView.Background>
             </BoxView>
-            <Grid Padding="20,56,16,12" VerticalOptions="Start">
+            <Grid Padding="20,48,16,12" VerticalOptions="Start">
                 <Label Text="BIBLIOTEK"
                        HorizontalOptions="Center" HorizontalTextAlignment="Center"
                        Style="{StaticResource DisplayLabel}" FontSize="18"
