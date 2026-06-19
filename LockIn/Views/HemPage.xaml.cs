@@ -48,7 +48,14 @@ public partial class HemPage : ContentPage
             );
         }
 
+        ScrollStreakToToday();
         AnimateGauge();
+    }
+
+    private void ScrollStreakToToday()
+    {
+        if (_vm.TodayIndex < _vm.Days.Count)
+            StreakCollectionView.ScrollTo(_vm.Days[_vm.TodayIndex], position: ScrollToPosition.Center, animate: false);
     }
 
     private void AnimateGauge()

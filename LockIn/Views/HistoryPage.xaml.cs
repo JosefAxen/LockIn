@@ -141,6 +141,22 @@ public partial class HistoryPage : ContentPage
     internal async void OnSessionTapped(object sender, TappedEventArgs e)
         => await AnimationHelper.PressAsync(sender);
 
+    private async void OnCalNavTapped(object sender, TappedEventArgs e)
+        => await AnimationHelper.PressAsync(sender);
+
+    private static async void OnButtonPointerPressed(object? sender, PointerEventArgs e)
+    {
+        HapticFeedback.Default.Perform(HapticFeedbackType.Click);
+        if (sender is PointerGestureRecognizer pgr && pgr.Parent is VisualElement ve)
+            await ve.ScaleTo(0.93, 65, Easing.CubicOut);
+    }
+
+    private static async void OnButtonPointerReleased(object? sender, PointerEventArgs e)
+    {
+        if (sender is PointerGestureRecognizer pgr && pgr.Parent is VisualElement ve)
+            await ve.ScaleTo(1.0, 230, Easing.SpringOut);
+    }
+
     private async void OnWorkoutBannerTapped(object sender, TappedEventArgs e)
         => await Shell.Current.GoToAsync(nameof(ActiveWorkoutPage));
 }

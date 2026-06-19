@@ -58,11 +58,11 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
 
             var weekStart    = GetMondayThisWeek();
             var sevenAgo     = DateTime.Today.AddDays(-6);
-            var thirtyAgo    = DateTime.Today.AddDays(-30);
+            var fortyFiveAgo = DateTime.Today.AddDays(-45);
 
             var weekSessionsTask   = db.GetCompletedSessionsInRangeAsync(weekStart, DateTime.Now);
             var recentSessionsTask = db.GetCompletedSessionsInRangeAsync(sevenAgo, DateTime.Now);
-            var streakSessionsTask = db.GetCompletedSessionsInRangeAsync(thirtyAgo, DateTime.Now);
+            var streakSessionsTask = db.GetCompletedSessionsInRangeAsync(fortyFiveAgo, DateTime.Now);
             var settingsTask       = db.GetAppSettingsAsync();
             var stepsTask          = health.GetTodayStepsAsync();
             var caloriesTask       = health.GetTodayActiveCaloriesAsync();
@@ -93,7 +93,7 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
             OnPropertyChanged(nameof(GaugeProgress));
 
             // Streak and calendar
-            Days       = BuildStreakDays(recentSessions);
+            Days       = BuildStreakDays(streakSessions);
             int streak = CalculateStreak(streakSessions);
             StreakLabel = streak > 0 ? $"{streak} DAGARS STREAK" : "INGEN STREAK";
 
@@ -153,8 +153,13 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
         }).ToList();
     }
 
-    private static IReadOnlyList<DayStreakItem> BuildStreakDays(List<WorkoutSession> sessions)
+    public int TodayIndex { get; private set; } = 45;
+
+    private IReadOnlyList<DayStreakItem> BuildStreakDays(List<WorkoutSession> sessions)
     {
+        const int daysBack    = 45;
+        const int daysForward = 6;
+
         var today = DateTime.Today;
         var completedDates = sessions
             .Where(s => s.CompletedAt.HasValue)
@@ -162,14 +167,15 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
             .ToHashSet();
 
         var abbrs = new[] { "MÅN", "TIS", "ONS", "TOR", "FRE", "LÖR", "SÖN" };
-        var items = new List<DayStreakItem>(7);
+        var items = new List<DayStreakItem>(daysBack + 1 + daysForward);
 
-        for (int i = 6; i >= 0; i--)
+        for (int i = -daysBack; i <= daysForward; i++)
         {
-            var day   = today.AddDays(-i);
-            int idx   = ((int)day.DayOfWeek + 6) % 7;
+            var day          = today.AddDays(i);
+            int idx          = ((int)day.DayOfWeek + 6) % 7;
             bool isToday     = i == 0;
-            bool isCompleted = completedDates.Contains(day.Date) && !isToday;
+            bool isFuture    = i > 0;
+            bool isCompleted = !isFuture && completedDates.Contains(day.Date);
 
             items.Add(new DayStreakItem
             {
@@ -179,6 +185,8 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
                 IsToday     = isToday
             });
         }
+
+        TodayIndex = daysBack;
         return items;
     }
 

@@ -119,7 +119,8 @@
                 </Grid>
 
                 <!-- ═══ DAY STREAK TRACKER ═══ -->
-                <CollectionView ItemsSource="{Binding Days}"
+                <CollectionView x:Name="StreakCollectionView"
+                                ItemsSource="{Binding Days}"
                                 Margin="12,0" HeightRequest="76"
                                 HorizontalScrollBarVisibility="Never"
                                 VerticalScrollBarVisibility="Never">

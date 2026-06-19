@@ -140,7 +140,8 @@
                                             <BoxView BackgroundColor="{StaticResource ForgeAccent}"
                                                      CornerRadius="2"
                                                      HorizontalOptions="Fill" VerticalOptions="Fill"
-                                                     AnchorX="0" ScaleX="{Binding ScaleFraction}"/>
+                                                     AnchorX="0" ScaleX="{Binding ScaleFraction}"
+                                                     Loaded="OnMuscleBarLoaded"/>
                                         </Grid>
                                         <Label Grid.Column="2"
                                                Text="{Binding ScoreText}"
@@ -221,6 +222,7 @@
                                                                            VerticalOptions="Center"/>
                                                             <Border.GestureRecognizers>
                                                                 <TapGestureRecognizer
+                                                                    Tapped="OnTemplateTapped"
                                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TrainViewModel}}, Path=StartWorkoutCommand}"
                                                                     CommandParameter="{Binding .}"/>
                                                             </Border.GestureRecognizers>
@@ -233,6 +235,7 @@
                                 </StackLayout>
                                 <Border.GestureRecognizers>
                                     <TapGestureRecognizer
+                                        Tapped="OnProgramTapped"
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TrainViewModel}}, Path=ToggleProgramGroupCommand}"
                                         CommandParameter="{Binding .}"/>
                                 </Border.GestureRecognizers>
@@ -294,7 +297,7 @@
         <Border BackgroundColor="{StaticResource ForgeAccent}"
                 StrokeShape="RoundRectangle 24" StrokeThickness="0"
                 HorizontalOptions="End" VerticalOptions="End"
-                Margin="0,0,20,44"
+                Margin="0,0,20,100"
                 HeightRequest="48" WidthRequest="162"
                 Padding="18,0">
             <HorizontalStackLayout Spacing="8" HorizontalOptions="Center" VerticalOptions="Center">

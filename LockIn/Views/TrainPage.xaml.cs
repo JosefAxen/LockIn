@@ -8,6 +8,7 @@ public partial class TrainPage : ContentPage
     private readonly TrainViewModel _vm;
     private readonly ActiveWorkoutStateService _state;
     private bool _hasLoaded;
+    private int _muscleBarIndex;
 
     public TrainPage(TrainViewModel vm, ActiveWorkoutStateService state)
     {
@@ -19,6 +20,7 @@ public partial class TrainPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        _muscleBarIndex = 0;
         if (_state.IsActive)
         {
             Dispatcher.Dispatch(async () =>
@@ -56,4 +58,18 @@ public partial class TrainPage : ContentPage
 
     internal async void OnTemplateTapped(object sender, TappedEventArgs e)
         => await AnimationHelper.PressAsync(sender);
+
+    private async void OnProgramTapped(object sender, TappedEventArgs e)
+        => await AnimationHelper.PressAsync(sender);
+
+    private async void OnMuscleBarLoaded(object sender, EventArgs e)
+    {
+        if (sender is not BoxView bar) return;
+        var target = bar.ScaleX;
+        if (target <= 0) return;
+        bar.ScaleX = 0;
+        var delay = ++_muscleBarIndex * 55 + 150;
+        await Task.Delay(delay);
+        await bar.ScaleXTo(target, 550, Easing.CubicOut);
+    }
 }

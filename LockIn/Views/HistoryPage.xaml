@@ -90,7 +90,7 @@
                                        FontSize="26" TextColor="{StaticResource ForgeMuted}"
                                        VerticalOptions="Center" Padding="4,0,12,0">
                                     <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding PrevMonthCommand}"/>
+                                        <TapGestureRecognizer Tapped="OnCalNavTapped" Command="{Binding PrevMonthCommand}"/>
                                     </Label.GestureRecognizers>
                                 </Label>
                                 <Label Grid.Column="1"
@@ -102,7 +102,7 @@
                                        FontSize="26" TextColor="{StaticResource ForgeMuted}"
                                        VerticalOptions="Center" Padding="12,0,4,0">
                                     <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding NextMonthCommand}"/>
+                                        <TapGestureRecognizer Tapped="OnCalNavTapped" Command="{Binding NextMonthCommand}"/>
                                     </Label.GestureRecognizers>
                                 </Label>
                             </Grid>
@@ -136,6 +136,7 @@
                                        TextColor="{Binding Period0Fg}"/>
                                 <Border.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding SelectPeriodCommand}" CommandParameter="{x:Int32 0}"/>
+                                    <PointerGestureRecognizer PointerPressed="OnButtonPointerPressed" PointerReleased="OnButtonPointerReleased"/>
                                 </Border.GestureRecognizers>
                             </Border>
                             <Border Grid.Column="1" BackgroundColor="{Binding Period1Bg}"
@@ -145,6 +146,7 @@
                                        TextColor="{Binding Period1Fg}"/>
                                 <Border.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding SelectPeriodCommand}" CommandParameter="{x:Int32 1}"/>
+                                    <PointerGestureRecognizer PointerPressed="OnButtonPointerPressed" PointerReleased="OnButtonPointerReleased"/>
                                 </Border.GestureRecognizers>
                             </Border>
                             <Border Grid.Column="2" BackgroundColor="{Binding Period2Bg}"
@@ -154,6 +156,7 @@
                                        TextColor="{Binding Period2Fg}"/>
                                 <Border.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding SelectPeriodCommand}" CommandParameter="{x:Int32 2}"/>
+                                    <PointerGestureRecognizer PointerPressed="OnButtonPointerPressed" PointerReleased="OnButtonPointerReleased"/>
                                 </Border.GestureRecognizers>
                             </Border>
                         </Grid>
@@ -165,6 +168,7 @@
                                        TextColor="{Binding Sort0Fg}"/>
                                 <Border.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding SelectSortCommand}" CommandParameter="{x:Int32 0}"/>
+                                    <PointerGestureRecognizer PointerPressed="OnButtonPointerPressed" PointerReleased="OnButtonPointerReleased"/>
                                 </Border.GestureRecognizers>
                             </Border>
                             <Border Grid.Column="1" BackgroundColor="{Binding Sort1Bg}"
@@ -174,6 +178,7 @@
                                        TextColor="{Binding Sort1Fg}"/>
                                 <Border.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding SelectSortCommand}" CommandParameter="{x:Int32 1}"/>
+                                    <PointerGestureRecognizer PointerPressed="OnButtonPointerPressed" PointerReleased="OnButtonPointerReleased"/>
                                 </Border.GestureRecognizers>
                             </Border>
                         </Grid>
