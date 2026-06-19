@@ -58,7 +58,7 @@
         </Grid>
 
         <!-- Content -->
-        <Grid>
+        <Grid SafeAreaEdges="None">
 
             <ActivityIndicator IsRunning="{Binding IsLoading}"
                                IsVisible="{Binding IsLoading}"
