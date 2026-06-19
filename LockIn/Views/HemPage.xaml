@@ -37,7 +37,7 @@
                     </LinearGradientBrush>
                 </BoxView.Background>
             </BoxView>
-            <Grid Padding="22,48,48,12" VerticalOptions="Start">
+            <Grid Padding="22,14,48,12" VerticalOptions="Start">
                 <Label Text="{Binding UserName}"
                        HorizontalOptions="Center" HorizontalTextAlignment="Center"
                        FontFamily="BebasNeue" FontSize="18" CharacterSpacing="1"

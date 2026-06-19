@@ -36,7 +36,7 @@
                     </LinearGradientBrush>
                 </BoxView.Background>
             </BoxView>
-            <Grid Padding="20,48,16,12">
+            <Grid Padding="20,14,16,12">
                 <Label Text="HISTORIK"
                        HorizontalOptions="Center" HorizontalTextAlignment="Center"
                        Style="{StaticResource DisplayLabel}" FontSize="18"

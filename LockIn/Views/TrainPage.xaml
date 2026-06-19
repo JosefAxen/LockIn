@@ -38,7 +38,7 @@
                 </BoxView.Background>
             </BoxView>
             <Label Text="TRÄNA"
-                   Padding="20,48,20,12"
+                   Padding="20,14,20,12"
                    Style="{StaticResource DisplayLabel}" FontSize="18"
                    HorizontalOptions="Fill" HorizontalTextAlignment="Center"
                    VerticalOptions="Start"/>

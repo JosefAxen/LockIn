@@ -43,7 +43,7 @@
                     </LinearGradientBrush>
                 </BoxView.Background>
             </BoxView>
-            <Grid Padding="20,48,16,12" VerticalOptions="Start">
+            <Grid Padding="20,14,16,12" VerticalOptions="Start">
                 <Label Text="BIBLIOTEK"
                        HorizontalOptions="Center" HorizontalTextAlignment="Center"
                        Style="{StaticResource DisplayLabel}" FontSize="18"
