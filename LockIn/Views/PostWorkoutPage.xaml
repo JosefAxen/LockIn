@@ -14,7 +14,7 @@
         <views:GreaterThanZeroConverter x:Key="GtzConverter"/>
     </ContentPage.Resources>
 
-    <Grid>
+    <Grid SafeAreaEdges="None">
 
     <Grid RowDefinitions="Auto,*,Auto">
 

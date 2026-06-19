@@ -22,7 +22,7 @@
         </Style>
     </ContentPage.Resources>
 
-    <Grid RowDefinitions="Auto,*">
+    <Grid RowDefinitions="Auto,*" SafeAreaEdges="None">
 
         <!-- Top bar -->
         <Grid Grid.Row="0" Padding="16,56,20,8" ColumnDefinitions="Auto,*,Auto,Auto">

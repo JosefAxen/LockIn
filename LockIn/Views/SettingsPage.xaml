@@ -14,7 +14,7 @@
         <views:WeightUnitConverter x:Key="WeightUnitConverter"/>
     </ContentPage.Resources>
 
-    <Grid RowDefinitions="Auto,*">
+    <Grid RowDefinitions="Auto,*" SafeAreaEdges="None">
 
         <Grid Grid.Row="0" Padding="16,56,16,8" ColumnDefinitions="48,*">
             <Border Grid.Column="0"

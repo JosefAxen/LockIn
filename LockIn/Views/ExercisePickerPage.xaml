@@ -10,7 +10,7 @@
              Shell.NavBarIsVisible="False"
              ios:Page.UseSafeArea="False">
 
-    <Grid RowDefinitions="Auto,Auto,Auto,Auto,*">
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,*" SafeAreaEdges="None">
 
         <Grid Grid.Row="0" Padding="16,56,16,8" ColumnDefinitions="Auto,*">
             <Button Grid.Column="0" Text="‹ Avbryt"

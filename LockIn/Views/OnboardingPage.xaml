@@ -17,7 +17,7 @@
         </Style>
     </ContentPage.Resources>
 
-    <Grid RowDefinitions="Auto,*,Auto">
+    <Grid RowDefinitions="Auto,*,Auto" SafeAreaEdges="None">
 
         <!-- Top bar: back + step dots -->
         <Grid Grid.Row="0" Padding="20,56,20,12" ColumnDefinitions="44,*,44">

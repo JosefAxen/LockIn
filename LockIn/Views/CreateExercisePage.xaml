@@ -9,7 +9,7 @@
              Shell.NavBarIsVisible="False"
              ios:Page.UseSafeArea="False">
 
-    <Grid RowDefinitions="*,Auto">
+    <Grid RowDefinitions="*,Auto" SafeAreaEdges="None">
 
         <ScrollView Grid.Row="0">
             <VerticalStackLayout Padding="16,0,16,8" Spacing="12">

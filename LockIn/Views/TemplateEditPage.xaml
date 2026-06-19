@@ -9,7 +9,7 @@
              Shell.NavBarIsVisible="False"
              ios:Page.UseSafeArea="False">
 
-    <Grid RowDefinitions="Auto,*" Padding="0">
+    <Grid RowDefinitions="Auto,*" Padding="0" SafeAreaEdges="None">
 
         <!-- Header -->
         <Grid Grid.Row="0" Padding="16,56,16,8" ColumnDefinitions="Auto,*,Auto">
