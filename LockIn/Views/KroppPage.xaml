@@ -57,17 +57,14 @@
             </Grid>
         </Grid>
 
-        <!-- Content -->
-        <Grid SafeAreaEdges="None">
+        <ActivityIndicator IsRunning="{Binding IsLoading}"
+                           IsVisible="{Binding IsLoading}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"/>
 
-            <ActivityIndicator IsRunning="{Binding IsLoading}"
-                               IsVisible="{Binding IsLoading}"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center"/>
-
-            <ScrollView IsVisible="{Binding IsLoading, Converter={x:Static vm:InverseBoolConverter.Instance}}"
-                        VerticalScrollBarVisibility="Never"
-                        Scrolled="OnScrolled">
+        <ScrollView IsVisible="{Binding IsLoading, Converter={x:Static vm:InverseBoolConverter.Instance}}"
+                    VerticalScrollBarVisibility="Never"
+                    Scrolled="OnScrolled">
                 <VerticalStackLayout Padding="16,56,16,100" Spacing="14">
 
                     <!-- Page title -->
@@ -369,7 +366,6 @@
                 </Border.GestureRecognizers>
             </Border>
 
-        </Grid>
     <!-- Bottom gradient fade behind floating tab bar -->
     <BoxView Grid.RowSpan="99" InputTransparent="True" VerticalOptions="End" HeightRequest="140">
         <BoxView.Background>
