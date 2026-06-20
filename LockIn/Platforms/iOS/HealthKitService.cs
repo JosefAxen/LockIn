@@ -17,6 +17,7 @@ public class HealthKitService : IHealthService
         HKQuantityType.Create(HKQuantityTypeIdentifier.StepCount)!,
         HKQuantityType.Create(HKQuantityTypeIdentifier.ActiveEnergyBurned)!,
         HKQuantityType.Create(HKQuantityTypeIdentifier.HeartRate)!,
+        HKCategoryType.Create(HKCategoryTypeIdentifier.SleepAnalysis)!,
     ];
 
     private static readonly HKObjectType[] s_writeTypes =
@@ -71,6 +72,37 @@ public class HealthKitService : IHealthService
 
     public Task<double[]> GetWeeklyMaxHeartRateAsync() =>
         GetDailyStatsAsync(HKQuantityTypeIdentifier.HeartRate, s_bpm, HKStatisticsOptions.DiscreteMax);
+
+    // Antal sömntimmar föregående natt (alla sömn-stages utom InBed)
+    public async Task<double> GetSleepHoursLastNightAsync()
+    {
+        if (!HKHealthStore.IsHealthDataAvailable) return 0.0;
+        var type = HKCategoryType.Create(HKCategoryTypeIdentifier.SleepAnalysis);
+        if (type is null) return 0.0;
+
+        // Täcker en hel natt: igår 18:00 → idag 12:00
+        var start = ToNSDate(DateTime.Today.AddDays(-1).AddHours(18));
+        var end   = ToNSDate(DateTime.Today.AddHours(12));
+        var pred  = HKQuery.GetPredicateForSamples(start, end, HKQueryOptions.StrictStartDate);
+
+        var tcs = new TaskCompletionSource<double>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var query = new HKSampleQuery(type, pred, 200, null, (_, samples, err) =>
+        {
+            if (err is not null)
+                System.Diagnostics.Debug.WriteLine($"[HealthKit] Sleep query error: {err.LocalizedDescription}");
+
+            double seconds = 0;
+            if (samples is not null)
+                foreach (var s in samples)
+                    if (s is HKCategorySample cs && cs.Value != 0) // 0 = InBed, allt annat = sömn
+                        seconds += cs.EndDate.SecondsSinceReferenceDate - cs.StartDate.SecondsSinceReferenceDate;
+
+            tcs.TrySetResult(seconds / 3600.0);
+        });
+        _store.ExecuteQuery(query);
+        try   { return await tcs.Task.WaitAsync(TimeSpan.FromSeconds(10)); }
+        catch (TimeoutException) { return 0.0; }
+    }
 
     public async Task SaveWorkoutAsync(DateTime start, DateTime end, double activeKcal)
     {

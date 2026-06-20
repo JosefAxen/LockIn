@@ -147,7 +147,8 @@ public class WeeklyGoalGauge : SKCanvasView
             Color        = SKColors.White,
             TextSize     = scoreTs,
             FakeBoldText = true,
-            TextAlign    = SKTextAlign.Center
+            TextAlign    = SKTextAlign.Center,
+            Typeface     = SKTypeface.FromFamilyName(null)  // System font (SF Pro på iOS)
         };
         using var subPaint = new SKPaint
         {

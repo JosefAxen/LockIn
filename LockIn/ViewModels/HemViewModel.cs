@@ -23,6 +23,14 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
     [ObservableProperty] private double[] _activeValues    = [];
     [ObservableProperty] private double[] _heartRateValues = [];
 
+    // Strain / Recovery / Sleep-ringar
+    [ObservableProperty] private float  _strainProgress;
+    [ObservableProperty] private string _strainText   = "–";
+    [ObservableProperty] private float  _recoveryProgress;
+    [ObservableProperty] private string _recoveryText = "–";
+    [ObservableProperty] private float  _sleepProgress;
+    [ObservableProperty] private string _sleepText    = "–";
+
     public float GaugeProgress => (float)(TrainingScore / 100.0);
 
     [ObservableProperty] private string _userName = "";
@@ -70,10 +78,12 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
             var weeklyStepsTask    = health.GetWeeklyStepsAsync();
             var weeklyCaloriesTask = health.GetWeeklyCaloriesAsync();
             var weeklyMaxHRTask    = health.GetWeeklyMaxHeartRateAsync();
+            var sleepTask          = health.GetSleepHoursLastNightAsync();
 
             await Task.WhenAll(weekSessionsTask, recentSessionsTask, streakSessionsTask, settingsTask,
                 stepsTask, caloriesTask, heartRateTask,
-                weeklyStepsTask, weeklyCaloriesTask, weeklyMaxHRTask);
+                weeklyStepsTask, weeklyCaloriesTask, weeklyMaxHRTask,
+                sleepTask);
 
             var weekSessions   = weekSessionsTask.Result;
             var recentSessions = recentSessionsTask.Result;
@@ -112,6 +122,25 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
             CaloriesValues  = weeklyCaloriesTask.Result.ToArray();
             ActiveValues    = BuildWeeklyActiveMinutes(recentSessions);
             HeartRateValues = weeklyMaxHRTask.Result.ToArray();
+
+            // Strain = träningsscore (redan uträknat)
+            StrainProgress = GaugeProgress;
+            StrainText     = ((int)TrainingScore).ToString();
+
+            // Recovery = beräknas från vilodagar (sessionsdata, inga extra HealthKit-behörigheter)
+            // 0 pass senaste 48h = 100%, 1 pass senaste 48h = 60%, 2+ = 20%
+            int passLast24h = recentSessions.Count(s =>
+                s.CompletedAt.HasValue && s.CompletedAt.Value >= DateTime.Now.AddHours(-24));
+            int passLast48h = recentSessions.Count(s =>
+                s.CompletedAt.HasValue && s.CompletedAt.Value >= DateTime.Now.AddHours(-48));
+            double recoveryPct = Math.Max(0, 100 - passLast24h * 40 - (passLast48h - passLast24h) * 20);
+            RecoveryProgress = (float)(recoveryPct / 100.0);
+            RecoveryText     = ((int)recoveryPct).ToString();
+
+            // Sleep = sömntimmar / 8
+            double sleepH = sleepTask.Result;
+            SleepProgress = sleepH > 0 ? (float)Math.Clamp(sleepH / 8.0, 0.0, 1.0) : 0f;
+            SleepText     = sleepH > 0 ? $"{sleepH:F1}h" : "–";
         }
         finally
         {

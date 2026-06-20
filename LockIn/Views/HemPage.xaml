@@ -9,10 +9,13 @@
              x:DataType="vm:HemViewModel"
              Title="Hem"
              Shell.NavBarIsVisible="False"
-             BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource ForgeBackground}}"
+             BackgroundColor="Transparent"
              ios:Page.UseSafeArea="False">
 
     <Grid SafeAreaEdges="None">
+
+        <!-- Atmosfärisk bakgrund — renderas under allt annat -->
+        <controls:AtmosphericBackgroundView InputTransparent="True"/>
 
         <!-- Permanent status bar gradient (alltid synlig, fyller Dynamic Island-zonen) -->
         <BoxView VerticalOptions="Start" HeightRequest="90" InputTransparent="True" ZIndex="19">
@@ -99,6 +102,35 @@
                     </VerticalStackLayout>
                 </Border>
 
+                <!-- ═══ STRAIN / RECOVERY / SÖMN-RINGAR ═══ -->
+                <Label Text="STRAIN · RECOVERY · SÖMN" Style="{StaticResource SectionLabel}" Margin="22,18,0,10"/>
+                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8" Margin="16,0,16,4">
+                    <StackLayout Grid.Column="0" Spacing="8" HorizontalOptions="Center">
+                        <controls:MetricRingView Progress="{Binding StrainProgress}"
+                                                 RingColor="{StaticResource ForgeAccentAmber}"
+                                                 CenterText="{Binding StrainText}"
+                                                 WidthRequest="90" HeightRequest="90"
+                                                 HorizontalOptions="Center"/>
+                        <Label Text="STRAIN" Style="{StaticResource SectionLabel}" HorizontalTextAlignment="Center"/>
+                    </StackLayout>
+                    <StackLayout Grid.Column="1" Spacing="8" HorizontalOptions="Center">
+                        <controls:MetricRingView Progress="{Binding RecoveryProgress}"
+                                                 RingColor="{StaticResource ForgeAccent}"
+                                                 CenterText="{Binding RecoveryText}"
+                                                 WidthRequest="90" HeightRequest="90"
+                                                 HorizontalOptions="Center"/>
+                        <Label Text="RECOVERY" Style="{StaticResource SectionLabel}" HorizontalTextAlignment="Center"/>
+                    </StackLayout>
+                    <StackLayout Grid.Column="2" Spacing="8" HorizontalOptions="Center">
+                        <controls:MetricRingView Progress="{Binding SleepProgress}"
+                                                 RingColor="{StaticResource ForgeAccentBlue}"
+                                                 CenterText="{Binding SleepText}"
+                                                 WidthRequest="90" HeightRequest="90"
+                                                 HorizontalOptions="Center"/>
+                        <Label Text="SÖMN" Style="{StaticResource SectionLabel}" HorizontalTextAlignment="Center"/>
+                    </StackLayout>
+                </Grid>
+
                 <!-- ═══ STREAK HEADER ═══ -->
                 <Grid Padding="22,22,22,10" ColumnDefinitions="*,Auto">
                     <VerticalStackLayout Grid.Column="0" Spacing="2">
@@ -164,7 +196,7 @@
                         <VerticalStackLayout Spacing="0">
                             <Label Text="STEG" Style="{StaticResource SectionLabel}" Margin="0,0,0,4"/>
                             <Label Text="{Binding StepsText}"
-                                   FontFamily="BebasNeue" FontSize="36" CharacterSpacing="0" LineHeight="1"
+                                   FontSize="36" CharacterSpacing="0" LineHeight="1"
                                    TextColor="{AppThemeBinding Light={StaticResource LightAccent}, Dark={StaticResource ForgeAccent}}"/>
                             <Label Text="steg idag" Style="{StaticResource MutedLabel}" Margin="0,2,0,6"/>
                             <controls:SparklineView Values="{Binding StepsValues}" StrokeColor="#4ADE80" HeightRequest="38" BackgroundColor="Transparent"/>
@@ -179,7 +211,7 @@
                         <VerticalStackLayout Spacing="0">
                             <Label Text="KALORIER" Style="{StaticResource SectionLabel}" Margin="0,0,0,4"/>
                             <Label Text="{Binding CaloriesText}"
-                                   FontFamily="BebasNeue" FontSize="36" CharacterSpacing="0" LineHeight="1"
+                                   FontSize="36" CharacterSpacing="0" LineHeight="1"
                                    TextColor="{AppThemeBinding Light={StaticResource LightAccentCoral}, Dark={StaticResource ForgeAccentCoral}}"/>
                             <Label Text="kcal" Style="{StaticResource MutedLabel}" Margin="0,2,0,6"/>
                             <controls:SparklineView Values="{Binding CaloriesValues}" StrokeColor="#FB7185" HeightRequest="38" BackgroundColor="Transparent"/>
@@ -194,7 +226,7 @@
                         <VerticalStackLayout Spacing="0">
                             <Label Text="AKTIV TID" Style="{StaticResource SectionLabel}" Margin="0,0,0,4"/>
                             <Label Text="{Binding ActiveText}"
-                                   FontFamily="BebasNeue" FontSize="36" CharacterSpacing="0" LineHeight="1"
+                                   FontSize="36" CharacterSpacing="0" LineHeight="1"
                                    TextColor="{AppThemeBinding Light={StaticResource LightAccentBlue}, Dark={StaticResource ForgeAccentBlue}}"/>
                             <Label Text="minuter" Style="{StaticResource MutedLabel}" Margin="0,2,0,6"/>
                             <controls:SparklineView Values="{Binding ActiveValues}" StrokeColor="#38BDF8" HeightRequest="38" BackgroundColor="Transparent"/>
@@ -209,7 +241,7 @@
                         <VerticalStackLayout Spacing="0">
                             <Label Text="MAXPULS" Style="{StaticResource SectionLabel}" Margin="0,0,0,4"/>
                             <Label Text="{Binding HeartRateText}"
-                                   FontFamily="BebasNeue" FontSize="36" CharacterSpacing="0" LineHeight="1"
+                                   FontSize="36" CharacterSpacing="0" LineHeight="1"
                                    TextColor="{AppThemeBinding Light={StaticResource LightAccentPurple}, Dark={StaticResource ForgeAccentPurple}}"/>
                             <Label Text="slag/min" Style="{StaticResource MutedLabel}" Margin="0,2,0,6"/>
                             <controls:SparklineView Values="{Binding HeartRateValues}" StrokeColor="#A78BFA" HeightRequest="38" BackgroundColor="Transparent"/>

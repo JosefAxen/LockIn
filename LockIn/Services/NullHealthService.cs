@@ -10,4 +10,5 @@ public class NullHealthService : IHealthService
     public Task<double[]> GetWeeklyCaloriesAsync()      => Task.FromResult(new double[7]);
     public Task<double[]> GetWeeklyMaxHeartRateAsync()  => Task.FromResult(new double[7]);
     public Task SaveWorkoutAsync(DateTime start, DateTime end, double activeKcal) => Task.CompletedTask;
+    public Task<double> GetSleepHoursLastNightAsync()   => Task.FromResult(0.0);
 }
