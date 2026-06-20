@@ -21,7 +21,6 @@ public class HealthKitService : IHealthService
 
     private static readonly HKObjectType[] s_writeTypes =
     [
-        HKWorkoutType.GetWorkoutType(),
         HKQuantityType.Create(HKQuantityTypeIdentifier.ActiveEnergyBurned)!,
     ];
 
@@ -85,10 +84,10 @@ public class HealthKitService : IHealthService
             HKWorkoutActivityType.TraditionalStrengthTraining,
             startDate,
             endDate,
-            null,
+            (HKWorkoutEvent[]?)null,
             kcalQty,
-            null,
-            null);
+            (HKQuantity?)null,
+            (NSDictionary?)null);
 
         var tcs1 = new TaskCompletionSource<bool>();
         _store.SaveObject(workout, (ok, err) =>
