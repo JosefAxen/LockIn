@@ -177,7 +177,7 @@ public partial class PostWorkoutViewModel(DatabaseService db, IHealthService hea
     {
         if (_loadedSession is null) return;
 
-        var action = await Shell.Current.DisplayActionSheet("Lägg till foto", "Avbryt", null, "Ta foto", "Välj från bibliotek");
+        var action = await Shell.Current.DisplayActionSheetAsync("Lägg till foto", "Avbryt", null, "Ta foto", "Välj från bibliotek");
         FileResult? file = null;
 
         try
@@ -185,7 +185,7 @@ public partial class PostWorkoutViewModel(DatabaseService db, IHealthService hea
             if (action == "Ta foto")
                 file = await MediaPicker.Default.CapturePhotoAsync();
             else if (action == "Välj från bibliotek")
-                file = await MediaPicker.Default.PickPhotoAsync();
+                file = (await MediaPicker.Default.PickPhotosAsync())?.FirstOrDefault();
         }
         catch { return; }
 
@@ -212,7 +212,7 @@ public partial class PostWorkoutViewModel(DatabaseService db, IHealthService hea
     [RelayCommand]
     private async Task DeletePhotoAsync(PhotoRow row)
     {
-        var confirmed = await Shell.Current.DisplayAlert("Ta bort foto", "Ta bort det här fotot?", "Ta bort", "Avbryt");
+        var confirmed = await Shell.Current.DisplayAlertAsync("Ta bort foto", "Ta bort det här fotot?", "Ta bort", "Avbryt");
         if (!confirmed) return;
         await db.DeletePhotoAsync(row.Photo);
         Photos.Remove(row);
