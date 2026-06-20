@@ -7,7 +7,7 @@ using System.Collections.ObjectModel;
 namespace LockIn.ViewModels;
 
 [QueryProperty(nameof(SessionId), "SessionId")]
-public partial class PostWorkoutViewModel(DatabaseService db) : ObservableObject
+public partial class PostWorkoutViewModel(DatabaseService db, IHealthService health) : ObservableObject
 {
     [ObservableProperty] private int _sessionId;
     [ObservableProperty] private string _templateName = "";
@@ -90,6 +90,15 @@ public partial class PostWorkoutViewModel(DatabaseService db) : ObservableObject
 
         // Check achievements
         await CheckAchievementsAsync(session, allSets);
+
+        // Sync to Apple Health if enabled
+        if (session.CompletedAt.HasValue &&
+            Preferences.Default.Get("healthkit_sync_enabled", false))
+        {
+            var durationMinutes = (session.CompletedAt.Value - session.StartedAt).TotalMinutes;
+            var activeKcal = durationMinutes * 6.0; // ~6 kcal/min for strength training
+            _ = health.SaveWorkoutAsync(session.StartedAt, session.CompletedAt.Value, activeKcal);
+        }
 
         // Load photos
         await RefreshPhotosAsync();

@@ -9,4 +9,5 @@ public interface IHealthService
     Task<double[]> GetWeeklyStepsAsync();
     Task<double[]> GetWeeklyCaloriesAsync();
     Task<double[]> GetWeeklyMaxHeartRateAsync();
+    Task SaveWorkoutAsync(DateTime start, DateTime end, double activeKcal);
 }

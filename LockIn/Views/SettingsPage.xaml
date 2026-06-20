@@ -151,16 +151,12 @@
                                    HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Border>
                         <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                            <Label Text="Apple Hälsa" FontFamily="DMSansMedium" FontSize="15"/>
-                            <Label Text="Öppna Inställningar för att ge åtkomst"
+                            <Label Text="Synka till Apple Hälsa" FontFamily="DMSansMedium" FontSize="15"/>
+                            <Label Text="Sparar träningspass med kalorier i Hälsa"
                                    Style="{StaticResource MutedLabel}"/>
                         </StackLayout>
-                        <Label Grid.Column="2" Text="›" FontSize="22"
-                               TextColor="{StaticResource ForgeMuted}" VerticalOptions="Center"/>
+                        <Switch Grid.Column="2" IsToggled="{Binding HealthKitSyncEnabled}" VerticalOptions="Center"/>
                     </Grid>
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding OpenHealthSettingsCommand}"/>
-                    </Border.GestureRecognizers>
                 </Border>
 
                 <!-- Body weight -->

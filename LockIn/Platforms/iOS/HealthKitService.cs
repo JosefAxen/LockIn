@@ -19,6 +19,12 @@ public class HealthKitService : IHealthService
         HKQuantityType.Create(HKQuantityTypeIdentifier.HeartRate)!,
     ];
 
+    private static readonly HKObjectType[] s_writeTypes =
+    [
+        HKWorkoutType.GetWorkoutType(),
+        HKQuantityType.Create(HKQuantityTypeIdentifier.ActiveEnergyBurned)!,
+    ];
+
     public async Task<bool> RequestPermissionsAsync()
     {
         if (!HKHealthStore.IsHealthDataAvailable)
@@ -28,7 +34,7 @@ public class HealthKitService : IHealthService
         }
 
         var readSet  = new NSSet<HKObjectType>(s_readTypes);
-        var writeSet = new NSSet(); // inga skrivrättigheter
+        var writeSet = new NSSet<HKObjectType>(s_writeTypes);
 
         try
         {
@@ -66,6 +72,47 @@ public class HealthKitService : IHealthService
 
     public Task<double[]> GetWeeklyMaxHeartRateAsync() =>
         GetDailyStatsAsync(HKQuantityTypeIdentifier.HeartRate, s_bpm, HKStatisticsOptions.DiscreteMax);
+
+    public async Task SaveWorkoutAsync(DateTime start, DateTime end, double activeKcal)
+    {
+        if (!HKHealthStore.IsHealthDataAvailable) return;
+
+        var startDate = ToNSDate(start);
+        var endDate   = ToNSDate(end);
+        var kcalQty   = HKQuantity.FromQuantity(s_kcal, activeKcal);
+
+        var workout = HKWorkout.Create(
+            HKWorkoutActivityType.TraditionalStrengthTraining,
+            startDate,
+            endDate,
+            null,
+            kcalQty,
+            null,
+            null);
+
+        var tcs1 = new TaskCompletionSource<bool>();
+        _store.SaveObject(workout, (ok, err) =>
+        {
+            if (err is not null)
+                System.Diagnostics.Debug.WriteLine($"[HealthKit] SaveWorkout: {err.LocalizedDescription}");
+            tcs1.TrySetResult(ok);
+        });
+
+        if (!await tcs1.Task) return;
+
+        var energyType = HKQuantityType.Create(HKQuantityTypeIdentifier.ActiveEnergyBurned)!;
+        var sample     = HKQuantitySample.FromType(energyType, kcalQty, startDate, endDate);
+
+        var tcs2 = new TaskCompletionSource<bool>();
+        _store.AddSamples(new HKSample[] { sample }, workout, (ok, err) =>
+        {
+            if (err is not null)
+                System.Diagnostics.Debug.WriteLine($"[HealthKit] AddSamples: {err.LocalizedDescription}");
+            tcs2.TrySetResult(ok);
+        });
+
+        await tcs2.Task;
+    }
 
     private Task<double> GetTodaySumAsync(HKQuantityTypeIdentifier typeId, HKUnit unit)
     {

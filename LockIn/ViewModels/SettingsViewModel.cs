@@ -7,7 +7,7 @@ using LockIn.Views;
 
 namespace LockIn.ViewModels;
 
-public partial class SettingsViewModel(DatabaseService db) : ObservableObject
+public partial class SettingsViewModel(DatabaseService db, IHealthService health) : ObservableObject
 {
     [ObservableProperty] private bool _useKg = true;
     [ObservableProperty] private string _appVersion = "";
@@ -15,16 +15,18 @@ public partial class SettingsViewModel(DatabaseService db) : ObservableObject
     [ObservableProperty] private bool _soundEnabled = true;
     [ObservableProperty] private int _weeklyGoal = 4;
     [ObservableProperty] private string _userName = "";
+    [ObservableProperty] private bool _healthKitSyncEnabled;
 
     public async Task LoadAsync()
     {
         var settings = await db.GetSettingsAsync();
         UseKg      = settings.WeightUnit == WeightUnit.Kg;
         WeeklyGoal = settings.WeeklyWorkoutGoal > 0 ? settings.WeeklyWorkoutGoal : 4;
-        HapticEnabled = Preferences.Default.Get("haptic_enabled", true);
-        SoundEnabled  = Preferences.Default.Get("sound_enabled", true);
-        AppVersion    = AppInfo.VersionString;
-        UserName      = settings.UserName ?? "";
+        HapticEnabled        = Preferences.Default.Get("haptic_enabled", true);
+        SoundEnabled         = Preferences.Default.Get("sound_enabled", true);
+        HealthKitSyncEnabled = Preferences.Default.Get("healthkit_sync_enabled", false);
+        AppVersion = AppInfo.VersionString;
+        UserName   = settings.UserName ?? "";
     }
 
     partial void OnUseKgChanged(bool value) => _ = SaveSettingsAsync();
@@ -34,6 +36,12 @@ public partial class SettingsViewModel(DatabaseService db) : ObservableObject
 
     partial void OnSoundEnabledChanged(bool value) =>
         Preferences.Default.Set("sound_enabled", value);
+
+    partial void OnHealthKitSyncEnabledChanged(bool value)
+    {
+        Preferences.Default.Set("healthkit_sync_enabled", value);
+        if (value) _ = health.RequestPermissionsAsync();
+    }
 
     private async Task SaveSettingsAsync()
     {
