@@ -11,13 +11,18 @@ workflows:
         bundle_identifier: com.josefaxen.lockin
       groups:
         - LockIn
+      vars:
+        DOTNET_ROOT: /Users/builder/.dotnet
 
     scripts:
       - name: Installera MAUI iOS workload
-        script: dotnet workload install maui-ios
+        script: |
+          export PATH="$DOTNET_ROOT:$PATH"
+          dotnet workload install maui-ios
 
       - name: Bygg och signera iOS-app
         script: |
+          export PATH="$DOTNET_ROOT:$PATH"
           dotnet publish LockIn/LockIn.csproj \
             -f net10.0-ios \
             -c Release \
