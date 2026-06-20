@@ -11,18 +11,25 @@ workflows:
         bundle_identifier: com.josefaxen.lockin
       groups:
         - LockIn
-      vars:
-        DOTNET_ROOT: /Users/builder/.dotnet
 
     scripts:
+      - name: Hitta dotnet
+        script: |
+          echo "=== which dotnet ==="
+          which dotnet || echo "inte i PATH"
+          echo "=== find dotnet binary ==="
+          find /usr /Users/builder $HOME -maxdepth 5 -name "dotnet" -type f 2>/dev/null | head -10
+          echo "=== PATH ==="
+          echo $PATH
+
       - name: Installera MAUI iOS workload
         script: |
-          export PATH="$DOTNET_ROOT:$PATH"
+          export PATH="/usr/local/share/dotnet:$HOME/.dotnet:$PATH"
           dotnet workload install maui-ios
 
       - name: Bygg och signera iOS-app
         script: |
-          export PATH="$DOTNET_ROOT:$PATH"
+          export PATH="/usr/local/share/dotnet:$HOME/.dotnet:$PATH"
           dotnet publish LockIn/LockIn.csproj \
             -f net10.0-ios \
             -c Release \
