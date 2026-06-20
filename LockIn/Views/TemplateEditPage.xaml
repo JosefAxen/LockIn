@@ -171,6 +171,34 @@
 
                                     </Grid>
 
+                                    <!-- Superset toggle row -->
+                                    <Grid ColumnDefinitions="*,Auto"
+                                          Padding="16,8,16,8">
+                                        <Border Grid.Column="0"
+                                                BackgroundColor="{StaticResource ForgeAccentDim}"
+                                                StrokeShape="RoundRectangle 4"
+                                                StrokeThickness="0"
+                                                Padding="8,3"
+                                                IsVisible="{Binding IsInSuperset}"
+                                                HorizontalOptions="Start"
+                                                VerticalOptions="Center">
+                                            <Label Text="SUPERSET"
+                                                   TextColor="{StaticResource ForgeAccent}"
+                                                   FontFamily="BebasNeue" FontSize="11"
+                                                   CharacterSpacing="1"/>
+                                        </Border>
+                                        <Button Grid.Column="1"
+                                                Text="{Binding SupersetButtonText}"
+                                                BackgroundColor="{StaticResource ForgeSurface2}"
+                                                TextColor="{StaticResource ForgeMuted}"
+                                                FontFamily="BebasNeue" FontSize="12"
+                                                CharacterSpacing="1"
+                                                HeightRequest="30" Padding="10,0"
+                                                CornerRadius="6"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TemplateEditViewModel}}, Path=ToggleSupersetCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                    </Grid>
+
                                     <!-- Divider before main fields -->
                                     <BoxView BackgroundColor="{StaticResource ForgeBorder}"
                                              HeightRequest="1" Margin="0"/>

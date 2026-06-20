@@ -66,7 +66,7 @@
         </Grid>
 
         <!-- Scrollable content -->
-        <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Never">
+        <ScrollView x:Name="MainScrollView" Grid.Row="1" VerticalScrollBarVisibility="Never">
             <StackLayout Padding="16,0,16,120" Spacing="12">
 
                 <!-- PR Banner -->
@@ -101,7 +101,7 @@
                 </Border>
 
                 <!-- Exercise sections — one card per exercise -->
-                <StackLayout BindableLayout.ItemsSource="{Binding Exercises}" Spacing="14">
+                <StackLayout x:Name="ExercisesLayout" BindableLayout.ItemsSource="{Binding Exercises}" Spacing="14">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate x:DataType="vm:WorkoutExerciseSection">
                             <Border Style="{StaticResource DarkCardFrame}"
@@ -115,6 +115,21 @@
                                              BackgroundColor="{Binding AccentColor}"
                                              CornerRadius="16,0,0,16"/>
                                 <StackLayout Grid.Column="1" Spacing="0">
+
+                                    <!-- Superset badge (visible when IsInSuperset) -->
+                                    <Grid IsVisible="{Binding IsInSuperset}"
+                                          Padding="16,8,16,0">
+                                        <Border BackgroundColor="{StaticResource ForgeAccentDim}"
+                                                StrokeShape="RoundRectangle 4"
+                                                StrokeThickness="0"
+                                                Padding="8,3"
+                                                HorizontalOptions="Start">
+                                            <Label Text="SUPERSET"
+                                                   TextColor="{StaticResource ForgeAccent}"
+                                                   FontFamily="BebasNeue" FontSize="11"
+                                                   CharacterSpacing="1"/>
+                                        </Border>
+                                    </Grid>
 
                                     <!-- Exercise header: name + info + rest time badge -->
                                     <Grid ColumnDefinitions="*,Auto,Auto"

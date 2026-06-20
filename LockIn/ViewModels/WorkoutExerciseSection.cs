@@ -17,6 +17,7 @@ public partial class WorkoutExerciseSection : ObservableObject
     public decimal WeightIncrementKg { get; set; } = 2.5m;
     public int AutoProgressMode { get; set; } = 0;
     public int? SupersetGroupId { get; set; }
+    public bool IsInSuperset => SupersetGroupId.HasValue;
     public MuscleGroup MuscleGroup { get; set; }
 
     public Color AccentColor => MuscleGroup switch

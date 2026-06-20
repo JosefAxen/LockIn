@@ -17,6 +17,8 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
     private WorkoutExerciseSection? _currentTimerSection;
     private DateTime _startTime;
     private CancellationTokenSource? _clockCts;
+    // SupersetGroupId → SessionExerciseIds som gjort set i nuvarande runda
+    private readonly Dictionary<int, HashSet<int>> _supersetRound = new();
 
     [ObservableProperty] private string _templateName = "FRITT PASS";
     [ObservableProperty] private string _elapsedTime = "0:00";
@@ -27,6 +29,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
     [ObservableProperty] private string _autoProgressMessage = "";
 
     public event EventHandler? PRScored;
+    public event EventHandler<int>? ScrollToSectionRequested;
 
     public ObservableCollection<WorkoutExerciseSection> Exercises { get; } = new();
 
@@ -273,11 +276,44 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             PRScored?.Invoke(this, EventArgs.Empty);
         }
 
-        // Warmup and Dropset skip rest timer
+        // Timer och superset-navigering
         if (set.SetType is SetType.Normal or SetType.Time)
-            StartTimerForSection(set.SessionExerciseId);
+            HandlePostSetTimer(set.SessionExerciseId);
 
         CheckAutoProgression(set.SessionExerciseId);
+    }
+
+    private void HandlePostSetTimer(int sessionExerciseId)
+    {
+        var section = Exercises.FirstOrDefault(e => e.SessionExerciseId == sessionExerciseId);
+        if (section?.SupersetGroupId is not int groupId)
+        {
+            StartTimerForSection(sessionExerciseId);
+            return;
+        }
+
+        // Superset: spåra vilka övningar i gruppen som gjort ett set denna runda
+        if (!_supersetRound.TryGetValue(groupId, out var done))
+        {
+            done = new HashSet<int>();
+            _supersetRound[groupId] = done;
+        }
+        done.Add(sessionExerciseId);
+
+        var groupSections = Exercises.Where(e => e.SupersetGroupId == groupId).ToList();
+        if (done.Count >= groupSections.Count)
+        {
+            // Hela gruppen klar — starta timer, nollställ rundan
+            _supersetRound.Remove(groupId);
+            StartTimerForSection(sessionExerciseId);
+        }
+        else
+        {
+            // Scrolla till nästa övning i gruppen som inte gjort set ännu
+            var next = groupSections.FirstOrDefault(e => !done.Contains(e.SessionExerciseId));
+            if (next != null)
+                ScrollToSectionRequested?.Invoke(this, next.SessionExerciseId);
+        }
     }
 
     private void CheckAutoProgression(int sessionExerciseId)
@@ -393,6 +429,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         notifications.CancelTimer();
         state.Deactivate();
         Exercises.Clear();
+        _supersetRound.Clear();
         TemplateName = "FRITT PASS";
         ElapsedTime = "0:00";
         HasPR = false;

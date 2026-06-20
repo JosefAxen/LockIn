@@ -12,6 +12,23 @@ public partial class ActiveWorkoutPage : ContentPage
         InitializeComponent();
         BindingContext = vm;
         vm.PRScored += (_, _) => MainThread.BeginInvokeOnMainThread(() => Confetti.Start());
+        vm.ScrollToSectionRequested += OnScrollToSectionRequested;
+    }
+
+    private void OnScrollToSectionRequested(object? sender, int sessionExerciseId)
+    {
+        var vm = BindingContext as ActiveWorkoutViewModel;
+        if (vm is null) return;
+        var index = -1;
+        for (int i = 0; i < vm.Exercises.Count; i++)
+        {
+            if (vm.Exercises[i].SessionExerciseId == sessionExerciseId) { index = i; break; }
+        }
+        if (index < 0 || index >= ExercisesLayout.Children.Count) return;
+        var card = ExercisesLayout.Children[index] as VisualElement;
+        if (card is null) return;
+        MainThread.BeginInvokeOnMainThread(async () =>
+            await MainScrollView.ScrollToAsync(card, ScrollToPosition.Start, animated: true));
     }
 
     private async void OnBackClicked(object sender, EventArgs e)

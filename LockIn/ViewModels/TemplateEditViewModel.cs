@@ -95,6 +95,32 @@ public partial class TemplateEditViewModel(DatabaseService db) : ObservableObjec
     }
 
     [RelayCommand]
+    private void ToggleSuperset(TemplateExerciseRow row)
+    {
+        var index = Exercises.IndexOf(row);
+        if (index < 0) return;
+
+        if (row.SupersetGroupId.HasValue)
+        {
+            // Ta bort från supersets — nolla hela gruppen
+            var gid = row.SupersetGroupId.Value;
+            foreach (var r in Exercises)
+                if (r.SupersetGroupId == gid) r.SupersetGroupId = null;
+        }
+        else
+        {
+            // Koppla till nästa övning i listan
+            if (index + 1 >= Exercises.Count) return;
+            var next = Exercises[index + 1];
+
+            // Använd befintlig grupp-id om nästa redan är i superset, annars skapa ny
+            var gid = next.SupersetGroupId ?? (Exercises.Max(r => r.SupersetGroupId ?? 0) + 1);
+            row.SupersetGroupId = gid;
+            next.SupersetGroupId = gid;
+        }
+    }
+
+    [RelayCommand]
     private async Task SaveAsync()
     {
         if (string.IsNullOrWhiteSpace(TemplateName))
@@ -132,6 +158,7 @@ public partial class TemplateEditViewModel(DatabaseService db) : ObservableObjec
             te.WeightIncrementKg = row.ProgressionEnabled && decimal.TryParse(row.WeightIncrementText.Replace(',', '.'),
                 System.Globalization.NumberStyles.Any,
                 System.Globalization.CultureInfo.InvariantCulture, out var inc) ? inc : 2.5m;
+            te.SupersetGroupId = row.SupersetGroupId;
             await db.SaveTemplateExerciseAsync(te);
         }
 
@@ -156,6 +183,17 @@ public partial class TemplateExerciseRow : ObservableObject
     [ObservableProperty] private string _targetRepsMaxText = "";
     [ObservableProperty] private string _weightIncrementText = "2.5";
 
+    // Superset
+    [ObservableProperty] private int? _supersetGroupId;
+    public bool IsInSuperset => SupersetGroupId.HasValue;
+    public string SupersetButtonText => SupersetGroupId.HasValue ? "KOPPLA BORT" : "SUPERSET +";
+
+    partial void OnSupersetGroupIdChanged(int? value)
+    {
+        OnPropertyChanged(nameof(IsInSuperset));
+        OnPropertyChanged(nameof(SupersetButtonText));
+    }
+
     public string RestDisplay => RestTimerService.Format(RestSeconds);
 
     partial void OnRestSecondsChanged(int value) =>
@@ -174,5 +212,6 @@ public partial class TemplateExerciseRow : ObservableObject
             TargetRepsMinText = te.TargetRepsMin > 0 ? te.TargetRepsMin.ToString() : "",
             TargetRepsMaxText = te.TargetRepsMax > 0 ? te.TargetRepsMax.ToString() : "",
             WeightIncrementText = te.WeightIncrementKg > 0 ? te.WeightIncrementKg.ToString("G") : "2.5",
+            SupersetGroupId = te.SupersetGroupId,
         };
 }
