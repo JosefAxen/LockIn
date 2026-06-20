@@ -35,7 +35,9 @@ workflows:
           echo "$PROVISIONING_PROFILE_BASE64" | base64 --decode > /tmp/profile.mobileprovision
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           UUID=$(security cms -D -i /tmp/profile.mobileprovision | plutil -extract UUID raw -)
+          PROV_NAME=$(security cms -D -i /tmp/profile.mobileprovision | plutil -extract Name raw -)
           cp /tmp/profile.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/$UUID.mobileprovision
+          echo "Installerade profil: $PROV_NAME ($UUID)"
 
           # ── Bygg ───────────────────────────────────────────────
           dotnet publish LockIn/LockIn.csproj \
@@ -43,7 +45,7 @@ workflows:
             -c Release \
             -r ios-arm64 \
             /p:ArchiveOnBuild=true \
-            /p:CodesignProvision="LockIn Distribution" \
+            /p:CodesignProvision="$PROV_NAME" \
             /p:CodesignKey="Apple Distribution"
 
           # ── TestFlight-upload ──────────────────────────────────
