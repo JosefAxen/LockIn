@@ -5,7 +5,7 @@ workflows:
     max_build_duration: 60
 
     environment:
-      xcode: latest
+      xcode: 26.5
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.josefaxen.lockin
