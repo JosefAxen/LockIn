@@ -25,14 +25,12 @@ workflows:
           # Installera MAUI iOS workload
           dotnet workload install maui-ios
 
-          # Bygg och signera
+          # Bygg och signera (Codemagic hanterar certifikat + profil via ios_signing)
           dotnet publish LockIn/LockIn.csproj \
             -f net10.0-ios \
             -c Release \
             -r ios-arm64 \
-            /p:ArchiveOnBuild=true \
-            /p:CodesignProvision="LockIn Distribution" \
-            /p:CodesignKey="Apple Distribution"
+            /p:ArchiveOnBuild=true
 
     artifacts:
       - '**/*.ipa'
