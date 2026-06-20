@@ -57,32 +57,8 @@ public class HealthKitService : IHealthService
     public async Task<int> GetTodayStepsAsync() =>
         (int)await GetTodaySumAsync(HKQuantityTypeIdentifier.StepCount, s_count);
 
-    public async Task<double> GetTodayActiveCaloriesAsync()
-    {
-        if (!HKHealthStore.IsHealthDataAvailable) return 0.0;
-        var type = HKQuantityType.Create(HKQuantityTypeIdentifier.ActiveEnergyBurned);
-        if (type is null) return 0.0;
-
-        var start    = ToNSDate(DateTime.Today);
-        var end      = ToNSDate(DateTime.Now);
-        var timePred = HKQuery.GetPredicateForSamples(start, end, HKQueryOptions.StrictStartDate);
-
-        // Exkludera appens egna energy-samples för att undvika dubbelräkning med passets SaveWorkoutAsync
-        var fromAppPred = HKQuery.GetPredicateForObjects(HKSource.DefaultSource);
-        var pred        = NSCompoundPredicate.CreateAnd(new NSPredicate[] { timePred, NSCompoundPredicate.CreateNot(fromAppPred) });
-
-        var tcs   = new TaskCompletionSource<double>(TaskCreationOptions.RunContinuationsAsynchronously);
-        var query = new HKStatisticsQuery(type, pred, HKStatisticsOptions.CumulativeSum,
-            (_, result, err) =>
-            {
-                if (err is not null)
-                    System.Diagnostics.Debug.WriteLine($"[HealthKit] ActiveCalories: {err.LocalizedDescription}");
-                tcs.TrySetResult(result?.SumQuantity()?.GetDoubleValue(s_kcal) ?? 0);
-            });
-        _store.ExecuteQuery(query);
-        try   { return await tcs.Task.WaitAsync(TimeSpan.FromSeconds(10)); }
-        catch (TimeoutException) { return 0.0; }
-    }
+    public Task<double> GetTodayActiveCaloriesAsync() =>
+        GetTodaySumAsync(HKQuantityTypeIdentifier.ActiveEnergyBurned, s_kcal);
 
     public async Task<int> GetTodayMaxHeartRateAsync() =>
         (int)await GetTodayDiscreteMaxAsync(HKQuantityTypeIdentifier.HeartRate, s_bpm);
