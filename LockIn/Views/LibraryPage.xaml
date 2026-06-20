@@ -129,12 +129,31 @@
             </Grid>
         </Border>
 
-        <!-- Search bar (exercises only) -->
-        <SearchBar Grid.Row="2"
-                   IsVisible="{Binding ShowExercises}"
-                   Text="{Binding SearchText}"
-                   Placeholder="Sök övning..."
-                   Margin="16,0,16,8"/>
+        <!-- Search bar (exercises only) — pill, Bevel-stil -->
+        <Border Grid.Row="2"
+                IsVisible="{Binding ShowExercises}"
+                BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface2}}"
+                StrokeShape="RoundRectangle 26"
+                StrokeThickness="0"
+                Padding="18,0"
+                HeightRequest="46"
+                Margin="16,0,16,10">
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                <Label Grid.Column="0"
+                       Text="⌕"
+                       FontSize="20"
+                       TextColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"
+                       VerticalOptions="Center"/>
+                <Entry Grid.Column="1"
+                       Text="{Binding SearchText}"
+                       Placeholder="Sök övning..."
+                       PlaceholderColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"
+                       BackgroundColor="Transparent"
+                       TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                       FontFamily="DMSansRegular" FontSize="15"
+                       VerticalOptions="Center"/>
+            </Grid>
+        </Border>
 
         <!-- Muscle chips (exercises only) -->
         <CollectionView Grid.Row="3"
@@ -151,8 +170,9 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="vm:MuscleGroupChip">
                     <Border BackgroundColor="{Binding Background}"
-                            StrokeShape="RoundRectangle 10" StrokeThickness="0"
-                            Padding="12,0">
+                            StrokeShape="RoundRectangle 22" StrokeThickness="0"
+                            Padding="14,0"
+                            HeightRequest="34">
                         <Label Text="{Binding Label}"
                                TextColor="{Binding Foreground}"
                                FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
@@ -191,36 +211,41 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:Exercise">
                     <Border Margin="16,0,16,8"
-                            Style="{StaticResource CardFrame}"
-                            Padding="0">
+                            BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
+                            StrokeShape="RoundRectangle 18"
+                            StrokeThickness="0"
+                            Padding="18,14">
+                        <Border.Shadow>
+                            <Shadow Brush="Black" Offset="0,2" Radius="10" Opacity="0.18"/>
+                        </Border.Shadow>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}}, Path=OpenExerciseProgressCommand}"
                                 CommandParameter="{Binding .}"/>
                         </Border.GestureRecognizers>
-                        <Grid ColumnDefinitions="4,*">
-                            <BoxView Grid.Column="0"
-                                     BackgroundColor="{Binding MuscleGroup, Converter={StaticResource MuscleGroupColorConverter}}"
-                                     CornerRadius="16,0,0,16"/>
-                            <Grid Grid.Column="1" ColumnDefinitions="*,Auto" Padding="14,12,14,12">
-                                <VerticalStackLayout Grid.Column="0" Spacing="3" VerticalOptions="Center">
-                                    <Label Text="{Binding Name}"
-                                           FontFamily="DMSansMedium" FontSize="15"/>
-                                    <Label Text="{Binding MuscleGroup, Converter={StaticResource MuscleGroupLabelConverter}}"
-                                           FontSize="12"
-                                           TextColor="{Binding MuscleGroup, Converter={StaticResource MuscleGroupColorConverter}}"/>
-                                </VerticalStackLayout>
-                                <Border Grid.Column="1"
-                                        IsVisible="{Binding IsCustom}"
-                                        BackgroundColor="{StaticResource ForgeAccentOrangeDim}"
-                                        StrokeShape="RoundRectangle 6"
-                                        StrokeThickness="0" Padding="8,4"
-                                        VerticalOptions="Center">
-                                    <Label Text="EGNA" TextColor="{StaticResource ForgeAccentOrange}"
-                                           FontSize="10" FontFamily="BebasNeue"
-                                           CharacterSpacing="1"/>
-                                </Border>
-                            </Grid>
+                        <Grid ColumnDefinitions="12,*,Auto" ColumnSpacing="12">
+                            <Ellipse Grid.Column="0"
+                                     WidthRequest="10" HeightRequest="10"
+                                     Fill="{Binding MuscleGroup, Converter={StaticResource MuscleGroupColorConverter}}"
+                                     VerticalOptions="Center"/>
+                            <VerticalStackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center">
+                                <Label Text="{Binding Name}"
+                                       FontFamily="DMSansMedium" FontSize="15"/>
+                                <Label Text="{Binding MuscleGroup, Converter={StaticResource MuscleGroupLabelConverter}}"
+                                       FontSize="12"
+                                       Opacity="0.85"
+                                       TextColor="{Binding MuscleGroup, Converter={StaticResource MuscleGroupColorConverter}}"/>
+                            </VerticalStackLayout>
+                            <Border Grid.Column="2"
+                                    IsVisible="{Binding IsCustom}"
+                                    BackgroundColor="{StaticResource ForgeAccentOrangeDim}"
+                                    StrokeShape="RoundRectangle 8"
+                                    StrokeThickness="0" Padding="8,4"
+                                    VerticalOptions="Center">
+                                <Label Text="EGNA" TextColor="{StaticResource ForgeAccentOrange}"
+                                       FontSize="10" FontFamily="BebasNeue"
+                                       CharacterSpacing="1"/>
+                            </Border>
                         </Grid>
                     </Border>
                 </DataTemplate>
@@ -236,50 +261,53 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:WorkoutTemplate">
                         <Border Margin="16,0,16,10"
-                                Style="{StaticResource CardFrame}"
-                                Padding="0">
+                                BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
+                                StrokeShape="RoundRectangle 18"
+                                StrokeThickness="0"
+                                Padding="18,14,8,14">
+                            <Border.Shadow>
+                                <Shadow Brush="Black" Offset="0,2" Radius="10" Opacity="0.18"/>
+                            </Border.Shadow>
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer
                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}}, Path=EditTemplateCommand}"
                                     CommandParameter="{Binding .}"/>
                             </Border.GestureRecognizers>
-                            <Grid ColumnDefinitions="4,*">
-                                <BoxView Grid.Column="0"
-                                         BackgroundColor="{StaticResource ForgeAccentOrange}"
-                                         CornerRadius="16,0,0,16"/>
-                                <Grid Grid.Column="1" ColumnDefinitions="*,44,40"
-                                      Padding="14,14,8,14" ColumnSpacing="4">
-                                    <StackLayout Grid.Column="0" Spacing="2" VerticalOptions="Center">
-                                        <Label Text="{Binding Name}"
-                                               FontFamily="BebasNeue" FontSize="20" CharacterSpacing="1"/>
-                                        <Label Text="TRYCK FÖR ATT REDIGERA"
-                                               Style="{StaticResource SectionLabel}" FontSize="9"/>
-                                    </StackLayout>
-                                    <Border Grid.Column="1"
-                                            WidthRequest="36" HeightRequest="36"
-                                            BackgroundColor="{StaticResource ForgeAccentOrange}"
-                                            StrokeShape="Ellipse" StrokeThickness="0"
-                                            VerticalOptions="Center">
-                                        <views:AppIcon Source="ic_play.png"
-                                                       WidthRequest="18" HeightRequest="18"
-                                                       ForceTint="White"
-                                                       HorizontalOptions="Center"
-                                                       VerticalOptions="Center"/>
-                                        <Border.GestureRecognizers>
-                                            <TapGestureRecognizer
-                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}}, Path=StartFromTemplateCommand}"
-                                                CommandParameter="{Binding .}"/>
-                                        </Border.GestureRecognizers>
-                                    </Border>
-                                    <Button Grid.Column="2"
-                                            Text="✕"
-                                            BackgroundColor="Transparent"
-                                            TextColor="{StaticResource ForgeMuted}"
-                                            FontSize="15" HeightRequest="36"
-                                            Padding="0"
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}}, Path=DeleteTemplateCommand}"
+                            <Grid ColumnDefinitions="12,*,44,40" ColumnSpacing="10">
+                                <Ellipse Grid.Column="0"
+                                         WidthRequest="10" HeightRequest="10"
+                                         Fill="{StaticResource ForgeAccentOrange}"
+                                         VerticalOptions="Center"/>
+                                <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                    <Label Text="{Binding Name}"
+                                           FontFamily="BebasNeue" FontSize="20" CharacterSpacing="1"/>
+                                    <Label Text="TRYCK FÖR ATT REDIGERA"
+                                           Style="{StaticResource SectionLabel}" FontSize="9"/>
+                                </StackLayout>
+                                <Border Grid.Column="2"
+                                        WidthRequest="36" HeightRequest="36"
+                                        BackgroundColor="{StaticResource ForgeAccentOrange}"
+                                        StrokeShape="Ellipse" StrokeThickness="0"
+                                        VerticalOptions="Center">
+                                    <views:AppIcon Source="ic_play.png"
+                                                   WidthRequest="18" HeightRequest="18"
+                                                   ForceTint="White"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center"/>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}}, Path=StartFromTemplateCommand}"
                                             CommandParameter="{Binding .}"/>
-                                </Grid>
+                                    </Border.GestureRecognizers>
+                                </Border>
+                                <Button Grid.Column="3"
+                                        Text="✕"
+                                        BackgroundColor="Transparent"
+                                        TextColor="{StaticResource ForgeMuted}"
+                                        FontSize="15" HeightRequest="36"
+                                        Padding="0"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}}, Path=DeleteTemplateCommand}"
+                                        CommandParameter="{Binding .}"/>
                             </Grid>
                         </Border>
                     </DataTemplate>
@@ -304,13 +332,19 @@
                          Padding="16,0,16,40" Spacing="12">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate x:DataType="data:WorkoutProgram">
-                        <Border Style="{StaticResource CardFrame}">
+                        <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
+                                StrokeShape="RoundRectangle 18"
+                                StrokeThickness="0"
+                                Padding="18,14">
+                            <Border.Shadow>
+                                <Shadow Brush="Black" Offset="0,2" Radius="10" Opacity="0.18"/>
+                            </Border.Shadow>
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer
                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}}, Path=OpenProgramCommand}"
                                     CommandParameter="{Binding .}"/>
                             </Border.GestureRecognizers>
-                            <StackLayout Padding="16,14" Spacing="8">
+                            <StackLayout Spacing="8">
                                 <Grid ColumnDefinitions="*,Auto">
                                     <Label Grid.Column="0"
                                            Text="{Binding Name}"
@@ -318,7 +352,7 @@
                                            CharacterSpacing="1"/>
                                     <Border Grid.Column="1"
                                             BackgroundColor="{StaticResource ForgeAccentAmberDim}"
-                                            StrokeShape="RoundRectangle 8"
+                                            StrokeShape="RoundRectangle 10"
                                             StrokeThickness="0" Padding="10,5">
                                         <Label Text="{Binding DaysPerWeek, StringFormat='{0} dgr/v'}"
                                                TextColor="{StaticResource ForgeAccentAmber}"

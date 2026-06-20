@@ -38,10 +38,30 @@
                    FontSize="22" HorizontalOptions="Center" VerticalOptions="Center"/>
         </Grid>
 
-        <SearchBar Grid.Row="1"
-                   Text="{Binding SearchText}"
-                   Placeholder="Sök övning..."
-                   Margin="16,0,16,8"/>
+        <!-- Pill-formad sökruta (Bevel-stil) -->
+        <Border Grid.Row="1"
+                BackgroundColor="{StaticResource ForgeSurface2}"
+                StrokeShape="RoundRectangle 26"
+                StrokeThickness="0"
+                Padding="18,0"
+                HeightRequest="46"
+                Margin="16,0,16,10">
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                <Label Grid.Column="0"
+                       Text="⌕"
+                       FontSize="20"
+                       TextColor="{StaticResource ForgeMuted}"
+                       VerticalOptions="Center"/>
+                <Entry Grid.Column="1"
+                       Text="{Binding SearchText}"
+                       Placeholder="Sök övning..."
+                       PlaceholderColor="{StaticResource ForgeMuted}"
+                       BackgroundColor="Transparent"
+                       TextColor="{StaticResource ForgeText}"
+                       FontFamily="DMSansRegular" FontSize="15"
+                       VerticalOptions="Center"/>
+            </Grid>
+        </Border>
 
         <!-- Muscle group chips -->
         <CollectionView Grid.Row="2"
@@ -57,8 +77,9 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="vm:MuscleGroupChip">
                     <Border BackgroundColor="{Binding Background}"
-                            StrokeShape="RoundRectangle 10" StrokeThickness="0"
-                            Padding="12,0">
+                            StrokeShape="RoundRectangle 22" StrokeThickness="0"
+                            Padding="14,0"
+                            HeightRequest="34">
                         <Label Text="{Binding Label}"
                                TextColor="{Binding Foreground}"
                                FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
@@ -75,16 +96,18 @@
 
         <!-- Add custom exercise row -->
         <Border Grid.Row="3"
-                Margin="16,0,16,6"
-                StrokeShape="RoundRectangle 14"
+                Margin="16,0,16,8"
+                StrokeShape="RoundRectangle 18"
                 BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
-                Stroke="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorder}}"
-                StrokeThickness="1"
-                Padding="14,12">
-            <Grid ColumnDefinitions="28,*">
+                StrokeThickness="0"
+                Padding="18,14">
+            <Border.Shadow>
+                <Shadow Brush="Black" Offset="0,2" Radius="10" Opacity="0.18"/>
+            </Border.Shadow>
+            <Grid ColumnDefinitions="24,*" ColumnSpacing="10">
                 <Label Grid.Column="0"
                        Text="+"
-                       FontFamily="BebasNeue" FontSize="24"
+                       FontSize="22" FontAttributes="Bold"
                        TextColor="{StaticResource ForgeAccentOrange}"
                        VerticalOptions="Center" HorizontalOptions="Center"/>
                 <Label Grid.Column="1"
@@ -105,28 +128,14 @@
                         VerticalScrollBarVisibility="Never">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="vm:ExercisePickerRow">
-                    <Border Style="{StaticResource CardFrame}" Margin="16,0,16,6" Padding="0">
-                        <Grid ColumnDefinitions="4,*">
-                            <BoxView Grid.Column="0" BackgroundColor="{Binding MuscleColor}"/>
-                            <Grid Grid.Column="1" ColumnDefinitions="*,Auto" Padding="14,12,14,12">
-                                <VerticalStackLayout Grid.Column="0" Spacing="3" VerticalOptions="Center">
-                                    <Label Text="{Binding Name}"
-                                           FontFamily="DMSansMedium" FontSize="15"/>
-                                    <Label Text="{Binding MuscleLabel}"
-                                           FontSize="12"
-                                           TextColor="{Binding MuscleColor}"/>
-                                </VerticalStackLayout>
-                                <Border Grid.Column="1"
-                                        IsVisible="{Binding IsCustom}"
-                                        BackgroundColor="{StaticResource ForgeAccentOrangeDim}"
-                                        StrokeShape="RoundRectangle 6"
-                                        StrokeThickness="0" Padding="8,4"
-                                        VerticalOptions="Center">
-                                    <Label Text="CUSTOM" TextColor="{StaticResource ForgeAccentOrange}"
-                                           FontSize="10" FontFamily="BebasNeue" CharacterSpacing="1"/>
-                                </Border>
-                            </Grid>
-                        </Grid>
+                    <Border Margin="16,0,16,8"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
+                            StrokeShape="RoundRectangle 18"
+                            StrokeThickness="0"
+                            Padding="18,14">
+                        <Border.Shadow>
+                            <Shadow Brush="Black" Offset="0,2" Radius="10" Opacity="0.18"/>
+                        </Border.Shadow>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ExercisePickerViewModel}}, Path=SelectExerciseCommand}"
@@ -135,6 +144,29 @@
                                 PointerPressed="OnExercisePointerPressed"
                                 PointerReleased="OnExercisePointerReleased"/>
                         </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="12,*,Auto" ColumnSpacing="12">
+                            <Ellipse Grid.Column="0"
+                                     WidthRequest="10" HeightRequest="10"
+                                     Fill="{Binding MuscleColor}"
+                                     VerticalOptions="Center"/>
+                            <VerticalStackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center">
+                                <Label Text="{Binding Name}"
+                                       FontFamily="DMSansMedium" FontSize="15"/>
+                                <Label Text="{Binding MuscleLabel}"
+                                       FontSize="12"
+                                       Opacity="0.85"
+                                       TextColor="{Binding MuscleColor}"/>
+                            </VerticalStackLayout>
+                            <Border Grid.Column="2"
+                                    IsVisible="{Binding IsCustom}"
+                                    BackgroundColor="{StaticResource ForgeAccentOrangeDim}"
+                                    StrokeShape="RoundRectangle 8"
+                                    StrokeThickness="0" Padding="8,4"
+                                    VerticalOptions="Center">
+                                <Label Text="CUSTOM" TextColor="{StaticResource ForgeAccentOrange}"
+                                       FontSize="10" FontFamily="BebasNeue" CharacterSpacing="1"/>
+                            </Border>
+                        </Grid>
                     </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
