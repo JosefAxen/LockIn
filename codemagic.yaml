@@ -13,11 +13,6 @@ workflows:
         - LockIn
 
     scripts:
-      - name: Installera .NET 10
-        script: |
-          curl -fsSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --channel 10.0
-          echo "PATH=$HOME/.dotnet:$PATH" >> $CM_ENV
-
       - name: Installera MAUI iOS workload
         script: dotnet workload install maui-ios
 
