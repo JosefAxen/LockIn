@@ -97,7 +97,9 @@ public partial class PostWorkoutViewModel(DatabaseService db, IHealthService hea
         {
             var durationMinutes = (session.CompletedAt.Value - session.StartedAt).TotalMinutes;
             var activeKcal = durationMinutes * 6.0; // ~6 kcal/min for strength training
-            _ = health.SaveWorkoutAsync(session.StartedAt, session.CompletedAt.Value, activeKcal);
+            _ = health.SaveWorkoutAsync(session.StartedAt, session.CompletedAt.Value, activeKcal)
+                .ContinueWith(t => System.Diagnostics.Debug.WriteLine($"[HealthKit] Sync misslyckades: {t.Exception?.GetBaseException().Message}"),
+                              TaskContinuationOptions.OnlyOnFaulted);
         }
 
         // Load photos
@@ -208,12 +210,21 @@ public partial class PostWorkoutViewModel(DatabaseService db, IHealthService hea
         using var stream = await file.OpenReadAsync();
         using var dest = File.Create(destPath);
         await stream.CopyToAsync(dest);
-        await db.SavePhotoAsync(new WorkoutPhoto
+        try
         {
-            SessionId = sessionId,
-            FilePath = destPath,
-            TakenAt = DateTime.Now
-        });
+            await db.SavePhotoAsync(new WorkoutPhoto
+            {
+                SessionId = sessionId,
+                FilePath = destPath,
+                TakenAt = DateTime.Now
+            });
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[Photos] DB-fel, tar bort orphan: {ex.Message}");
+            try { File.Delete(destPath); } catch { }
+            throw;
+        }
     }
 
     [RelayCommand]

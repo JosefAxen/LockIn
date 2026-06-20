@@ -57,8 +57,32 @@ public class HealthKitService : IHealthService
     public async Task<int> GetTodayStepsAsync() =>
         (int)await GetTodaySumAsync(HKQuantityTypeIdentifier.StepCount, s_count);
 
-    public Task<double> GetTodayActiveCaloriesAsync() =>
-        GetTodaySumAsync(HKQuantityTypeIdentifier.ActiveEnergyBurned, s_kcal);
+    public async Task<double> GetTodayActiveCaloriesAsync()
+    {
+        if (!HKHealthStore.IsHealthDataAvailable) return 0.0;
+        var type = HKQuantityType.Create(HKQuantityTypeIdentifier.ActiveEnergyBurned);
+        if (type is null) return 0.0;
+
+        var start    = ToNSDate(DateTime.Today);
+        var end      = ToNSDate(DateTime.Now);
+        var timePred = HKQuery.GetPredicateForSamples(start, end, HKQueryOptions.StrictStartDate);
+
+        // Exkludera appens egna energy-samples för att undvika dubbelräkning med passets SaveWorkoutAsync
+        var fromAppPred = HKQuery.GetPredicateForObjects(HKSource.DefaultSource);
+        var pred        = NSCompoundPredicate.CreateAnd(new NSPredicate[] { timePred, NSCompoundPredicate.CreateNot(fromAppPred) });
+
+        var tcs   = new TaskCompletionSource<double>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var query = new HKStatisticsQuery(type, pred, HKStatisticsOptions.CumulativeSum,
+            (_, result, err) =>
+            {
+                if (err is not null)
+                    System.Diagnostics.Debug.WriteLine($"[HealthKit] ActiveCalories: {err.LocalizedDescription}");
+                tcs.TrySetResult(result?.SumQuantity()?.GetDoubleValue(s_kcal) ?? 0);
+            });
+        _store.ExecuteQuery(query);
+        try   { return await tcs.Task.WaitAsync(TimeSpan.FromSeconds(10)); }
+        catch (TimeoutException) { return 0.0; }
+    }
 
     public async Task<int> GetTodayMaxHeartRateAsync() =>
         (int)await GetTodayDiscreteMaxAsync(HKQuantityTypeIdentifier.HeartRate, s_bpm);
@@ -75,34 +99,37 @@ public class HealthKitService : IHealthService
     public async Task SaveWorkoutAsync(DateTime start, DateTime end, double activeKcal)
     {
         if (!HKHealthStore.IsHealthDataAvailable) return;
+        if (end <= start) return;
 
         var energyType = HKQuantityType.Create(HKQuantityTypeIdentifier.ActiveEnergyBurned);
         if (energyType is null) return;
 
-        var kcalQty = HKQuantity.FromQuantity(s_kcal, Math.Max(0, activeKcal));
-        var sample  = HKQuantitySample.FromType(energyType, kcalQty, ToNSDate(start), ToNSDate(end));
+        var safeKcal = double.IsNaN(activeKcal) ? 0.0 : Math.Max(0, activeKcal);
+        var kcalQty  = HKQuantity.FromQuantity(s_kcal, safeKcal);
+        var sample   = HKQuantitySample.FromType(energyType, kcalQty, ToNSDate(start), ToNSDate(end));
 
-        var tcs = new TaskCompletionSource<bool>();
+        var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
         _store.SaveObject(sample, (ok, err) =>
         {
             if (err is not null)
                 System.Diagnostics.Debug.WriteLine($"[HealthKit] SaveEnergy: {err.LocalizedDescription}");
             tcs.TrySetResult(ok);
         });
-        await tcs.Task;
+        try   { await tcs.Task.WaitAsync(TimeSpan.FromSeconds(10)); }
+        catch (TimeoutException) { System.Diagnostics.Debug.WriteLine("[HealthKit] SaveEnergy timeout"); }
     }
 
-    private Task<double> GetTodaySumAsync(HKQuantityTypeIdentifier typeId, HKUnit unit)
+    private async Task<double> GetTodaySumAsync(HKQuantityTypeIdentifier typeId, HKUnit unit)
     {
-        if (!HKHealthStore.IsHealthDataAvailable) return Task.FromResult(0.0);
+        if (!HKHealthStore.IsHealthDataAvailable) return 0.0;
         var type = HKQuantityType.Create(typeId);
-        if (type is null) return Task.FromResult(0.0);
+        if (type is null) return 0.0;
 
         var start = ToNSDate(DateTime.Today);
         var end   = ToNSDate(DateTime.Now);
         var pred  = HKQuery.GetPredicateForSamples(start, end, HKQueryOptions.StrictStartDate);
 
-        var tcs   = new TaskCompletionSource<double>();
+        var tcs   = new TaskCompletionSource<double>(TaskCreationOptions.RunContinuationsAsynchronously);
         var query = new HKStatisticsQuery(type, pred, HKStatisticsOptions.CumulativeSum,
             (_, result, err) =>
             {
@@ -111,20 +138,21 @@ public class HealthKitService : IHealthService
                 tcs.TrySetResult(result?.SumQuantity()?.GetDoubleValue(unit) ?? 0);
             });
         _store.ExecuteQuery(query);
-        return tcs.Task;
+        try   { return await tcs.Task.WaitAsync(TimeSpan.FromSeconds(10)); }
+        catch (TimeoutException) { return 0.0; }
     }
 
-    private Task<double> GetTodayDiscreteMaxAsync(HKQuantityTypeIdentifier typeId, HKUnit unit)
+    private async Task<double> GetTodayDiscreteMaxAsync(HKQuantityTypeIdentifier typeId, HKUnit unit)
     {
-        if (!HKHealthStore.IsHealthDataAvailable) return Task.FromResult(0.0);
+        if (!HKHealthStore.IsHealthDataAvailable) return 0.0;
         var type = HKQuantityType.Create(typeId);
-        if (type is null) return Task.FromResult(0.0);
+        if (type is null) return 0.0;
 
         var start = ToNSDate(DateTime.Today);
         var end   = ToNSDate(DateTime.Now);
         var pred  = HKQuery.GetPredicateForSamples(start, end, HKQueryOptions.StrictStartDate);
 
-        var tcs   = new TaskCompletionSource<double>();
+        var tcs   = new TaskCompletionSource<double>(TaskCreationOptions.RunContinuationsAsynchronously);
         var query = new HKStatisticsQuery(type, pred, HKStatisticsOptions.DiscreteMax,
             (_, result, err) =>
             {
@@ -133,7 +161,8 @@ public class HealthKitService : IHealthService
                 tcs.TrySetResult(result?.MaximumQuantity()?.GetDoubleValue(unit) ?? 0);
             });
         _store.ExecuteQuery(query);
-        return tcs.Task;
+        try   { return await tcs.Task.WaitAsync(TimeSpan.FromSeconds(10)); }
+        catch (TimeoutException) { return 0.0; }
     }
 
     // 7 separata queries (en per dag) — undviker HKStatisticsCollectionQuery.Statistics
@@ -151,7 +180,7 @@ public class HealthKitService : IHealthService
             var dayEnd   = ToNSDate(DateTime.Today.AddDays(i - 5));
             var pred     = HKQuery.GetPredicateForSamples(dayStart, dayEnd, HKQueryOptions.StrictStartDate);
 
-            var tcs   = new TaskCompletionSource<double>();
+            var tcs   = new TaskCompletionSource<double>(TaskCreationOptions.RunContinuationsAsynchronously);
             var query = new HKStatisticsQuery(type, pred, options,
                 (_, result, _) =>
                 {
@@ -161,7 +190,9 @@ public class HealthKitService : IHealthService
                     tcs.TrySetResult(val);
                 });
             _store.ExecuteQuery(query);
-            tasks[i] = tcs.Task;
+            tasks[i] = tcs.Task
+                .WaitAsync(TimeSpan.FromSeconds(10))
+                .ContinueWith(t => t.IsCompletedSuccessfully ? t.Result : 0.0);
         }
 
         return Task.WhenAll(tasks);

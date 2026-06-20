@@ -73,6 +73,8 @@ public partial class SessionDetailViewModel(DatabaseService db) : ObservableObje
     [RelayCommand]
     private async Task AddPhotoAsync()
     {
+        if (_sessionId == 0) return;
+
         var action = await Shell.Current.DisplayActionSheetAsync("Lägg till foto", "Avbryt", null, "Ta foto", "Välj från bibliotek");
         var dir = Path.Combine(FileSystem.AppDataDirectory, "photos");
         Directory.CreateDirectory(dir);
@@ -104,12 +106,21 @@ public partial class SessionDetailViewModel(DatabaseService db) : ObservableObje
         using var stream = await file.OpenReadAsync();
         using var dest = File.Create(destPath);
         await stream.CopyToAsync(dest);
-        await db.SavePhotoAsync(new WorkoutPhoto
+        try
         {
-            SessionId = _sessionId,
-            FilePath = destPath,
-            TakenAt = DateTime.Now
-        });
+            await db.SavePhotoAsync(new WorkoutPhoto
+            {
+                SessionId = _sessionId,
+                FilePath = destPath,
+                TakenAt = DateTime.Now
+            });
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[Photos] DB-fel, tar bort orphan: {ex.Message}");
+            try { File.Delete(destPath); } catch { }
+            throw;
+        }
     }
 
     [RelayCommand]
