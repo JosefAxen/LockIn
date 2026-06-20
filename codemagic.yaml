@@ -54,8 +54,9 @@ workflows:
           echo "$APP_STORE_CONNECT_PRIVATE_KEY" | base64 --decode \
             > ~/.appstoreconnect/private_keys/AuthKey_${APP_STORE_CONNECT_KEY_IDENTIFIER}.p8
 
-          IPA=$(find . -name "*.ipa" | head -1)
-          [ -z "$IPA" ] && echo "ERROR: ingen IPA hittades" && exit 1
+          IPA=$(find LockIn/bin -name "*.ipa" 2>/dev/null | head -1)
+          [ -z "$IPA" ] && echo "ERROR: ingen IPA hittades i LockIn/bin" && exit 1
+          xcrun --find altool 2>/dev/null || (echo "ERROR: xcrun altool saknas i $(xcodebuild -version | head -1) — uppgradera CI-konfigurationen" && exit 1)
           xcrun altool --upload-app \
             --type ios \
             --file "$IPA" \

@@ -92,7 +92,8 @@ public partial class SessionDetailViewModel(DatabaseService db) : ObservableObje
                 var files = await MediaPicker.Default.PickPhotosAsync();
                 if (files is not null)
                     foreach (var file in files)
-                        await SavePhotoFileAsync(file, dir);
+                        if (file is not null)
+                            await SavePhotoFileAsync(file, dir);
             }
         }
         catch { return; }

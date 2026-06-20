@@ -75,17 +75,21 @@ public partial class PostWorkoutViewModel(DatabaseService db, IHealthService hea
         var prSets = await db.GetPRsForSessionAsync(sessionId);
         PrCount = prSets.Count.ToString();
         PRs.Clear();
-        foreach (var ps in prSets)
+        if (prSets.Count > 0)
         {
-            var se = await db.GetSessionExercisesAsync(sessionId);
-            var seRow = se.FirstOrDefault(x => x.Id == ps.SessionExerciseId);
-            var exercise = seRow != null ? await db.GetExerciseAsync(seRow.ExerciseId) : null;
-            PRs.Add(new PRRow
+            var seById      = (await db.GetSessionExercisesAsync(sessionId)).ToDictionary(se => se.Id);
+            var exerciseById = (await db.GetExercisesAsync()).ToDictionary(e => e.Id);
+            foreach (var ps in prSets)
             {
-                ExerciseName = exercise?.Name ?? "",
-                Display = $"{ps.WeightKg} kg × {ps.Reps}",
-                Epley1RM = $"Est. 1RM {PRService.CalculateEpley1RM(ps.WeightKg, ps.Reps):F0} kg"
-            });
+                seById.TryGetValue(ps.SessionExerciseId, out var seRow);
+                exerciseById.TryGetValue(seRow?.ExerciseId ?? -1, out var exercise);
+                PRs.Add(new PRRow
+                {
+                    ExerciseName = exercise?.Name ?? "",
+                    Display = $"{ps.WeightKg} kg × {ps.Reps}",
+                    Epley1RM = $"Est. 1RM {PRService.CalculateEpley1RM(ps.WeightKg, ps.Reps):F0} kg"
+                });
+            }
         }
 
         // Check achievements
@@ -196,7 +200,8 @@ public partial class PostWorkoutViewModel(DatabaseService db, IHealthService hea
                 var files = await MediaPicker.Default.PickPhotosAsync();
                 if (files is not null)
                     foreach (var file in files)
-                        await SavePhotoFileAsync(file, _loadedSession.Id, dir);
+                        if (file is not null)
+                            await SavePhotoFileAsync(file, _loadedSession.Id, dir);
             }
         }
         catch { return; }
