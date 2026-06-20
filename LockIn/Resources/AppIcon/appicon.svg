@@ -1,14 +1,37 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
-  <!-- Background -->
-  <rect width="1024" height="1024" fill="#0E0E10"/>
-  <!-- Dark surface (main field) -->
-  <rect x="54" y="0" width="970" height="1024" fill="#111114"/>
-  <!-- Green accent stripe — left edge -->
-  <rect x="0" y="0" width="54" height="1024" fill="#4ADE80"/>
-  <!-- L vertical stroke -->
-  <rect x="250" y="164" width="108" height="570" rx="14" fill="#E2E8F0"/>
-  <!-- L horizontal foot -->
-  <rect x="250" y="626" width="438" height="108" rx="14" fill="#E2E8F0"/>
-  <!-- Green accent dot — top right -->
-  <circle cx="810" cy="218" r="54" fill="#4ADE80"/>
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="35%" r="85%">
+      <stop offset="0%" stop-color="#26262E"/>
+      <stop offset="60%" stop-color="#0A0A10"/>
+      <stop offset="100%" stop-color="#000000"/>
+    </radialGradient>
+    <linearGradient id="silver" x1="30%" y1="0%" x2="70%" y2="100%">
+      <stop offset="0%" stop-color="#FAFAFA"/>
+      <stop offset="12%" stop-color="#E5E5E8"/>
+      <stop offset="32%" stop-color="#B8B8BC"/>
+      <stop offset="58%" stop-color="#7A7A80"/>
+      <stop offset="82%" stop-color="#3E3E44"/>
+      <stop offset="100%" stop-color="#1A1A1E"/>
+    </linearGradient>
+    <linearGradient id="topgloss" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.18"/>
+      <stop offset="40%" stop-color="#FFFFFF" stop-opacity="0.04"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="leftrim" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+  <rect x="0" y="0" width="1024" height="512" fill="url(#topgloss)"/>
+
+  <g transform="translate(286, 192)">
+    <path d="M 30 30 L 30 654 L 488 654 L 488 564 L 134 564 L 134 30 Z" fill="#000" opacity="0.55"/>
+    <path d="M 0 0 L 0 624 L 458 624 L 458 534 L 104 534 L 104 0 Z" fill="url(#silver)"/>
+    <rect x="0" y="0" width="104" height="13" fill="#FFFFFF" opacity="0.85"/>
+    <rect x="0" y="0" width="15" height="624" fill="url(#leftrim)"/>
+    <rect x="104" y="522" width="354" height="12" fill="#FFFFFF" opacity="0.22"/>
+  </g>
 </svg>
