@@ -1,4 +1,4 @@
-name: Build iOS IPA
+name: Build & Deploy iOS
 
 on:
   push:
@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: macos-26
 
     steps:
@@ -27,16 +27,46 @@ jobs:
       - name: Restore
         run: dotnet restore LockIn/LockIn.csproj
 
-      - name: Build iOS (unsigned)
+      - name: Import signing certificate
+        env:
+          CERTIFICATE_BASE64: ${{ secrets.CERTIFICATE_BASE64 }}
+          CERTIFICATE_PASSWORD: ${{ secrets.CERTIFICATE_PASSWORD }}
+        run: |
+          KEYCHAIN_PATH=$RUNNER_TEMP/build.keychain
+          security create-keychain -p "" $KEYCHAIN_PATH
+          security default-keychain -s $KEYCHAIN_PATH
+          security unlock-keychain -p "" $KEYCHAIN_PATH
+          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+          echo "$CERTIFICATE_BASE64" | base64 --decode > $RUNNER_TEMP/cert.p12
+          security import $RUNNER_TEMP/cert.p12 \
+            -k $KEYCHAIN_PATH \
+            -P "$CERTIFICATE_PASSWORD" \
+            -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "" $KEYCHAIN_PATH
+          security list-keychain -d user -s $KEYCHAIN_PATH
+
+      - name: Install provisioning profile
+        env:
+          PROVISIONING_PROFILE_BASE64: ${{ secrets.PROVISIONING_PROFILE_BASE64 }}
+        run: |
+          PP_PATH=$RUNNER_TEMP/build.mobileprovision
+          echo "$PROVISIONING_PROFILE_BASE64" | base64 --decode > $PP_PATH
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          UUID=$(/usr/libexec/PlistBuddy -c "Print UUID" \
+            /dev/stdin <<< $(security cms -D -i $PP_PATH))
+          PROFILE_NAME=$(/usr/libexec/PlistBuddy -c "Print Name" \
+            /dev/stdin <<< $(security cms -D -i $PP_PATH))
+          cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/$UUID.mobileprovision
+          echo "Installed profile: $PROFILE_NAME ($UUID)"
+          echo "PROV_PROFILE_NAME=$PROFILE_NAME" >> $GITHUB_ENV
+
+      - name: Build iOS (signed)
         run: |
           dotnet publish LockIn/LockIn.csproj \
             -f net10.0-ios \
             -c Release \
             -r ios-arm64 \
-            /p:CodesignKey="" \
-            /p:CodesignProvision="" \
-            /p:EnableCodeSigning=false \
-            /p:ArchiveOnBuild=false
+            /p:CodesignProvision="$PROV_PROFILE_NAME"
 
       - name: Package as IPA
         run: |
@@ -44,6 +74,22 @@ jobs:
           mkdir -p Payload
           cp -r "$APP_PATH" Payload/
           zip -r LockIn.ipa Payload
+
+      - name: Upload to TestFlight
+        env:
+          ASC_API_KEY_ID: ${{ secrets.ASC_API_KEY_ID }}
+          ASC_API_KEY_ISSUER_ID: ${{ secrets.ASC_API_KEY_ISSUER_ID }}
+          ASC_API_KEY_BASE64: ${{ secrets.ASC_API_KEY_BASE64 }}
+        run: |
+          mkdir -p ~/.appstoreconnect/private_keys
+          echo "$ASC_API_KEY_BASE64" | base64 --decode \
+            > ~/.appstoreconnect/private_keys/AuthKey_${ASC_API_KEY_ID}.p8
+          xcrun altool --upload-app \
+            --type ios \
+            --file LockIn.ipa \
+            --apiKey "$ASC_API_KEY_ID" \
+            --apiIssuer "$ASC_API_KEY_ISSUER_ID" \
+            --verbose
 
       - name: Get version
         id: version
@@ -69,5 +115,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add docs/source.json
-          git diff --staged --quiet || git commit -m "chore: update source.json to ${{ steps.version.outputs.tag }} [skip ci]"
+          git diff --staged --quiet || \
+            git commit -m "chore: update source.json to ${{ steps.version.outputs.tag }} [skip ci]"
           git push

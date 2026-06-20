@@ -34,6 +34,8 @@
 	</array>
 	<key>NSHealthShareUsageDescription</key>
 	<string>LockIn läser steg, kalorier och pulsvärden för att visa din dagliga aktivitetsöversikt på hemsidan.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>LockIn skriver träningspass till Hälsa för att spåra din aktivitet och kalorier.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>LockIn använder kameran för att ta progressfoton kopplade till dina pass.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
