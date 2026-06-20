@@ -19,6 +19,7 @@ public partial class SettingsPage : ContentPage
     {
         base.OnAppearing();
         WorkoutBanner.IsVisible = _state.IsActive;
+        StickyHeader.Opacity = 0;
         Content.Opacity = 0;
         Content.TranslationY = 8;
         await Task.WhenAll(
@@ -27,6 +28,9 @@ public partial class SettingsPage : ContentPage
             Content.TranslateTo(0, 0, 220, Easing.CubicOut)
         );
     }
+
+    private void OnScrolled(object sender, ScrolledEventArgs e)
+        => StickyHeader.Opacity = Math.Clamp((e.ScrollY - 80.0) / 40.0, 0, 1);
 
     private async void OnBackClicked(object sender, EventArgs e)
         => await Shell.Current.GoToAsync("..");

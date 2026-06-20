@@ -21,6 +21,7 @@ public partial class LibraryPage : ContentPage
         base.OnAppearing();
         WorkoutBanner.IsVisible = _state.IsActive;
         _state.StateChanged += OnWorkoutStateChanged;
+        _vm.PropertyChanged += OnVmPropertyChanged;
 
         StickyHeader.Opacity = 0;
         PageTitleRow.Opacity = 1;
@@ -52,6 +53,16 @@ public partial class LibraryPage : ContentPage
     {
         base.OnDisappearing();
         _state.StateChanged -= OnWorkoutStateChanged;
+        _vm.PropertyChanged -= OnVmPropertyChanged;
+    }
+
+    private void OnVmPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(LibraryViewModel.SelectedTab))
+        {
+            StickyHeader.Opacity = 0;
+            PageTitleRow.Opacity = 1;
+        }
     }
 
     protected override async void OnNavigatedTo(NavigatedToEventArgs args)
@@ -64,6 +75,13 @@ public partial class LibraryPage : ContentPage
         => MainThread.BeginInvokeOnMainThread(() => WorkoutBanner.IsVisible = _state.IsActive);
 
     private void OnExercisesScrolled(object sender, ItemsViewScrolledEventArgs e)
+    {
+        var opacity = Math.Clamp(e.VerticalOffset / 40.0, 0, 1);
+        StickyHeader.Opacity = opacity;
+        PageTitleRow.Opacity = 1 - opacity;
+    }
+
+    private void OnTemplatesScrolled(object sender, ItemsViewScrolledEventArgs e)
     {
         var opacity = Math.Clamp(e.VerticalOffset / 40.0, 0, 1);
         StickyHeader.Opacity = opacity;

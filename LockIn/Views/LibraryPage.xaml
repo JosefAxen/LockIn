@@ -225,6 +225,7 @@
         <!-- Tab 1: Templates -->
         <Grid Grid.Row="4" IsVisible="{Binding ShowTemplates}">
             <CollectionView ItemsSource="{Binding Templates}"
+                            Scrolled="OnTemplatesScrolled"
                             HorizontalScrollBarVisibility="Never"
                             VerticalScrollBarVisibility="Never">
                 <CollectionView.ItemTemplate>
