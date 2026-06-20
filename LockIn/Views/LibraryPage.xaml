@@ -72,52 +72,58 @@
                     VerticalOptions="Center"/>
         </Grid>
 
-        <!-- Tab segment control -->
-        <Grid Grid.Row="1" ColumnDefinitions="*,*,*" Padding="16,8,16,10" ColumnSpacing="6">
+        <!-- Tab segment control — iOS glass pill -->
+        <Border Grid.Row="1" Margin="16,8,16,10"
+                BackgroundColor="#33787882"
+                StrokeThickness="0"
+                StrokeShape="RoundRectangle 50"
+                Padding="2">
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="0">
 
-            <Border Grid.Column="0"
-                    BackgroundColor="{Binding Tab0Bg}"
-                    StrokeShape="RoundRectangle 10"
-                    StrokeThickness="0"
-                    HeightRequest="36">
-                <Label Text="ÖVNINGAR"
-                       TextColor="{Binding Tab0Fg}"
-                       FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
-                       HorizontalOptions="Center" VerticalOptions="Center"/>
-                <Border.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 0}"/>
-                </Border.GestureRecognizers>
-            </Border>
+                <Border Grid.Column="0"
+                        BackgroundColor="{Binding Tab0Bg}"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 48"
+                        Padding="0,9">
+                    <Label Text="ÖVNINGAR"
+                           TextColor="{Binding Tab0Fg}"
+                           FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
+                           HorizontalOptions="Center" VerticalOptions="Center"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 0}"/>
+                    </Border.GestureRecognizers>
+                </Border>
 
-            <Border Grid.Column="1"
-                    BackgroundColor="{Binding Tab1Bg}"
-                    StrokeShape="RoundRectangle 10"
-                    StrokeThickness="0"
-                    HeightRequest="36">
-                <Label Text="MALLAR"
-                       TextColor="{Binding Tab1Fg}"
-                       FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
-                       HorizontalOptions="Center" VerticalOptions="Center"/>
-                <Border.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 1}"/>
-                </Border.GestureRecognizers>
-            </Border>
+                <Border Grid.Column="1"
+                        BackgroundColor="{Binding Tab1Bg}"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 48"
+                        Padding="0,9">
+                    <Label Text="MALLAR"
+                           TextColor="{Binding Tab1Fg}"
+                           FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
+                           HorizontalOptions="Center" VerticalOptions="Center"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 1}"/>
+                    </Border.GestureRecognizers>
+                </Border>
 
-            <Border Grid.Column="2"
-                    BackgroundColor="{Binding Tab2Bg}"
-                    StrokeShape="RoundRectangle 10"
-                    StrokeThickness="0"
-                    HeightRequest="36">
-                <Label Text="PROGRAM"
-                       TextColor="{Binding Tab2Fg}"
-                       FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
-                       HorizontalOptions="Center" VerticalOptions="Center"/>
-                <Border.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 2}"/>
-                </Border.GestureRecognizers>
-            </Border>
+                <Border Grid.Column="2"
+                        BackgroundColor="{Binding Tab2Bg}"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 48"
+                        Padding="0,9">
+                    <Label Text="PROGRAM"
+                           TextColor="{Binding Tab2Fg}"
+                           FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
+                           HorizontalOptions="Center" VerticalOptions="Center"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 2}"/>
+                    </Border.GestureRecognizers>
+                </Border>
 
-        </Grid>
+            </Grid>
+        </Border>
 
         <!-- Search bar (exercises only) -->
         <SearchBar Grid.Row="2"
@@ -201,11 +207,11 @@
                                 </VerticalStackLayout>
                                 <Border Grid.Column="1"
                                         IsVisible="{Binding IsCustom}"
-                                        BackgroundColor="{StaticResource ForgeAccentDim}"
+                                        BackgroundColor="{StaticResource ForgeAccentOrangeDim}"
                                         StrokeShape="RoundRectangle 6"
                                         StrokeThickness="0" Padding="8,4"
                                         VerticalOptions="Center">
-                                    <Label Text="EIGEN" TextColor="{StaticResource ForgeAccent}"
+                                    <Label Text="EIGEN" TextColor="{StaticResource ForgeAccentOrange}"
                                            FontSize="10" FontFamily="BebasNeue"
                                            CharacterSpacing="1"/>
                                 </Border>
@@ -237,7 +243,7 @@
                                        VerticalOptions="Center"/>
                                 <Border Grid.Column="1"
                                         WidthRequest="36" HeightRequest="36"
-                                        BackgroundColor="{StaticResource ForgeAccent}"
+                                        BackgroundColor="{StaticResource ForgeAccentOrange}"
                                         StrokeShape="Ellipse" StrokeThickness="0">
                                     <views:AppIcon Source="ic_play.png"
                                                    WidthRequest="18" HeightRequest="18"
@@ -295,11 +301,11 @@
                                            FontFamily="BebasNeue" FontSize="20"
                                            CharacterSpacing="1"/>
                                     <Border Grid.Column="1"
-                                            BackgroundColor="{StaticResource ForgeAccentDim}"
+                                            BackgroundColor="{StaticResource ForgeAccentAmberDim}"
                                             StrokeShape="RoundRectangle 8"
                                             StrokeThickness="0" Padding="10,5">
                                         <Label Text="{Binding DaysPerWeek, StringFormat='{0} dgr/v'}"
-                                               TextColor="{StaticResource ForgeAccent}"
+                                               TextColor="{StaticResource ForgeAccentAmber}"
                                                FontFamily="DMSansMedium" FontSize="12"/>
                                     </Border>
                                 </Grid>
@@ -307,7 +313,7 @@
                                        Style="{StaticResource MutedLabel}"
                                        LineBreakMode="WordWrap"/>
                                 <Label Text="SE PROGRAM →"
-                                       TextColor="{StaticResource ForgeAccent}"
+                                       TextColor="{StaticResource ForgeAccentAmber}"
                                        FontFamily="BebasNeue" FontSize="13"
                                        CharacterSpacing="2"/>
                             </StackLayout>

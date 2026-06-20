@@ -19,10 +19,15 @@ public partial class LibraryViewModel(DatabaseService db) : ObservableObject
     public bool ShowPrograms  => SelectedTab == 2;
     public bool ShowActionButton => SelectedTab < 2;
 
-    private static Color ActiveTabBg  => TabColorHelper.ActiveBg;
-    private static Color ActiveTabFg  => TabColorHelper.ActiveFg;
-    private static Color InactiveTabBg => TabColorHelper.InactiveBg;
-    private static Color InactiveTabFg => TabColorHelper.InactiveFg;
+    private static readonly Color _glassActiveBg   = Color.FromArgb("#2BFFFFFF");
+    private static readonly Color _glassActiveFg   = Color.FromArgb("#E2E8F0");
+    private static readonly Color _glassInactiveBg = Colors.Transparent;
+    private static readonly Color _glassInactiveFg = Color.FromArgb("#80FFFFFF");
+
+    private static Color ActiveTabBg   => _glassActiveBg;
+    private static Color ActiveTabFg   => _glassActiveFg;
+    private static Color InactiveTabBg => _glassInactiveBg;
+    private static Color InactiveTabFg => _glassInactiveFg;
 
     public Color Tab0Bg => SelectedTab == 0 ? ActiveTabBg  : InactiveTabBg;
     public Color Tab1Bg => SelectedTab == 1 ? ActiveTabBg  : InactiveTabBg;

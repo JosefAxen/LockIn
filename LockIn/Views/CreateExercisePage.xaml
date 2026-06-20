@@ -15,11 +15,21 @@
             <VerticalStackLayout Padding="16,0,16,8" Spacing="12">
 
                 <!-- Header -->
-                <Grid Padding="0,56,0,4" ColumnDefinitions="Auto,*">
-                    <Button Grid.Column="0" Text="‹ Avbryt"
-                            Style="{StaticResource SecondaryButton}"
-                            Padding="12,8"
-                            Command="{Binding CancelCommand}"/>
+                <Grid Padding="0,56,0,4" ColumnDefinitions="48,*">
+                    <Border Grid.Column="0"
+                            WidthRequest="36" HeightRequest="36"
+                            StrokeShape="Ellipse"
+                            BackgroundColor="#17FFFFFF"
+                            Stroke="#29FFFFFF"
+                            StrokeThickness="0.5"
+                            VerticalOptions="Center">
+                        <Label Text="‹" FontSize="22" FontFamily="DMSansMedium"
+                               HorizontalOptions="Center" VerticalOptions="Center"
+                               TextColor="{StaticResource ForgeText}"/>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding CancelCommand}"/>
+                        </Border.GestureRecognizers>
+                    </Border>
                     <Label Grid.Column="1" Text="NY ÖVNING"
                            Style="{StaticResource DisplayLabel}"
                            FontSize="22" HorizontalOptions="Center" VerticalOptions="Center"/>

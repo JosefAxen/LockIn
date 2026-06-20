@@ -12,11 +12,21 @@
     <Grid RowDefinitions="Auto,*" Padding="0" SafeAreaEdges="None">
 
         <!-- Header -->
-        <Grid Grid.Row="0" Padding="16,56,16,8" ColumnDefinitions="Auto,*,Auto">
-            <Button Grid.Column="0" Text="‹ Tillbaka"
-                    Style="{StaticResource SecondaryButton}"
-                    Padding="12,8"
-                    Clicked="OnBackClicked"/>
+        <Grid Grid.Row="0" Padding="16,56,16,8" ColumnDefinitions="48,*,Auto">
+            <Border Grid.Column="0"
+                    WidthRequest="36" HeightRequest="36"
+                    StrokeShape="Ellipse"
+                    BackgroundColor="#17FFFFFF"
+                    Stroke="#29FFFFFF"
+                    StrokeThickness="0.5"
+                    VerticalOptions="Center">
+                <Label Text="‹" FontSize="22" FontFamily="DMSansMedium"
+                       HorizontalOptions="Center" VerticalOptions="Center"
+                       TextColor="{StaticResource ForgeText}"/>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnBackClicked"/>
+                </Border.GestureRecognizers>
+            </Border>
             <Label Grid.Column="1" Text="MALL"
                    Style="{StaticResource DisplayLabel}"
                    FontSize="24" HorizontalOptions="Center" VerticalOptions="Center"/>
@@ -148,10 +158,11 @@
                                         <VerticalStackLayout Grid.Column="3" Spacing="4">
                                             <Label Text="VILA"
                                                    Style="{StaticResource SectionLabel}"
+                                                   TextColor="{StaticResource ForgeAccentAmber}"
                                                    HorizontalOptions="Center"/>
                                             <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}"
                                                     StrokeShape="RoundRectangle 8"
-                                                    Stroke="{StaticResource ForgeAccentDim}"
+                                                    Stroke="{StaticResource ForgeAccentAmberDim}"
                                                     StrokeThickness="1"
                                                     HeightRequest="46">
                                                 <Border.GestureRecognizers>

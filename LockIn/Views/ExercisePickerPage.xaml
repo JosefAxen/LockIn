@@ -12,10 +12,21 @@
 
     <Grid RowDefinitions="Auto,Auto,Auto,Auto,*" SafeAreaEdges="None">
 
-        <Grid Grid.Row="0" Padding="16,56,16,8" ColumnDefinitions="Auto,*">
-            <Button Grid.Column="0" Text="‹ Avbryt"
-                    Style="{StaticResource SecondaryButton}"
-                    Padding="12,8" Clicked="OnBackClicked"/>
+        <Grid Grid.Row="0" Padding="16,56,16,8" ColumnDefinitions="48,*">
+            <Border Grid.Column="0"
+                    WidthRequest="36" HeightRequest="36"
+                    StrokeShape="Ellipse"
+                    BackgroundColor="#17FFFFFF"
+                    Stroke="#29FFFFFF"
+                    StrokeThickness="0.5"
+                    VerticalOptions="Center">
+                <Label Text="‹" FontSize="22" FontFamily="DMSansMedium"
+                       HorizontalOptions="Center" VerticalOptions="Center"
+                       TextColor="{StaticResource ForgeText}"/>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnBackClicked"/>
+                </Border.GestureRecognizers>
+            </Border>
             <Label Grid.Column="1" Text="VÄLJ ÖVNING"
                    Style="{StaticResource DisplayLabel}"
                    FontSize="22" HorizontalOptions="Center" VerticalOptions="Center"/>
@@ -68,7 +79,7 @@
                 <Label Grid.Column="0"
                        Text="+"
                        FontFamily="BebasNeue" FontSize="24"
-                       TextColor="{StaticResource ForgeAccent}"
+                       TextColor="{StaticResource ForgeAccentOrange}"
                        VerticalOptions="Center" HorizontalOptions="Center"/>
                 <Label Grid.Column="1"
                        Text="Lägg till custom övning"
@@ -101,11 +112,11 @@
                                 </VerticalStackLayout>
                                 <Border Grid.Column="1"
                                         IsVisible="{Binding IsCustom}"
-                                        BackgroundColor="{StaticResource ForgeAccentDim}"
+                                        BackgroundColor="{StaticResource ForgeAccentOrangeDim}"
                                         StrokeShape="RoundRectangle 6"
                                         StrokeThickness="0" Padding="8,4"
                                         VerticalOptions="Center">
-                                    <Label Text="CUSTOM" TextColor="{StaticResource ForgeAccent}"
+                                    <Label Text="CUSTOM" TextColor="{StaticResource ForgeAccentOrange}"
                                            FontSize="10" FontFamily="BebasNeue" CharacterSpacing="1"/>
                                 </Border>
                             </Grid>
