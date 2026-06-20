@@ -188,6 +188,15 @@
                                     <StackLayout BindableLayout.ItemsSource="{Binding Sets}" Spacing="0">
                                         <BindableLayout.ItemTemplate>
                                             <DataTemplate x:DataType="vm:LoggedSetRow">
+                                                <SwipeView>
+                                                    <SwipeView.RightItems>
+                                                        <SwipeItems>
+                                                            <SwipeItem Text="Ta bort"
+                                                                       BackgroundColor="#E53E3E"
+                                                                       Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ActiveWorkoutViewModel}}, Path=DeleteSetCommand}"
+                                                                       CommandParameter="{Binding .}"/>
+                                                        </SwipeItems>
+                                                    </SwipeView.RightItems>
                                                 <Grid ColumnDefinitions="32,*,14,*,42,36"
                                                       Padding="16,5,16,5" ColumnSpacing="6"
                                                       HeightRequest="46"
@@ -303,6 +312,7 @@
                                                     </Border>
 
                                                 </Grid>
+                                                </SwipeView>
                                             </DataTemplate>
                                         </BindableLayout.ItemTemplate>
                                     </StackLayout>

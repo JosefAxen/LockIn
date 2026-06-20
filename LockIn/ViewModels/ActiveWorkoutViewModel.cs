@@ -68,7 +68,9 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
                     var exercise = await db.GetExerciseAsync(te.ExerciseId);
                     if (exercise is null) continue;
                     await AddExerciseSectionAsync(exercise, i, te.Sets, te.Reps,
-                        te.TargetWeight, te.DefaultRestSeconds);
+                        te.TargetWeight, te.DefaultRestSeconds,
+                        te.TargetRepsMin, te.TargetRepsMax, te.WeightIncrementKg,
+                        te.AutoProgressMode, te.SupersetGroupId);
                 }
             }
 
@@ -88,13 +90,16 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
 
     private async Task<WorkoutExerciseSection> AddExerciseSectionAsync(
         Exercise exercise, int orderIndex, int sets = 3, int reps = 8,
-        decimal targetWeight = 0, int restSeconds = 90)
+        decimal targetWeight = 0, int restSeconds = 90,
+        int targetRepsMin = 0, int targetRepsMax = 0, decimal weightIncrementKg = 2.5m,
+        int autoProgressMode = 0, int? supersetGroupId = null)
     {
         var se = new SessionExercise
         {
             SessionId = _session!.Id,
             ExerciseId = exercise.Id,
-            OrderIndex = orderIndex
+            OrderIndex = orderIndex,
+            SupersetGroupId = supersetGroupId
         };
         await db.SaveSessionExerciseAsync(se);
 
@@ -106,7 +111,11 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             ExerciseDescription = exercise.Description ?? "",
             DefaultRestSeconds = restSeconds,
             RestSeconds = restSeconds,
-            TargetReps = reps,
+            TargetReps = targetRepsMax > 0 ? targetRepsMax : reps,
+            TargetRepsMax = targetRepsMax,
+            WeightIncrementKg = weightIncrementKg,
+            AutoProgressMode = autoProgressMode,
+            SupersetGroupId = supersetGroupId,
             MuscleGroup = exercise.MuscleGroup,
         };
 
@@ -178,6 +187,16 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
     {
         if (section.Sets.Count > 1)
             section.Sets.RemoveAt(section.Sets.Count - 1);
+    }
+
+    [RelayCommand]
+    private void DeleteSet(LoggedSetRow set)
+    {
+        var section = Exercises.FirstOrDefault(e => e.Sets.Contains(set));
+        if (section is null || section.Sets.Count <= 1) return;
+        section.Sets.Remove(set);
+        for (int i = 0; i < section.Sets.Count; i++)
+            section.Sets[i].SetNumber = i + 1;
     }
 
     [RelayCommand]
@@ -264,14 +283,16 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
     private void CheckAutoProgression(int sessionExerciseId)
     {
         var section = Exercises.FirstOrDefault(e => e.SessionExerciseId == sessionExerciseId);
-        if (section is null) return;
+        if (section is null || section.AutoProgressMode == 0) return;
 
         var normalSets = section.Sets.Where(s => s.SetType == SetType.Normal).ToList();
         if (normalSets.Count == 0 || !normalSets.All(s => s.IsCompleted)) return;
 
-        if (section.TargetReps <= 0) return;
+        var targetMax = section.TargetRepsMax > 0 ? section.TargetRepsMax : section.TargetReps;
+        if (targetMax <= 0) return;
+
         bool allHitTarget = normalSets.All(s =>
-            int.TryParse(s.RepsText, out var r) && r >= section.TargetReps);
+            int.TryParse(s.RepsText, out var r) && r >= targetMax);
         if (!allHitTarget) return;
 
         var maxWeight = normalSets
@@ -282,7 +303,8 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
 
         if (maxWeight <= 0) return;
 
-        AutoProgressMessage = $"Öka till {maxWeight + 2.5m:G} kg nästa {section.ExerciseName}-pass";
+        var increment = section.WeightIncrementKg > 0 ? section.WeightIncrementKg : 2.5m;
+        AutoProgressMessage = $"Öka till {maxWeight + increment:G} kg nästa {section.ExerciseName}-pass";
         HasAutoProgress = true;
     }
 

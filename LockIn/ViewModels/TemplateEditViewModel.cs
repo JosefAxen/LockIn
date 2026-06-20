@@ -126,6 +126,12 @@ public partial class TemplateEditViewModel(DatabaseService db) : ObservableObjec
                 System.Globalization.NumberStyles.Any,
                 System.Globalization.CultureInfo.InvariantCulture, out var w) ? w : 0;
             te.DefaultRestSeconds = row.RestSeconds;
+            te.AutoProgressMode = row.ProgressionEnabled ? 1 : 0;
+            te.TargetRepsMin = row.ProgressionEnabled && int.TryParse(row.TargetRepsMinText, out var rMin) ? rMin : 0;
+            te.TargetRepsMax = row.ProgressionEnabled && int.TryParse(row.TargetRepsMaxText, out var rMax) ? rMax : 0;
+            te.WeightIncrementKg = row.ProgressionEnabled && decimal.TryParse(row.WeightIncrementText.Replace(',', '.'),
+                System.Globalization.NumberStyles.Any,
+                System.Globalization.CultureInfo.InvariantCulture, out var inc) ? inc : 2.5m;
             await db.SaveTemplateExerciseAsync(te);
         }
 
@@ -144,6 +150,12 @@ public partial class TemplateExerciseRow : ObservableObject
     [ObservableProperty] private string _weightText = "";
     [ObservableProperty] private int _restSeconds = 90;
 
+    // Auto-progression
+    [ObservableProperty] private bool _progressionEnabled;
+    [ObservableProperty] private string _targetRepsMinText = "";
+    [ObservableProperty] private string _targetRepsMaxText = "";
+    [ObservableProperty] private string _weightIncrementText = "2.5";
+
     public string RestDisplay => RestTimerService.Format(RestSeconds);
 
     partial void OnRestSecondsChanged(int value) =>
@@ -157,6 +169,10 @@ public partial class TemplateExerciseRow : ObservableObject
             SetsText = te.Sets.ToString(),
             RepsText = te.Reps.ToString(),
             WeightText = te.TargetWeight > 0 ? te.TargetWeight.ToString("G") : "",
-            RestSeconds = te.DefaultRestSeconds
+            RestSeconds = te.DefaultRestSeconds,
+            ProgressionEnabled = te.AutoProgressMode > 0,
+            TargetRepsMinText = te.TargetRepsMin > 0 ? te.TargetRepsMin.ToString() : "",
+            TargetRepsMaxText = te.TargetRepsMax > 0 ? te.TargetRepsMax.ToString() : "",
+            WeightIncrementText = te.WeightIncrementKg > 0 ? te.WeightIncrementKg.ToString("G") : "2.5",
         };
 }

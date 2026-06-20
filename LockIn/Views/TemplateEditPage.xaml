@@ -81,6 +81,100 @@
                                     <BoxView BackgroundColor="{StaticResource ForgeBorder}"
                                              HeightRequest="1" Margin="0"/>
 
+                                    <!-- Progression toggle row -->
+                                    <Grid ColumnDefinitions="*,Auto"
+                                          Padding="16,10,16,10">
+                                        <Label Grid.Column="0"
+                                               Text="AUTO-PROGRESSION"
+                                               Style="{StaticResource SectionLabel}"
+                                               VerticalOptions="Center"/>
+                                        <Switch Grid.Column="1"
+                                                IsToggled="{Binding ProgressionEnabled, Mode=TwoWay}"
+                                                OnColor="{StaticResource ForgeAccent}"
+                                                VerticalOptions="Center"/>
+                                    </Grid>
+
+                                    <!-- Progression fields (only when enabled) -->
+                                    <Grid IsVisible="{Binding ProgressionEnabled}"
+                                          ColumnDefinitions="*,*,*"
+                                          Padding="12,0,12,10"
+                                          ColumnSpacing="8">
+
+                                        <!-- MIN REPS -->
+                                        <VerticalStackLayout Grid.Column="0" Spacing="4">
+                                            <Label Text="MIN REPS"
+                                                   Style="{StaticResource SectionLabel}"
+                                                   TextColor="{StaticResource ForgeAccent}"
+                                                   HorizontalOptions="Center"/>
+                                            <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}"
+                                                    StrokeShape="RoundRectangle 8"
+                                                    Stroke="{StaticResource ForgeAccentDim}"
+                                                    StrokeThickness="1"
+                                                    Padding="0" HeightRequest="46">
+                                                <Entry Text="{Binding TargetRepsMinText, Mode=TwoWay}"
+                                                       Keyboard="Numeric"
+                                                       Placeholder="6"
+                                                       PlaceholderColor="{StaticResource ForgeMuted}"
+                                                       HorizontalTextAlignment="Center"
+                                                       FontFamily="BebasNeue" FontSize="22"
+                                                       TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                                                       BackgroundColor="Transparent"
+                                                       VerticalOptions="Center"/>
+                                            </Border>
+                                        </VerticalStackLayout>
+
+                                        <!-- MAX REPS -->
+                                        <VerticalStackLayout Grid.Column="1" Spacing="4">
+                                            <Label Text="MAX REPS"
+                                                   Style="{StaticResource SectionLabel}"
+                                                   TextColor="{StaticResource ForgeAccent}"
+                                                   HorizontalOptions="Center"/>
+                                            <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}"
+                                                    StrokeShape="RoundRectangle 8"
+                                                    Stroke="{StaticResource ForgeAccentDim}"
+                                                    StrokeThickness="1"
+                                                    Padding="0" HeightRequest="46">
+                                                <Entry Text="{Binding TargetRepsMaxText, Mode=TwoWay}"
+                                                       Keyboard="Numeric"
+                                                       Placeholder="10"
+                                                       PlaceholderColor="{StaticResource ForgeMuted}"
+                                                       HorizontalTextAlignment="Center"
+                                                       FontFamily="BebasNeue" FontSize="22"
+                                                       TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                                                       BackgroundColor="Transparent"
+                                                       VerticalOptions="Center"/>
+                                            </Border>
+                                        </VerticalStackLayout>
+
+                                        <!-- +KG PER STEG -->
+                                        <VerticalStackLayout Grid.Column="2" Spacing="4">
+                                            <Label Text="+KG"
+                                                   Style="{StaticResource SectionLabel}"
+                                                   TextColor="{StaticResource ForgeAccent}"
+                                                   HorizontalOptions="Center"/>
+                                            <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}"
+                                                    StrokeShape="RoundRectangle 8"
+                                                    Stroke="{StaticResource ForgeAccentDim}"
+                                                    StrokeThickness="1"
+                                                    Padding="0" HeightRequest="46">
+                                                <Entry Text="{Binding WeightIncrementText, Mode=TwoWay}"
+                                                       Keyboard="Numeric"
+                                                       Placeholder="2.5"
+                                                       PlaceholderColor="{StaticResource ForgeMuted}"
+                                                       HorizontalTextAlignment="Center"
+                                                       FontFamily="BebasNeue" FontSize="22"
+                                                       TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                                                       BackgroundColor="Transparent"
+                                                       VerticalOptions="Center"/>
+                                            </Border>
+                                        </VerticalStackLayout>
+
+                                    </Grid>
+
+                                    <!-- Divider before main fields -->
+                                    <BoxView BackgroundColor="{StaticResource ForgeBorder}"
+                                             HeightRequest="1" Margin="0"/>
+
                                     <!-- Editable fields row -->
                                     <Grid ColumnDefinitions="*,*,*,*"
                                           Padding="12,10,12,12"

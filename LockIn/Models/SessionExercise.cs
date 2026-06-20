@@ -14,4 +14,7 @@ public class SessionExercise
     public int ExerciseId { get; set; }
 
     public int OrderIndex { get; set; }
+
+    // Superset (Fas 3) — kopias från TemplateExercise vid sessionsstart
+    public int? SupersetGroupId { get; set; }
 }
