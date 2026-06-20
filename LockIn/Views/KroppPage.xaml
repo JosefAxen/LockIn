@@ -354,7 +354,8 @@
                     Stroke="{StaticResource ForgeAccent}"
                     StrokeThickness="1.5"
                     StrokeShape="RoundRectangle 18,18,0,0"
-                    Padding="20,14,20,36"
+                    Padding="20,14,20,16"
+                    Margin="0,0,0,83"
                     VerticalOptions="End"
                     ZIndex="10">
                 <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">

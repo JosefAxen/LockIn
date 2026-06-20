@@ -8,6 +8,7 @@
              x:DataType="vm:ActiveWorkoutViewModel"
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
              Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False"
              BackgroundColor="{StaticResource ForgeBackground}"
              ios:Page.UseSafeArea="False">
 
