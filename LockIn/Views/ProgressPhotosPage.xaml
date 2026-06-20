@@ -11,15 +11,23 @@
     <Grid RowDefinitions="Auto,*" SafeAreaEdges="None">
 
         <!-- Header -->
-        <Grid Grid.Row="0" Padding="16,56,20,12" ColumnDefinitions="Auto,*">
-            <Button Grid.Column="0" Text="‹"
-                    Style="{StaticResource SecondaryButton}"
-                    WidthRequest="44" HeightRequest="44" Padding="0"
-                    Command="{Binding GoBackCommand}"/>
-            <Label Grid.Column="1"
-                   Text="FOTON"
-                   Style="{StaticResource DisplayLabel}"
-                   FontSize="28"
+        <Grid Grid.Row="0" Padding="16,56,16,12">
+            <Border WidthRequest="36" HeightRequest="36"
+                    HorizontalOptions="Start" VerticalOptions="Center"
+                    StrokeShape="Ellipse"
+                    BackgroundColor="{AppThemeBinding Light=#1A000000, Dark=#17FFFFFF}"
+                    Stroke="{AppThemeBinding Light=#0D000000, Dark=#29FFFFFF}"
+                    StrokeThickness="0.5">
+                <Label Text="‹" FontSize="22" FontFamily="DMSansMedium"
+                       HorizontalOptions="Center" VerticalOptions="Center"
+                       TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding GoBackCommand}"/>
+                </Border.GestureRecognizers>
+            </Border>
+            <Label Text="FOTON"
+                   FontFamily="BebasNeue" FontSize="28" CharacterSpacing="1"
+                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
                    HorizontalOptions="Center" VerticalOptions="Center"/>
         </Grid>
 
@@ -30,10 +38,27 @@
                            VerticalOptions="Center"/>
 
         <CollectionView Grid.Row="1"
-                        ItemsSource="{Binding Photos}"
+                        ItemsSource="{Binding PhotoGroups}"
+                        IsGrouped="True"
                         IsVisible="{Binding IsLoading, Converter={x:Static vm:InverseBoolConverter.Instance}}"
-                        Margin="12,4,12,48"
-                        ItemsLayout="VerticalGrid, 2">
+                        Margin="16,4,16,48">
+
+            <CollectionView.GroupHeaderTemplate>
+                <DataTemplate x:DataType="vm:PhotoGroup">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10"
+                          Padding="0,14,0,8">
+                        <Label Grid.Column="0"
+                               Text="{Binding MonthKey}"
+                               FontFamily="BebasNeue" FontSize="12" CharacterSpacing="2.5"
+                               TextColor="{StaticResource ForgeAccentBlue}"
+                               VerticalOptions="Center"/>
+                        <BoxView Grid.Column="1"
+                                 HeightRequest="1"
+                                 BackgroundColor="{StaticResource ForgeBorder}"
+                                 VerticalOptions="Center"/>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.GroupHeaderTemplate>
 
             <CollectionView.EmptyView>
                 <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center"
@@ -49,34 +74,33 @@
 
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="vm:PhotoRow">
-                    <Border Margin="4,4"
-                            StrokeShape="RoundRectangle 12"
-                            StrokeThickness="0"
-                            Padding="0"
-                            HeightRequest="180">
-                        <Grid RowDefinitions="*,Auto">
-                            <Image Grid.Row="0" Source="{Binding Source}"
+                    <Border Margin="0,0,0,14"
+                            StrokeShape="RoundRectangle 20"
+                            Stroke="{StaticResource ForgeBorder}"
+                            StrokeThickness="1"
+                            Padding="0">
+                        <Grid RowDefinitions="Auto,Auto">
+                            <Image Grid.Row="0"
+                                   Source="{Binding Source}"
                                    Aspect="AspectFill"
-                                   HeightRequest="180"/>
-                            <Border Grid.Row="1"
-                                    BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
-                                    StrokeThickness="0" Padding="10,8">
-                                <Grid ColumnDefinitions="*,Auto">
-                                    <Label Grid.Column="0"
-                                           Text="{Binding DateDisplay}"
-                                           Style="{StaticResource MutedLabel}"
-                                           FontSize="11" VerticalOptions="Center"/>
-                                    <Label Grid.Column="1" Text="✕"
-                                           TextColor="{StaticResource ForgeMuted}"
-                                           FontSize="14" VerticalOptions="Center">
-                                        <Label.GestureRecognizers>
-                                            <TapGestureRecognizer
-                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ProgressPhotosViewModel}}, Path=DeletePhotoCommand}"
-                                                CommandParameter="{Binding .}"/>
-                                        </Label.GestureRecognizers>
-                                    </Label>
-                                </Grid>
-                            </Border>
+                                   HeightRequest="220"/>
+                            <Grid Grid.Row="1" ColumnDefinitions="*,Auto" Padding="16,12"
+                                  BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}">
+                                <Label Grid.Column="0"
+                                       Text="{Binding DateDisplay}"
+                                       FontFamily="DMSansMedium" FontSize="14"
+                                       TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                                       VerticalOptions="Center"/>
+                                <Label Grid.Column="1" Text="✕"
+                                       TextColor="{StaticResource ForgeMuted}"
+                                       FontSize="16" VerticalOptions="Center">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ProgressPhotosViewModel}}, Path=DeletePhotoCommand}"
+                                            CommandParameter="{Binding .}"/>
+                                    </Label.GestureRecognizers>
+                                </Label>
+                            </Grid>
                         </Grid>
                     </Border>
                 </DataTemplate>

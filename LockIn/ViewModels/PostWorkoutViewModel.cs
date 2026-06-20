@@ -275,4 +275,5 @@ public class PhotoRow(WorkoutPhoto photo)
     public string FilePath => Photo.FilePath;
     public ImageSource Source => ImageSource.FromFile(Photo.FilePath);
     public string DateDisplay => Photo.TakenAt.ToString("d MMM HH:mm");
+    public string MonthYear => Photo.TakenAt.ToString("MMMM yyyy").ToUpper();
 }

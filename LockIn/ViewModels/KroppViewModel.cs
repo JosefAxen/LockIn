@@ -38,12 +38,15 @@ public partial class KroppViewModel(DatabaseService db) : ObservableObject
     public bool IsKroppTab => SelectedTab == 1;
     public bool IsHeatmapTab => SelectedTab == 2;
 
-    public Color Tab0Bg => SelectedTab == 0 ? TabColorHelper.ActiveBg : TabColorHelper.InactiveBg;
-    public Color Tab0Fg => SelectedTab == 0 ? TabColorHelper.ActiveFg : TabColorHelper.InactiveFg;
-    public Color Tab1Bg => SelectedTab == 1 ? TabColorHelper.ActiveBg : TabColorHelper.InactiveBg;
-    public Color Tab1Fg => SelectedTab == 1 ? TabColorHelper.ActiveFg : TabColorHelper.InactiveFg;
-    public Color Tab2Bg => SelectedTab == 2 ? TabColorHelper.ActiveBg : TabColorHelper.InactiveBg;
-    public Color Tab2Fg => SelectedTab == 2 ? TabColorHelper.ActiveFg : TabColorHelper.InactiveFg;
+    private static readonly Color _segPillActive = Color.FromArgb("#2BFFFFFF");
+    private static readonly Color _segTextDim    = Color.FromArgb("#80FFFFFF");
+
+    public Color Tab0Bg => SelectedTab == 0 ? _segPillActive : Colors.Transparent;
+    public Color Tab0Fg => SelectedTab == 0 ? Color.FromArgb("#38BDF8") : _segTextDim;
+    public Color Tab1Bg => SelectedTab == 1 ? _segPillActive : Colors.Transparent;
+    public Color Tab1Fg => SelectedTab == 1 ? Color.FromArgb("#A78BFA") : _segTextDim;
+    public Color Tab2Bg => SelectedTab == 2 ? _segPillActive : Colors.Transparent;
+    public Color Tab2Fg => SelectedTab == 2 ? Color.FromArgb("#4ADE80") : _segTextDim;
 
     partial void OnSelectedTabChanged(int value)
     {

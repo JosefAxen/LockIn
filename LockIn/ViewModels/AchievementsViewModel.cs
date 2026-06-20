@@ -53,4 +53,12 @@ public class AchievementRow
 
     public string DisplayEmoji => IsUnlocked ? Emoji : "🔒";
     public double CardOpacity => IsUnlocked ? 1.0 : 0.45;
+
+    public Color CardBackground => IsUnlocked
+        ? Color.FromArgb("#1FFBBF24")
+        : Color.FromArgb("#161618");
+
+    public Color CardStroke => IsUnlocked
+        ? Color.FromArgb("#40FBBF24")
+        : Colors.Transparent;
 }

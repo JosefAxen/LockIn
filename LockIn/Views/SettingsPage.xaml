@@ -18,13 +18,13 @@
 
         <Grid Grid.Row="0" Padding="16,56,16,8" ColumnDefinitions="48,*">
             <Border Grid.Column="0"
-                    WidthRequest="40" HeightRequest="40"
-                    StrokeShape="RoundRectangle 13"
-                    BackgroundColor="{AppThemeBinding Light=#1A000000, Dark=#26FFFFFF}"
-                    Stroke="{AppThemeBinding Light=#0D000000, Dark=#33FFFFFF}"
+                    WidthRequest="36" HeightRequest="36"
+                    StrokeShape="Ellipse"
+                    BackgroundColor="{AppThemeBinding Light=#1A000000, Dark=#17FFFFFF}"
+                    Stroke="{AppThemeBinding Light=#0D000000, Dark=#29FFFFFF}"
                     StrokeThickness="0.5"
                     VerticalOptions="Center">
-                <Label Text="‹" FontSize="24" FontFamily="DMSansMedium"
+                <Label Text="‹" FontSize="22" FontFamily="DMSansMedium"
                        HorizontalOptions="Center" VerticalOptions="Center"
                        TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
                 <Border.GestureRecognizers>
@@ -45,7 +45,7 @@
                 <Label Text="PROFIL" Style="{StaticResource SectionLabel}" Margin="4,0"/>
                 <Border Style="{StaticResource CardFrame}" Padding="16,14">
                     <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                        <Border Grid.Column="0" BackgroundColor="{StaticResource ForgeAccentDim}"
+                        <Border Grid.Column="0" BackgroundColor="{StaticResource ForgeAccentBlueDim}"
                                 StrokeShape="RoundRectangle 10" StrokeThickness="0"
                                 WidthRequest="38" HeightRequest="38" VerticalOptions="Center">
                             <Label Text="👤" FontSize="18"
@@ -67,7 +67,7 @@
                 <Label Text="TRÄNING" Style="{StaticResource SectionLabel}" Margin="4,0"/>
                 <Border Style="{StaticResource CardFrame}" Padding="16,14">
                     <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                        <Border Grid.Column="0" BackgroundColor="{StaticResource ForgeAccentDim}"
+                        <Border Grid.Column="0" BackgroundColor="{StaticResource ForgeAccentOrangeDim}"
                                 StrokeShape="RoundRectangle 10" StrokeThickness="0"
                                 WidthRequest="38" HeightRequest="38" VerticalOptions="Center">
                             <views:AppIcon Source="ic_calendar.png" WidthRequest="20" HeightRequest="20"
@@ -90,7 +90,7 @@
                 <Label Text="ENHETER" Style="{StaticResource SectionLabel}" Margin="4,0"/>
                 <Border Style="{StaticResource CardFrame}" Padding="16,14">
                     <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                        <Border Grid.Column="0" BackgroundColor="{StaticResource ForgeAccentDim}"
+                        <Border Grid.Column="0" BackgroundColor="{StaticResource ForgeAccentPurpleDim}"
                                 StrokeShape="RoundRectangle 10" StrokeThickness="0"
                                 WidthRequest="38" HeightRequest="38" VerticalOptions="Center">
                             <views:AppIcon Source="ic_ruler.png" WidthRequest="20" HeightRequest="20"
@@ -109,7 +109,7 @@
                 <Label Text="VILOTIMER" Style="{StaticResource SectionLabel}" Margin="4,0"/>
                 <Border Style="{StaticResource CardFrame}" Padding="16,14">
                     <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                        <Border Grid.Column="0" BackgroundColor="{StaticResource ForgeAccent}"
+                        <Border Grid.Column="0" BackgroundColor="{StaticResource ForgeAccentAmberDim}"
                                 StrokeShape="RoundRectangle 10" StrokeThickness="0"
                                 WidthRequest="38" HeightRequest="38" VerticalOptions="Center">
                             <views:AppIcon Source="ic_vibration.png" WidthRequest="20" HeightRequest="20"
@@ -125,7 +125,7 @@
                 </Border>
                 <Border Style="{StaticResource CardFrame}" Padding="16,14">
                     <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                        <Border Grid.Column="0" BackgroundColor="{StaticResource ForgeAccent}"
+                        <Border Grid.Column="0" BackgroundColor="{StaticResource ForgeAccentAmberDim}"
                                 StrokeShape="RoundRectangle 10" StrokeThickness="0"
                                 WidthRequest="38" HeightRequest="38" VerticalOptions="Center">
                             <views:AppIcon Source="ic_volume.png" WidthRequest="20" HeightRequest="20"
@@ -166,7 +166,7 @@
                 <!-- Body weight -->
                 <Border Style="{StaticResource CardFrame}" Padding="16,14">
                     <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                        <Border Grid.Column="0" BackgroundColor="{StaticResource ForgeAccentDim}"
+                        <Border Grid.Column="0" BackgroundColor="{StaticResource ForgeAccentBlueDim}"
                                 StrokeShape="RoundRectangle 10" StrokeThickness="0"
                                 WidthRequest="38" HeightRequest="38" VerticalOptions="Center">
                             <views:AppIcon Source="ic_weight.png" WidthRequest="20" HeightRequest="20"

@@ -11,11 +11,21 @@
     <Grid RowDefinitions="Auto,*" SafeAreaEdges="None">
 
         <!-- Header -->
-        <Grid Grid.Row="0" Padding="16,56,20,12" ColumnDefinitions="Auto,*,Auto">
-            <Button Grid.Column="0" Text="‹"
-                    Style="{StaticResource SecondaryButton}"
-                    WidthRequest="44" HeightRequest="44" Padding="0"
-                    Command="{Binding GoBackCommand}"/>
+        <Grid Grid.Row="0" Padding="16,56,20,12" ColumnDefinitions="48,*,Auto">
+            <Border Grid.Column="0"
+                    WidthRequest="36" HeightRequest="36"
+                    StrokeShape="Ellipse"
+                    BackgroundColor="#17FFFFFF"
+                    Stroke="#29FFFFFF"
+                    StrokeThickness="0.5"
+                    VerticalOptions="Center">
+                <Label Text="‹" FontSize="22" FontFamily="DMSansMedium"
+                       HorizontalOptions="Center" VerticalOptions="Center"
+                       TextColor="{StaticResource ForgeText}"/>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding GoBackCommand}"/>
+                </Border.GestureRecognizers>
+            </Border>
             <Label Grid.Column="1"
                    Text="ACHIEVEMENTS"
                    Style="{StaticResource DisplayLabel}"
@@ -47,8 +57,9 @@
                     <Border Margin="4,4"
                             Opacity="{Binding CardOpacity}"
                             StrokeShape="RoundRectangle 14"
-                            StrokeThickness="0"
-                            BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
+                            StrokeThickness="1"
+                            BackgroundColor="{Binding CardBackground}"
+                            Stroke="{Binding CardStroke}"
                             Padding="0">
                         <Grid RowDefinitions="Auto,*" Padding="14,14,14,14" RowSpacing="6">
 
@@ -69,7 +80,7 @@
                                        LineBreakMode="WordWrap"/>
                                 <Label Text="{Binding UnlockedAt}"
                                        IsVisible="{Binding IsUnlocked}"
-                                       TextColor="{StaticResource ForgeAccent}"
+                                       TextColor="{StaticResource ForgeAccentAmber}"
                                        FontFamily="DMSansRegular"
                                        FontSize="10"
                                        Margin="0,2,0,0"/>

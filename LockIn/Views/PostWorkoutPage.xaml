@@ -37,7 +37,7 @@
                         <StackLayout Spacing="2">
                             <Label Text="{Binding TotalVolume}"
                                    FontFamily="BebasNeue" FontSize="26"
-                                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                                   TextColor="{StaticResource ForgeAccentBlue}"/>
                             <Label Text="Volym (kg)" Style="{StaticResource MutedLabel}"/>
                         </StackLayout>
                     </Border>
@@ -45,7 +45,7 @@
                         <StackLayout Spacing="2">
                             <Label Text="{Binding TotalSets}"
                                    FontFamily="BebasNeue" FontSize="26"
-                                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                                   TextColor="{StaticResource ForgeAccentPurple}"/>
                             <Label Text="Set" Style="{StaticResource MutedLabel}"/>
                         </StackLayout>
                     </Border>
@@ -53,7 +53,7 @@
                         <StackLayout Spacing="2">
                             <Label Text="{Binding PrCount}"
                                    FontFamily="BebasNeue" FontSize="26"
-                                   TextColor="{StaticResource ForgeSuccess}"/>
+                                   TextColor="{StaticResource ForgeAccentAmber}"/>
                             <Label Text="PR" Style="{StaticResource MutedLabel}"/>
                         </StackLayout>
                     </Border>
@@ -109,9 +109,9 @@
                              IsVisible="{Binding NewAchievements.Count, Converter={StaticResource GtzConverter}}">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate x:DataType="vm:NewAchievementRow">
-                            <Border BackgroundColor="{StaticResource ForgeAccentDim}"
+                            <Border BackgroundColor="{StaticResource ForgeAccentAmberDim}"
                                     StrokeThickness="1"
-                                    Stroke="{StaticResource ForgeAccent}"
+                                    Stroke="{StaticResource ForgeAccentAmber}"
                                     StrokeShape="RoundRectangle 12"
                                     Padding="16,12">
                                 <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
@@ -120,11 +120,11 @@
                                     <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
                                         <Label Text="ACHIEVEMENT UPPLÅST"
                                                Style="{StaticResource SectionLabel}"
-                                               TextColor="{StaticResource ForgeAccent}"
+                                               TextColor="{StaticResource ForgeAccentAmber}"
                                                FontSize="10"/>
                                         <Label Text="{Binding Title}"
                                                FontFamily="BebasNeue" FontSize="18"
-                                               TextColor="{StaticResource ForgeAccent}"
+                                               TextColor="{StaticResource ForgeAccentAmber}"
                                                CharacterSpacing="0.5"/>
                                     </StackLayout>
                                 </Grid>

@@ -36,6 +36,9 @@
     <Color x:Key="ForgeAccentBlue">#38BDF8</Color>
     <Color x:Key="ForgeAccentPurple">#A78BFA</Color>
     <Color x:Key="ForgeAccentAmber">#FBBF24</Color>
+    <Color x:Key="ForgeAccentAmberDim">#1FFBBF24</Color>
+    <Color x:Key="ForgeAccentOrange">#FB923C</Color>
+    <Color x:Key="ForgeAccentOrangeDim">#1FFB923C</Color>
 
     <!-- Dim versions for card backgrounds / fills -->
     <Color x:Key="ForgeAccentCoralDim">#1FFB7185</Color>

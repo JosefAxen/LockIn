@@ -26,16 +26,20 @@
 
         <!-- Top bar -->
         <Grid Grid.Row="0" Padding="16,56,20,8" ColumnDefinitions="Auto,*,Auto,Auto">
-            <Button Grid.Column="0" Text="‹"
-                    Style="{StaticResource SecondaryButton}"
-                    BackgroundColor="{StaticResource ForgeSurface2}"
-                    TextColor="{StaticResource ForgeText}"
-                    WidthRequest="44" HeightRequest="44" Padding="0"
-                    Clicked="OnBackClicked">
-                <Button.Behaviors>
-                    <views:AnimatedButtonBehavior/>
-                </Button.Behaviors>
-            </Button>
+            <Border Grid.Column="0"
+                    WidthRequest="36" HeightRequest="36"
+                    StrokeShape="Ellipse"
+                    BackgroundColor="#17FFFFFF"
+                    Stroke="#29FFFFFF"
+                    StrokeThickness="0.5"
+                    VerticalOptions="Center">
+                <Label Text="‹" FontSize="22" FontFamily="DMSansMedium"
+                       HorizontalOptions="Center" VerticalOptions="Center"
+                       TextColor="{StaticResource ForgeText}"/>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnBackClicked"/>
+                </Border.GestureRecognizers>
+            </Border>
             <Label Grid.Column="1" Text="{Binding TemplateName}"
                    Style="{StaticResource DisplayLabel}"
                    TextColor="{StaticResource ForgeText}"
@@ -66,14 +70,15 @@
 
                 <!-- PR Banner -->
                 <Border IsVisible="{Binding HasPR}"
-                        BackgroundColor="{StaticResource ForgeSuccessDim}"
+                        BackgroundColor="{StaticResource ForgeAccentAmberDim}"
+                        Stroke="{StaticResource ForgeAccentAmber}"
                         StrokeShape="RoundRectangle 12"
-                        StrokeThickness="0" Padding="14,12">
+                        StrokeThickness="0.5" Padding="14,12">
                     <Grid ColumnDefinitions="Auto,*">
                         <Label Grid.Column="0" Text="🏆" FontSize="20"
                                VerticalOptions="Center" Margin="0,0,10,0"/>
                         <Label Grid.Column="1" Text="{Binding PrMessage}"
-                               TextColor="{StaticResource ForgeSuccess}"
+                               TextColor="{StaticResource ForgeAccentAmber}"
                                FontFamily="DMSansMedium" FontSize="13"
                                LineBreakMode="WordWrap"/>
                     </Grid>

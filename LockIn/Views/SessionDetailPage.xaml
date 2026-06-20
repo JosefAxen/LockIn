@@ -13,11 +13,21 @@
     <Grid RowDefinitions="Auto,*" SafeAreaEdges="None">
 
         <!-- Header -->
-        <Grid Grid.Row="0" Padding="16,56,20,12" ColumnDefinitions="Auto,*">
-            <Button Grid.Column="0" Text="‹"
-                    Style="{StaticResource SecondaryButton}"
-                    WidthRequest="44" HeightRequest="44" Padding="0"
-                    Command="{Binding GoBackCommand}"/>
+        <Grid Grid.Row="0" Padding="16,56,20,12" ColumnDefinitions="48,*">
+            <Border Grid.Column="0"
+                    WidthRequest="36" HeightRequest="36"
+                    StrokeShape="Ellipse"
+                    BackgroundColor="#17FFFFFF"
+                    Stroke="#29FFFFFF"
+                    StrokeThickness="0.5"
+                    VerticalOptions="Center">
+                <Label Text="‹" FontSize="22" FontFamily="DMSansMedium"
+                       HorizontalOptions="Center" VerticalOptions="Center"
+                       TextColor="{StaticResource ForgeText}"/>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding GoBackCommand}"/>
+                </Border.GestureRecognizers>
+            </Border>
             <Label Grid.Column="1"
                    Text="{Binding TemplateName}"
                    Style="{StaticResource DisplayLabel}"
@@ -37,19 +47,19 @@
                             <StackLayout Grid.Column="0" Spacing="2">
                                 <Label Text="{Binding VolumeDisplay}"
                                        FontFamily="BebasNeue" FontSize="24"
-                                       TextColor="{StaticResource ForgeAccent}"/>
+                                       TextColor="{StaticResource ForgeAccentBlue}"/>
                                 <Label Text="VOLYM" Style="{StaticResource SectionLabel}" FontSize="10"/>
                             </StackLayout>
                             <StackLayout Grid.Column="1" Spacing="2">
                                 <Label Text="{Binding DurationDisplay}"
                                        FontFamily="BebasNeue" FontSize="24"
-                                       TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                                       TextColor="{StaticResource ForgeAccentAmber}"/>
                                 <Label Text="TID" Style="{StaticResource SectionLabel}" FontSize="10"/>
                             </StackLayout>
                             <StackLayout Grid.Column="2" Spacing="2">
                                 <Label Text="{Binding PrCountValue}"
                                        FontFamily="BebasNeue" FontSize="24"
-                                       TextColor="{StaticResource ForgeSuccess}"/>
+                                       TextColor="{StaticResource ForgeAccentAmber}"/>
                                 <Label Text="PRs" Style="{StaticResource SectionLabel}" FontSize="10"/>
                             </StackLayout>
                         </Grid>

@@ -27,24 +27,24 @@ public partial class HistoryViewModel(DatabaseService db) : ObservableObject
 
     public event Action? CalendarChanged;
 
-    private static Color TabActiveBg  => TabColorHelper.ActiveBg;
-    private static Color TabActiveFg  => TabColorHelper.ActiveFg;
-    private static Color TabInactiveBg => TabColorHelper.InactiveBg;
-    private static Color TabInactiveFg => TabColorHelper.InactiveFg;
+    private static readonly Color _glassActiveBg  = Color.FromArgb("#2BFFFFFF");
+    private static readonly Color _glassActiveFg  = Color.FromArgb("#E2E8F0");
+    private static readonly Color _glassInactiveBg = Colors.Transparent;
+    private static readonly Color _glassInactiveFg = Color.FromArgb("#80FFFFFF");
 
     // Period tab colors
-    public Color Period0Bg => SelectedPeriod == 0 ? TabActiveBg : TabInactiveBg;
-    public Color Period0Fg => SelectedPeriod == 0 ? TabActiveFg : TabInactiveFg;
-    public Color Period1Bg => SelectedPeriod == 1 ? TabActiveBg : TabInactiveBg;
-    public Color Period1Fg => SelectedPeriod == 1 ? TabActiveFg : TabInactiveFg;
-    public Color Period2Bg => SelectedPeriod == 2 ? TabActiveBg : TabInactiveBg;
-    public Color Period2Fg => SelectedPeriod == 2 ? TabActiveFg : TabInactiveFg;
+    public Color Period0Bg => SelectedPeriod == 0 ? _glassActiveBg : _glassInactiveBg;
+    public Color Period0Fg => SelectedPeriod == 0 ? _glassActiveFg : _glassInactiveFg;
+    public Color Period1Bg => SelectedPeriod == 1 ? _glassActiveBg : _glassInactiveBg;
+    public Color Period1Fg => SelectedPeriod == 1 ? _glassActiveFg : _glassInactiveFg;
+    public Color Period2Bg => SelectedPeriod == 2 ? _glassActiveBg : _glassInactiveBg;
+    public Color Period2Fg => SelectedPeriod == 2 ? _glassActiveFg : _glassInactiveFg;
 
     // Sort tab colors
-    public Color Sort0Bg => SelectedSort == 0 ? TabActiveBg : TabInactiveBg;
-    public Color Sort0Fg => SelectedSort == 0 ? TabActiveFg : TabInactiveFg;
-    public Color Sort1Bg => SelectedSort == 1 ? TabActiveBg : TabInactiveBg;
-    public Color Sort1Fg => SelectedSort == 1 ? TabActiveFg : TabInactiveFg;
+    public Color Sort0Bg => SelectedSort == 0 ? _glassActiveBg : _glassInactiveBg;
+    public Color Sort0Fg => SelectedSort == 0 ? _glassActiveFg : _glassInactiveFg;
+    public Color Sort1Bg => SelectedSort == 1 ? _glassActiveBg : _glassInactiveBg;
+    public Color Sort1Fg => SelectedSort == 1 ? _glassActiveFg : _glassInactiveFg;
 
     partial void OnSelectedPeriodChanged(int value)
     {
