@@ -1,0 +1,43 @@
+workflows:
+  lockin-ios-release:
+    name: LockIn — iOS TestFlight
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+
+    environment:
+      xcode: latest
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.josefaxen.lockin
+      groups:
+        - app_store_connect
+
+    scripts:
+      - name: Installera .NET 10
+        script: |
+          curl -fsSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --channel 10.0
+          echo "export PATH=$HOME/.dotnet:\$PATH" >> $CM_ENV
+
+      - name: Installera MAUI iOS workload
+        script: dotnet workload install maui-ios
+
+      - name: Bygg och signera iOS-app
+        script: |
+          dotnet publish LockIn/LockIn.csproj \
+            -f net10.0-ios \
+            -c Release \
+            -r ios-arm64 \
+            /p:ArchiveOnBuild=true \
+            /p:CodesignProvision="LockIn Distribution" \
+            /p:CodesignKey="Apple Distribution"
+
+    artifacts:
+      - '**/*.ipa'
+
+    publishing:
+      app_store_connect:
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        submit_to_testflight: true
+        cancel_previous_submissions: true

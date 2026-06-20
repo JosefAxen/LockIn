@@ -1,9 +1,7 @@
 name: Build & Deploy iOS
 
 on:
-  push:
-    branches: [ main, master ]
-  workflow_dispatch:
+  workflow_dispatch: # Codemagic hanterar automatiska byggen
 
 permissions:
   contents: write
