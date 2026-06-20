@@ -13,23 +13,19 @@ workflows:
         - LockIn
 
     scripts:
-      - name: Hitta dotnet
+      - name: Installera .NET, bygg och signera
         script: |
-          echo "=== which dotnet ==="
-          which dotnet || echo "inte i PATH"
-          echo "=== find dotnet binary ==="
-          find /usr /Users/builder $HOME -maxdepth 5 -name "dotnet" -type f 2>/dev/null | head -10
-          echo "=== PATH ==="
-          echo $PATH
+          set -e
 
-      - name: Installera MAUI iOS workload
-        script: |
-          export PATH="/usr/local/share/dotnet:$HOME/.dotnet:$PATH"
+          # Installera .NET 10
+          curl -fsSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --channel 10.0
+          export PATH="$HOME/.dotnet:$PATH"
+          dotnet --version
+
+          # Installera MAUI iOS workload
           dotnet workload install maui-ios
 
-      - name: Bygg och signera iOS-app
-        script: |
-          export PATH="/usr/local/share/dotnet:$HOME/.dotnet:$PATH"
+          # Bygg och signera
           dotnet publish LockIn/LockIn.csproj \
             -f net10.0-ios \
             -c Release \
