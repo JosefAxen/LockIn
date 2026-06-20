@@ -38,94 +38,89 @@
                    FontSize="22" HorizontalOptions="Center" VerticalOptions="Center"/>
         </Grid>
 
-        <!-- Pill-formad sökruta (Bevel-stil) -->
-        <Border Grid.Row="1"
-                BackgroundColor="{StaticResource ForgeSurface2}"
-                StrokeShape="RoundRectangle 26"
-                StrokeThickness="0"
-                Padding="18,0"
-                HeightRequest="46"
-                Margin="16,0,16,10">
-            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
-                <Label Grid.Column="0"
-                       Text="⌕"
-                       FontSize="20"
-                       TextColor="{StaticResource ForgeMuted}"
-                       VerticalOptions="Center"/>
-                <Entry Grid.Column="1"
-                       Text="{Binding SearchText}"
-                       Placeholder="Sök övning..."
-                       PlaceholderColor="{StaticResource ForgeMuted}"
-                       BackgroundColor="Transparent"
-                       TextColor="{StaticResource ForgeText}"
-                       FontFamily="DMSansRegular" FontSize="15"
-                       VerticalOptions="Center"/>
-            </Grid>
-        </Border>
-
-        <!-- Muscle group chips -->
-        <CollectionView Grid.Row="2"
-                        ItemsSource="{Binding MuscleChips}"
-                        SelectionMode="None"
-                        HeightRequest="40"
-                        Margin="16,0,16,8"
-                        HorizontalScrollBarVisibility="Never"
-                        VerticalScrollBarVisibility="Never">
-            <CollectionView.ItemsLayout>
-                <LinearItemsLayout Orientation="Horizontal" ItemSpacing="6"/>
-            </CollectionView.ItemsLayout>
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="vm:MuscleGroupChip">
-                    <Border BackgroundColor="{Binding Background}"
-                            StrokeShape="RoundRectangle 22" StrokeThickness="0"
-                            Padding="14,0"
-                            HeightRequest="34">
-                        <Label Text="{Binding Label}"
-                               TextColor="{Binding Foreground}"
-                               FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
-                               VerticalOptions="Center"/>
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ExercisePickerViewModel}}, Path=SelectChipCommand}"
-                                CommandParameter="{Binding .}"/>
-                        </Border.GestureRecognizers>
-                    </Border>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-
-        <!-- Add custom exercise row -->
-        <Border Grid.Row="3"
-                Margin="16,0,16,8"
-                StrokeShape="RoundRectangle 18"
-                BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
-                StrokeThickness="0"
-                Padding="18,14">
-            <Border.Shadow>
-                <Shadow Brush="Black" Offset="0,2" Radius="10" Opacity="0.18"/>
-            </Border.Shadow>
-            <Grid ColumnDefinitions="24,*" ColumnSpacing="10">
-                <Label Grid.Column="0"
-                       Text="+"
-                       FontSize="22" FontAttributes="Bold"
-                       TextColor="{StaticResource ForgeAccentOrange}"
-                       VerticalOptions="Center" HorizontalOptions="Center"/>
-                <Label Grid.Column="1"
-                       Text="Lägg till custom övning"
-                       FontFamily="DMSansMedium" FontSize="15"
-                       TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
-                       VerticalOptions="Center"/>
-            </Grid>
-            <Border.GestureRecognizers>
-                <TapGestureRecognizer Tapped="OnAddCustomExerciseTapped"/>
-            </Border.GestureRecognizers>
-        </Border>
-
-        <CollectionView Grid.Row="4"
+        <CollectionView Grid.Row="1" Grid.RowSpan="4"
                         ItemsSource="{Binding FilteredExercises}"
                         SelectionMode="None"
                         HorizontalScrollBarVisibility="Never"
                         VerticalScrollBarVisibility="Never">
+            <CollectionView.Header>
+                <VerticalStackLayout Spacing="0">
+                    <!-- Pill-formad sökruta (scrollar med) -->
+                    <Border BackgroundColor="{StaticResource ForgeSurface2}"
+                            StrokeShape="RoundRectangle 26"
+                            StrokeThickness="0"
+                            Padding="18,0"
+                            HeightRequest="46"
+                            Margin="16,0,16,10">
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                            <Label Grid.Column="0"
+                                   Text="⌕"
+                                   FontSize="20"
+                                   TextColor="{StaticResource ForgeMuted}"
+                                   VerticalOptions="Center"/>
+                            <Entry Grid.Column="1"
+                                   Text="{Binding Source={RelativeSource AncestorType={x:Type vm:ExercisePickerViewModel}}, Path=SearchText}"
+                                   Placeholder="Sök övning..."
+                                   PlaceholderColor="{StaticResource ForgeMuted}"
+                                   BackgroundColor="Transparent"
+                                   TextColor="{StaticResource ForgeText}"
+                                   FontFamily="DMSansRegular" FontSize="15"
+                                   VerticalOptions="Center"/>
+                        </Grid>
+                    </Border>
+                    <!-- Muskelchips (horisontell scroll) -->
+                    <ScrollView Orientation="Horizontal"
+                                HorizontalScrollBarVisibility="Never"
+                                Margin="16,0,16,8">
+                        <HorizontalStackLayout BindableLayout.ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type vm:ExercisePickerViewModel}}, Path=MuscleChips}"
+                                               Spacing="6">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="vm:MuscleGroupChip">
+                                    <Border BackgroundColor="{Binding Background}"
+                                            StrokeShape="RoundRectangle 22" StrokeThickness="0"
+                                            Padding="14,0"
+                                            HeightRequest="34">
+                                        <Label Text="{Binding Label}"
+                                               TextColor="{Binding Foreground}"
+                                               FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
+                                               VerticalOptions="Center"/>
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ExercisePickerViewModel}}, Path=SelectChipCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                        </Border.GestureRecognizers>
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </HorizontalStackLayout>
+                    </ScrollView>
+                    <!-- Add custom exercise row -->
+                    <Border Margin="16,0,16,8"
+                            StrokeShape="RoundRectangle 18"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
+                            StrokeThickness="0"
+                            Padding="18,14">
+                        <Border.Shadow>
+                            <Shadow Brush="Black" Offset="0,2" Radius="10" Opacity="0.18"/>
+                        </Border.Shadow>
+                        <Grid ColumnDefinitions="24,*" ColumnSpacing="10">
+                            <Label Grid.Column="0"
+                                   Text="+"
+                                   FontSize="22" FontAttributes="Bold"
+                                   TextColor="{StaticResource ForgeAccentOrange}"
+                                   VerticalOptions="Center" HorizontalOptions="Center"/>
+                            <Label Grid.Column="1"
+                                   Text="Lägg till custom övning"
+                                   FontFamily="DMSansMedium" FontSize="15"
+                                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                                   VerticalOptions="Center"/>
+                        </Grid>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnAddCustomExerciseTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+                </VerticalStackLayout>
+            </CollectionView.Header>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="vm:ExercisePickerRow">
                     <Border Margin="16,0,16,8"
