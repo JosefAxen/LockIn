@@ -9,6 +9,7 @@
              x:DataType="vm:BodyWeightViewModel"
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
              Shell.NavBarIsVisible="False"
+             BackgroundColor="Transparent"
              ios:Page.UseSafeArea="False">
 
     <ContentPage.Resources>
@@ -16,6 +17,9 @@
     </ContentPage.Resources>
 
     <Grid RowDefinitions="Auto,*,Auto" SafeAreaEdges="None">
+
+        <!-- Atmosfärisk bakgrund -->
+        <controls:AtmosphericBackgroundView Grid.RowSpan="3" InputTransparent="True"/>
 
         <!-- Header -->
         <Grid Grid.Row="0" Padding="16,56,16,8" ColumnDefinitions="Auto,*">
@@ -37,8 +41,8 @@
                 <Border Style="{StaticResource CardFrame}" Padding="24,20">
                     <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
                         <Label Text="{Binding LatestWeight}"
-                               FontFamily="BebasNeue" FontSize="56"
-                               CharacterSpacing="1"
+                               FontSize="56" FontAttributes="Bold"
+                               CharacterSpacing="-1"
                                TextColor="{AppThemeBinding Light={StaticResource LightAccent}, Dark={StaticResource ForgeAccent}}"
                                HorizontalOptions="Center"/>
                         <Label Text="{Binding LatestDate}"

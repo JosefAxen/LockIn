@@ -4,15 +4,19 @@
              xmlns:vm="clr-namespace:LockIn.ViewModels"
              xmlns:models="clr-namespace:LockIn.Models"
              xmlns:views="clr-namespace:LockIn.Views"
+             xmlns:controls="clr-namespace:LockIn.Controls"
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
              x:Class="LockIn.Views.TrainPage"
              x:DataType="vm:TrainViewModel"
              Title="Träna"
              Shell.NavBarIsVisible="False"
-             BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource ForgeBackground}}"
+             BackgroundColor="Transparent"
              ios:Page.UseSafeArea="False">
 
     <Grid SafeAreaEdges="None">
+
+        <!-- Atmosfärisk bakgrund — renderas under allt annat -->
+        <controls:AtmosphericBackgroundView InputTransparent="True"/>
 
         <!-- Permanent status bar gradient (alltid synlig, fyller Dynamic Island-zonen) -->
         <BoxView VerticalOptions="Start" HeightRequest="90" InputTransparent="True" ZIndex="19">
@@ -62,7 +66,7 @@
                                           HorizontalOptions="Start" Margin="0,0,0,2"
                                           ForceTint="#38BDF8"/>
                             <Label Text="{Binding WeekCount}"
-                                   FontFamily="BebasNeue" FontSize="28"
+                                   FontSize="28" FontAttributes="Bold"
                                    TextColor="{StaticResource ForgeAccentBlue}"/>
                             <Label Text="DENNA VECKA" Style="{StaticResource SectionLabel}" FontSize="9"/>
                         </StackLayout>
@@ -73,7 +77,7 @@
                                           HorizontalOptions="Start" Margin="0,0,0,2"
                                           ForceTint="#FBBF24"/>
                             <Label Text="{Binding Streak}"
-                                   FontFamily="BebasNeue" FontSize="28"
+                                   FontSize="28" FontAttributes="Bold"
                                    TextColor="{StaticResource ForgeAccentAmber}"/>
                             <Label Text="DAGAR STREAK" Style="{StaticResource SectionLabel}" FontSize="9"/>
                         </StackLayout>
@@ -84,7 +88,7 @@
                                           HorizontalOptions="Start" Margin="0,0,0,2"
                                           ForceTint="#A78BFA"/>
                             <Label Text="{Binding TotalCount}"
-                                   FontFamily="BebasNeue" FontSize="28"
+                                   FontSize="28" FontAttributes="Bold"
                                    TextColor="{StaticResource ForgeAccentPurple}"/>
                             <Label Text="TOTALT PASS" Style="{StaticResource SectionLabel}" FontSize="9"/>
                         </StackLayout>

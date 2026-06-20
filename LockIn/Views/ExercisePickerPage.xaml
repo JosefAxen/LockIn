@@ -3,15 +3,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:LockIn.ViewModels"
              xmlns:views="clr-namespace:LockIn.Views"
+             xmlns:controls="clr-namespace:LockIn.Controls"
              x:Class="LockIn.Views.ExercisePickerPage"
              x:DataType="vm:ExercisePickerViewModel"
              Title="Välj övning"
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
              Shell.NavBarIsVisible="False"
              Shell.TabBarIsVisible="False"
+             BackgroundColor="Transparent"
              ios:Page.UseSafeArea="False">
 
     <Grid RowDefinitions="Auto,Auto,Auto,Auto,*" SafeAreaEdges="None">
+
+        <!-- Atmosfärisk bakgrund -->
+        <controls:AtmosphericBackgroundView Grid.RowSpan="5" InputTransparent="True"/>
 
         <Grid Grid.Row="0" Padding="16,56,16,8" ColumnDefinitions="48,*">
             <Border Grid.Column="0"

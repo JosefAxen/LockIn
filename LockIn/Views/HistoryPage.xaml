@@ -3,15 +3,19 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:LockIn.ViewModels"
              xmlns:svc="clr-namespace:LockIn.Services"
+             xmlns:controls="clr-namespace:LockIn.Controls"
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
              x:Class="LockIn.Views.HistoryPage"
              x:DataType="vm:HistoryViewModel"
              Title="Historik"
              Shell.NavBarIsVisible="False"
-             BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource ForgeBackground}}"
+             BackgroundColor="Transparent"
              ios:Page.UseSafeArea="False">
 
     <Grid SafeAreaEdges="None">
+
+        <!-- Atmosfärisk bakgrund -->
+        <controls:AtmosphericBackgroundView InputTransparent="True"/>
 
         <!-- Permanent status bar gradient (alltid synlig, fyller Dynamic Island-zonen) -->
         <BoxView VerticalOptions="Start" HeightRequest="90" InputTransparent="True" ZIndex="19">
@@ -222,7 +226,7 @@
                                             <Grid ColumnDefinitions="*,*,*,Auto">
                                                 <StackLayout Grid.Column="0" Spacing="1">
                                                     <Label Text="{Binding TotalVolume, StringFormat='{0:F0}'}"
-                                                           FontFamily="BebasNeue" FontSize="28"
+                                                           FontSize="28" FontAttributes="Bold"
                                                            TextColor="{StaticResource ForgeAccentBlue}"/>
                                                     <Label Text="KG VOLYM" Style="{StaticResource SectionLabel}"/>
                                                 </StackLayout>
@@ -235,7 +239,7 @@
                                                 <StackLayout Grid.Column="2" Spacing="1"
                                                              IsVisible="{Binding PRCount, Converter={x:Static vm:GreaterThanZeroConverter.Instance}}">
                                                     <Label Text="{Binding PRCount}"
-                                                           FontFamily="BebasNeue" FontSize="28"
+                                                           FontSize="28" FontAttributes="Bold"
                                                            TextColor="{StaticResource ForgeAccentAmber}"/>
                                                     <Label Text="PRs" Style="{StaticResource SectionLabel}"/>
                                                 </StackLayout>

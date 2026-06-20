@@ -2,14 +2,19 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:LockIn.ViewModels"
+             xmlns:controls="clr-namespace:LockIn.Controls"
              x:Class="LockIn.Views.PlateCalculatorPage"
              x:DataType="vm:PlateCalculatorViewModel"
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
              Shell.NavBarIsVisible="False"
              Shell.TabBarIsVisible="False"
+             BackgroundColor="Transparent"
              ios:Page.UseSafeArea="False">
 
     <Grid RowDefinitions="Auto,*" SafeAreaEdges="None">
+
+        <!-- Atmosfärisk bakgrund -->
+        <controls:AtmosphericBackgroundView Grid.RowSpan="2" InputTransparent="True"/>
 
         <!-- Header -->
         <Grid Grid.Row="0" Padding="16,56,16,8" ColumnDefinitions="Auto,*">
@@ -43,7 +48,7 @@
                                            Keyboard="Numeric"
                                            Placeholder="0"
                                            PlaceholderColor="{StaticResource ForgeTextSecondary}"
-                                           FontFamily="BebasNeue" FontSize="34"
+                                           FontSize="34" FontAttributes="Bold"
                                            BackgroundColor="Transparent"
                                            TextColor="{StaticResource ForgeText}"
                                            HeightRequest="62"/>
@@ -69,7 +74,7 @@
                                     <Entry Grid.Column="0"
                                            Text="{Binding BarWeightText}"
                                            Keyboard="Numeric"
-                                           FontFamily="BebasNeue" FontSize="34"
+                                           FontSize="34" FontAttributes="Bold"
                                            BackgroundColor="Transparent"
                                            TextColor="{StaticResource ForgeText}"
                                            HeightRequest="62"/>

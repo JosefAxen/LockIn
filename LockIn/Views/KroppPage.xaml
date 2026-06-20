@@ -10,10 +10,13 @@
              x:DataType="vm:KroppViewModel"
              Title="Kropp"
              Shell.NavBarIsVisible="False"
-             BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource ForgeBackground}}"
+             BackgroundColor="Transparent"
              ios:Page.UseSafeArea="False">
 
     <Grid SafeAreaEdges="None">
+
+        <!-- Atmosfärisk bakgrund -->
+        <controls:AtmosphericBackgroundView InputTransparent="True"/>
 
         <!-- Permanent status bar gradient (alltid synlig, fyller Dynamic Island-zonen) -->
         <BoxView VerticalOptions="Start" HeightRequest="90" InputTransparent="True" ZIndex="19">
@@ -139,8 +142,8 @@
                         <Border Style="{StaticResource CardFrame}" Padding="24,20">
                             <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
                                 <Label Text="{Binding LatestWeight}"
-                                       FontFamily="BebasNeue" FontSize="60"
-                                       CharacterSpacing="1"
+                                       FontSize="60" FontAttributes="Bold"
+                                       CharacterSpacing="-1"
                                        TextColor="{AppThemeBinding Light={StaticResource LightAccentBlue}, Dark={StaticResource ForgeAccentBlue}}"
                                        HorizontalOptions="Center"/>
                                 <Label Text="{Binding LatestWeightDate}"

@@ -4,13 +4,18 @@
              xmlns:vm="clr-namespace:LockIn.ViewModels"
              xmlns:svc="clr-namespace:LockIn.Services"
              xmlns:views="clr-namespace:LockIn.Views"
+             xmlns:controls="clr-namespace:LockIn.Controls"
              x:Class="LockIn.Views.SessionDetailPage"
              x:DataType="vm:SessionDetailViewModel"
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
              Shell.NavBarIsVisible="False"
+             BackgroundColor="Transparent"
              ios:Page.UseSafeArea="False">
 
     <Grid RowDefinitions="Auto,*" SafeAreaEdges="None">
+
+        <!-- Atmosfärisk bakgrund -->
+        <controls:AtmosphericBackgroundView Grid.RowSpan="2" InputTransparent="True"/>
 
         <!-- Header -->
         <Grid Grid.Row="0" Padding="16,56,20,12" ColumnDefinitions="48,*">

@@ -9,6 +9,7 @@
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
              Shell.NavBarIsVisible="False"
              Shell.TabBarIsVisible="False"
+             BackgroundColor="Transparent"
              ios:Page.UseSafeArea="False">
 
     <ContentPage.Resources>
@@ -16,6 +17,9 @@
     </ContentPage.Resources>
 
     <Grid SafeAreaEdges="None">
+
+        <!-- Atmosfärisk bakgrund -->
+        <controls:AtmosphericBackgroundView InputTransparent="True"/>
 
         <!-- Celebration gradient — edge-to-edge inkl. Dynamic Island -->
         <BoxView VerticalOptions="Start" HeightRequest="200" InputTransparent="True" ZIndex="1">
@@ -55,7 +59,7 @@
                     <Border Grid.Column="0" Style="{StaticResource CardFrame}" Padding="14,16">
                         <StackLayout Spacing="4">
                             <Label Text="{Binding TotalVolume}"
-                                   FontFamily="BebasNeue" FontSize="40" LineHeight="1"
+                                   FontSize="40" FontAttributes="Bold" LineHeight="1" CharacterSpacing="-1"
                                    TextColor="{StaticResource ForgeAccentBlue}"/>
                             <Label Text="KG VOLYM" Style="{StaticResource SectionLabel}"/>
                         </StackLayout>
@@ -63,7 +67,7 @@
                     <Border Grid.Column="1" Style="{StaticResource CardFrame}" Padding="14,16">
                         <StackLayout Spacing="4">
                             <Label Text="{Binding TotalSets}"
-                                   FontFamily="BebasNeue" FontSize="40" LineHeight="1"
+                                   FontSize="40" FontAttributes="Bold" LineHeight="1" CharacterSpacing="-1"
                                    TextColor="{StaticResource ForgeAccentPurple}"/>
                             <Label Text="SET" Style="{StaticResource SectionLabel}"/>
                         </StackLayout>
@@ -71,7 +75,7 @@
                     <Border Grid.Column="2" Style="{StaticResource CardFrame}" Padding="14,16">
                         <StackLayout Spacing="4">
                             <Label Text="{Binding PrCount}"
-                                   FontFamily="BebasNeue" FontSize="40" LineHeight="1"
+                                   FontSize="40" FontAttributes="Bold" LineHeight="1" CharacterSpacing="-1"
                                    TextColor="{StaticResource ForgeAccentAmber}"/>
                             <Label Text="PR" Style="{StaticResource SectionLabel}"/>
                         </StackLayout>

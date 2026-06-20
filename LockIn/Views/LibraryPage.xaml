@@ -5,12 +5,13 @@
              xmlns:models="clr-namespace:LockIn.Models"
              xmlns:data="clr-namespace:LockIn.Data"
              xmlns:views="clr-namespace:LockIn.Views"
+             xmlns:controls="clr-namespace:LockIn.Controls"
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
              x:Class="LockIn.Views.LibraryPage"
              x:DataType="vm:LibraryViewModel"
              Title="Bibliotek"
              Shell.NavBarIsVisible="False"
-             BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource ForgeBackground}}"
+             BackgroundColor="Transparent"
              ios:Page.UseSafeArea="False">
 
     <ContentPage.Resources>
@@ -19,6 +20,9 @@
     </ContentPage.Resources>
 
     <Grid RowDefinitions="Auto,Auto,Auto,Auto,*" SafeAreaEdges="None">
+
+        <!-- Atmosfärisk bakgrund -->
+        <controls:AtmosphericBackgroundView Grid.RowSpan="5" InputTransparent="True"/>
 
         <!-- Permanent status bar gradient (alltid synlig, fyller Dynamic Island-zonen) -->
         <BoxView Grid.RowSpan="6" VerticalOptions="Start" HeightRequest="90" InputTransparent="True" ZIndex="19">
