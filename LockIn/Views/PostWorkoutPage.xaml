@@ -17,45 +17,63 @@
 
     <Grid SafeAreaEdges="None">
 
-    <Grid RowDefinitions="Auto,*,Auto">
+        <!-- Celebration gradient — edge-to-edge inkl. Dynamic Island -->
+        <BoxView VerticalOptions="Start" HeightRequest="200" InputTransparent="True" ZIndex="1">
+            <BoxView.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#1A4ADE80" Offset="0.0"/>
+                    <GradientStop Color="Transparent" Offset="1.0"/>
+                </LinearGradientBrush>
+            </BoxView.Background>
+        </BoxView>
 
-        <Grid Grid.Row="0" Padding="20,56,20,8">
-            <Label Text="{Binding TemplateName}"
-                   Style="{StaticResource DisplayLabel}"
-                   FontSize="28"/>
-            <Label Text="{Binding Duration}"
-                   Style="{StaticResource MutedLabel}"
-                   FontSize="14"
-                   HorizontalOptions="End" VerticalOptions="Center"/>
-        </Grid>
+    <Grid RowDefinitions="Auto,*,Auto" ZIndex="2">
+
+        <VerticalStackLayout Grid.Row="0" Padding="20,56,20,12" Spacing="4">
+            <Label Text="BRA JOBBAT"
+                   Style="{StaticResource SectionLabel}"
+                   TextColor="{StaticResource ForgeAccent}"/>
+            <Grid ColumnDefinitions="*,Auto">
+                <Label Grid.Column="0"
+                       Text="{Binding TemplateName}"
+                       Style="{StaticResource DisplayLabel}"
+                       FontSize="32"
+                       VerticalOptions="Center"/>
+                <Label Grid.Column="1"
+                       Text="{Binding Duration}"
+                       Style="{StaticResource MutedLabel}"
+                       FontSize="13"
+                       VerticalOptions="End" Margin="0,0,0,4"/>
+            </Grid>
+        </VerticalStackLayout>
 
         <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Never">
             <StackLayout Padding="16,0,16,32" Spacing="16">
 
                 <!-- Stats row -->
                 <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
-                    <Border Grid.Column="0" Style="{StaticResource CardFrame}" Padding="14,12">
-                        <StackLayout Spacing="2">
+                    <Border Grid.Column="0" Style="{StaticResource CardFrame}" Padding="14,16">
+                        <StackLayout Spacing="4">
                             <Label Text="{Binding TotalVolume}"
-                                   FontFamily="BebasNeue" FontSize="26"
+                                   FontFamily="BebasNeue" FontSize="40" LineHeight="1"
                                    TextColor="{StaticResource ForgeAccentBlue}"/>
-                            <Label Text="Volym (kg)" Style="{StaticResource MutedLabel}"/>
+                            <Label Text="KG VOLYM" Style="{StaticResource SectionLabel}"/>
                         </StackLayout>
                     </Border>
-                    <Border Grid.Column="1" Style="{StaticResource CardFrame}" Padding="14,12">
-                        <StackLayout Spacing="2">
+                    <Border Grid.Column="1" Style="{StaticResource CardFrame}" Padding="14,16">
+                        <StackLayout Spacing="4">
                             <Label Text="{Binding TotalSets}"
-                                   FontFamily="BebasNeue" FontSize="26"
+                                   FontFamily="BebasNeue" FontSize="40" LineHeight="1"
                                    TextColor="{StaticResource ForgeAccentPurple}"/>
-                            <Label Text="Set" Style="{StaticResource MutedLabel}"/>
+                            <Label Text="SET" Style="{StaticResource SectionLabel}"/>
                         </StackLayout>
                     </Border>
-                    <Border Grid.Column="2" Style="{StaticResource CardFrame}" Padding="14,12">
-                        <StackLayout Spacing="2">
+                    <Border Grid.Column="2" Style="{StaticResource CardFrame}" Padding="14,16">
+                        <StackLayout Spacing="4">
                             <Label Text="{Binding PrCount}"
-                                   FontFamily="BebasNeue" FontSize="26"
+                                   FontFamily="BebasNeue" FontSize="40" LineHeight="1"
                                    TextColor="{StaticResource ForgeAccentAmber}"/>
-                            <Label Text="PR" Style="{StaticResource MutedLabel}"/>
+                            <Label Text="PR" Style="{StaticResource SectionLabel}"/>
                         </StackLayout>
                     </Border>
                 </Grid>
@@ -70,10 +88,13 @@
                                     <Label Grid.Column="0" Text="{Binding Name}"
                                            Style="{StaticResource MutedLabel}"
                                            VerticalOptions="Center"/>
-                                    <ProgressBar Grid.Column="1"
-                                                 Progress="{Binding ProgressFraction}"
-                                                 ProgressColor="{StaticResource ForgeAccent}"
-                                                 VerticalOptions="Center"/>
+                                    <Grid Grid.Column="1" HeightRequest="4" VerticalOptions="Center">
+                                        <BoxView BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface3}}"
+                                                 CornerRadius="2" HorizontalOptions="Fill" VerticalOptions="Fill"/>
+                                        <BoxView BackgroundColor="{StaticResource ForgeAccent}"
+                                                 CornerRadius="2" HorizontalOptions="Fill" VerticalOptions="Fill"
+                                                 AnchorX="0" ScaleX="{Binding ProgressFraction}"/>
+                                    </Grid>
                                     <StackLayout Grid.Column="2" Spacing="0">
                                         <Label Text="{Binding VolumeDisplay}"
                                                FontFamily="DMSansMedium" FontSize="12"

@@ -310,6 +310,9 @@
                 Margin="0,0,20,100"
                 HeightRequest="48" WidthRequest="162"
                 Padding="18,0">
+            <Border.Shadow>
+                <Shadow Brush="#4ADE80" Offset="0,4" Radius="20" Opacity="0.35"/>
+            </Border.Shadow>
             <HorizontalStackLayout Spacing="8" HorizontalOptions="Center" VerticalOptions="Center">
                 <views:AppIcon Source="ic_play.png"
                                WidthRequest="16" HeightRequest="16"

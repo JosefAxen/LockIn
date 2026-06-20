@@ -196,7 +196,8 @@
                         </Border.GestureRecognizers>
                         <Grid ColumnDefinitions="4,*">
                             <BoxView Grid.Column="0"
-                                     BackgroundColor="{Binding MuscleGroup, Converter={StaticResource MuscleGroupColorConverter}}"/>
+                                     BackgroundColor="{Binding MuscleGroup, Converter={StaticResource MuscleGroupColorConverter}}"
+                                     CornerRadius="16,0,0,16"/>
                             <Grid Grid.Column="1" ColumnDefinitions="*,Auto" Padding="14,12,14,12">
                                 <VerticalStackLayout Grid.Column="0" Spacing="3" VerticalOptions="Center">
                                     <Label Text="{Binding Name}"
@@ -211,7 +212,7 @@
                                         StrokeShape="RoundRectangle 6"
                                         StrokeThickness="0" Padding="8,4"
                                         VerticalOptions="Center">
-                                    <Label Text="EIGEN" TextColor="{StaticResource ForgeAccentOrange}"
+                                    <Label Text="EGNA" TextColor="{StaticResource ForgeAccentOrange}"
                                            FontSize="10" FontFamily="BebasNeue"
                                            CharacterSpacing="1"/>
                                 </Border>
@@ -231,40 +232,50 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:WorkoutTemplate">
                         <Border Margin="16,0,16,10"
-                                Style="{StaticResource CardFrame}">
+                                Style="{StaticResource CardFrame}"
+                                Padding="0">
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer
                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}}, Path=EditTemplateCommand}"
                                     CommandParameter="{Binding .}"/>
                             </Border.GestureRecognizers>
-                            <Grid ColumnDefinitions="*,44,40" Padding="16,12,8,12" ColumnSpacing="4">
-                                <Label Grid.Column="0"
-                                       Text="{Binding Name}"
-                                       FontFamily="DMSansMedium" FontSize="15"
-                                       VerticalOptions="Center"/>
-                                <Border Grid.Column="1"
-                                        WidthRequest="36" HeightRequest="36"
-                                        BackgroundColor="{StaticResource ForgeAccentOrange}"
-                                        StrokeShape="Ellipse" StrokeThickness="0">
-                                    <views:AppIcon Source="ic_play.png"
-                                                   WidthRequest="18" HeightRequest="18"
-                                                   ForceTint="White"
-                                                   HorizontalOptions="Center"
-                                                   VerticalOptions="Center"/>
-                                    <Border.GestureRecognizers>
-                                        <TapGestureRecognizer
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}}, Path=StartFromTemplateCommand}"
+                            <Grid ColumnDefinitions="4,*">
+                                <BoxView Grid.Column="0"
+                                         BackgroundColor="{StaticResource ForgeAccentOrange}"
+                                         CornerRadius="16,0,0,16"/>
+                                <Grid Grid.Column="1" ColumnDefinitions="*,44,40"
+                                      Padding="14,14,8,14" ColumnSpacing="4">
+                                    <StackLayout Grid.Column="0" Spacing="2" VerticalOptions="Center">
+                                        <Label Text="{Binding Name}"
+                                               FontFamily="BebasNeue" FontSize="20" CharacterSpacing="1"/>
+                                        <Label Text="TRYCK FÖR ATT REDIGERA"
+                                               Style="{StaticResource SectionLabel}" FontSize="9"/>
+                                    </StackLayout>
+                                    <Border Grid.Column="1"
+                                            WidthRequest="36" HeightRequest="36"
+                                            BackgroundColor="{StaticResource ForgeAccentOrange}"
+                                            StrokeShape="Ellipse" StrokeThickness="0"
+                                            VerticalOptions="Center">
+                                        <views:AppIcon Source="ic_play.png"
+                                                       WidthRequest="18" HeightRequest="18"
+                                                       ForceTint="White"
+                                                       HorizontalOptions="Center"
+                                                       VerticalOptions="Center"/>
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}}, Path=StartFromTemplateCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                        </Border.GestureRecognizers>
+                                    </Border>
+                                    <Button Grid.Column="2"
+                                            Text="✕"
+                                            BackgroundColor="Transparent"
+                                            TextColor="{StaticResource ForgeMuted}"
+                                            FontSize="15" HeightRequest="36"
+                                            Padding="0"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}}, Path=DeleteTemplateCommand}"
                                             CommandParameter="{Binding .}"/>
-                                    </Border.GestureRecognizers>
-                                </Border>
-                                <Button Grid.Column="2"
-                                        Text="✕"
-                                        BackgroundColor="Transparent"
-                                        TextColor="{StaticResource ForgeMuted}"
-                                        FontSize="15" HeightRequest="36"
-                                        Padding="0"
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}}, Path=DeleteTemplateCommand}"
-                                        CommandParameter="{Binding .}"/>
+                                </Grid>
                             </Grid>
                         </Border>
                     </DataTemplate>
