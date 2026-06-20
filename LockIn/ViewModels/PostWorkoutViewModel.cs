@@ -31,8 +31,7 @@ public partial class PostWorkoutViewModel(DatabaseService db, IHealthService hea
     {
         IsLoading = true;
 
-        var sessions = await db.GetSessionsAsync();
-        var session = sessions.FirstOrDefault(s => s.Id == sessionId);
+        var session = await db.GetSessionAsync(sessionId);
         if (session is null) { IsLoading = false; return; }
 
         _loadedSession = session;
@@ -47,8 +46,11 @@ public partial class PostWorkoutViewModel(DatabaseService db, IHealthService hea
             Duration = $"{(int)elapsed.TotalMinutes}m";
         }
 
-        var muscleVolume = await db.GetSessionVolumeByMuscleGroupAsync(sessionId);
-        var allSets = await GetAllSessionSetsAsync(sessionId);
+        var muscleTask = db.GetSessionVolumeByMuscleGroupAsync(sessionId);
+        var setsTask   = db.GetAllSetsForSessionAsync(sessionId);
+        await Task.WhenAll(muscleTask, setsTask);
+        var muscleVolume = muscleTask.Result;
+        var allSets = setsTask.Result;
 
         var totalVol = allSets.Sum(s => s.WeightKg * s.Reps);
         TotalVolume = totalVol >= 1000
@@ -77,12 +79,15 @@ public partial class PostWorkoutViewModel(DatabaseService db, IHealthService hea
         PRs.Clear();
         if (prSets.Count > 0)
         {
-            var seById      = (await db.GetSessionExercisesAsync(sessionId)).ToDictionary(se => se.Id);
-            var exerciseById = (await db.GetExercisesAsync()).ToDictionary(e => e.Id);
+            var seTask  = db.GetSessionExercisesAsync(sessionId);
+            var exTask  = db.GetExercisesAsync();
+            await Task.WhenAll(seTask, exTask);
+            var seById      = seTask.Result.ToDictionary(se => se.Id);
+            var exerciseById = exTask.Result.ToDictionary(e => e.Id);
             foreach (var ps in prSets)
             {
                 seById.TryGetValue(ps.SessionExerciseId, out var seRow);
-                exerciseById.TryGetValue(seRow?.ExerciseId ?? -1, out var exercise);
+                var exercise = seRow is not null && exerciseById.TryGetValue(seRow.ExerciseId, out var ex) ? ex : null;
                 PRs.Add(new PRRow
                 {
                     ExerciseName = exercise?.Name ?? "",
@@ -204,7 +209,7 @@ public partial class PostWorkoutViewModel(DatabaseService db, IHealthService hea
                             await SavePhotoFileAsync(file, _loadedSession.Id, dir);
             }
         }
-        catch { return; }
+        catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"[Photos] Fel vid fotoval: {ex.Message}"); return; }
 
         await RefreshPhotosAsync();
     }
@@ -239,18 +244,6 @@ public partial class PostWorkoutViewModel(DatabaseService db, IHealthService hea
         if (!confirmed) return;
         await db.DeletePhotoAsync(row.Photo);
         Photos.Remove(row);
-    }
-
-    private async Task<List<LoggedSet>> GetAllSessionSetsAsync(int sessionId)
-    {
-        var ses = await db.GetSessionExercisesAsync(sessionId);
-        var result = new List<LoggedSet>();
-        foreach (var se in ses)
-        {
-            var sets = await db.GetSetsForSessionExerciseAsync(se.Id);
-            result.AddRange(sets);
-        }
-        return result;
     }
 
     [RelayCommand]

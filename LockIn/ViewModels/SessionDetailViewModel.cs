@@ -96,7 +96,7 @@ public partial class SessionDetailViewModel(DatabaseService db) : ObservableObje
                             await SavePhotoFileAsync(file, dir);
             }
         }
-        catch { return; }
+        catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"[Photos] Fel vid fotoval: {ex.Message}"); return; }
 
         await RefreshPhotosAsync();
     }

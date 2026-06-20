@@ -95,7 +95,19 @@ public class HealthKitService : IHealthService
         catch (TimeoutException) { System.Diagnostics.Debug.WriteLine("[HealthKit] SaveEnergy timeout"); }
     }
 
-    private async Task<double> GetTodaySumAsync(HKQuantityTypeIdentifier typeId, HKUnit unit)
+    private Task<double> GetTodaySumAsync(HKQuantityTypeIdentifier typeId, HKUnit unit) =>
+        GetTodayStatAsync(typeId, unit, HKStatisticsOptions.CumulativeSum,
+            (r, u) => r.SumQuantity()?.GetDoubleValue(u) ?? 0);
+
+    private Task<double> GetTodayDiscreteMaxAsync(HKQuantityTypeIdentifier typeId, HKUnit unit) =>
+        GetTodayStatAsync(typeId, unit, HKStatisticsOptions.DiscreteMax,
+            (r, u) => r.MaximumQuantity()?.GetDoubleValue(u) ?? 0);
+
+    private async Task<double> GetTodayStatAsync(
+        HKQuantityTypeIdentifier typeId,
+        HKUnit unit,
+        HKStatisticsOptions options,
+        Func<HKStatistics, HKUnit, double> extract)
     {
         if (!HKHealthStore.IsHealthDataAvailable) return 0.0;
         var type = HKQuantityType.Create(typeId);
@@ -105,36 +117,13 @@ public class HealthKitService : IHealthService
         var end   = ToNSDate(DateTime.Now);
         var pred  = HKQuery.GetPredicateForSamples(start, end, HKQueryOptions.StrictStartDate);
 
-        var tcs   = new TaskCompletionSource<double>(TaskCreationOptions.RunContinuationsAsynchronously);
-        var query = new HKStatisticsQuery(type, pred, HKStatisticsOptions.CumulativeSum,
+        var tcs = new TaskCompletionSource<double>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var query = new HKStatisticsQuery(type, pred, options,
             (_, result, err) =>
             {
                 if (err is not null)
                     System.Diagnostics.Debug.WriteLine($"[HealthKit] Frågefel {typeId}: {err.LocalizedDescription}");
-                tcs.TrySetResult(result?.SumQuantity()?.GetDoubleValue(unit) ?? 0);
-            });
-        _store.ExecuteQuery(query);
-        try   { return await tcs.Task.WaitAsync(TimeSpan.FromSeconds(10)); }
-        catch (TimeoutException) { return 0.0; }
-    }
-
-    private async Task<double> GetTodayDiscreteMaxAsync(HKQuantityTypeIdentifier typeId, HKUnit unit)
-    {
-        if (!HKHealthStore.IsHealthDataAvailable) return 0.0;
-        var type = HKQuantityType.Create(typeId);
-        if (type is null) return 0.0;
-
-        var start = ToNSDate(DateTime.Today);
-        var end   = ToNSDate(DateTime.Now);
-        var pred  = HKQuery.GetPredicateForSamples(start, end, HKQueryOptions.StrictStartDate);
-
-        var tcs   = new TaskCompletionSource<double>(TaskCreationOptions.RunContinuationsAsynchronously);
-        var query = new HKStatisticsQuery(type, pred, HKStatisticsOptions.DiscreteMax,
-            (_, result, err) =>
-            {
-                if (err is not null)
-                    System.Diagnostics.Debug.WriteLine($"[HealthKit] Frågefel {typeId}: {err.LocalizedDescription}");
-                tcs.TrySetResult(result?.MaximumQuantity()?.GetDoubleValue(unit) ?? 0);
+                tcs.TrySetResult(result is not null ? extract(result, unit) : 0.0);
             });
         _store.ExecuteQuery(query);
         try   { return await tcs.Task.WaitAsync(TimeSpan.FromSeconds(10)); }

@@ -257,6 +257,12 @@ public class DatabaseService
         return session.Id == 0 ? await _db.InsertAsync(session) : await _db.UpdateAsync(session);
     }
 
+    public async Task<WorkoutSession?> GetSessionAsync(int id)
+    {
+        await InitAsync();
+        return await _db.Table<WorkoutSession>().Where(s => s.Id == id).FirstOrDefaultAsync();
+    }
+
     public async Task<List<WorkoutSession>> GetSessionsAsync()
     {
         await InitAsync();
@@ -293,6 +299,16 @@ public class DatabaseService
             .Where(s => s.SessionExerciseId == sessionExerciseId)
             .OrderBy(s => s.SetNumber)
             .ToListAsync();
+    }
+
+    public async Task<List<LoggedSet>> GetAllSetsForSessionAsync(int sessionId)
+    {
+        await InitAsync();
+        return await _db.QueryAsync<LoggedSet>(
+            @"SELECT ls.* FROM LoggedSets ls
+              JOIN SessionExercises se ON se.Id = ls.SessionExerciseId
+              WHERE se.SessionId = ?
+              ORDER BY se.Id, ls.SetNumber", sessionId);
     }
 
     public async Task<List<LoggedSet>> GetAllSetsForExerciseAsync(int exerciseId)
