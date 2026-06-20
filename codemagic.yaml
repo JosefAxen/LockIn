@@ -20,7 +20,7 @@ workflows:
           dotnet workload install maui-ios
 
           # ── Keychain ───────────────────────────────────────────
-          KEYCHAIN_PATH=$RUNNER_TEMP/build.keychain
+          KEYCHAIN_PATH=/tmp/build.keychain
           security create-keychain -p "" $KEYCHAIN_PATH
           security default-keychain -s $KEYCHAIN_PATH
           security unlock-keychain -p "" $KEYCHAIN_PATH
