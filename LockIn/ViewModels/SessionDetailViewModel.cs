@@ -74,35 +74,42 @@ public partial class SessionDetailViewModel(DatabaseService db) : ObservableObje
     private async Task AddPhotoAsync()
     {
         var action = await Shell.Current.DisplayActionSheetAsync("Lägg till foto", "Avbryt", null, "Ta foto", "Välj från bibliotek");
-        FileResult? file = null;
+        var dir = Path.Combine(FileSystem.AppDataDirectory, "photos");
+        Directory.CreateDirectory(dir);
 
         try
         {
             if (action == "Ta foto")
-                file = await MediaPicker.Default.CapturePhotoAsync();
+            {
+                var file = await MediaPicker.Default.CapturePhotoAsync();
+                if (file is not null)
+                    await SavePhotoFileAsync(file, dir);
+            }
             else if (action == "Välj från bibliotek")
-                file = (await MediaPicker.Default.PickPhotosAsync())?.FirstOrDefault();
+            {
+                var files = await MediaPicker.Default.PickPhotosAsync();
+                if (files is not null)
+                    foreach (var file in files)
+                        await SavePhotoFileAsync(file, dir);
+            }
         }
         catch { return; }
 
-        if (file is null) return;
+        await RefreshPhotosAsync();
+    }
 
-        var dir = Path.Combine(FileSystem.AppDataDirectory, "photos");
-        Directory.CreateDirectory(dir);
-        var destPath = Path.Combine(dir, $"session_{_sessionId}_{DateTime.Now:yyyyMMdd_HHmmss}.jpg");
-
+    private async Task SavePhotoFileAsync(FileResult file, string dir)
+    {
+        var destPath = Path.Combine(dir, $"session_{_sessionId}_{Guid.NewGuid():N}.jpg");
         using var stream = await file.OpenReadAsync();
         using var dest = File.Create(destPath);
         await stream.CopyToAsync(dest);
-
         await db.SavePhotoAsync(new WorkoutPhoto
         {
             SessionId = _sessionId,
             FilePath = destPath,
             TakenAt = DateTime.Now
         });
-
-        await RefreshPhotosAsync();
     }
 
     [RelayCommand]

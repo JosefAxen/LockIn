@@ -76,41 +76,20 @@ public class HealthKitService : IHealthService
     {
         if (!HKHealthStore.IsHealthDataAvailable) return;
 
-        var startDate = ToNSDate(start);
-        var endDate   = ToNSDate(end);
-        var kcalQty   = HKQuantity.FromQuantity(s_kcal, activeKcal);
+        var energyType = HKQuantityType.Create(HKQuantityTypeIdentifier.ActiveEnergyBurned);
+        if (energyType is null) return;
 
-        var workout = HKWorkout.Create(
-            HKWorkoutActivityType.TraditionalStrengthTraining,
-            startDate,
-            endDate,
-            (HKWorkoutEvent[]?)null,
-            kcalQty,
-            (HKQuantity?)null,
-            (NSDictionary?)null);
+        var kcalQty = HKQuantity.FromQuantity(s_kcal, Math.Max(0, activeKcal));
+        var sample  = HKQuantitySample.FromType(energyType, kcalQty, ToNSDate(start), ToNSDate(end));
 
-        var tcs1 = new TaskCompletionSource<bool>();
-        _store.SaveObject(workout, (ok, err) =>
+        var tcs = new TaskCompletionSource<bool>();
+        _store.SaveObject(sample, (ok, err) =>
         {
             if (err is not null)
-                System.Diagnostics.Debug.WriteLine($"[HealthKit] SaveWorkout: {err.LocalizedDescription}");
-            tcs1.TrySetResult(ok);
+                System.Diagnostics.Debug.WriteLine($"[HealthKit] SaveEnergy: {err.LocalizedDescription}");
+            tcs.TrySetResult(ok);
         });
-
-        if (!await tcs1.Task) return;
-
-        var energyType = HKQuantityType.Create(HKQuantityTypeIdentifier.ActiveEnergyBurned)!;
-        var sample     = HKQuantitySample.FromType(energyType, kcalQty, startDate, endDate);
-
-        var tcs2 = new TaskCompletionSource<bool>();
-        _store.AddSamples(new HKSample[] { sample }, workout, (ok, err) =>
-        {
-            if (err is not null)
-                System.Diagnostics.Debug.WriteLine($"[HealthKit] AddSamples: {err.LocalizedDescription}");
-            tcs2.TrySetResult(ok);
-        });
-
-        await tcs2.Task;
+        await tcs.Task;
     }
 
     private Task<double> GetTodaySumAsync(HKQuantityTypeIdentifier typeId, HKUnit unit)

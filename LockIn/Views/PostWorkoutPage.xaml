@@ -8,6 +8,7 @@
              x:DataType="vm:PostWorkoutViewModel"
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
              Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False"
              ios:Page.UseSafeArea="False">
 
     <ContentPage.Resources>

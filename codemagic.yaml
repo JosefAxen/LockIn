@@ -21,6 +21,7 @@ workflows:
 
           # ── Keychain ───────────────────────────────────────────
           KEYCHAIN_PATH=/tmp/build.keychain
+          security delete-keychain $KEYCHAIN_PATH 2>/dev/null || true
           security create-keychain -p "" $KEYCHAIN_PATH
           security default-keychain -s $KEYCHAIN_PATH
           security unlock-keychain -p "" $KEYCHAIN_PATH
@@ -54,6 +55,7 @@ workflows:
             > ~/.appstoreconnect/private_keys/AuthKey_${APP_STORE_CONNECT_KEY_IDENTIFIER}.p8
 
           IPA=$(find . -name "*.ipa" | head -1)
+          [ -z "$IPA" ] && echo "ERROR: ingen IPA hittades" && exit 1
           xcrun altool --upload-app \
             --type ios \
             --file "$IPA" \

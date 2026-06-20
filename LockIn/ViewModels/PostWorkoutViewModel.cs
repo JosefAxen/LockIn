@@ -178,35 +178,42 @@ public partial class PostWorkoutViewModel(DatabaseService db, IHealthService hea
         if (_loadedSession is null) return;
 
         var action = await Shell.Current.DisplayActionSheetAsync("Lägg till foto", "Avbryt", null, "Ta foto", "Välj från bibliotek");
-        FileResult? file = null;
+        var dir = Path.Combine(FileSystem.AppDataDirectory, "photos");
+        Directory.CreateDirectory(dir);
 
         try
         {
             if (action == "Ta foto")
-                file = await MediaPicker.Default.CapturePhotoAsync();
+            {
+                var file = await MediaPicker.Default.CapturePhotoAsync();
+                if (file is not null)
+                    await SavePhotoFileAsync(file, _loadedSession.Id, dir);
+            }
             else if (action == "Välj från bibliotek")
-                file = (await MediaPicker.Default.PickPhotosAsync())?.FirstOrDefault();
+            {
+                var files = await MediaPicker.Default.PickPhotosAsync();
+                if (files is not null)
+                    foreach (var file in files)
+                        await SavePhotoFileAsync(file, _loadedSession.Id, dir);
+            }
         }
         catch { return; }
 
-        if (file is null) return;
+        await RefreshPhotosAsync();
+    }
 
-        var dir = Path.Combine(FileSystem.AppDataDirectory, "photos");
-        Directory.CreateDirectory(dir);
-        var destPath = Path.Combine(dir, $"session_{_loadedSession.Id}_{DateTime.Now:yyyyMMdd_HHmmss}.jpg");
-
+    private async Task SavePhotoFileAsync(FileResult file, int sessionId, string dir)
+    {
+        var destPath = Path.Combine(dir, $"session_{sessionId}_{Guid.NewGuid():N}.jpg");
         using var stream = await file.OpenReadAsync();
         using var dest = File.Create(destPath);
         await stream.CopyToAsync(dest);
-
         await db.SavePhotoAsync(new WorkoutPhoto
         {
-            SessionId = _loadedSession.Id,
+            SessionId = sessionId,
             FilePath = destPath,
             TakenAt = DateTime.Now
         });
-
-        await RefreshPhotosAsync();
     }
 
     [RelayCommand]
