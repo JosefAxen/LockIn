@@ -10,7 +10,7 @@ workflows:
         distribution_type: app_store
         bundle_identifier: com.josefaxen.lockin
       groups:
-        - app_store_connect
+        - LockIn
 
     scripts:
       - name: Installera .NET 10
