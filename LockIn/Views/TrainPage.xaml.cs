@@ -22,12 +22,9 @@ public partial class TrainPage : ContentPage
     {
         base.OnAppearing();
         _muscleBarIndex = 0;
-        if (_state.IsActive)
-        {
-            Dispatcher.Dispatch(async () =>
-                await Shell.Current.GoToAsync(nameof(ActiveWorkoutPage)));
-            return;
-        }
+        // Tidigare fanns en if(_state.IsActive) redirect till ActiveWorkoutPage här —
+        // den skapade en evig loop när användaren tryckte tillbaka från passet.
+        // Borttagen. Användaren kommer tillbaka till passet via "PASS PÅGÅR"-bannern.
 
         StickyHeader.Opacity = 0;
         Content.Opacity = 0;
