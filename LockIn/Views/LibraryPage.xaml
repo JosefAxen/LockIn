@@ -274,7 +274,7 @@
                             <Grid ColumnDefinitions="12,*,44,40" ColumnSpacing="10">
                                 <Ellipse Grid.Column="0"
                                          WidthRequest="10" HeightRequest="10"
-                                         Fill="{StaticResource ForgeAccentOrange}"
+                                         Fill="{StaticResource ForgeAccentCoral}"
                                          VerticalOptions="Center"/>
                                 <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
                                     <Label Text="{Binding Name}"
@@ -284,7 +284,7 @@
                                 </StackLayout>
                                 <Border Grid.Column="2"
                                         WidthRequest="36" HeightRequest="36"
-                                        BackgroundColor="{StaticResource ForgeAccentOrange}"
+                                        BackgroundColor="{StaticResource ForgeAccentCoral}"
                                         StrokeShape="Ellipse" StrokeThickness="0"
                                         VerticalOptions="Center">
                                     <views:AppIcon Source="ic_play.png"
@@ -349,11 +349,11 @@
                                            FontFamily="BebasNeue" FontSize="20"
                                            CharacterSpacing="1"/>
                                     <Border Grid.Column="1"
-                                            BackgroundColor="{StaticResource ForgeAccentAmberDim}"
+                                            BackgroundColor="{StaticResource ForgeAccentPurpleDim}"
                                             StrokeShape="RoundRectangle 10"
                                             StrokeThickness="0" Padding="10,5">
                                         <Label Text="{Binding DaysPerWeek, StringFormat='{0} dgr/v'}"
-                                               TextColor="{StaticResource ForgeAccentAmber}"
+                                               TextColor="{StaticResource ForgeAccentPurple}"
                                                FontFamily="DMSansMedium" FontSize="12"/>
                                     </Border>
                                 </Grid>
@@ -361,7 +361,7 @@
                                        Style="{StaticResource MutedLabel}"
                                        LineBreakMode="WordWrap"/>
                                 <Label Text="SE PROGRAM →"
-                                       TextColor="{StaticResource ForgeAccentAmber}"
+                                       TextColor="{StaticResource ForgeAccentPurple}"
                                        FontFamily="BebasNeue" FontSize="13"
                                        CharacterSpacing="2"/>
                             </StackLayout>

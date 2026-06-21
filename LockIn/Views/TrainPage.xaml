@@ -200,7 +200,7 @@
                                           Padding="18,14">
                                         <Ellipse Grid.Column="0"
                                                  WidthRequest="10" HeightRequest="10"
-                                                 Fill="{StaticResource ForgeAccentAmber}"
+                                                 Fill="{StaticResource ForgeAccentPurple}"
                                                  VerticalOptions="Center"/>
                                         <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
                                             <Label Text="{Binding ProgramName}"
@@ -225,7 +225,7 @@
                                                                VerticalOptions="Center"/>
                                                         <Border Grid.Column="1"
                                                                 WidthRequest="36" HeightRequest="36"
-                                                                BackgroundColor="{StaticResource ForgeAccentAmber}"
+                                                                BackgroundColor="{StaticResource ForgeAccentPurple}"
                                                                 StrokeShape="Ellipse" StrokeThickness="0">
                                                             <views:AppIcon Source="ic_play.png"
                                                                            WidthRequest="18" HeightRequest="18"
@@ -281,7 +281,7 @@
                                     <Grid ColumnDefinitions="12,*,Auto" ColumnSpacing="12">
                                         <Ellipse Grid.Column="0"
                                                  WidthRequest="10" HeightRequest="10"
-                                                 Fill="{StaticResource ForgeAccentOrange}"
+                                                 Fill="{StaticResource ForgeAccentCoral}"
                                                  VerticalOptions="Center"/>
                                         <StackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center">
                                             <Label Text="{Binding Name}"
@@ -291,7 +291,7 @@
                                         </StackLayout>
                                         <Border Grid.Column="2"
                                                 WidthRequest="36" HeightRequest="36"
-                                                BackgroundColor="{StaticResource ForgeAccentOrange}"
+                                                BackgroundColor="{StaticResource ForgeAccentCoral}"
                                                 StrokeShape="Ellipse" StrokeThickness="0"
                                                 VerticalOptions="Center">
                                             <views:AppIcon Source="ic_play.png"
