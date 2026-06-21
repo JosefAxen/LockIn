@@ -88,11 +88,14 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
             var sleepStagesTask    = health.GetSleepStagesLastNightAsync();
             var hrvTask            = health.GetHrvSampleAsync();
             var rhrTask            = health.GetRestingHrSampleAsync();
+            var hrSamplesTask      = health.GetTodayHeartRateSamplesAsync();
+            var maxHrTask          = health.GetEstimatedMaxHeartRateAsync();
 
             await Task.WhenAll(weekSessionsTask, recentSessionsTask, streakSessionsTask, settingsTask,
                 stepsTask, caloriesTask, heartRateTask,
                 weeklyStepsTask, weeklyCaloriesTask, weeklyMaxHRTask,
-                sleepHoursTask, sleepStagesTask, hrvTask, rhrTask);
+                sleepHoursTask, sleepStagesTask, hrvTask, rhrTask,
+                hrSamplesTask, maxHrTask);
 
             var weekSessions   = weekSessionsTask.Result;
             var recentSessions = recentSessionsTask.Result;
@@ -132,9 +135,15 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
             ActiveValues    = BuildWeeklyActiveMinutes(recentSessions);
             HeartRateValues = weeklyMaxHRTask.Result.ToArray();
 
-            // Strain = träningsscore (redan uträknat)
-            StrainProgress = GaugeProgress;
-            StrainText     = ((int)TrainingScore).ToString();
+            // Strain (Ansträngning) = TRIMP-baserad zon-score från dagens HR-samples
+            var hrSamples   = hrSamplesTask.Result;
+            var estMaxHr    = maxHrTask.Result;
+            var restingBpm  = rhrTask.Result.TodayBpm > 0
+                ? (int)rhrTask.Result.TodayBpm
+                : (rhrTask.Result.BaselineBpm > 0 ? (int)rhrTask.Result.BaselineBpm : 60);
+            double strainPct = CalculateStrain(hrSamples, estMaxHr, restingBpm);
+            StrainProgress = (float)(strainPct / 100.0);
+            StrainText     = hrSamples.Count > 5 ? ((int)strainPct).ToString() : "–";
 
             var hrv   = hrvTask.Result;
             var rhr   = rhrTask.Result;
@@ -270,6 +279,44 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
         return (int)sessions
             .Where(s => s.CompletedAt.HasValue && s.StartedAt.Date == today)
             .Sum(s => (s.CompletedAt!.Value - s.StartedAt).TotalMinutes);
+    }
+
+    /// <summary>
+    /// TRIMP-inspirerad Strain (Ansträngning) — viktar tid i 5 HR-zoner.
+    /// Karvonen-formel för %-of-Reserve: (HR - HRrest) / (HRmax - HRrest).
+    /// Zon 1 (50-60% reserve) × 1, Zon 2 × 2, ... Zon 5 × 5.
+    /// Summa minuter × zon-multiplikator, normaliserad till 0-100.
+    /// </summary>
+    private static double CalculateStrain(IReadOnlyList<HeartRateSample> samples, int maxHr, int restingHr)
+    {
+        if (samples.Count < 2 || maxHr <= restingHr) return 0;
+
+        var ordered  = samples.OrderBy(s => s.Time).ToList();
+        var reserve  = (double)(maxHr - restingHr);
+        double points = 0;
+
+        for (int i = 0; i < ordered.Count - 1; i++)
+        {
+            var minutes = (ordered[i + 1].Time - ordered[i].Time).TotalMinutes;
+            // Hoppa över luckor större än 5 min (HR-data sannolikt inte representativ)
+            if (minutes <= 0 || minutes > 5) continue;
+
+            var pctReserve = (ordered[i].Bpm - restingHr) / reserve;
+            int multiplier = pctReserve switch
+            {
+                < 0.5 => 0,    // Under Zon 1 = återhämtning, ingen strain
+                < 0.6 => 1,    // Zon 1
+                < 0.7 => 2,    // Zon 2
+                < 0.8 => 3,    // Zon 3
+                < 0.9 => 4,    // Zon 4
+                _     => 5     // Zon 5
+            };
+            points += minutes * multiplier;
+        }
+
+        // Normalisering: 300 points (60 min Zon 5) → 100.
+        // En genomsnittlig dag landar ofta på 20-40 strain, en intensiv pass-dag på 70-90.
+        return Math.Min(100, points / 3.0);
     }
 
     private static (string Headline, string Detail) BuildRecommendation(

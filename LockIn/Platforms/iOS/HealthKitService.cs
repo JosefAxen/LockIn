@@ -165,6 +165,73 @@ public class HealthKitService : IHealthService
         catch (TimeoutException) { return new SleepStages(0, 0, 0, 0, 0, 0); }
     }
 
+    public async Task<List<HeartRateSample>> GetTodayHeartRateSamplesAsync()
+    {
+        var result = new List<HeartRateSample>();
+        if (!HKHealthStore.IsHealthDataAvailable) return result;
+        var type = HKQuantityType.Create(HKQuantityTypeIdentifier.HeartRate);
+        if (type is null) return result;
+
+        var start = ToNSDate(DateTime.Today);
+        var end   = ToNSDate(DateTime.Now);
+        var pred  = HKQuery.GetPredicateForSamples(start, end, HKQueryOptions.StrictStartDate);
+
+        var tcs = new TaskCompletionSource<List<HeartRateSample>>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var query = new HKSampleQuery(type, pred, 2000, null, (_, samples, err) =>
+        {
+            if (err is not null)
+                System.Diagnostics.Debug.WriteLine($"[HealthKit] HR samples error: {err.LocalizedDescription}");
+
+            if (samples is not null)
+            {
+                foreach (var s in samples)
+                {
+                    if (s is HKQuantitySample qs)
+                    {
+                        var bpm = qs.Quantity.GetDoubleValue(s_bpm);
+                        var dt  = DateTime.SpecifyKind(
+                            new DateTime(2001, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+                                .AddSeconds(qs.StartDate.SecondsSinceReferenceDate),
+                            DateTimeKind.Utc).ToLocalTime();
+                        result.Add(new HeartRateSample(dt, bpm));
+                    }
+                }
+            }
+            tcs.TrySetResult(result);
+        });
+        _store.ExecuteQuery(query);
+        try   { return await tcs.Task.WaitAsync(TimeSpan.FromSeconds(15)); }
+        catch (TimeoutException) { return result; }
+    }
+
+    public async Task<int> GetEstimatedMaxHeartRateAsync()
+    {
+        // Använd högsta uppmätta HR senaste 90 dagarna som proxy för max HR.
+        // Fallback 190 om ingen data (motsvarar ~30-åring via 220-ålder-formeln).
+        var max = await GetWindowMaxAsync(HKQuantityTypeIdentifier.HeartRate, s_bpm,
+                                          DateTime.Today.AddDays(-90), DateTime.Now);
+        return max > 100 ? (int)max : 190;
+    }
+
+    private async Task<double> GetWindowMaxAsync(
+        HKQuantityTypeIdentifier typeId, HKUnit unit, DateTime start, DateTime end)
+    {
+        if (!HKHealthStore.IsHealthDataAvailable) return 0.0;
+        var type = HKQuantityType.Create(typeId);
+        if (type is null) return 0.0;
+
+        var pred = HKQuery.GetPredicateForSamples(ToNSDate(start), ToNSDate(end), HKQueryOptions.StrictStartDate);
+        var tcs  = new TaskCompletionSource<double>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var query = new HKStatisticsQuery(type, pred, HKStatisticsOptions.DiscreteMax,
+            (_, result, err) =>
+            {
+                tcs.TrySetResult(result?.MaximumQuantity()?.GetDoubleValue(unit) ?? 0.0);
+            });
+        _store.ExecuteQuery(query);
+        try   { return await tcs.Task.WaitAsync(TimeSpan.FromSeconds(10)); }
+        catch (TimeoutException) { return 0.0; }
+    }
+
     public async Task<HrvSample> GetHrvSampleAsync()
     {
         var today    = await GetWindowAverageAsync(HKQuantityTypeIdentifier.HeartRateVariabilitySdnn, s_ms,

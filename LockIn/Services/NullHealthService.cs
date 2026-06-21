@@ -17,4 +17,7 @@ public class NullHealthService : IHealthService
         => Task.FromResult(new RestingHrSample(0, 0));
     public Task<SleepStages> GetSleepStagesLastNightAsync()
         => Task.FromResult(new SleepStages(0, 0, 0, 0, 0, 0));
+    public Task<List<HeartRateSample>> GetTodayHeartRateSamplesAsync()
+        => Task.FromResult(new List<HeartRateSample>());
+    public Task<int> GetEstimatedMaxHeartRateAsync() => Task.FromResult(190);
 }

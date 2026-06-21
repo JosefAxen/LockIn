@@ -2,6 +2,7 @@ namespace LockIn.Services;
 
 public record HrvSample(double TodayMs, double BaselineMs);
 public record RestingHrSample(double TodayBpm, double BaselineBpm);
+public record HeartRateSample(DateTime Time, double Bpm);
 public record SleepStages(
     double TotalHours,
     double CoreMinutes,
@@ -24,4 +25,6 @@ public interface IHealthService
     Task<HrvSample> GetHrvSampleAsync();
     Task<RestingHrSample> GetRestingHrSampleAsync();
     Task<SleepStages> GetSleepStagesLastNightAsync();
+    Task<List<HeartRateSample>> GetTodayHeartRateSamplesAsync();
+    Task<int> GetEstimatedMaxHeartRateAsync();
 }
