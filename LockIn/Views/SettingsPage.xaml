@@ -187,7 +187,7 @@
                         </Border>
                         <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
                             <Label Text="Ljud" FontFamily="DMSansMedium" FontSize="15"/>
-                            <Label Text="Spela ett ljud när vilotimern är klar"
+                            <Label Text="Vilotimer + achievement-ljud"
                                    Style="{StaticResource MutedLabel}"/>
                         </StackLayout>
                         <Switch Grid.Column="2" IsToggled="{Binding SoundEnabled}" VerticalOptions="Center"/>

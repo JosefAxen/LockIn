@@ -43,7 +43,8 @@ public partial class PostWorkoutPage : ContentPage
         MainThread.BeginInvokeOnMainThread(() =>
         {
             ConfettiOverlay.Start();
-            _sound.PlayAchievementUnlocked();
+            if (Preferences.Default.Get("sound_enabled", true))
+                _sound.PlayAchievementUnlocked();
             if (Preferences.Default.Get("haptic_enabled", true))
                 HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
         });

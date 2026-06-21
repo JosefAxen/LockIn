@@ -257,7 +257,10 @@
                 </StackLayout>
 
                 <!-- Free templates -->
-                <Label Text="MINA MALLAR" Style="{StaticResource SectionLabel}" Margin="4,0,4,8"/>
+                <Label Text="MINA MALLAR"
+                       Style="{StaticResource SectionLabel}"
+                       Margin="4,0,4,8"
+                       IsVisible="{Binding FreeTemplates.Count, Converter={x:Static vm:GreaterThanZeroConverter.Instance}}"/>
 
                 <StackLayout BindableLayout.ItemsSource="{Binding FreeTemplates}" Spacing="10">
                     <BindableLayout.ItemTemplate>

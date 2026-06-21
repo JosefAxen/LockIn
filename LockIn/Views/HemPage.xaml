@@ -127,8 +127,7 @@
                 </Border>
 
                 <!-- ═══ STRAIN / RECOVERY / SÖMN-RINGAR ═══ -->
-                <Label Text="ANSTRÄNGNING · ÅTERHÄMTNING · SÖMN" Style="{StaticResource SectionLabel}" Margin="22,18,0,10"/>
-                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8" Margin="16,0,16,4">
+                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8" Margin="16,18,16,4">
                     <StackLayout Grid.Column="0" Spacing="6" HorizontalOptions="Center">
                         <controls:MetricRingView Progress="{Binding StrainProgress}"
                                                  TargetProgress="{Binding StrainTarget}"
