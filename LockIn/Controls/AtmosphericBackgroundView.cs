@@ -36,15 +36,6 @@ public class AtmosphericBackgroundView : SKCanvasView
         using var glow2Paint = new SKPaint { Shader = glow2Shader, IsAntialias = true };
         canvas.DrawRect(bounds, glow2Paint);
 
-        // Blå ambient dimma — undre tredjedelen
-        using var blueShader = SKShader.CreateLinearGradient(
-            new SKPoint(0, h),
-            new SKPoint(0, h * 0.55f),
-            new[] { SKColor.Parse("#1A3B82E6"), SKColors.Transparent },
-            SKShaderTileMode.Clamp);
-        using var bluePaint = new SKPaint { Shader = blueShader, IsAntialias = true };
-        canvas.DrawRect(bounds, bluePaint);
-
         // Edge vignette — ger djup åt kanter
         using var vigShader = SKShader.CreateRadialGradient(
             new SKPoint(w * 0.5f, h * 0.45f),
