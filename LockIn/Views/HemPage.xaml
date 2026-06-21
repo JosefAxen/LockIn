@@ -102,16 +102,46 @@
                     </VerticalStackLayout>
                 </Border>
 
+                <!-- ═══ IDAG-REKOMMENDATION ═══ -->
+                <Border Margin="16,16,16,4"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
+                        StrokeShape="RoundRectangle 18"
+                        StrokeThickness="0"
+                        Padding="20,16">
+                    <Border.Shadow>
+                        <Shadow Brush="Black" Offset="0,2" Radius="10" Opacity="0.18"/>
+                    </Border.Shadow>
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="IDAG"
+                               Style="{StaticResource SectionLabel}"
+                               TextColor="{StaticResource ForgeAccent}"/>
+                        <Label Text="{Binding TodayRecommendation}"
+                               FontFamily="BebasNeue" FontSize="32"
+                               CharacterSpacing="1"
+                               LineHeight="1"
+                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                        <Label Text="{Binding TodayRecommendationDetail}"
+                               Style="{StaticResource MutedLabel}"
+                               LineBreakMode="WordWrap"/>
+                    </VerticalStackLayout>
+                </Border>
+
                 <!-- ═══ STRAIN / RECOVERY / SÖMN-RINGAR ═══ -->
                 <Label Text="STRAIN · RECOVERY · SÖMN" Style="{StaticResource SectionLabel}" Margin="22,18,0,10"/>
                 <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8" Margin="16,0,16,4">
-                    <StackLayout Grid.Column="0" Spacing="8" HorizontalOptions="Center">
+                    <StackLayout Grid.Column="0" Spacing="6" HorizontalOptions="Center">
                         <controls:MetricRingView Progress="{Binding StrainProgress}"
+                                                 TargetProgress="{Binding StrainTarget}"
                                                  RingColor="{StaticResource ForgeAccentAmber}"
                                                  CenterText="{Binding StrainText}"
                                                  WidthRequest="90" HeightRequest="90"
                                                  HorizontalOptions="Center"/>
                         <Label Text="STRAIN" Style="{StaticResource SectionLabel}" HorizontalTextAlignment="Center"/>
+                        <Label Text="{Binding StrainTargetText}"
+                               FontFamily="BebasNeue" FontSize="10" CharacterSpacing="1.5"
+                               TextColor="{StaticResource ForgeAccentAmber}"
+                               Opacity="0.7"
+                               HorizontalTextAlignment="Center"/>
                     </StackLayout>
                     <StackLayout Grid.Column="1" Spacing="8" HorizontalOptions="Center">
                         <controls:MetricRingView Progress="{Binding RecoveryProgress}"
@@ -130,6 +160,50 @@
                         <Label Text="SÖMN" Style="{StaticResource SectionLabel}" HorizontalTextAlignment="Center"/>
                     </StackLayout>
                 </Grid>
+
+                <Label Text="{Binding RecoveryComponentsText}"
+                       Style="{StaticResource MutedLabel}"
+                       FontSize="10"
+                       HorizontalTextAlignment="Center"
+                       Margin="16,6,16,0"/>
+
+                <!-- ═══ SÖMN-DETALJER ═══ -->
+                <Label Text="SÖMN" Style="{StaticResource SectionLabel}" Margin="22,18,0,10"/>
+                <Border Margin="16,0,16,0"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
+                        StrokeShape="RoundRectangle 18"
+                        StrokeThickness="0"
+                        Padding="20,16">
+                    <Border.Shadow>
+                        <Shadow Brush="Black" Offset="0,2" Radius="10" Opacity="0.18"/>
+                    </Border.Shadow>
+                    <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="10">
+                        <VerticalStackLayout Grid.Column="0" Spacing="2">
+                            <Label Text="{Binding SleepStages.CoreMinutes, StringFormat='{0:F0}m'}"
+                                   FontSize="22" FontAttributes="Bold"
+                                   TextColor="{StaticResource ForgeAccentBlue}"/>
+                            <Label Text="CORE" Style="{StaticResource SectionLabel}" FontSize="9"/>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                            <Label Text="{Binding SleepStages.DeepMinutes, StringFormat='{0:F0}m'}"
+                                   FontSize="22" FontAttributes="Bold"
+                                   TextColor="{StaticResource ForgeAccentPurple}"/>
+                            <Label Text="DEEP" Style="{StaticResource SectionLabel}" FontSize="9"/>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="2" Spacing="2">
+                            <Label Text="{Binding SleepStages.RemMinutes, StringFormat='{0:F0}m'}"
+                                   FontSize="22" FontAttributes="Bold"
+                                   TextColor="{StaticResource ForgeAccent}"/>
+                            <Label Text="REM" Style="{StaticResource SectionLabel}" FontSize="9"/>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="3" Spacing="2">
+                            <Label Text="{Binding SleepStages.AwakeMinutes, StringFormat='{0:F0}m'}"
+                                   FontSize="22" FontAttributes="Bold"
+                                   TextColor="{StaticResource ForgeAccentAmber}"/>
+                            <Label Text="AWAKE" Style="{StaticResource SectionLabel}" FontSize="9"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                </Border>
 
                 <!-- ═══ STREAK HEADER ═══ -->
                 <Grid Padding="22,22,22,10" ColumnDefinitions="*,Auto">
