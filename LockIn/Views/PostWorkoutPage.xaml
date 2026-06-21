@@ -41,9 +41,9 @@
             </BoxView.Background>
         </BoxView>
 
-        <!-- Sticky header gradient (fades in on scroll) -->
+        <!-- Sticky header gradient + compact namn (fades in on scroll) -->
         <Grid x:Name="StickyHeader" VerticalOptions="Start" ZIndex="20" Opacity="0"
-              HeightRequest="150" SafeAreaEdges="None" InputTransparent="True">
+              HeightRequest="150" SafeAreaEdges="None">
             <BoxView InputTransparent="True">
                 <BoxView.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
@@ -54,30 +54,40 @@
                     </LinearGradientBrush>
                 </BoxView.Background>
             </BoxView>
+            <VerticalStackLayout Padding="22,56,22,12" Spacing="2" VerticalOptions="Start">
+                <Label Text="BRA JOBBAT"
+                       Style="{StaticResource SectionLabel}"
+                       TextColor="{StaticResource ForgeAccent}"/>
+                <Label Text="{Binding TemplateName}"
+                       FontFamily="BebasNeue" FontSize="18" CharacterSpacing="1"
+                       TextColor="{StaticResource ForgeText}"/>
+            </VerticalStackLayout>
         </Grid>
 
-    <Grid RowDefinitions="Auto,*,Auto" ZIndex="2">
+    <Grid ZIndex="2">
 
-        <VerticalStackLayout Grid.Row="0" Padding="20,56,20,12" Spacing="4">
-            <Label Text="BRA JOBBAT"
-                   Style="{StaticResource SectionLabel}"
-                   TextColor="{StaticResource ForgeAccent}"/>
-            <Grid ColumnDefinitions="*,Auto">
-                <Label Grid.Column="0"
-                       Text="{Binding TemplateName}"
-                       Style="{StaticResource DisplayLabel}"
-                       FontSize="32"
-                       VerticalOptions="Center"/>
-                <Label Grid.Column="1"
-                       Text="{Binding Duration}"
-                       Style="{StaticResource MutedLabel}"
-                       FontSize="13"
-                       VerticalOptions="End" Margin="0,0,0,4"/>
-            </Grid>
-        </VerticalStackLayout>
-
-        <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Never" Scrolled="OnScrolled">
+        <ScrollView VerticalScrollBarVisibility="Never" Scrolled="OnScrolled">
             <StackLayout Padding="16,0,16,32" Spacing="16">
+
+                <!-- Header — scrollar med innehållet -->
+                <VerticalStackLayout Padding="4,56,4,4" Spacing="4">
+                    <Label Text="BRA JOBBAT"
+                           Style="{StaticResource SectionLabel}"
+                           TextColor="{StaticResource ForgeAccent}"/>
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0"
+                               Text="{Binding TemplateName}"
+                               Style="{StaticResource DisplayLabel}"
+                               FontSize="32"
+                               VerticalOptions="Center"/>
+                        <Label Grid.Column="1"
+                               Text="{Binding Duration}"
+                               Style="{StaticResource MutedLabel}"
+                               FontSize="13"
+                               VerticalOptions="End" Margin="0,0,0,4"/>
+                    </Grid>
+                </VerticalStackLayout>
+
 
                 <!-- Stats row -->
                 <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
@@ -261,28 +271,16 @@
                     </StackLayout>
                 </Border>
 
+                <!-- KLAR-knapp som sista element — scrollar med innehållet -->
+                <Button Text="KLAR"
+                        Style="{StaticResource PrimaryButton}"
+                        Margin="0,12,0,0"
+                        Command="{Binding DoneCommand}"/>
+
             </StackLayout>
         </ScrollView>
 
-        <Grid Grid.Row="2" Padding="16,8,16,32">
-            <Button Text="KLAR"
-                    Style="{StaticResource PrimaryButton}"
-                    Command="{Binding DoneCommand}"/>
-        </Grid>
-
     </Grid>
-
-    <!-- Bottom gradient fade — matchar topp-gradienten spegelvänt -->
-    <BoxView InputTransparent="True" VerticalOptions="End" HeightRequest="150" ZIndex="22">
-        <BoxView.Background>
-            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                <GradientStop Color="#00141418" Offset="0.0"/>
-                <GradientStop Color="#38141418" Offset="0.35"/>
-                <GradientStop Color="#90141418" Offset="0.65"/>
-                <GradientStop Color="#141418" Offset="1.0"/>
-            </LinearGradientBrush>
-        </BoxView.Background>
-    </BoxView>
 
     <controls:ConfettiView x:Name="ConfettiOverlay"/>
 
