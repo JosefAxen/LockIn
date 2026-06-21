@@ -127,7 +127,7 @@
                 </Border>
 
                 <!-- ═══ STRAIN / RECOVERY / SÖMN-RINGAR ═══ -->
-                <Label Text="STRAIN · RECOVERY · SÖMN" Style="{StaticResource SectionLabel}" Margin="22,18,0,10"/>
+                <Label Text="ANSTRÄNGNING · ÅTERHÄMTNING · SÖMN" Style="{StaticResource SectionLabel}" Margin="22,18,0,10"/>
                 <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8" Margin="16,0,16,4">
                     <StackLayout Grid.Column="0" Spacing="6" HorizontalOptions="Center">
                         <controls:MetricRingView Progress="{Binding StrainProgress}"
@@ -136,7 +136,7 @@
                                                  CenterText="{Binding StrainText}"
                                                  WidthRequest="90" HeightRequest="90"
                                                  HorizontalOptions="Center"/>
-                        <Label Text="STRAIN" Style="{StaticResource SectionLabel}" HorizontalTextAlignment="Center"/>
+                        <Label Text="ANSTRÄNGNING" Style="{StaticResource SectionLabel}" HorizontalTextAlignment="Center"/>
                         <Label Text="{Binding StrainTargetText}"
                                FontFamily="BebasNeue" FontSize="10" CharacterSpacing="1.5"
                                TextColor="{StaticResource ForgeAccentAmber}"
@@ -149,7 +149,7 @@
                                                  CenterText="{Binding RecoveryText}"
                                                  WidthRequest="90" HeightRequest="90"
                                                  HorizontalOptions="Center"/>
-                        <Label Text="RECOVERY" Style="{StaticResource SectionLabel}" HorizontalTextAlignment="Center"/>
+                        <Label Text="ÅTERHÄMTNING" Style="{StaticResource SectionLabel}" HorizontalTextAlignment="Center"/>
                     </StackLayout>
                     <StackLayout Grid.Column="2" Spacing="8" HorizontalOptions="Center">
                         <controls:MetricRingView Progress="{Binding SleepProgress}"
@@ -324,44 +324,11 @@
                 </Grid>
 
                 <!-- ═══ MUSKELHEATMAP ═══ -->
-                <Border Margin="16,16,16,0"
-                        StrokeShape="RoundRectangle 22"
-                        BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
-                        Stroke="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorder}}"
-                        StrokeThickness="1"
-                        Padding="20,18">
-                    <VerticalStackLayout Spacing="12">
-                        <Label Text="MUSKLER · 7 DAGAR" Style="{StaticResource SectionLabel}"/>
-                        <CollectionView ItemsSource="{Binding HeatmapItems}"
-                                        HeightRequest="120"
-                                        HorizontalScrollBarVisibility="Never"
-                                        VerticalScrollBarVisibility="Never">
-                            <CollectionView.ItemsLayout>
-                                <GridItemsLayout Orientation="Vertical" Span="4"
-                                                 HorizontalItemSpacing="8" VerticalItemSpacing="8"/>
-                            </CollectionView.ItemsLayout>
-                            <CollectionView.ItemTemplate>
-                                <DataTemplate x:DataType="vm:HeatmapTile">
-                                    <Border BackgroundColor="{Binding TileColor}"
-                                            StrokeShape="RoundRectangle 12"
-                                            StrokeThickness="0"
-                                            Padding="4,10,4,4">
-                                        <VerticalStackLayout Spacing="3" HorizontalOptions="Center">
-                                            <Label Text="{Binding Name}"
-                                                   FontFamily="BebasNeue" FontSize="8" CharacterSpacing="0.5"
-                                                   TextColor="{Binding TextColor}" Opacity="0.85"
-                                                   HorizontalOptions="Center"/>
-                                            <Label Text="{Binding ScoreText}"
-                                                   FontFamily="BebasNeue" FontSize="18"
-                                                   TextColor="{Binding TextColor}"
-                                                   HorizontalOptions="Center"/>
-                                        </VerticalStackLayout>
-                                    </Border>
-                                </DataTemplate>
-                            </CollectionView.ItemTemplate>
-                        </CollectionView>
-                    </VerticalStackLayout>
-                </Border>
+                <Label Text="MUSKLER · 7 DAGAR" Style="{StaticResource SectionLabel}" Margin="22,18,0,10"/>
+                <Grid x:Name="HemHeatmapGrid"
+                      ColumnDefinitions="*,*,*,*"
+                      ColumnSpacing="8" RowSpacing="8"
+                      Margin="16,0"/>
 
             </VerticalStackLayout>
         </ScrollView>

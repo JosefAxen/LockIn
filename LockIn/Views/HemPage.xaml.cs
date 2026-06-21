@@ -50,6 +50,7 @@ public partial class HemPage : ContentPage
 
         ScrollStreakToToday();
         AnimateGauge();
+        HeatmapBuilder.Build(HemHeatmapGrid, _vm.HeatmapItems);
     }
 
     private void ScrollStreakToToday()

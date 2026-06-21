@@ -95,6 +95,7 @@
                            HorizontalOptions="Center" VerticalOptions="Center"/>
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 0}"/>
+                        <PointerGestureRecognizer PointerPressed="OnPillPressed" PointerReleased="OnPillReleased"/>
                     </Border.GestureRecognizers>
                 </Border>
 
@@ -109,6 +110,7 @@
                            HorizontalOptions="Center" VerticalOptions="Center"/>
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 1}"/>
+                        <PointerGestureRecognizer PointerPressed="OnPillPressed" PointerReleased="OnPillReleased"/>
                     </Border.GestureRecognizers>
                 </Border>
 
@@ -123,6 +125,7 @@
                            HorizontalOptions="Center" VerticalOptions="Center"/>
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 2}"/>
+                        <PointerGestureRecognizer PointerPressed="OnPillPressed" PointerReleased="OnPillReleased"/>
                     </Border.GestureRecognizers>
                 </Border>
 
