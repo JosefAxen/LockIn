@@ -11,12 +11,15 @@ public class HealthKitService : IHealthService
     private static readonly HKUnit s_count = HKUnit.Count;
     private static readonly HKUnit s_kcal  = HKUnit.FromString("kcal");
     private static readonly HKUnit s_bpm   = HKUnit.FromString("count/min");
+    private static readonly HKUnit s_ms    = HKUnit.FromString("ms");
 
     private static readonly HKObjectType[] s_readTypes =
     [
         HKQuantityType.Create(HKQuantityTypeIdentifier.StepCount)!,
         HKQuantityType.Create(HKQuantityTypeIdentifier.ActiveEnergyBurned)!,
         HKQuantityType.Create(HKQuantityTypeIdentifier.HeartRate)!,
+        HKQuantityType.Create(HKQuantityTypeIdentifier.HeartRateVariabilitySdnn)!,
+        HKQuantityType.Create(HKQuantityTypeIdentifier.RestingHeartRate)!,
         HKCategoryType.Create(HKCategoryTypeIdentifier.SleepAnalysis)!,
     ];
 
@@ -99,6 +102,103 @@ public class HealthKitService : IHealthService
 
             tcs.TrySetResult(seconds / 3600.0);
         });
+        _store.ExecuteQuery(query);
+        try   { return await tcs.Task.WaitAsync(TimeSpan.FromSeconds(10)); }
+        catch (TimeoutException) { return 0.0; }
+    }
+
+    public async Task<SleepStages> GetSleepStagesLastNightAsync()
+    {
+        if (!HKHealthStore.IsHealthDataAvailable) return new SleepStages(0, 0, 0, 0, 0, 0);
+        var type = HKCategoryType.Create(HKCategoryTypeIdentifier.SleepAnalysis);
+        if (type is null) return new SleepStages(0, 0, 0, 0, 0, 0);
+
+        var start = ToNSDate(DateTime.Today.AddDays(-1).AddHours(18));
+        var end   = ToNSDate(DateTime.Today.AddHours(12));
+        var pred  = HKQuery.GetPredicateForSamples(start, end, HKQueryOptions.StrictStartDate);
+
+        var tcs = new TaskCompletionSource<SleepStages>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var query = new HKSampleQuery(type, pred, 500, null, (_, samples, err) =>
+        {
+            if (err is not null)
+                System.Diagnostics.Debug.WriteLine($"[HealthKit] SleepStages err: {err.LocalizedDescription}");
+
+            double inBed = 0, asleepUnspec = 0, awake = 0, core = 0, deep = 0, rem = 0;
+            if (samples is not null)
+            {
+                foreach (var s in samples)
+                {
+                    if (s is not HKCategorySample cs) continue;
+                    var secs = cs.EndDate.SecondsSinceReferenceDate - cs.StartDate.SecondsSinceReferenceDate;
+                    // Apple value mapping: 0=InBed 1=AsleepUnspecified 2=Awake 3=AsleepCore 4=AsleepDeep 5=AsleepREM
+                    switch ((int)cs.Value)
+                    {
+                        case 0: inBed        += secs; break;
+                        case 1: asleepUnspec += secs; break;
+                        case 2: awake        += secs; break;
+                        case 3: core         += secs; break;
+                        case 4: deep         += secs; break;
+                        case 5: rem          += secs; break;
+                    }
+                }
+            }
+
+            double coreMin  = core  / 60.0;
+            double deepMin  = deep  / 60.0;
+            double remMin   = rem   / 60.0;
+            double awakeMin = awake / 60.0;
+            double inBedMin = inBed / 60.0;
+            // Om enhet inte rapporterar stages, fall tillbaka på AsleepUnspecified
+            if (coreMin + deepMin + remMin < 1 && asleepUnspec > 0)
+                coreMin = asleepUnspec / 60.0;
+            double totalAsleepMin = coreMin + deepMin + remMin;
+            tcs.TrySetResult(new SleepStages(
+                TotalHours:   totalAsleepMin / 60.0,
+                CoreMinutes:  coreMin,
+                DeepMinutes:  deepMin,
+                RemMinutes:   remMin,
+                AwakeMinutes: awakeMin,
+                InBedMinutes: inBedMin));
+        });
+        _store.ExecuteQuery(query);
+        try   { return await tcs.Task.WaitAsync(TimeSpan.FromSeconds(10)); }
+        catch (TimeoutException) { return new SleepStages(0, 0, 0, 0, 0, 0); }
+    }
+
+    public async Task<HrvSample> GetHrvSampleAsync()
+    {
+        var today    = await GetWindowAverageAsync(HKQuantityTypeIdentifier.HeartRateVariabilitySdnn, s_ms,
+                                                   DateTime.Today.AddHours(-12), DateTime.Now);
+        var baseline = await GetWindowAverageAsync(HKQuantityTypeIdentifier.HeartRateVariabilitySdnn, s_ms,
+                                                   DateTime.Today.AddDays(-7), DateTime.Today);
+        return new HrvSample(today, baseline);
+    }
+
+    public async Task<RestingHrSample> GetRestingHrSampleAsync()
+    {
+        var today    = await GetWindowAverageAsync(HKQuantityTypeIdentifier.RestingHeartRate, s_bpm,
+                                                   DateTime.Today, DateTime.Now);
+        var baseline = await GetWindowAverageAsync(HKQuantityTypeIdentifier.RestingHeartRate, s_bpm,
+                                                   DateTime.Today.AddDays(-7), DateTime.Today);
+        return new RestingHrSample(today, baseline);
+    }
+
+    private async Task<double> GetWindowAverageAsync(
+        HKQuantityTypeIdentifier typeId, HKUnit unit, DateTime start, DateTime end)
+    {
+        if (!HKHealthStore.IsHealthDataAvailable) return 0.0;
+        var type = HKQuantityType.Create(typeId);
+        if (type is null) return 0.0;
+
+        var pred = HKQuery.GetPredicateForSamples(ToNSDate(start), ToNSDate(end), HKQueryOptions.StrictStartDate);
+        var tcs  = new TaskCompletionSource<double>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var query = new HKStatisticsQuery(type, pred, HKStatisticsOptions.DiscreteAverage,
+            (_, result, err) =>
+            {
+                if (err is not null)
+                    System.Diagnostics.Debug.WriteLine($"[HealthKit] Avg query error {typeId}: {err.LocalizedDescription}");
+                tcs.TrySetResult(result?.AverageQuantity()?.GetDoubleValue(unit) ?? 0.0);
+            });
         _store.ExecuteQuery(query);
         try   { return await tcs.Task.WaitAsync(TimeSpan.FromSeconds(10)); }
         catch (TimeoutException) { return 0.0; }
