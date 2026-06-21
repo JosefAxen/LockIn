@@ -54,7 +54,7 @@
         </Grid>
 
         <!-- Top bar -->
-        <Grid Grid.Row="0" Padding="16,56,20,8" ColumnDefinitions="Auto,*,Auto,Auto" ZIndex="21">
+        <Grid x:Name="TopBar" Grid.Row="0" Padding="16,56,20,8" ColumnDefinitions="Auto,*,Auto,Auto" ZIndex="21">
             <Border Grid.Column="0"
                     WidthRequest="36" HeightRequest="36"
                     StrokeShape="Ellipse"

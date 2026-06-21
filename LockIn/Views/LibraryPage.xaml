@@ -77,7 +77,7 @@
         </Grid>
 
         <!-- Tab segment control — iOS glass pill -->
-        <Border Grid.Row="1" Margin="16,8,16,10"
+        <Border x:Name="TabSegment" Grid.Row="1" Margin="16,8,16,10"
                 BackgroundColor="#33787882"
                 StrokeThickness="0"
                 StrokeShape="RoundRectangle 50"

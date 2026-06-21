@@ -26,6 +26,7 @@ public partial class LibraryPage : ContentPage
 
         StickyHeader.Opacity = 0;
         PageTitleRow.Opacity = 1;
+        TabSegment.Opacity = 1;
 
         if (!_hasLoaded)
         {
@@ -63,6 +64,7 @@ public partial class LibraryPage : ContentPage
         {
             StickyHeader.Opacity = 0;
             PageTitleRow.Opacity = 1;
+            TabSegment.Opacity = 1;
         }
     }
 
@@ -80,6 +82,7 @@ public partial class LibraryPage : ContentPage
         var opacity = Math.Clamp(e.VerticalOffset / 40.0, 0, 1);
         StickyHeader.Opacity = opacity;
         PageTitleRow.Opacity = 1 - opacity;
+        TabSegment.Opacity = 1 - opacity;
     }
 
     private void OnTemplatesScrolled(object sender, ItemsViewScrolledEventArgs e)
@@ -87,6 +90,7 @@ public partial class LibraryPage : ContentPage
         var opacity = Math.Clamp(e.VerticalOffset / 40.0, 0, 1);
         StickyHeader.Opacity = opacity;
         PageTitleRow.Opacity = 1 - opacity;
+        TabSegment.Opacity = 1 - opacity;
     }
 
     private void OnProgramsScrolled(object sender, ScrolledEventArgs e)
@@ -94,6 +98,7 @@ public partial class LibraryPage : ContentPage
         var opacity = Math.Clamp((e.ScrollY - 80.0) / 40.0, 0, 1);
         StickyHeader.Opacity = opacity;
         PageTitleRow.Opacity = 1 - opacity;
+        TabSegment.Opacity = 1 - opacity;
     }
 
     private async void OnWorkoutBannerTapped(object sender, TappedEventArgs e)
