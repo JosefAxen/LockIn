@@ -15,8 +15,8 @@ public static class DesignTokens
     public static Color Surface2    => Color.FromArgb(IsDark ? "#222228" : "#EDEDED");
 
     // ─── Accent / Primary ────────────────────────────────────────────────────
-    public static readonly Color Accent  = Color.FromArgb("#4ADE80");
-    public static readonly Color Primary = Color.FromArgb("#006239");
+    public static readonly Color Accent  = Color.FromArgb("#B8B8BC");
+    public static readonly Color Primary = Color.FromArgb("#3E3E44");
 
     // ─── Text ────────────────────────────────────────────────────────────────
     public static Color Text          => Color.FromArgb(IsDark ? "#E2E8F0" : "#171717");
@@ -29,15 +29,15 @@ public static class DesignTokens
     public static Color GraphDotStroke => Color.FromArgb(IsDark ? "#0A0A0C" : "#FFFFFF");
 
     // ─── Chips / Segment buttons ─────────────────────────────────────────────
-    public static readonly Color ChipActiveBg  = Color.FromArgb("#006239");
+    public static readonly Color ChipActiveBg  = Color.FromArgb("#3E3E44");
     public static readonly Color ChipActiveFg  = Colors.White;
     public static Color ChipInactiveBg => Color.FromArgb(IsDark ? "#1C1C24" : "#E8E8F0");
     public static Color ChipInactiveFg => Color.FromArgb(IsDark ? "#52525E" : "#70707A");
 
     // ─── Streak calendar days ────────────────────────────────────────────────
-    public static readonly Color CalTrainedStroke = Color.FromArgb("#4ADE80");
-    public static readonly Color CalTrainedFill   = Color.FromArgb("#1A4ADE80");
-    public static readonly Color CalTrainedText   = Color.FromArgb("#4ADE80");
+    public static readonly Color CalTrainedStroke = Color.FromArgb("#B8B8BC");
+    public static readonly Color CalTrainedFill   = Color.FromArgb("#1AB8B8BC");
+    public static readonly Color CalTrainedText   = Color.FromArgb("#FAFAFA");
     public static readonly Color CalTodayStroke   = Color.FromArgb("#FBBF24");
     public static Color          CalTodayFill     => Color.FromArgb(IsDark ? "#222228" : "#FFF8E6");
     public static readonly Color CalTodayText     = Color.FromArgb("#FBBF24");

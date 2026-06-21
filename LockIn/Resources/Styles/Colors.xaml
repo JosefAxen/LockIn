@@ -10,16 +10,16 @@
     <Color x:Key="ForgeSurface2">#222228</Color>
     <Color x:Key="ForgeSurface3">#2E2E36</Color>
 
-    <!-- Accent: ring / highlight color — used for text, indicators, progress bars -->
-    <Color x:Key="ForgeAccent">#4ADE80</Color>
-    <!-- Primary: button background in dark mode -->
-    <Color x:Key="ForgePrimary">#006239</Color>
+    <!-- Accent: ring / highlight color — silver, matchar logo -->
+    <Color x:Key="ForgeAccent">#B8B8BC</Color>
+    <!-- Primary: button background in dark mode (dark silver) -->
+    <Color x:Key="ForgePrimary">#3E3E44</Color>
     <!-- Text on primary buttons in dark mode -->
-    <Color x:Key="ForgePrimaryForeground">#DDE8E3</Color>
+    <Color x:Key="ForgePrimaryForeground">#FAFAFA</Color>
 
     <!-- Tinted accent surfaces -->
-    <Color x:Key="ForgeAccentDim">#1F4ADE80</Color>
-    <Color x:Key="ForgeAccentGlow">#0F4ADE80</Color>
+    <Color x:Key="ForgeAccentDim">#1FB8B8BC</Color>
+    <Color x:Key="ForgeAccentGlow">#0FB8B8BC</Color>
 
     <Color x:Key="ForgeText">#E2E8F0</Color>
     <Color x:Key="ForgeTextSecondary">#A2A2A2</Color>
@@ -60,11 +60,11 @@
     <Color x:Key="LightBorder">#DFDFDF</Color>
 
     <!-- Accent / primary for light mode -->
-    <Color x:Key="LightAccent">#72E3AD</Color>
+    <Color x:Key="LightAccent">#9E9EA6</Color>
     <!-- Button background in light mode — mirrors ForgePrimary in dark -->
-    <Color x:Key="LightPrimary">#006239</Color>
+    <Color x:Key="LightPrimary">#3E3E44</Color>
     <!-- Text on primary buttons in light mode -->
-    <Color x:Key="LightPrimaryForeground">#1E2723</Color>
+    <Color x:Key="LightPrimaryForeground">#1E1E22</Color>
 
     <!-- Light multi-accent -->
     <Color x:Key="LightAccentCoral">#E11D48</Color>
