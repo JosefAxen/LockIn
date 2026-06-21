@@ -210,24 +210,31 @@
                     <StackLayout BindableLayout.ItemsSource="{Binding Sessions}" Spacing="0">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate x:DataType="svc:DatabaseService+SessionSummaryRow">
-                                <Border Style="{StaticResource CardFrame}" Margin="0,0,0,10">
-                                    <Grid ColumnDefinitions="4,*">
-                                        <BoxView Grid.Column="0"
-                                                 BackgroundColor="{StaticResource ForgeAccentBlue}"
-                                                 CornerRadius="16,0,0,16"/>
-                                        <StackLayout Grid.Column="1" Padding="14,14,14,14" Spacing="10">
-                                            <Grid ColumnDefinitions="*,Auto">
-                                                <Label Grid.Column="0"
-                                                       Text="{Binding TemplateName}"
-                                                       FontFamily="BebasNeue" FontSize="24"
-                                                       CharacterSpacing="1"
-                                                       TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
-                                                <Label Grid.Column="1"
-                                                       Text="{Binding StartedAt, StringFormat='{0:d MMM}'}"
-                                                       Style="{StaticResource MutedLabel}"
-                                                       FontSize="12"
-                                                       VerticalOptions="Center"/>
-                                            </Grid>
+                                <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
+                                        StrokeShape="RoundRectangle 18"
+                                        StrokeThickness="0"
+                                        Margin="0,0,0,10"
+                                        Padding="18,14">
+                                    <Border.Shadow>
+                                        <Shadow Brush="Black" Offset="0,2" Radius="10" Opacity="0.18"/>
+                                    </Border.Shadow>
+                                    <StackLayout Spacing="10">
+                                        <Grid ColumnDefinitions="12,*,Auto" ColumnSpacing="12">
+                                            <Ellipse Grid.Column="0"
+                                                     WidthRequest="10" HeightRequest="10"
+                                                     Fill="{StaticResource ForgeAccentBlue}"
+                                                     VerticalOptions="Center"/>
+                                            <Label Grid.Column="1"
+                                                   Text="{Binding TemplateName}"
+                                                   FontFamily="BebasNeue" FontSize="24"
+                                                   CharacterSpacing="1"
+                                                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                                            <Label Grid.Column="2"
+                                                   Text="{Binding StartedAt, StringFormat='{0:d MMM}'}"
+                                                   Style="{StaticResource MutedLabel}"
+                                                   FontSize="12"
+                                                   VerticalOptions="Center"/>
+                                        </Grid>
                                             <Grid ColumnDefinitions="*,*,*,Auto">
                                                 <StackLayout Grid.Column="0" Spacing="1">
                                                     <Label Text="{Binding TotalVolume, StringFormat='{0:F0}'}"
@@ -253,8 +260,7 @@
                                                        TextColor="{StaticResource ForgeMuted}"
                                                        VerticalOptions="Center"/>
                                             </Grid>
-                                        </StackLayout>
-                                    </Grid>
+                                    </StackLayout>
                                     <Border.GestureRecognizers>
                                         <TapGestureRecognizer
                                             Tapped="OnSessionTapped"

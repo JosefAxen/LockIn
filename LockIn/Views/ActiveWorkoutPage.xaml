@@ -132,17 +132,14 @@
                 <StackLayout x:Name="ExercisesLayout" BindableLayout.ItemsSource="{Binding Exercises}" Spacing="14">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate x:DataType="vm:WorkoutExerciseSection">
-                            <Border Style="{StaticResource DarkCardFrame}"
-                                    Stroke="{Binding AccentBrush}"
-                                    StrokeThickness="0.5">
+                            <Border BackgroundColor="{StaticResource ForgeSurface}"
+                                    StrokeShape="RoundRectangle 18"
+                                    StrokeThickness="0"
+                                    Padding="0">
                                 <Border.Shadow>
-                                    <Shadow Brush="{Binding AccentBrush}" Offset="0,0" Radius="28" Opacity="0.20"/>
+                                    <Shadow Brush="{Binding AccentBrush}" Offset="0,0" Radius="22" Opacity="0.18"/>
                                 </Border.Shadow>
-                                <Grid ColumnDefinitions="4,*">
-                                    <BoxView Grid.Column="0"
-                                             BackgroundColor="{Binding AccentColor}"
-                                             CornerRadius="16,0,0,16"/>
-                                <StackLayout Grid.Column="1" Spacing="0">
+                                <StackLayout Spacing="0">
 
                                     <!-- Superset badge (visible when IsInSuperset) -->
                                     <Grid IsVisible="{Binding IsInSuperset}"
@@ -159,16 +156,20 @@
                                         </Border>
                                     </Grid>
 
-                                    <!-- Exercise header: name + info + rest time badge -->
-                                    <Grid ColumnDefinitions="*,Auto,Auto"
-                                          Padding="16,12,12,10">
-                                        <Label Grid.Column="0"
+                                    <!-- Exercise header: punkt + name + info + rest time badge -->
+                                    <Grid ColumnDefinitions="12,*,Auto,Auto" ColumnSpacing="10"
+                                          Padding="18,12,12,10">
+                                        <Ellipse Grid.Column="0"
+                                                 WidthRequest="10" HeightRequest="10"
+                                                 Fill="{Binding AccentColor}"
+                                                 VerticalOptions="Center"/>
+                                        <Label Grid.Column="1"
                                                Text="{Binding ExerciseName}"
                                                FontFamily="DMSansMedium" FontSize="16"
                                                VerticalOptions="Center"/>
 
                                         <!-- Info button — only visible when description exists -->
-                                        <Border Grid.Column="1"
+                                        <Border Grid.Column="2"
                                                 IsVisible="{Binding HasDescription}"
                                                 BackgroundColor="Transparent"
                                                 StrokeThickness="0"
@@ -185,7 +186,7 @@
                                         </Border>
 
                                         <!-- Rest time badge — tap to change -->
-                                        <Border Grid.Column="2"
+                                        <Border Grid.Column="3"
                                                 BackgroundColor="{StaticResource ForgeAccentDim}"
                                                 StrokeShape="RoundRectangle 8"
                                                 StrokeThickness="0"
@@ -413,7 +414,6 @@
                                     </Grid>
 
                                 </StackLayout>
-                                </Grid>
                             </Border>
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>

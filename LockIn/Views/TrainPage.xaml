@@ -187,25 +187,30 @@
                              IsVisible="{Binding HasProgramGroups}">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate x:DataType="vm:ProgramGroup">
-                            <Border Style="{StaticResource CardFrame}">
+                            <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
+                                    StrokeShape="RoundRectangle 18"
+                                    StrokeThickness="0"
+                                    Padding="0">
+                                <Border.Shadow>
+                                    <Shadow Brush="Black" Offset="0,2" Radius="10" Opacity="0.18"/>
+                                </Border.Shadow>
                                 <StackLayout Spacing="0">
                                     <!-- Program header -->
-                                    <Grid ColumnDefinitions="4,*">
-                                        <BoxView Grid.Column="0"
-                                                 BackgroundColor="{StaticResource ForgeAccentAmber}"
-                                                 CornerRadius="16,0,0,16"/>
-                                        <Grid Grid.Column="1" ColumnDefinitions="*,Auto"
-                                              Padding="14,14,16,14">
-                                            <StackLayout Grid.Column="0" Spacing="2" VerticalOptions="Center">
-                                                <Label Text="{Binding ProgramName}"
-                                                       FontFamily="BebasNeue" FontSize="20" CharacterSpacing="1"/>
-                                                <Label Text="{Binding TemplateCount, StringFormat='{0} PASS'}"
-                                                       Style="{StaticResource SectionLabel}" FontSize="10"/>
-                                            </StackLayout>
-                                            <Label Grid.Column="1" Text="{Binding ChevronIcon}"
-                                                   FontSize="20" TextColor="{StaticResource ForgeMuted}"
-                                                   VerticalOptions="Center"/>
-                                        </Grid>
+                                    <Grid ColumnDefinitions="12,*,Auto" ColumnSpacing="12"
+                                          Padding="18,14">
+                                        <Ellipse Grid.Column="0"
+                                                 WidthRequest="10" HeightRequest="10"
+                                                 Fill="{StaticResource ForgeAccentAmber}"
+                                                 VerticalOptions="Center"/>
+                                        <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                            <Label Text="{Binding ProgramName}"
+                                                   FontFamily="BebasNeue" FontSize="20" CharacterSpacing="1"/>
+                                            <Label Text="{Binding TemplateCount, StringFormat='{0} PASS'}"
+                                                   Style="{StaticResource SectionLabel}" FontSize="10"/>
+                                        </StackLayout>
+                                        <Label Grid.Column="2" Text="{Binding ChevronIcon}"
+                                               FontSize="20" TextColor="{StaticResource ForgeMuted}"
+                                               VerticalOptions="Center"/>
                                     </Grid>
                                     <!-- Template list (expandable) -->
                                     <StackLayout IsVisible="{Binding IsExpanded}" Spacing="0">
@@ -266,31 +271,35 @@
                                                    CommandParameter="{Binding .}"/>
                                     </SwipeItems>
                                 </SwipeView.RightItems>
-                                <Border Style="{StaticResource CardFrame}">
-                                    <Grid ColumnDefinitions="4,*">
-                                        <BoxView Grid.Column="0"
-                                                 BackgroundColor="{StaticResource ForgeAccentOrange}"
-                                                 CornerRadius="16,0,0,16"/>
-                                        <Grid Grid.Column="1" ColumnDefinitions="*,Auto"
-                                              Padding="14,16,16,16">
-                                            <StackLayout Grid.Column="0" Spacing="3" VerticalOptions="Center">
-                                                <Label Text="{Binding Name}"
-                                                       FontFamily="BebasNeue" FontSize="22" CharacterSpacing="1"/>
-                                                <Label Text="TRYCK FÖR ATT STARTA"
-                                                       Style="{StaticResource SectionLabel}" FontSize="10"/>
-                                            </StackLayout>
-                                            <Border Grid.Column="1"
-                                                    WidthRequest="36" HeightRequest="36"
-                                                    BackgroundColor="{StaticResource ForgeAccentOrange}"
-                                                    StrokeShape="Ellipse" StrokeThickness="0"
-                                                    VerticalOptions="Center">
-                                                <views:AppIcon Source="ic_play.png"
-                                                               WidthRequest="18" HeightRequest="18"
-                                                               ForceTint="White"
-                                                               HorizontalOptions="Center"
-                                                               VerticalOptions="Center"/>
-                                            </Border>
-                                        </Grid>
+                                <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
+                                        StrokeShape="RoundRectangle 18"
+                                        StrokeThickness="0"
+                                        Padding="18,14,12,14">
+                                    <Border.Shadow>
+                                        <Shadow Brush="Black" Offset="0,2" Radius="10" Opacity="0.18"/>
+                                    </Border.Shadow>
+                                    <Grid ColumnDefinitions="12,*,Auto" ColumnSpacing="12">
+                                        <Ellipse Grid.Column="0"
+                                                 WidthRequest="10" HeightRequest="10"
+                                                 Fill="{StaticResource ForgeAccentOrange}"
+                                                 VerticalOptions="Center"/>
+                                        <StackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center">
+                                            <Label Text="{Binding Name}"
+                                                   FontFamily="BebasNeue" FontSize="22" CharacterSpacing="1"/>
+                                            <Label Text="TRYCK FÖR ATT STARTA"
+                                                   Style="{StaticResource SectionLabel}" FontSize="10"/>
+                                        </StackLayout>
+                                        <Border Grid.Column="2"
+                                                WidthRequest="36" HeightRequest="36"
+                                                BackgroundColor="{StaticResource ForgeAccentOrange}"
+                                                StrokeShape="Ellipse" StrokeThickness="0"
+                                                VerticalOptions="Center">
+                                            <views:AppIcon Source="ic_play.png"
+                                                           WidthRequest="18" HeightRequest="18"
+                                                           ForceTint="White"
+                                                           HorizontalOptions="Center"
+                                                           VerticalOptions="Center"/>
+                                        </Border>
                                     </Grid>
                                     <Border.GestureRecognizers>
                                         <TapGestureRecognizer
