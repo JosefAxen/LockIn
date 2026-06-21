@@ -296,12 +296,14 @@
                 </Border.GestureRecognizers>
             </Border>
 
-    <!-- Bottom gradient fade behind floating tab bar -->
-    <BoxView Grid.RowSpan="99" InputTransparent="True" VerticalOptions="End" HeightRequest="140">
+    <!-- Bottom gradient fade behind floating tab bar — matchar topp-gradienten spegelvänt -->
+    <BoxView Grid.RowSpan="99" InputTransparent="True" VerticalOptions="End" HeightRequest="150">
         <BoxView.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                <GradientStop Color="Transparent" Offset="0"/>
-                <GradientStop Color="{AppThemeBinding Light=#FCFCFC, Dark=#0E0E10}" Offset="1"/>
+                <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark=#000E0E10}" Offset="0.0"/>
+                <GradientStop Color="{AppThemeBinding Light=#38FCFCFC, Dark=#380E0E10}" Offset="0.35"/>
+                <GradientStop Color="{AppThemeBinding Light=#90FCFCFC, Dark=#900E0E10}" Offset="0.65"/>
+                <GradientStop Color="{AppThemeBinding Light=#FCFCFC, Dark=#0E0E10}" Offset="1.0"/>
             </LinearGradientBrush>
         </BoxView.Background>
     </BoxView>

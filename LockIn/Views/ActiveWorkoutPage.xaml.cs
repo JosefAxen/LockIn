@@ -31,6 +31,9 @@ public partial class ActiveWorkoutPage : ContentPage
             await MainScrollView.ScrollToAsync(card, ScrollToPosition.Start, animated: true));
     }
 
+    private void OnScrolled(object sender, ScrolledEventArgs e)
+        => StickyHeader.Opacity = Math.Clamp((e.ScrollY - 80.0) / 40.0, 0, 1);
+
     private async void OnBackClicked(object sender, EventArgs e)
     {
         var confirmed = await DisplayAlert("Avbryt pass", "Lämna utan att avsluta?", "Ja", "Nej");
@@ -45,6 +48,7 @@ public partial class ActiveWorkoutPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        StickyHeader.Opacity = 0;
         (BindingContext as ActiveWorkoutViewModel)?.RefreshTimerState();
         if (!_hasAppeared)
         {

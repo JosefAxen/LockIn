@@ -28,8 +28,33 @@
         <!-- Atmosfärisk bakgrund -->
         <controls:AtmosphericBackgroundView Grid.RowSpan="2" InputTransparent="True"/>
 
+        <!-- Permanent status bar gradient (alltid synlig, fyller Dynamic Island-zonen) -->
+        <BoxView Grid.RowSpan="2" VerticalOptions="Start" HeightRequest="90" InputTransparent="True" ZIndex="19">
+            <BoxView.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#280E0E10" Offset="0.0"/>
+                    <GradientStop Color="#000E0E10" Offset="1.0"/>
+                </LinearGradientBrush>
+            </BoxView.Background>
+        </BoxView>
+
+        <!-- Sticky header gradient (fades in on scroll) -->
+        <Grid x:Name="StickyHeader" Grid.RowSpan="2" VerticalOptions="Start" ZIndex="20" Opacity="0"
+              HeightRequest="150" SafeAreaEdges="None" InputTransparent="True">
+            <BoxView InputTransparent="True">
+                <BoxView.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#D80E0E10" Offset="0.0"/>
+                        <GradientStop Color="#900E0E10" Offset="0.35"/>
+                        <GradientStop Color="#380E0E10" Offset="0.65"/>
+                        <GradientStop Color="#000E0E10" Offset="1.0"/>
+                    </LinearGradientBrush>
+                </BoxView.Background>
+            </BoxView>
+        </Grid>
+
         <!-- Top bar -->
-        <Grid Grid.Row="0" Padding="16,56,20,8" ColumnDefinitions="Auto,*,Auto,Auto">
+        <Grid Grid.Row="0" Padding="16,56,20,8" ColumnDefinitions="Auto,*,Auto,Auto" ZIndex="21">
             <Border Grid.Column="0"
                     WidthRequest="36" HeightRequest="36"
                     StrokeShape="Ellipse"
@@ -69,7 +94,7 @@
         </Grid>
 
         <!-- Scrollable content -->
-        <ScrollView x:Name="MainScrollView" Grid.Row="1" VerticalScrollBarVisibility="Never">
+        <ScrollView x:Name="MainScrollView" Grid.Row="1" VerticalScrollBarVisibility="Never" Scrolled="OnScrolled">
             <StackLayout Padding="16,0,16,120" Spacing="12">
 
                 <!-- PR Banner -->
@@ -419,6 +444,18 @@
                                HorizontalOptions="Fill"
                                VerticalOptions="Fill"/>
 
+        <!-- Bottom gradient fade — matchar topp-gradienten spegelvänt -->
+        <BoxView Grid.RowSpan="2" InputTransparent="True" VerticalOptions="End" HeightRequest="150" ZIndex="22">
+            <BoxView.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#000E0E10" Offset="0.0"/>
+                    <GradientStop Color="#380E0E10" Offset="0.35"/>
+                    <GradientStop Color="#900E0E10" Offset="0.65"/>
+                    <GradientStop Color="#0E0E10" Offset="1.0"/>
+                </LinearGradientBrush>
+            </BoxView.Background>
+        </BoxView>
+
         <!-- Floating FAB: avsluta pass -->
         <Button Grid.Row="1"
                 Text="AVSLUTA PASS"
@@ -431,6 +468,7 @@
                 HeightRequest="48"
                 WidthRequest="172"
                 CornerRadius="24"
+                ZIndex="23"
                 Command="{Binding FinishWorkoutCommand}">
             <Button.Behaviors>
                 <views:AnimatedButtonBehavior/>
