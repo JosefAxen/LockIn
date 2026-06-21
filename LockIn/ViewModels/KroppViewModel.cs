@@ -46,7 +46,7 @@ public partial class KroppViewModel(DatabaseService db) : ObservableObject
     public Color Tab1Bg => SelectedTab == 1 ? _segPillActive : Colors.Transparent;
     public Color Tab1Fg => SelectedTab == 1 ? Color.FromArgb("#A78BFA") : _segTextDim;
     public Color Tab2Bg => SelectedTab == 2 ? _segPillActive : Colors.Transparent;
-    public Color Tab2Fg => SelectedTab == 2 ? Color.FromArgb("#4ADE80") : _segTextDim;
+    public Color Tab2Fg => SelectedTab == 2 ? Color.FromArgb("#FAFAFA") : _segTextDim;
 
     partial void OnSelectedTabChanged(int value)
     {

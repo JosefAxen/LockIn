@@ -150,7 +150,7 @@ public partial class OnboardingViewModel(DatabaseService db) : ObservableObject
 
     // ── Card colors ────────────────────────────────────────────────────────
 
-    private static Color SelBg  => Color.FromArgb("#4ADE80");
+    private static Color SelBg  => Color.FromArgb("#B8B8BC");
     private static Color SelFg  => Color.FromArgb("#0E0E10");
     private static Color IdleBg => Color.FromArgb("#222228");
     private static Color IdleFg => Color.FromArgb("#E2E8F0");

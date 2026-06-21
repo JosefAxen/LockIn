@@ -25,7 +25,7 @@ public class PRColorConverter : IValueConverter
     public static readonly PRColorConverter Instance = new();
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) =>
         value is true
-            ? Color.FromArgb("#4ADE80")
+            ? Color.FromArgb("#B8B8BC")
             : Application.Current?.RequestedTheme == AppTheme.Dark
                 ? Color.FromArgb("#F2F2F2")
                 : Color.FromArgb("#1A1A1A");
@@ -46,7 +46,7 @@ public class DotColorConverter : IValueConverter
 {
     public static readonly DotColorConverter Instance = new();
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) =>
-        value is true ? Color.FromArgb("#4ADE80") : Color.FromArgb("#222228");
+        value is true ? Color.FromArgb("#B8B8BC") : Color.FromArgb("#222228");
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
         throw new NotImplementedException();
 }
@@ -55,7 +55,7 @@ public class OnboardingButtonColorConverter : IValueConverter
 {
     public static readonly OnboardingButtonColorConverter Instance = new();
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) =>
-        value is true ? Color.FromArgb("#4ADE80") : Color.FromArgb("#2A2A32");
+        value is true ? Color.FromArgb("#B8B8BC") : Color.FromArgb("#2A2A32");
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
         throw new NotImplementedException();
 }
