@@ -20,7 +20,7 @@ public class AtmosphericBackgroundView : SKCanvasView
         using var glowShader = SKShader.CreateRadialGradient(
             new SKPoint(w * 0.5f, h * 0.17f),
             w * 0.65f,
-            new[] { SKColor.Parse("#284ADE80"), SKColors.Transparent },
+            new[] { SKColor.Parse("#28B8B8BC"), SKColors.Transparent },
             new[] { 0f, 1f },
             SKShaderTileMode.Clamp);
         using var glowPaint = new SKPaint { Shader = glowShader, IsAntialias = true };
@@ -30,7 +30,7 @@ public class AtmosphericBackgroundView : SKCanvasView
         using var glow2Shader = SKShader.CreateRadialGradient(
             new SKPoint(w * 0.5f, h * 0.12f),
             w * 0.3f,
-            new[] { SKColor.Parse("#1C4ADE80"), SKColors.Transparent },
+            new[] { SKColor.Parse("#1CB8B8BC"), SKColors.Transparent },
             new[] { 0f, 1f },
             SKShaderTileMode.Clamp);
         using var glow2Paint = new SKPaint { Shader = glow2Shader, IsAntialias = true };

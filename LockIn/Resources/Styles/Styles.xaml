@@ -82,7 +82,7 @@
         <Setter Property="BorderWidth" Value="0" />
         <Setter Property="Shadow">
             <Setter.Value>
-                <Shadow Brush="#4ADE80" Offset="0,4" Radius="20" Opacity="0.28" />
+                <Shadow Brush="#B8B8BC" Offset="0,4" Radius="20" Opacity="0.28" />
             </Setter.Value>
         </Setter>
     </Style>
@@ -137,7 +137,7 @@
         <Setter Property="Padding" Value="0" />
         <Setter Property="Shadow">
             <Setter.Value>
-                <Shadow Brush="#4ADE80" Offset="0,4" Radius="20" Opacity="0.15" />
+                <Shadow Brush="#B8B8BC" Offset="0,4" Radius="20" Opacity="0.15" />
             </Setter.Value>
         </Setter>
     </Style>
