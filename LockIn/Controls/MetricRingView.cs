@@ -18,6 +18,10 @@ public class MetricRingView : SKCanvasView
         BindableProperty.Create(nameof(CenterText), typeof(string), typeof(MetricRingView), "–",
             propertyChanged: (b, _, _) => ((MetricRingView)b).InvalidateSurface());
 
+    public static readonly BindableProperty TargetProgressProperty =
+        BindableProperty.Create(nameof(TargetProgress), typeof(float), typeof(MetricRingView), 0f,
+            propertyChanged: (b, _, _) => ((MetricRingView)b).InvalidateSurface());
+
     public float Progress
     {
         get => (float)GetValue(ProgressProperty);
@@ -34,6 +38,12 @@ public class MetricRingView : SKCanvasView
     {
         get => (string)GetValue(CenterTextProperty);
         set => SetValue(CenterTextProperty, value);
+    }
+
+    public float TargetProgress
+    {
+        get => (float)GetValue(TargetProgressProperty);
+        set => SetValue(TargetProgressProperty, value);
     }
 
     private const float StartAngleDeg = 135f;
@@ -63,6 +73,29 @@ public class MetricRingView : SKCanvasView
             Color       = new SKColor(0x2A, 0x2A, 0x2E)
         };
         canvas.DrawPath(trackPath, trackPaint);
+
+        // Target halo — halv-transparent stråk till TargetProgress
+        float targetSweep = TotalSweepDeg * Math.Clamp(TargetProgress, 0f, 1f);
+        if (targetSweep > 0.5f)
+        {
+            var c = RingColor;
+            var skTarget = new SKColor(
+                (byte)(c.Red   * 255),
+                (byte)(c.Green * 255),
+                (byte)(c.Blue  * 255),
+                (byte)90);
+            using var targetPath = new SKPath();
+            targetPath.AddArc(rect, StartAngleDeg, targetSweep);
+            using var targetPaint = new SKPaint
+            {
+                IsAntialias = true,
+                Style       = SKPaintStyle.Stroke,
+                StrokeWidth = sw,
+                StrokeCap   = SKStrokeCap.Round,
+                Color       = skTarget
+            };
+            canvas.DrawPath(targetPath, targetPaint);
+        }
 
         // Active arc
         float activeSweep = TotalSweepDeg * Math.Clamp(Progress, 0f, 1f);
