@@ -141,6 +141,7 @@
                                            TextColor="{Binding Period0Fg}" VerticalOptions="Center"/>
                                     <Border.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding SelectPeriodCommand}" CommandParameter="{x:Int32 0}"/>
+                                        <PointerGestureRecognizer PointerPressed="OnPillPressed" PointerReleased="OnPillReleased"/>
                                     </Border.GestureRecognizers>
                                 </Border>
                                 <Border Grid.Column="1" BackgroundColor="{Binding Period1Bg}"
@@ -150,6 +151,7 @@
                                            TextColor="{Binding Period1Fg}" VerticalOptions="Center"/>
                                     <Border.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding SelectPeriodCommand}" CommandParameter="{x:Int32 1}"/>
+                                        <PointerGestureRecognizer PointerPressed="OnPillPressed" PointerReleased="OnPillReleased"/>
                                     </Border.GestureRecognizers>
                                 </Border>
                                 <Border Grid.Column="2" BackgroundColor="{Binding Period2Bg}"
@@ -159,6 +161,7 @@
                                            TextColor="{Binding Period2Fg}" VerticalOptions="Center"/>
                                     <Border.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding SelectPeriodCommand}" CommandParameter="{x:Int32 2}"/>
+                                        <PointerGestureRecognizer PointerPressed="OnPillPressed" PointerReleased="OnPillReleased"/>
                                     </Border.GestureRecognizers>
                                 </Border>
                             </Grid>
@@ -172,6 +175,7 @@
                                            TextColor="{Binding Sort0Fg}" VerticalOptions="Center"/>
                                     <Border.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding SelectSortCommand}" CommandParameter="{x:Int32 0}"/>
+                                        <PointerGestureRecognizer PointerPressed="OnPillPressed" PointerReleased="OnPillReleased"/>
                                     </Border.GestureRecognizers>
                                 </Border>
                                 <Border Grid.Column="1" BackgroundColor="{Binding Sort1Bg}"
@@ -181,6 +185,7 @@
                                            TextColor="{Binding Sort1Fg}" VerticalOptions="Center"/>
                                     <Border.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding SelectSortCommand}" CommandParameter="{x:Int32 1}"/>
+                                        <PointerGestureRecognizer PointerPressed="OnPillPressed" PointerReleased="OnPillReleased"/>
                                     </Border.GestureRecognizers>
                                 </Border>
                             </Grid>

@@ -157,6 +157,20 @@ public partial class HistoryPage : ContentPage
             await ve.ScaleTo(1.0, 230, Easing.SpringOut);
     }
 
+    // Pill-knappar — snappy scale-pop med spring tillbaka, optimerat för filtreringsflöde
+    private static async void OnPillPressed(object? sender, PointerEventArgs e)
+    {
+        HapticFeedback.Default.Perform(HapticFeedbackType.Click);
+        if (sender is PointerGestureRecognizer pgr && pgr.Parent is VisualElement ve)
+            await ve.ScaleTo(0.93, 60, Easing.CubicOut);
+    }
+
+    private static async void OnPillReleased(object? sender, PointerEventArgs e)
+    {
+        if (sender is PointerGestureRecognizer pgr && pgr.Parent is VisualElement ve)
+            await ve.ScaleTo(1.0, 180, Easing.SpringOut);
+    }
+
     private async void OnWorkoutBannerTapped(object sender, TappedEventArgs e)
         => await Shell.Current.GoToAsync(nameof(ActiveWorkoutPage));
 }

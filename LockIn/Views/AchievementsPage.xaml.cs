@@ -13,6 +13,7 @@ public partial class AchievementsPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        StickyHeader.Opacity = 0;
         var vm = BindingContext as AchievementsViewModel;
         Content.Opacity = 0;
         Content.TranslationY = 14;
@@ -22,4 +23,7 @@ public partial class AchievementsPage : ContentPage
             Content.TranslateTo(0, 0, 280, Easing.CubicOut)
         );
     }
+
+    private void OnScrolled(object sender, ItemsViewScrolledEventArgs e)
+        => StickyHeader.Opacity = Math.Clamp((e.VerticalOffset - 80.0) / 40.0, 0, 1);
 }
