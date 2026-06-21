@@ -38,9 +38,9 @@
             </BoxView.Background>
         </BoxView>
 
-        <!-- Sticky header gradient (fades in on scroll) -->
+        <!-- Sticky header gradient + compact mini-toolbar (fades in on scroll) -->
         <Grid x:Name="StickyHeader" Grid.RowSpan="2" VerticalOptions="Start" ZIndex="20" Opacity="0"
-              HeightRequest="150" SafeAreaEdges="None" InputTransparent="True">
+              HeightRequest="150" SafeAreaEdges="None">
             <BoxView InputTransparent="True">
                 <BoxView.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
@@ -51,51 +51,84 @@
                     </LinearGradientBrush>
                 </BoxView.Background>
             </BoxView>
+            <!-- Compact mini-toolbar: back + plate-calc + tid (inget namn) -->
+            <Grid Padding="16,56,20,8" ColumnDefinitions="Auto,*,Auto,Auto" VerticalOptions="Start">
+                <Border Grid.Column="0"
+                        WidthRequest="36" HeightRequest="36"
+                        StrokeShape="Ellipse"
+                        BackgroundColor="#17FFFFFF"
+                        Stroke="#29FFFFFF"
+                        StrokeThickness="0.5"
+                        VerticalOptions="Center">
+                    <Label Text="‹" FontSize="22" FontFamily="DMSansMedium"
+                           HorizontalOptions="Center" VerticalOptions="Center"
+                           TextColor="{StaticResource ForgeText}"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnBackClicked"/>
+                    </Border.GestureRecognizers>
+                </Border>
+                <Border Grid.Column="2"
+                        WidthRequest="40" HeightRequest="40"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}"
+                        StrokeShape="Ellipse" StrokeThickness="0"
+                        Margin="0,0,6,0">
+                    <views:AppIcon Source="ic_scale.png"
+                                   WidthRequest="20" HeightRequest="20"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding OpenPlateCalculatorCommand}"/>
+                    </Border.GestureRecognizers>
+                </Border>
+                <Label Grid.Column="3" Text="{Binding ElapsedTime}"
+                       TextColor="{StaticResource ForgeAccent}"
+                       FontFamily="BebasNeue" FontSize="22"
+                       VerticalOptions="Center"/>
+            </Grid>
         </Grid>
 
-        <!-- Top bar -->
-        <Grid x:Name="TopBar" Grid.Row="0" Padding="16,56,20,8" ColumnDefinitions="Auto,*,Auto,Auto" ZIndex="21">
-            <Border Grid.Column="0"
-                    WidthRequest="36" HeightRequest="36"
-                    StrokeShape="Ellipse"
-                    BackgroundColor="#17FFFFFF"
-                    Stroke="#29FFFFFF"
-                    StrokeThickness="0.5"
-                    VerticalOptions="Center">
-                <Label Text="‹" FontSize="22" FontFamily="DMSansMedium"
-                       HorizontalOptions="Center" VerticalOptions="Center"
-                       TextColor="{StaticResource ForgeText}"/>
-                <Border.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="OnBackClicked"/>
-                </Border.GestureRecognizers>
-            </Border>
-            <Label Grid.Column="1" Text="{Binding TemplateName}"
-                   Style="{StaticResource DisplayLabel}"
-                   TextColor="{StaticResource ForgeText}"
-                   FontSize="22"
-                   HorizontalOptions="Center" VerticalOptions="Center"/>
-            <!-- Plate calculator button -->
-            <Border Grid.Column="2"
-                    WidthRequest="40" HeightRequest="40"
-                    BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}"
-                    StrokeShape="Ellipse" StrokeThickness="0"
-                    Margin="0,0,6,0">
-                <views:AppIcon Source="ic_scale.png"
-                               WidthRequest="20" HeightRequest="20"
-                               HorizontalOptions="Center" VerticalOptions="Center"/>
-                <Border.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding OpenPlateCalculatorCommand}"/>
-                </Border.GestureRecognizers>
-            </Border>
-            <Label Grid.Column="3" Text="{Binding ElapsedTime}"
-                   TextColor="{StaticResource ForgeAccent}"
-                   FontFamily="BebasNeue" FontSize="22"
-                   VerticalOptions="Center"/>
-        </Grid>
-
-        <!-- Scrollable content -->
-        <ScrollView x:Name="MainScrollView" Grid.Row="1" VerticalScrollBarVisibility="Never" Scrolled="OnScrolled">
+        <!-- Scrollable content (TopBar ligger som första element och scrollar bort) -->
+        <ScrollView x:Name="MainScrollView" Grid.Row="0" Grid.RowSpan="2" VerticalScrollBarVisibility="Never" Scrolled="OnScrolled">
             <StackLayout Padding="16,0,16,120" Spacing="12">
+
+                <!-- Top bar — scrollar med innehållet -->
+                <Grid x:Name="TopBar" Padding="0,56,4,8" ColumnDefinitions="Auto,*,Auto,Auto">
+                    <Border Grid.Column="0"
+                            WidthRequest="36" HeightRequest="36"
+                            StrokeShape="Ellipse"
+                            BackgroundColor="#17FFFFFF"
+                            Stroke="#29FFFFFF"
+                            StrokeThickness="0.5"
+                            VerticalOptions="Center">
+                        <Label Text="‹" FontSize="22" FontFamily="DMSansMedium"
+                               HorizontalOptions="Center" VerticalOptions="Center"
+                               TextColor="{StaticResource ForgeText}"/>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnBackClicked"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+                    <Label Grid.Column="1" Text="{Binding TemplateName}"
+                           Style="{StaticResource DisplayLabel}"
+                           TextColor="{StaticResource ForgeText}"
+                           FontSize="22"
+                           HorizontalOptions="Center" VerticalOptions="Center"/>
+                    <Border Grid.Column="2"
+                            WidthRequest="40" HeightRequest="40"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}"
+                            StrokeShape="Ellipse" StrokeThickness="0"
+                            Margin="0,0,6,0">
+                        <views:AppIcon Source="ic_scale.png"
+                                       WidthRequest="20" HeightRequest="20"
+                                       HorizontalOptions="Center" VerticalOptions="Center"/>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding OpenPlateCalculatorCommand}"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+                    <Label Grid.Column="3" Text="{Binding ElapsedTime}"
+                           TextColor="{StaticResource ForgeAccent}"
+                           FontFamily="BebasNeue" FontSize="22"
+                           VerticalOptions="Center"/>
+                </Grid>
+
 
                 <!-- PR Banner -->
                 <Border IsVisible="{Binding HasPR}"

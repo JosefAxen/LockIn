@@ -32,11 +32,7 @@ public partial class ActiveWorkoutPage : ContentPage
     }
 
     private void OnScrolled(object sender, ScrolledEventArgs e)
-    {
-        var opacity = Math.Clamp((e.ScrollY - 80.0) / 40.0, 0, 1);
-        StickyHeader.Opacity = opacity;
-        TopBar.Opacity = 1 - opacity;
-    }
+        => StickyHeader.Opacity = Math.Clamp((e.ScrollY - 80.0) / 40.0, 0, 1);
 
     private async void OnBackClicked(object sender, EventArgs e)
     {
@@ -51,7 +47,6 @@ public partial class ActiveWorkoutPage : ContentPage
     {
         base.OnAppearing();
         StickyHeader.Opacity = 0;
-        TopBar.Opacity = 1;
         (BindingContext as ActiveWorkoutViewModel)?.RefreshTimerState();
         if (!_hasAppeared)
         {
