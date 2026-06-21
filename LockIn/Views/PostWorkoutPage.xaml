@@ -67,7 +67,7 @@
     <Grid ZIndex="2">
 
         <ScrollView VerticalScrollBarVisibility="Never" Scrolled="OnScrolled">
-            <StackLayout Padding="16,0,16,32" Spacing="16">
+            <StackLayout Padding="16,0,16,120" Spacing="16">
 
                 <!-- Header — scrollar med innehållet -->
                 <VerticalStackLayout Padding="4,56,4,4" Spacing="4">
@@ -271,16 +271,19 @@
                     </StackLayout>
                 </Border>
 
-                <!-- KLAR-knapp som sista element — scrollar med innehållet -->
-                <Button Text="KLAR"
-                        Style="{StaticResource PrimaryButton}"
-                        Margin="0,12,0,0"
-                        Command="{Binding DoneCommand}"/>
-
             </StackLayout>
         </ScrollView>
 
     </Grid>
+
+    <!-- Floating KLAR-knapp — fast längst ner, ingen container/gradient -->
+    <Button Text="KLAR"
+            Style="{StaticResource PrimaryButton}"
+            HorizontalOptions="Fill"
+            VerticalOptions="End"
+            Margin="16,0,16,40"
+            ZIndex="23"
+            Command="{Binding DoneCommand}"/>
 
     <controls:ConfettiView x:Name="ConfettiOverlay"/>
 
