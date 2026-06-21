@@ -315,7 +315,7 @@
                 HeightRequest="56" WidthRequest="180"
                 Padding="20,0">
             <Border.Shadow>
-                <Shadow Brush="#4ADE80" Offset="0,6" Radius="28" Opacity="0.45"/>
+                <Shadow Brush="#B8B8BC" Offset="0,6" Radius="28" Opacity="0.45"/>
             </Border.Shadow>
             <!-- Inre highlight för bevel-känsla -->
             <Grid>

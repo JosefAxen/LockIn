@@ -25,7 +25,7 @@
         <BoxView VerticalOptions="Start" HeightRequest="200" InputTransparent="True" ZIndex="1">
             <BoxView.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <GradientStop Color="#1A4ADE80" Offset="0.0"/>
+                    <GradientStop Color="#1AB8B8BC" Offset="0.0"/>
                     <GradientStop Color="Transparent" Offset="1.0"/>
                 </LinearGradientBrush>
             </BoxView.Background>

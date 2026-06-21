@@ -54,7 +54,7 @@
                         <Label Text="EST. 1RM PROGRESSION"
                                Style="{StaticResource SectionLabel}"
                                Margin="4,0,0,0"/>
-                        <controls:LineChartView Points="{Binding ChartPoints}" StrokeColor="#4ADE80" HeightRequest="200" BackgroundColor="Transparent"/>
+                        <controls:LineChartView Points="{Binding ChartPoints}" StrokeColor="#B8B8BC" HeightRequest="200" BackgroundColor="Transparent"/>
                     </VerticalStackLayout>
                 </Border>
 

@@ -273,7 +273,7 @@
                                    FontSize="36" CharacterSpacing="0" LineHeight="1"
                                    TextColor="{AppThemeBinding Light={StaticResource LightAccent}, Dark={StaticResource ForgeAccent}}"/>
                             <Label Text="steg idag" Style="{StaticResource MutedLabel}" Margin="0,2,0,6"/>
-                            <controls:SparklineView Values="{Binding StepsValues}" StrokeColor="#4ADE80" HeightRequest="38" BackgroundColor="Transparent"/>
+                            <controls:SparklineView Values="{Binding StepsValues}" StrokeColor="#B8B8BC" HeightRequest="38" BackgroundColor="Transparent"/>
                         </VerticalStackLayout>
                     </Border>
 

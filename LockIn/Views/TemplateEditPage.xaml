@@ -69,7 +69,7 @@
                     HeightRequest="38"
                     VerticalOptions="Center">
                 <Border.Shadow>
-                    <Shadow Brush="#4ADE80" Offset="0,3" Radius="14" Opacity="0.4"/>
+                    <Shadow Brush="#B8B8BC" Offset="0,3" Radius="14" Opacity="0.4"/>
                 </Border.Shadow>
                 <Label Text="SPARA"
                        FontFamily="BebasNeue" FontSize="14"
