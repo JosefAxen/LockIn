@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <!-- ═══ Dark palette ═══ -->
-    <Color x:Key="ForgeBackground">#0E0E10</Color>
+    <Color x:Key="ForgeBackground">#141418</Color>
     <Color x:Key="ForgeSurface">#161618</Color>
     <Color x:Key="ForgeSurface2">#222228</Color>
     <Color x:Key="ForgeSurface3">#2E2E36</Color>

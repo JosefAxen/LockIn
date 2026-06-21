@@ -10,7 +10,7 @@ public static class DesignTokens
         Application.Current?.RequestedTheme != AppTheme.Light;
 
     // ─── Surfaces ────────────────────────────────────────────────────────────
-    public static Color Background  => Color.FromArgb(IsDark ? "#0E0E10" : "#FCFCFC");
+    public static Color Background  => Color.FromArgb(IsDark ? "#141418" : "#FCFCFC");
     public static Color Surface     => Color.FromArgb(IsDark ? "#161618" : "#FFFFFF");
     public static Color Surface2    => Color.FromArgb(IsDark ? "#222228" : "#EDEDED");
 

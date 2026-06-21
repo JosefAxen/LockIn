@@ -20,8 +20,8 @@
         <BoxView Grid.RowSpan="2" VerticalOptions="Start" HeightRequest="90" InputTransparent="True" ZIndex="19">
             <BoxView.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <GradientStop Color="#280E0E10" Offset="0.0"/>
-                    <GradientStop Color="#000E0E10" Offset="1.0"/>
+                    <GradientStop Color="#28141418" Offset="0.0"/>
+                    <GradientStop Color="#00141418" Offset="1.0"/>
                 </LinearGradientBrush>
             </BoxView.Background>
         </BoxView>
@@ -32,10 +32,10 @@
             <BoxView InputTransparent="True">
                 <BoxView.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                        <GradientStop Color="#D80E0E10" Offset="0.0"/>
-                        <GradientStop Color="#900E0E10" Offset="0.35"/>
-                        <GradientStop Color="#380E0E10" Offset="0.65"/>
-                        <GradientStop Color="#000E0E10" Offset="1.0"/>
+                        <GradientStop Color="#D8141418" Offset="0.0"/>
+                        <GradientStop Color="#90141418" Offset="0.35"/>
+                        <GradientStop Color="#38141418" Offset="0.65"/>
+                        <GradientStop Color="#00141418" Offset="1.0"/>
                     </LinearGradientBrush>
                 </BoxView.Background>
             </BoxView>
@@ -368,10 +368,10 @@
         <BoxView Grid.RowSpan="2" InputTransparent="True" VerticalOptions="End" HeightRequest="150" ZIndex="22">
             <BoxView.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <GradientStop Color="#000E0E10" Offset="0.0"/>
-                    <GradientStop Color="#380E0E10" Offset="0.35"/>
-                    <GradientStop Color="#900E0E10" Offset="0.65"/>
-                    <GradientStop Color="#0E0E10" Offset="1.0"/>
+                    <GradientStop Color="#00141418" Offset="0.0"/>
+                    <GradientStop Color="#38141418" Offset="0.35"/>
+                    <GradientStop Color="#90141418" Offset="0.65"/>
+                    <GradientStop Color="#141418" Offset="1.0"/>
                 </LinearGradientBrush>
             </BoxView.Background>
         </BoxView>

@@ -14,7 +14,7 @@ public class AtmosphericBackgroundView : SKCanvasView
         var bounds = new SKRect(0, 0, w, h);
 
         // Base fill
-        canvas.Clear(SKColor.Parse("#0E0E10"));
+        canvas.Clear(SKColor.Parse("#141418"));
 
         // Green radial glow — topp-center, bakom gauge-zonen
         using var glowShader = SKShader.CreateRadialGradient(

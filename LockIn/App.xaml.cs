@@ -16,7 +16,7 @@ public partial class App : Application
     protected override Window CreateWindow(IActivationState? activationState)
     {
         // Start with dark blank page to avoid flash, then navigate based on onboarding state
-        var splash = new ContentPage { BackgroundColor = Color.FromArgb("#0E0E10") };
+        var splash = new ContentPage { BackgroundColor = Color.FromArgb("#141418") };
         var window = new Window(splash);
 
         window.HandlerChanged += (_, _) =>

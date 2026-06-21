@@ -28,8 +28,8 @@
         <BoxView Grid.RowSpan="6" VerticalOptions="Start" HeightRequest="90" InputTransparent="True" ZIndex="19">
             <BoxView.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <GradientStop Color="{AppThemeBinding Light=#28FCFCFC, Dark=#280E0E10}" Offset="0.0"/>
-                    <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark=#000E0E10}" Offset="1.0"/>
+                    <GradientStop Color="{AppThemeBinding Light=#28FCFCFC, Dark=#28141418}" Offset="0.0"/>
+                    <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark=#00141418}" Offset="1.0"/>
                 </LinearGradientBrush>
             </BoxView.Background>
         </BoxView>
@@ -40,10 +40,10 @@
             <BoxView InputTransparent="True">
                 <BoxView.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                        <GradientStop Color="{AppThemeBinding Light=#D8FCFCFC, Dark=#D80E0E10}" Offset="0.0"/>
-                        <GradientStop Color="{AppThemeBinding Light=#90FCFCFC, Dark=#900E0E10}" Offset="0.35"/>
-                        <GradientStop Color="{AppThemeBinding Light=#38FCFCFC, Dark=#380E0E10}" Offset="0.65"/>
-                        <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark=#000E0E10}" Offset="1.0"/>
+                        <GradientStop Color="{AppThemeBinding Light=#D8FCFCFC, Dark=#D8141418}" Offset="0.0"/>
+                        <GradientStop Color="{AppThemeBinding Light=#90FCFCFC, Dark=#90141418}" Offset="0.35"/>
+                        <GradientStop Color="{AppThemeBinding Light=#38FCFCFC, Dark=#38141418}" Offset="0.65"/>
+                        <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark=#00141418}" Offset="1.0"/>
                     </LinearGradientBrush>
                 </BoxView.Background>
             </BoxView>
@@ -404,10 +404,10 @@
     <BoxView Grid.RowSpan="99" InputTransparent="True" VerticalOptions="End" HeightRequest="150">
         <BoxView.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark=#000E0E10}" Offset="0.0"/>
-                <GradientStop Color="{AppThemeBinding Light=#38FCFCFC, Dark=#380E0E10}" Offset="0.35"/>
-                <GradientStop Color="{AppThemeBinding Light=#90FCFCFC, Dark=#900E0E10}" Offset="0.65"/>
-                <GradientStop Color="{AppThemeBinding Light=#FCFCFC, Dark=#0E0E10}" Offset="1.0"/>
+                <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark=#00141418}" Offset="0.0"/>
+                <GradientStop Color="{AppThemeBinding Light=#38FCFCFC, Dark=#38141418}" Offset="0.35"/>
+                <GradientStop Color="{AppThemeBinding Light=#90FCFCFC, Dark=#90141418}" Offset="0.65"/>
+                <GradientStop Color="{AppThemeBinding Light=#FCFCFC, Dark=#141418}" Offset="1.0"/>
             </LinearGradientBrush>
         </BoxView.Background>
     </BoxView>
