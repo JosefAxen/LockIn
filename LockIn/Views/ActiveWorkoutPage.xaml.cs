@@ -57,6 +57,15 @@ public partial class ActiveWorkoutPage : ContentPage
         }
     }
 
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+        // Stoppa ConfettiView innan navigation — annars fortsätter dess
+        // DispatcherTimer (16ms tick) köra på en disposed page och blockerar
+        // UI-tråden vilket renderas som svart skärm vid navigation efter PR.
+        Confetti.Stop();
+    }
+
     // RIR tap — logic only; animation handled by PointerGestureRecognizer
     // sender is the Border the gesture is attached to, not the TapGestureRecognizer itself
     private void OnRirTapped(object sender, TappedEventArgs e)
