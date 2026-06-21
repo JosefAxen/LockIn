@@ -36,13 +36,11 @@ public partial class ActiveWorkoutPage : ContentPage
 
     private async void OnBackClicked(object sender, EventArgs e)
     {
-        var confirmed = await DisplayAlert("Avbryt pass", "Lämna utan att avsluta?", "Ja", "Nej");
-        if (confirmed)
-        {
-            var vm = BindingContext as ActiveWorkoutViewModel;
-            vm?.ForceDeactivate();
-            await Shell.Current.GoToAsync("..");
-        }
+        // Lämna vyn UTAN att avsluta passet. Passet förblir aktivt
+        // (state.IsActive == true), så användaren kan återgå via
+        // "PASS PÅGÅR"-bannern eller genom att navigera till Träna-fliken.
+        // För att avsluta passet på riktigt — använd "AVSLUTA PASS"-knappen.
+        await Shell.Current.GoToAsync("..");
     }
 
     protected override async void OnAppearing()

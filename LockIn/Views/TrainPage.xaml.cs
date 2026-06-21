@@ -30,27 +30,36 @@ public partial class TrainPage : ContentPage
         }
 
         StickyHeader.Opacity = 0;
+        Content.Opacity = 0;
+        Content.TranslationY = _hasLoaded ? 12 : 16;
 
-        if (!_hasLoaded)
+        // try/finally säkerhetsnät: om LoadAsync eller animationerna kastar
+        // (race condition med PostWorkout DB-save, layout inte mätt än, etc)
+        // så förblir Content.Opacity låst på 0 → svart skärm. Återställ alltid.
+        try
         {
-            Content.Opacity = 0;
-            Content.TranslationY = 16;
-            await _vm.LoadAsync();
-            _hasLoaded = true;
-            await Task.WhenAll(
-                Content.FadeTo(1, 400, Easing.CubicOut),
-                Content.TranslateTo(0, 0, 400, Easing.CubicOut)
-            );
+            if (!_hasLoaded)
+            {
+                await _vm.LoadAsync();
+                _hasLoaded = true;
+                await Task.WhenAll(
+                    Content.FadeTo(1, 400, Easing.CubicOut),
+                    Content.TranslateTo(0, 0, 400, Easing.CubicOut)
+                );
+            }
+            else
+            {
+                await Task.WhenAll(
+                    _vm.LoadAsync(),
+                    Content.FadeTo(1, 320, Easing.CubicOut),
+                    Content.TranslateTo(0, 0, 320, Easing.CubicOut)
+                );
+            }
         }
-        else
+        finally
         {
-            Content.Opacity = 0;
-            Content.TranslationY = 12;
-            await Task.WhenAll(
-                _vm.LoadAsync(),
-                Content.FadeTo(1, 320, Easing.CubicOut),
-                Content.TranslateTo(0, 0, 320, Easing.CubicOut)
-            );
+            Content.Opacity = 1;
+            Content.TranslationY = 0;
         }
     }
 
