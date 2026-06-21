@@ -16,8 +16,33 @@
         <!-- Atmosfärisk bakgrund -->
         <controls:AtmosphericBackgroundView Grid.RowSpan="2" InputTransparent="True"/>
 
+        <!-- Permanent status bar gradient -->
+        <BoxView Grid.RowSpan="2" VerticalOptions="Start" HeightRequest="90" InputTransparent="True" ZIndex="19">
+            <BoxView.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#280E0E10" Offset="0.0"/>
+                    <GradientStop Color="#000E0E10" Offset="1.0"/>
+                </LinearGradientBrush>
+            </BoxView.Background>
+        </BoxView>
+
+        <!-- Sticky header gradient (fades in on scroll) -->
+        <Grid x:Name="StickyHeader" Grid.RowSpan="2" VerticalOptions="Start" ZIndex="20" Opacity="0"
+              HeightRequest="150" SafeAreaEdges="None" InputTransparent="True">
+            <BoxView InputTransparent="True">
+                <BoxView.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#D80E0E10" Offset="0.0"/>
+                        <GradientStop Color="#900E0E10" Offset="0.35"/>
+                        <GradientStop Color="#380E0E10" Offset="0.65"/>
+                        <GradientStop Color="#000E0E10" Offset="1.0"/>
+                    </LinearGradientBrush>
+                </BoxView.Background>
+            </BoxView>
+        </Grid>
+
         <!-- Header -->
-        <Grid Grid.Row="0" Padding="16,56,16,8" ColumnDefinitions="48,*,Auto">
+        <Grid Grid.Row="0" Padding="16,56,16,8" ColumnDefinitions="48,*,Auto" ZIndex="21">
             <Border Grid.Column="0"
                     WidthRequest="36" HeightRequest="36"
                     StrokeShape="Ellipse"
@@ -35,13 +60,30 @@
             <Label Grid.Column="1" Text="MALL"
                    Style="{StaticResource DisplayLabel}"
                    FontSize="24" HorizontalOptions="Center" VerticalOptions="Center"/>
-            <Button Grid.Column="2" Text="SPARA"
-                    Style="{StaticResource PrimaryButton}"
-                    HeightRequest="40" Padding="16,0"
-                    Command="{Binding SaveCommand}"/>
+            <!-- Spara-knapp — pill, premium gym-stil -->
+            <Border Grid.Column="2"
+                    BackgroundColor="{StaticResource ForgeAccent}"
+                    StrokeShape="RoundRectangle 20"
+                    StrokeThickness="0"
+                    Padding="18,0"
+                    HeightRequest="38"
+                    VerticalOptions="Center">
+                <Border.Shadow>
+                    <Shadow Brush="#4ADE80" Offset="0,3" Radius="14" Opacity="0.4"/>
+                </Border.Shadow>
+                <Label Text="SPARA"
+                       FontFamily="BebasNeue" FontSize="14"
+                       CharacterSpacing="2"
+                       TextColor="#0E0E10"
+                       HorizontalOptions="Center" VerticalOptions="Center"/>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding SaveCommand}"/>
+                    <PointerGestureRecognizer PointerPressed="OnSavePressed" PointerReleased="OnSaveReleased"/>
+                </Border.GestureRecognizers>
+            </Border>
         </Grid>
 
-        <ScrollView Grid.Row="1">
+        <ScrollView Grid.Row="1" Scrolled="OnScrolled">
             <VerticalStackLayout Padding="16,8,16,40" Spacing="12">
 
                 <!-- Template name -->
@@ -55,7 +97,7 @@
                     </VerticalStackLayout>
                 </Border>
 
-                <Label Text="ÖVNINGAR" Style="{StaticResource SectionLabel}" Margin="4,4,0,0"/>
+                <Label Text="ÖVNINGAR" Style="{StaticResource SectionLabel}" Margin="0,4,0,0"/>
 
                 <!-- Exercise cards -->
                 <StackLayout BindableLayout.ItemsSource="{Binding Exercises}" Spacing="10">
@@ -321,6 +363,18 @@
 
             </VerticalStackLayout>
         </ScrollView>
+
+        <!-- Bottom gradient fade — matchar topp-gradienten spegelvänt -->
+        <BoxView Grid.RowSpan="2" InputTransparent="True" VerticalOptions="End" HeightRequest="150" ZIndex="22">
+            <BoxView.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#000E0E10" Offset="0.0"/>
+                    <GradientStop Color="#380E0E10" Offset="0.35"/>
+                    <GradientStop Color="#900E0E10" Offset="0.65"/>
+                    <GradientStop Color="#0E0E10" Offset="1.0"/>
+                </LinearGradientBrush>
+            </BoxView.Background>
+        </BoxView>
 
     </Grid>
 </ContentPage>

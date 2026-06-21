@@ -13,8 +13,12 @@ public partial class ProgramDetailPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        StickyHeader.Opacity = 0;
         await AnimationHelper.PageEntryAsync(this);
     }
+
+    private void OnScrolled(object sender, ScrolledEventArgs e)
+        => StickyHeader.Opacity = Math.Clamp((e.ScrollY - 80.0) / 40.0, 0, 1);
 
     private async void OnBackClicked(object sender, EventArgs e) =>
         await Shell.Current.GoToAsync("..");
