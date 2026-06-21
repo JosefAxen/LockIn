@@ -76,18 +76,26 @@
                     VerticalOptions="Center"/>
         </Grid>
 
-        <!-- Tab segment control — iOS glass pill -->
+        <!-- Tab segment control — iOS glass pill med glidande indikator -->
         <Border x:Name="TabSegment" Grid.Row="1" Margin="16,8,16,10"
                 BackgroundColor="#33787882"
                 StrokeThickness="0"
                 StrokeShape="RoundRectangle 50"
                 Padding="2">
-            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="0">
+            <Grid x:Name="TabPills" ColumnDefinitions="*,*,*" HeightRequest="40"
+                  SizeChanged="OnTabContainerSizeChanged">
 
-                <Border Grid.Column="0"
-                        BackgroundColor="{Binding Tab0Bg}"
+                <!-- Glidande indikator — flyttar mellan tabbar -->
+                <Border x:Name="TabIndicator" Grid.ColumnSpan="3"
+                        BackgroundColor="{StaticResource ForgeSurface}"
                         StrokeThickness="0"
                         StrokeShape="RoundRectangle 48"
+                        HorizontalOptions="Start"
+                        VerticalOptions="Fill"/>
+
+                <Border Grid.Column="0"
+                        BackgroundColor="Transparent"
+                        StrokeThickness="0"
                         Padding="0,9">
                     <Label Text="ÖVNINGAR"
                            TextColor="{Binding Tab0Fg}"
@@ -95,14 +103,12 @@
                            HorizontalOptions="Center" VerticalOptions="Center"/>
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 0}"/>
-                        <PointerGestureRecognizer PointerPressed="OnPillPressed" PointerReleased="OnPillReleased"/>
                     </Border.GestureRecognizers>
                 </Border>
 
                 <Border Grid.Column="1"
-                        BackgroundColor="{Binding Tab1Bg}"
+                        BackgroundColor="Transparent"
                         StrokeThickness="0"
-                        StrokeShape="RoundRectangle 48"
                         Padding="0,9">
                     <Label Text="MALLAR"
                            TextColor="{Binding Tab1Fg}"
@@ -110,14 +116,12 @@
                            HorizontalOptions="Center" VerticalOptions="Center"/>
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 1}"/>
-                        <PointerGestureRecognizer PointerPressed="OnPillPressed" PointerReleased="OnPillReleased"/>
                     </Border.GestureRecognizers>
                 </Border>
 
                 <Border Grid.Column="2"
-                        BackgroundColor="{Binding Tab2Bg}"
+                        BackgroundColor="Transparent"
                         StrokeThickness="0"
-                        StrokeShape="RoundRectangle 48"
                         Padding="0,9">
                     <Label Text="PROGRAM"
                            TextColor="{Binding Tab2Fg}"
@@ -125,7 +129,6 @@
                            HorizontalOptions="Center" VerticalOptions="Center"/>
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 2}"/>
-                        <PointerGestureRecognizer PointerPressed="OnPillPressed" PointerReleased="OnPillReleased"/>
                     </Border.GestureRecognizers>
                 </Border>
 

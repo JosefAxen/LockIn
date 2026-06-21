@@ -58,6 +58,8 @@ public partial class LibraryPage : ContentPage
         _vm.PropertyChanged -= OnVmPropertyChanged;
     }
 
+    private double _tabColumnWidth;
+
     private void OnVmPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(LibraryViewModel.SelectedTab))
@@ -65,7 +67,26 @@ public partial class LibraryPage : ContentPage
             StickyHeader.Opacity = 0;
             PageTitleRow.Opacity = 1;
             TabSegment.Opacity = 1;
+            UpdateTabIndicator(animated: true);
         }
+    }
+
+    private void OnTabContainerSizeChanged(object? sender, EventArgs e)
+    {
+        if (sender is not VisualElement ve || ve.Width <= 0) return;
+        _tabColumnWidth = ve.Width / 3.0;
+        TabIndicator.WidthRequest = _tabColumnWidth;
+        UpdateTabIndicator(animated: false);
+    }
+
+    private void UpdateTabIndicator(bool animated)
+    {
+        if (_tabColumnWidth <= 0) return;
+        var targetX = _vm.SelectedTab * _tabColumnWidth;
+        if (animated)
+            TabIndicator.TranslateTo(targetX, 0, 280, Easing.SpringOut);
+        else
+            TabIndicator.TranslationX = targetX;
     }
 
     protected override async void OnNavigatedTo(NavigatedToEventArgs args)
@@ -104,16 +125,4 @@ public partial class LibraryPage : ContentPage
     private async void OnWorkoutBannerTapped(object sender, TappedEventArgs e)
         => await Shell.Current.GoToAsync(nameof(ActiveWorkoutPage));
 
-    private static async void OnPillPressed(object? sender, PointerEventArgs e)
-    {
-        HapticFeedback.Default.Perform(HapticFeedbackType.Click);
-        if (sender is PointerGestureRecognizer pgr && pgr.Parent is VisualElement ve)
-            await ve.ScaleTo(0.96, 30, Easing.CubicOut);
-    }
-
-    private static async void OnPillReleased(object? sender, PointerEventArgs e)
-    {
-        if (sender is PointerGestureRecognizer pgr && pgr.Parent is VisualElement ve)
-            await ve.ScaleTo(1.0, 220, Easing.SpringOut);
-    }
 }

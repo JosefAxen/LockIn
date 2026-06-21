@@ -95,44 +95,41 @@
                             StrokeThickness="0"
                             StrokeShape="RoundRectangle 50"
                             Padding="2">
-                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="0">
-                            <Border Grid.Column="0" BackgroundColor="{Binding Tab0Bg}"
+                        <Grid x:Name="TabPills" ColumnDefinitions="*,*,*" HeightRequest="40"
+                              SizeChanged="OnTabContainerSizeChanged">
+                            <Border x:Name="TabIndicator" Grid.ColumnSpan="3"
+                                    BackgroundColor="{StaticResource ForgeSurface}"
                                     StrokeThickness="0"
                                     StrokeShape="RoundRectangle 48"
-                                    Padding="0,9">
+                                    HorizontalOptions="Start" VerticalOptions="Fill"/>
+                            <Border Grid.Column="0" BackgroundColor="Transparent"
+                                    StrokeThickness="0" Padding="0,9">
                                 <Label Text="VIKT"
                                        FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1.5"
                                        TextColor="{Binding Tab0Fg}"
                                        HorizontalOptions="Center" VerticalOptions="Center"/>
                                 <Border.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 0}"/>
-                                    <PointerGestureRecognizer PointerPressed="OnPillPressed" PointerReleased="OnPillReleased"/>
                                 </Border.GestureRecognizers>
                             </Border>
-                            <Border Grid.Column="1" BackgroundColor="{Binding Tab1Bg}"
-                                    StrokeThickness="0"
-                                    StrokeShape="RoundRectangle 48"
-                                    Padding="0,9">
+                            <Border Grid.Column="1" BackgroundColor="Transparent"
+                                    StrokeThickness="0" Padding="0,9">
                                 <Label Text="KROPP"
                                        FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1.5"
                                        TextColor="{Binding Tab1Fg}"
                                        HorizontalOptions="Center" VerticalOptions="Center"/>
                                 <Border.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 1}"/>
-                                    <PointerGestureRecognizer PointerPressed="OnPillPressed" PointerReleased="OnPillReleased"/>
                                 </Border.GestureRecognizers>
                             </Border>
-                            <Border Grid.Column="2" BackgroundColor="{Binding Tab2Bg}"
-                                    StrokeThickness="0"
-                                    StrokeShape="RoundRectangle 48"
-                                    Padding="0,9">
+                            <Border Grid.Column="2" BackgroundColor="Transparent"
+                                    StrokeThickness="0" Padding="0,9">
                                 <Label Text="HEATMAP"
                                        FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1.5"
                                        TextColor="{Binding Tab2Fg}"
                                        HorizontalOptions="Center" VerticalOptions="Center"/>
                                 <Border.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 2}"/>
-                                    <PointerGestureRecognizer PointerPressed="OnPillPressed" PointerReleased="OnPillReleased"/>
                                 </Border.GestureRecognizers>
                             </Border>
                         </Grid>

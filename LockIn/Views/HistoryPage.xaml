@@ -133,59 +133,66 @@
                     <!-- Filter + Sort -->
                     <StackLayout Spacing="8">
                         <Border BackgroundColor="#33787882" StrokeThickness="0" StrokeShape="RoundRectangle 50" Padding="2">
-                            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="0">
-                                <Border Grid.Column="0" BackgroundColor="{Binding Period0Bg}"
-                                        StrokeThickness="0" StrokeShape="RoundRectangle 48" Padding="0,9">
+                            <Grid x:Name="PeriodPills" ColumnDefinitions="*,*,*" HeightRequest="40"
+                                  SizeChanged="OnPeriodContainerSizeChanged">
+                                <Border x:Name="PeriodIndicator" Grid.ColumnSpan="3"
+                                        BackgroundColor="{StaticResource ForgeSurface}"
+                                        StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 48"
+                                        HorizontalOptions="Start" VerticalOptions="Fill"/>
+                                <Border Grid.Column="0" BackgroundColor="Transparent"
+                                        StrokeThickness="0" Padding="0,9">
                                     <Label Text="ALLT" HorizontalOptions="Center"
                                            FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1.5"
                                            TextColor="{Binding Period0Fg}" VerticalOptions="Center"/>
                                     <Border.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding SelectPeriodCommand}" CommandParameter="{x:Int32 0}"/>
-                                        <PointerGestureRecognizer PointerPressed="OnPillPressed" PointerReleased="OnPillReleased"/>
                                     </Border.GestureRecognizers>
                                 </Border>
-                                <Border Grid.Column="1" BackgroundColor="{Binding Period1Bg}"
-                                        StrokeThickness="0" StrokeShape="RoundRectangle 48" Padding="0,9">
+                                <Border Grid.Column="1" BackgroundColor="Transparent"
+                                        StrokeThickness="0" Padding="0,9">
                                     <Label Text="VECKA" HorizontalOptions="Center"
                                            FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1.5"
                                            TextColor="{Binding Period1Fg}" VerticalOptions="Center"/>
                                     <Border.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding SelectPeriodCommand}" CommandParameter="{x:Int32 1}"/>
-                                        <PointerGestureRecognizer PointerPressed="OnPillPressed" PointerReleased="OnPillReleased"/>
                                     </Border.GestureRecognizers>
                                 </Border>
-                                <Border Grid.Column="2" BackgroundColor="{Binding Period2Bg}"
-                                        StrokeThickness="0" StrokeShape="RoundRectangle 48" Padding="0,9">
+                                <Border Grid.Column="2" BackgroundColor="Transparent"
+                                        StrokeThickness="0" Padding="0,9">
                                     <Label Text="MÅNAD" HorizontalOptions="Center"
                                            FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1.5"
                                            TextColor="{Binding Period2Fg}" VerticalOptions="Center"/>
                                     <Border.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding SelectPeriodCommand}" CommandParameter="{x:Int32 2}"/>
-                                        <PointerGestureRecognizer PointerPressed="OnPillPressed" PointerReleased="OnPillReleased"/>
                                     </Border.GestureRecognizers>
                                 </Border>
                             </Grid>
                         </Border>
                         <Border BackgroundColor="#33787882" StrokeThickness="0" StrokeShape="RoundRectangle 50" Padding="2">
-                            <Grid ColumnDefinitions="*,*" ColumnSpacing="0">
-                                <Border Grid.Column="0" BackgroundColor="{Binding Sort0Bg}"
-                                        StrokeThickness="0" StrokeShape="RoundRectangle 48" Padding="0,8">
+                            <Grid x:Name="SortPills" ColumnDefinitions="*,*" HeightRequest="38"
+                                  SizeChanged="OnSortContainerSizeChanged">
+                                <Border x:Name="SortIndicator" Grid.ColumnSpan="2"
+                                        BackgroundColor="{StaticResource ForgeSurface}"
+                                        StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 48"
+                                        HorizontalOptions="Start" VerticalOptions="Fill"/>
+                                <Border Grid.Column="0" BackgroundColor="Transparent"
+                                        StrokeThickness="0" Padding="0,8">
                                     <Label Text="DATUM" HorizontalOptions="Center"
                                            FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1.5"
                                            TextColor="{Binding Sort0Fg}" VerticalOptions="Center"/>
                                     <Border.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding SelectSortCommand}" CommandParameter="{x:Int32 0}"/>
-                                        <PointerGestureRecognizer PointerPressed="OnPillPressed" PointerReleased="OnPillReleased"/>
                                     </Border.GestureRecognizers>
                                 </Border>
-                                <Border Grid.Column="1" BackgroundColor="{Binding Sort1Bg}"
-                                        StrokeThickness="0" StrokeShape="RoundRectangle 48" Padding="0,8">
+                                <Border Grid.Column="1" BackgroundColor="Transparent"
+                                        StrokeThickness="0" Padding="0,8">
                                     <Label Text="VOLYM" HorizontalOptions="Center"
                                            FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1.5"
                                            TextColor="{Binding Sort1Fg}" VerticalOptions="Center"/>
                                     <Border.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding SelectSortCommand}" CommandParameter="{x:Int32 1}"/>
-                                        <PointerGestureRecognizer PointerPressed="OnPillPressed" PointerReleased="OnPillReleased"/>
                                     </Border.GestureRecognizers>
                                 </Border>
                             </Grid>

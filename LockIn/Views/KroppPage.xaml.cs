@@ -22,6 +22,7 @@ public partial class KroppPage : ContentPage
         base.OnAppearing();
         WorkoutBanner.IsVisible = _state.IsActive;
         _vm.HeatmapReady += BuildHeatmapGrid;
+        _vm.PropertyChanged += OnKroppVmPropertyChanged;
 
         StickyHeader.Opacity = 0;
 
@@ -52,6 +53,7 @@ public partial class KroppPage : ContentPage
     {
         base.OnDisappearing();
         _vm.HeatmapReady -= BuildHeatmapGrid;
+        _vm.PropertyChanged -= OnKroppVmPropertyChanged;
     }
 
     private void OnScrolled(object sender, ScrolledEventArgs e)
@@ -66,16 +68,29 @@ public partial class KroppPage : ContentPage
     private async void OnWorkoutBannerTapped(object sender, TappedEventArgs e)
         => await Shell.Current.GoToAsync(nameof(ActiveWorkoutPage));
 
-    private static async void OnPillPressed(object? sender, PointerEventArgs e)
+    private double _tabColumnWidth;
+
+    private void OnTabContainerSizeChanged(object? sender, EventArgs e)
     {
-        HapticFeedback.Default.Perform(HapticFeedbackType.Click);
-        if (sender is PointerGestureRecognizer pgr && pgr.Parent is VisualElement ve)
-            await ve.ScaleTo(0.96, 30, Easing.CubicOut);
+        if (sender is not VisualElement ve || ve.Width <= 0) return;
+        _tabColumnWidth = ve.Width / 3.0;
+        TabIndicator.WidthRequest = _tabColumnWidth;
+        UpdateTabIndicator(animated: false);
     }
 
-    private static async void OnPillReleased(object? sender, PointerEventArgs e)
+    private void UpdateTabIndicator(bool animated)
     {
-        if (sender is PointerGestureRecognizer pgr && pgr.Parent is VisualElement ve)
-            await ve.ScaleTo(1.0, 220, Easing.SpringOut);
+        if (_tabColumnWidth <= 0) return;
+        var targetX = _vm.SelectedTab * _tabColumnWidth;
+        if (animated)
+            TabIndicator.TranslateTo(targetX, 0, 280, Easing.SpringOut);
+        else
+            TabIndicator.TranslationX = targetX;
+    }
+
+    private void OnKroppVmPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(KroppViewModel.SelectedTab))
+            UpdateTabIndicator(animated: true);
     }
 }

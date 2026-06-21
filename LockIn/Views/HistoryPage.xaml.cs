@@ -22,6 +22,7 @@ public partial class HistoryPage : ContentPage
         base.OnAppearing();
         WorkoutBanner.IsVisible = _state.IsActive;
         _vm.CalendarChanged += RebuildCalendar;
+        _vm.PropertyChanged += OnHistoryVmPropertyChanged;
 
         StickyHeader.Opacity = 0;
 
@@ -51,10 +52,58 @@ public partial class HistoryPage : ContentPage
     private void OnScrolled(object sender, ScrolledEventArgs e)
         => StickyHeader.Opacity = Math.Clamp((e.ScrollY - 80.0) / 40.0, 0, 1);
 
+    private double _periodColumnWidth;
+    private double _sortColumnWidth;
+
+    private void OnPeriodContainerSizeChanged(object? sender, EventArgs e)
+    {
+        if (sender is not VisualElement ve || ve.Width <= 0) return;
+        _periodColumnWidth = ve.Width / 3.0;
+        PeriodIndicator.WidthRequest = _periodColumnWidth;
+        UpdatePeriodIndicator(animated: false);
+    }
+
+    private void OnSortContainerSizeChanged(object? sender, EventArgs e)
+    {
+        if (sender is not VisualElement ve || ve.Width <= 0) return;
+        _sortColumnWidth = ve.Width / 2.0;
+        SortIndicator.WidthRequest = _sortColumnWidth;
+        UpdateSortIndicator(animated: false);
+    }
+
+    private void UpdatePeriodIndicator(bool animated)
+    {
+        if (_periodColumnWidth <= 0) return;
+        var targetX = _vm.SelectedPeriod * _periodColumnWidth;
+        if (animated)
+            PeriodIndicator.TranslateTo(targetX, 0, 280, Easing.SpringOut);
+        else
+            PeriodIndicator.TranslationX = targetX;
+    }
+
+    private void UpdateSortIndicator(bool animated)
+    {
+        if (_sortColumnWidth <= 0) return;
+        var targetX = _vm.SelectedSort * _sortColumnWidth;
+        if (animated)
+            SortIndicator.TranslateTo(targetX, 0, 280, Easing.SpringOut);
+        else
+            SortIndicator.TranslationX = targetX;
+    }
+
+    private void OnHistoryVmPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(HistoryViewModel.SelectedPeriod))
+            UpdatePeriodIndicator(animated: true);
+        else if (e.PropertyName == nameof(HistoryViewModel.SelectedSort))
+            UpdateSortIndicator(animated: true);
+    }
+
     protected override void OnDisappearing()
     {
         base.OnDisappearing();
         _vm.CalendarChanged -= RebuildCalendar;
+        _vm.PropertyChanged -= OnHistoryVmPropertyChanged;
     }
 
     private void RebuildCalendar() =>
@@ -157,20 +206,6 @@ public partial class HistoryPage : ContentPage
             await ve.ScaleTo(1.0, 230, Easing.SpringOut);
     }
 
-    // Pill-knappar — direkt + smooth som navbar. Snabb scale-tryck,
-    // mjuk SpringOut-retur så bytet känns följsamt och inte halvt.
-    private static async void OnPillPressed(object? sender, PointerEventArgs e)
-    {
-        HapticFeedback.Default.Perform(HapticFeedbackType.Click);
-        if (sender is PointerGestureRecognizer pgr && pgr.Parent is VisualElement ve)
-            await ve.ScaleTo(0.96, 30, Easing.CubicOut);
-    }
-
-    private static async void OnPillReleased(object? sender, PointerEventArgs e)
-    {
-        if (sender is PointerGestureRecognizer pgr && pgr.Parent is VisualElement ve)
-            await ve.ScaleTo(1.0, 220, Easing.SpringOut);
-    }
 
     private async void OnWorkoutBannerTapped(object sender, TappedEventArgs e)
         => await Shell.Current.GoToAsync(nameof(ActiveWorkoutPage));
