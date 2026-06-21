@@ -307,27 +307,41 @@
             </StackLayout>
         </ScrollView>
 
-        <!-- Floating FAB: starta fritt pass -->
+        <!-- Floating FAB: starta fritt pass — premium pill -->
         <Border BackgroundColor="{StaticResource ForgeAccent}"
-                StrokeShape="RoundRectangle 24" StrokeThickness="0"
+                StrokeShape="RoundRectangle 28" StrokeThickness="0"
                 HorizontalOptions="End" VerticalOptions="End"
-                Margin="0,0,20,100"
-                HeightRequest="48" WidthRequest="162"
-                Padding="18,0">
+                Margin="0,0,18,100"
+                HeightRequest="56" WidthRequest="180"
+                Padding="20,0">
             <Border.Shadow>
-                <Shadow Brush="#4ADE80" Offset="0,4" Radius="20" Opacity="0.35"/>
+                <Shadow Brush="#4ADE80" Offset="0,6" Radius="28" Opacity="0.45"/>
             </Border.Shadow>
-            <HorizontalStackLayout Spacing="8" HorizontalOptions="Center" VerticalOptions="Center">
-                <views:AppIcon Source="ic_play.png"
-                               WidthRequest="16" HeightRequest="16"
-                               ForceTint="White"
-                               VerticalOptions="Center"/>
-                <Label Text="FRITT PASS"
-                       FontFamily="BebasNeue" FontSize="16" CharacterSpacing="1"
-                       TextColor="White" VerticalOptions="Center"/>
-            </HorizontalStackLayout>
+            <!-- Inre highlight för bevel-känsla -->
+            <Grid>
+                <BoxView VerticalOptions="Start" HeightRequest="28"
+                         InputTransparent="True"
+                         Margin="0,1,0,0">
+                    <BoxView.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                            <GradientStop Color="#40FFFFFF" Offset="0.0"/>
+                            <GradientStop Color="#00FFFFFF" Offset="1.0"/>
+                        </LinearGradientBrush>
+                    </BoxView.Background>
+                </BoxView>
+                <HorizontalStackLayout Spacing="10" HorizontalOptions="Center" VerticalOptions="Center">
+                    <views:AppIcon Source="ic_play.png"
+                                   WidthRequest="18" HeightRequest="18"
+                                   ForceTint="#0E0E10"
+                                   VerticalOptions="Center"/>
+                    <Label Text="FRITT PASS"
+                           FontFamily="BebasNeue" FontSize="17" CharacterSpacing="2"
+                           TextColor="#0E0E10" VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+            </Grid>
             <Border.GestureRecognizers>
                 <TapGestureRecognizer Command="{Binding StartFreeWorkoutCommand}"/>
+                <PointerGestureRecognizer PointerPressed="OnFabPressed" PointerReleased="OnFabReleased"/>
             </Border.GestureRecognizers>
         </Border>
     <!-- Bottom gradient fade behind floating tab bar — matchar topp-gradienten spegelvänt -->
