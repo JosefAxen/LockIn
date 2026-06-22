@@ -13,6 +13,7 @@
 
     <ContentPage.Resources>
         <views:InvertedBoolConverter x:Key="InvertedBoolConverter"/>
+        <views:StringNotEmptyConverter x:Key="StringNotEmptyConverter"/>
     </ContentPage.Resources>
 
     <Grid RowDefinitions="Auto,*" SafeAreaEdges="None">
@@ -99,6 +100,54 @@
                                Style="{StaticResource MutedLabel}"
                                HorizontalTextAlignment="Center"
                                LineBreakMode="WordWrap"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Metadata (utrustning, nivå, typ) -->
+                <Border Style="{StaticResource CardFrame}" Padding="16,14"
+                        IsVisible="{Binding HasMetadata}">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="ÖVNINGSINFO" Style="{StaticResource SectionLabel}"/>
+                        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="12" RowSpacing="8">
+
+                            <VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="2">
+                                <Label Text="UTRUSTNING" Style="{StaticResource SectionLabel}" FontSize="10"/>
+                                <Label Text="{Binding EquipmentName}"
+                                       FontFamily="DMSansMedium" FontSize="13"
+                                       TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Grid.Row="0" Grid.Column="1" Spacing="2">
+                                <Label Text="NIVÅ" Style="{StaticResource SectionLabel}" FontSize="10"/>
+                                <Label Text="{Binding LevelName}"
+                                       FontFamily="DMSansMedium" FontSize="13"
+                                       TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Grid.Row="1" Grid.Column="0" Spacing="2">
+                                <Label Text="TYP" Style="{StaticResource SectionLabel}" FontSize="10"/>
+                                <Label Text="{Binding MechanicName}"
+                                       FontFamily="DMSansMedium" FontSize="13"
+                                       TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Grid.Row="1" Grid.Column="1" Spacing="2">
+                                <Label Text="RÖRELSE" Style="{StaticResource SectionLabel}" FontSize="10"/>
+                                <Label Text="{Binding ForceName}"
+                                       FontFamily="DMSansMedium" FontSize="13"
+                                       TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Spacing="2"
+                                                 IsVisible="{Binding SecondaryMusclesText, Converter={StaticResource StringNotEmptyConverter}}">
+                                <Label Text="SEKUNDÄRA MUSKLER" Style="{StaticResource SectionLabel}" FontSize="10"/>
+                                <Label Text="{Binding SecondaryMusclesText}"
+                                       FontFamily="DMSansRegular" FontSize="13"
+                                       TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                                       LineBreakMode="WordWrap"/>
+                            </VerticalStackLayout>
+
+                        </Grid>
                     </VerticalStackLayout>
                 </Border>
 
