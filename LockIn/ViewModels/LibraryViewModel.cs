@@ -134,7 +134,8 @@ public partial class LibraryViewModel(DatabaseService db) : ObservableObject
         if (_selectedEquipment.HasValue)
             source = source.Where(e => e.Equipment == _selectedEquipment.Value);
         if (!string.IsNullOrEmpty(q))
-            source = source.Where(e => e.Name.ToLowerInvariant().Contains(q));
+            source = source.Where(e => e.Name.ToLowerInvariant().Contains(q)
+                                    || e.SwedishName.ToLowerInvariant().Contains(q));
 
         Groups.Clear();
         foreach (var group in source.GroupBy(e => e.MuscleGroup).OrderBy(g => g.Key.ToString()))

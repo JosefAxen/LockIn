@@ -58,4 +58,6 @@ public class Exercise
     public ExerciseLevel Level { get; set; }
 
     public ExerciseMechanic Mechanic { get; set; }
+
+    public string SwedishName { get; set; } = "";
 }

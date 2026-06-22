@@ -78,7 +78,8 @@ public partial class ExercisePickerViewModel(DatabaseService db) : ObservableObj
         if (_selectedEquipment.HasValue)
             source = source.Where(e => e.Equipment == _selectedEquipment.Value);
         if (!string.IsNullOrEmpty(q))
-            source = source.Where(e => e.Name.ToLowerInvariant().Contains(q));
+            source = source.Where(e => e.Name.ToLowerInvariant().Contains(q)
+                                    || e.SwedishName.ToLowerInvariant().Contains(q));
 
         FilteredExercises.Clear();
         foreach (var e in source.OrderBy(e => e.Name))

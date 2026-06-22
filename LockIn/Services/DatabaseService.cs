@@ -91,10 +91,15 @@ public class DatabaseService
         try { await _db.ExecuteAsync("ALTER TABLE Exercises ADD COLUMN Mechanic INTEGER NOT NULL DEFAULT 0"); }
         catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
 
+        // Fas 6: Svenskt namn för sökning
+        try { await _db.ExecuteAsync("ALTER TABLE Exercises ADD COLUMN SwedishName TEXT NOT NULL DEFAULT ''"); }
+        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
+
         await SeedAsync();
         await SeedExerciseDescriptionsAsync();
         await SeedForearmExercisesAsync();
         await SeedExerciseDbAsync();
+        await SeedSwedishNamesAsync();
     }
 
     private async Task SeedExerciseDescriptionsAsync()
@@ -294,6 +299,14 @@ public class DatabaseService
             if (toInsert.Count > 0)
                 conn.InsertAll(toInsert);
         });
+    }
+
+    private async Task SeedSwedishNamesAsync()
+    {
+        foreach (var (englishName, swedishName) in SwedishExerciseNames.Map)
+            await _db.ExecuteAsync(
+                "UPDATE Exercises SET SwedishName = ? WHERE Name = ? AND SwedishName = ''",
+                swedishName, englishName);
     }
 
     private static MuscleGroup MapDbMuscle(string? m) => m?.ToLowerInvariant() switch
