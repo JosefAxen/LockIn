@@ -13,6 +13,12 @@
              BackgroundColor="Transparent"
              ios:Page.UseSafeArea="False">
 
+    <ContentPage.Resources>
+        <views:EquipmentLabelConverter x:Key="EquipmentLabelConverter"/>
+        <views:EquipmentNotOtherConverter x:Key="EquipmentNotOtherConverter"/>
+        <views:StringNotEmptyConverter x:Key="StringNotEmptyConverter"/>
+    </ContentPage.Resources>
+
     <Grid RowDefinitions="Auto,Auto,Auto,Auto,*" SafeAreaEdges="None">
 
         <!-- Atmosfärisk bakgrund -->
@@ -94,6 +100,32 @@
                             </BindableLayout.ItemTemplate>
                         </HorizontalStackLayout>
                     </ScrollView>
+                    <!-- Equipment-chips (horisontell scroll) -->
+                    <ScrollView Orientation="Horizontal"
+                                HorizontalScrollBarVisibility="Never"
+                                Margin="16,0,16,8">
+                        <HorizontalStackLayout
+                            BindableLayout.ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type vm:ExercisePickerViewModel}}, Path=EquipmentChips}"
+                            Spacing="6">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="vm:EquipmentChip">
+                                    <Border BackgroundColor="{Binding Background}"
+                                            StrokeShape="RoundRectangle 22" StrokeThickness="0"
+                                            Padding="14,0" HeightRequest="34">
+                                        <Label Text="{Binding Label}"
+                                               TextColor="{Binding Foreground}"
+                                               FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
+                                               VerticalOptions="Center"/>
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ExercisePickerViewModel}}, Path=SelectEquipmentChipCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                        </Border.GestureRecognizers>
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </HorizontalStackLayout>
+                    </ScrollView>
                     <!-- Add custom exercise row -->
                     <Border Margin="16,0,16,8"
                             StrokeShape="RoundRectangle 18"
@@ -151,6 +183,11 @@
                                        FontSize="12"
                                        Opacity="0.85"
                                        TextColor="{Binding MuscleColor}"/>
+                                <Label Text="{Binding EquipmentLabel}"
+                                       IsVisible="{Binding EquipmentLabel, Converter={StaticResource StringNotEmptyConverter}}"
+                                       FontFamily="BebasNeue" FontSize="10" CharacterSpacing="1"
+                                       TextColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"
+                                       VerticalOptions="Center"/>
                             </VerticalStackLayout>
                             <Border Grid.Column="2"
                                     IsVisible="{Binding IsCustom}"
