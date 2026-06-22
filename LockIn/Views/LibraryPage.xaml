@@ -17,6 +17,8 @@
     <ContentPage.Resources>
         <vm:MuscleGroupColorConverter x:Key="MuscleGroupColorConverter"/>
         <vm:MuscleGroupLabelConverter x:Key="MuscleGroupLabelConverter"/>
+        <views:EquipmentLabelConverter x:Key="EquipmentLabelConverter"/>
+        <views:EquipmentNotOtherConverter x:Key="EquipmentNotOtherConverter"/>
     </ContentPage.Resources>
 
     <Grid RowDefinitions="Auto,*" SafeAreaEdges="None">
@@ -199,6 +201,32 @@
                             </BindableLayout.ItemTemplate>
                         </HorizontalStackLayout>
                     </ScrollView>
+                    <!-- Equipment-chips (horisontell scroll) -->
+                    <ScrollView Orientation="Horizontal"
+                                HorizontalScrollBarVisibility="Never"
+                                Margin="16,0,16,12">
+                        <HorizontalStackLayout
+                            BindableLayout.ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}}, Path=EquipmentChips}"
+                            Spacing="6">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="vm:EquipmentChip">
+                                    <Border BackgroundColor="{Binding Background}"
+                                            StrokeShape="RoundRectangle 22" StrokeThickness="0"
+                                            Padding="14,0" HeightRequest="34">
+                                        <Label Text="{Binding Label}"
+                                               TextColor="{Binding Foreground}"
+                                               FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
+                                               VerticalOptions="Center"/>
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}}, Path=SelectEquipmentChipCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                        </Border.GestureRecognizers>
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </HorizontalStackLayout>
+                    </ScrollView>
                 </VerticalStackLayout>
             </CollectionView.Header>
             <CollectionView.GroupHeaderTemplate>
@@ -236,16 +264,23 @@
                                        Opacity="0.85"
                                        TextColor="{Binding MuscleGroup, Converter={StaticResource MuscleGroupColorConverter}}"/>
                             </VerticalStackLayout>
-                            <Border Grid.Column="2"
-                                    IsVisible="{Binding IsCustom}"
-                                    BackgroundColor="{StaticResource ForgeAccentOrangeDim}"
-                                    StrokeShape="RoundRectangle 8"
-                                    StrokeThickness="0" Padding="8,4"
-                                    VerticalOptions="Center">
-                                <Label Text="EGNA" TextColor="{StaticResource ForgeAccentOrange}"
-                                       FontSize="10" FontFamily="BebasNeue"
-                                       CharacterSpacing="1"/>
-                            </Border>
+                            <StackLayout Grid.Column="2" Orientation="Horizontal" Spacing="4" VerticalOptions="Center">
+                                <Border IsVisible="{Binding IsCustom}"
+                                        BackgroundColor="{StaticResource ForgeAccentOrangeDim}"
+                                        StrokeShape="RoundRectangle 8"
+                                        StrokeThickness="0" Padding="8,4">
+                                    <Label Text="EGNA" TextColor="{StaticResource ForgeAccentOrange}"
+                                           FontSize="10" FontFamily="BebasNeue" CharacterSpacing="1"/>
+                                </Border>
+                                <Border IsVisible="{Binding Equipment, Converter={StaticResource EquipmentNotOtherConverter}}"
+                                        BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}"
+                                        StrokeShape="RoundRectangle 8"
+                                        StrokeThickness="0" Padding="8,4">
+                                    <Label Text="{Binding Equipment, Converter={StaticResource EquipmentLabelConverter}}"
+                                           TextColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"
+                                           FontSize="10" FontFamily="BebasNeue" CharacterSpacing="1"/>
+                                </Border>
+                            </StackLayout>
                         </Grid>
                     </Border>
                 </DataTemplate>
