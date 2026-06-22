@@ -268,7 +268,7 @@
         </CollectionView>
 
         <!-- Tab 1: Templates -->
-        <Grid IsVisible="{Binding ShowTemplates}">
+        <Grid IsVisible="{Binding ShowTemplates}" SafeAreaEdges="None">
             <CollectionView ItemsSource="{Binding Templates}"
                             Scrolled="OnTemplatesScrolled"
                             HorizontalScrollBarVisibility="Never"
