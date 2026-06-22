@@ -170,29 +170,32 @@ public partial class LibraryViewModel(DatabaseService db) : ObservableObject
             for (int k = i; k < Groups.Count; k++)
                 if (Groups[k].Title == title) { existingIdx = k; break; }
 
-            ExerciseGroup group;
             if (existingIdx < 0)
             {
-                group = new ExerciseGroup(title);
-                if (i < Groups.Count) Groups.Insert(i, group);
-                else Groups.Add(group);
-            }
-            else
-            {
-                group = Groups[existingIdx];
-                if (existingIdx != i)
-                {
-                    Groups.RemoveAt(existingIdx);
-                    Groups.Insert(i, group);
-                }
+                // Ny grupp: fyll övningarna INNAN gruppen läggs till Groups.
+                // MAUI observerar inte gruppen förrän Groups.Add/Insert körs,
+                // så Add-anropen har noll UI-kostnad. Groups.Add avfyrar ett
+                // enda InsertSections-event med alla celler — 60× snabbare
+                // än att lägga till en tom grupp och sedan infoga 60 rader var för sig.
+                var g = new ExerciseGroup(title);
+                foreach (var e in items) g.Add(e);
+                if (i < Groups.Count) Groups.Insert(i, g);
+                else Groups.Add(g);
+                continue;  // gruppen är redan korrekt, hoppa till nästa
             }
 
-            // Sync group items in O(n) without any Clear() or IndexOf:
-            //   1. Remove items not in desired set (backward pass, O(n))
-            //   2. Merge-insert missing items using two-pointer (O(n))
-            // Both group (after removals) and items are sorted by Name, so
-            // the merge is a straight in-order pass. Never fires Reset, so
-            // CollectionView never calls ReloadData() — keyboard focus preserved.
+            var group = Groups[existingIdx];
+            if (existingIdx != i)
+            {
+                Groups.RemoveAt(existingIdx);
+                Groups.Insert(i, group);
+            }
+
+            // Befintlig grupp: synka övningar i O(n) utan Clear() (undviker
+            // Reset → ReloadData → tangentbord stängs).
+            //   1. Ta bort övningar som inte matchar filtret (bakåt, O(n))
+            //   2. Merge-infoga saknade övningar med tvåpekar-metod (O(n))
+            // Båda group och items är sorterade på Name → rak in-order-pass.
             var keepSet = items.ToHashSet();
             for (int j = group.Count - 1; j >= 0; j--)
                 if (!keepSet.Contains(group[j])) group.RemoveAt(j);
