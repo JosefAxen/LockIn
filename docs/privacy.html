@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="LockIn — Integritetspolicy. Hur vi hanterar din data.">
+  <title>Integritetspolicy — LockIn</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:         #141418;
+      --surface:    #161618;
+      --surface2:   #1E1E22;
+      --accent:     #B8B8BC;
+      --accent-dim: rgba(184, 184, 188, 0.09);
+      --text:       #E2E8F0;
+      --muted:      #8A8A96;
+      --border:     #252530;
+      --font-d:     'Bebas Neue', sans-serif;
+      --font-b:     'DM Sans', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-b);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;
+      height: 72px;
+      background: rgba(14,14,16,0.8);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .nav-logo {
+      font-family: var(--font-d);
+      font-size: 26px;
+      letter-spacing: 0.12em;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .nav-logo em { color: var(--accent); font-style: normal; }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.18s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    /* ── PAGE ── */
+    .page-header {
+      padding: 152px 0 72px;
+      border-bottom: 1px solid var(--border);
+    }
+    .wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+    .page-label {
+      font-family: var(--font-d);
+      font-size: 11px;
+      letter-spacing: 0.42em;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+    .page-title {
+      font-family: var(--font-d);
+      font-size: clamp(52px, 8vw, 80px);
+      letter-spacing: 0.02em;
+      line-height: 0.95;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+    .page-meta {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    /* ── CONTENT ── */
+    .content {
+      padding: 72px 0 120px;
+    }
+
+    .section {
+      margin-bottom: 64px;
+    }
+
+    h2 {
+      font-family: var(--font-d);
+      font-size: 28px;
+      letter-spacing: 0.08em;
+      color: var(--text);
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    p {
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.75;
+      margin-bottom: 16px;
+    }
+
+    p:last-child { margin-bottom: 0; }
+
+    p strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    ul {
+      list-style: none;
+      margin: 16px 0;
+    }
+
+    ul li {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.65;
+      padding: 10px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    ul li::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 8px;
+    }
+
+    .callout {
+      background: var(--accent-dim);
+      border: 1px solid rgba(184,184,188,0.2);
+      border-radius: 14px;
+      padding: 24px 28px;
+      margin: 28px 0;
+    }
+    .callout p {
+      color: var(--text);
+      margin: 0;
+    }
+    .callout-label {
+      font-family: var(--font-d);
+      font-size: 11px;
+      letter-spacing: 0.35em;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    a:hover { text-decoration: underline; }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 40px 0;
+      border-top: 1px solid var(--border);
+    }
+    .footer-inner {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .footer-logo {
+      font-family: var(--font-d);
+      font-size: 20px;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+    }
+    .footer-links { display: flex; gap: 28px; list-style: none; }
+    .footer-links a { color: var(--muted); text-decoration: none; font-size: 13px; transition: color 0.18s; }
+    .footer-links a:hover { color: var(--text); }
+    .footer-copy { font-size: 12px; color: var(--muted); opacity: 0.45; }
+
+    @media (max-width: 768px) {
+      nav { padding: 0 24px; }
+      .nav-links { display: none; }
+      .wrap { padding: 0 24px; }
+      .footer-inner { flex-direction: column; text-align: center; padding: 0 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">LOCK<em>IN</em></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Hem</a></li>
+    <li><a href="support.html">Support</a></li>
+    <li><a href="privacy.html" aria-current="page" style="color:var(--text)">Integritetspolicy</a></li>
+  </ul>
+</nav>
+
+<header class="page-header">
+  <div class="wrap">
+    <p class="page-label">Transparens</p>
+    <h1 class="page-title">INTEGRITETS&shy;POLICY</h1>
+    <p class="page-meta">Senast uppdaterad: juni 2026</p>
+  </div>
+</header>
+
+<main class="content">
+  <div class="wrap">
+
+    <div class="callout">
+      <p class="callout-label">SAMMANFATTNING</p>
+      <p>LockIn samlar inte in någon data om dig. All din information lagras lokalt på din enhet och delas aldrig med tredje part, annonsörer eller molntjänster.</p>
+    </div>
+
+    <div class="section">
+      <h2>OM APPEN</h2>
+      <p>LockIn är en iOS-träningsapp utvecklad av Josef Axén. Appen hjälper dig att logga träningspass, följa progress och sätta personliga rekord.</p>
+      <p>Appen kräver inget konto och kopplas inte till några externa servrar. Din data är din.</p>
+    </div>
+
+    <div class="section">
+      <h2>DATA SOM LAGRAS LOKALT</h2>
+      <p>Följande information sparas uteslutande på din enhet via en lokal SQLite-databas:</p>
+      <ul>
+        <li>Träningspass — övningar, set, reps, vikt och tidsstämplar</li>
+        <li>Träningsmallar och program du skapar</li>
+        <li>Kroppsvikt och kroppssammansättning (om du väljer att logga det)</li>
+        <li>Träningsfoton (om du väljer att lägga till dem)</li>
+        <li>Appinställningar</li>
+      </ul>
+      <p>Ingen av denna data lämnar din enhet.</p>
+    </div>
+
+    <div class="section">
+      <h2>APPLE HEALTH (HÄLSOAPPEN)</h2>
+      <p>LockIn kan integreras med Apple Health för att <strong>läsa</strong> hälsodata som hjälper dig förstå din återhämtning bättre. Appen skriver ingen data tillbaka till Health.</p>
+      <p>Följande Health-kategorier kan läsas, om du beviljar tillstånd:</p>
+      <ul>
+        <li>Hjärtrytmvariabilitet (HRV) — för återhämtningsbedömning</li>
+        <li>Vilopuls — för att spåra kardiovaskulär hälsa</li>
+        <li>Sömnanalys — för att bedöma återhämtning efter sömn</li>
+        <li>Stegräknare och aktiv energi</li>
+      </ul>
+      <p>Du väljer själv vilka Health-kategorier LockIn får tillgång till. Tillståndet kan återkallas när som helst via <strong>Inställningar → Hälsa → Apps</strong> på din iPhone.</p>
+      <p>Health-data används enbart för att visa information i appen och delas aldrig med tredje part.</p>
+    </div>
+
+    <div class="section">
+      <h2>INGEN INSAMLING, INGA SPÅRNING</h2>
+      <p>LockIn:</p>
+      <ul>
+        <li>Använder inga analytiksverktyg (Mixpanel, Firebase, Amplitude eller liknande)</li>
+        <li>Skickar ingen telemetri eller krasch­rapporter till externa servrar</li>
+        <li>Visar inga annonser och delar ingen data med annonsörer</li>
+        <li>Kräver inget konto och samlar inte in e-post eller personuppgifter</li>
+        <li>Kommunicerar inte med några externa API:er</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>TA BORT DIN DATA</h2>
+      <p>All data raderas automatiskt om du avinstallerar appen. Du kan även radera all lokal data inifrån appen via <strong>Inställningar → Återställ data</strong>.</p>
+      <p>Eftersom ingen data skickas till externa servrar finns det inget att begära borttagning av.</p>
+    </div>
+
+    <div class="section">
+      <h2>BARN</h2>
+      <p>LockIn riktar sig inte till barn under 13 år. Vi samlar inte medvetet in information från barn.</p>
+    </div>
+
+    <div class="section">
+      <h2>FÖRÄNDRINGAR I POLICYN</h2>
+      <p>Om policyn ändras uppdateras datum på denna sida. Större förändringar kommuniceras via app-uppdateringar.</p>
+    </div>
+
+    <div class="section">
+      <h2>KONTAKT</h2>
+      <p>Frågor om integritet? Kontakta oss via <a href="support.html">supportsidan</a> eller öppna ett ärende på <a href="https://github.com/JosefAxen/LockIn/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <span class="footer-logo">LOCKIN</span>
+    <ul class="footer-links">
+      <li><a href="index.html">Hem</a></li>
+      <li><a href="support.html">Support</a></li>
+    </ul>
+    <span class="footer-copy">© 2026 Josef Axén</span>
+  </div>
+</footer>
+
+</body>
+</html>
