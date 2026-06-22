@@ -8,7 +8,7 @@ using System.Collections.ObjectModel;
 
 namespace LockIn.ViewModels;
 
-public partial class TrainViewModel(DatabaseService db) : ObservableObject
+public partial class TrainViewModel(DatabaseService db, ActiveWorkoutStateService state) : ObservableObject
 {
     public ObservableCollection<ProgramGroup> ProgramGroups { get; } = new();
     public ObservableCollection<WorkoutTemplate> FreeTemplates { get; } = new();
@@ -126,6 +126,15 @@ public partial class TrainViewModel(DatabaseService db) : ObservableObject
     [RelayCommand]
     private async Task StartWorkoutAsync(WorkoutTemplate template)
     {
+        if (state.IsActive)
+        {
+            var go = await Shell.Current.DisplayAlert(
+                "Pågående pass",
+                "Du har redan ett aktivt pass. Vill du gå till det?",
+                "Gå till passet", "Avbryt");
+            if (go) await Shell.Current.GoToAsync(nameof(ActiveWorkoutPage));
+            return;
+        }
         await Shell.Current.GoToAsync(nameof(ActiveWorkoutPage), new Dictionary<string, object>
         {
             { "TemplateId", template.Id }
@@ -135,6 +144,15 @@ public partial class TrainViewModel(DatabaseService db) : ObservableObject
     [RelayCommand]
     private async Task StartFreeWorkoutAsync()
     {
+        if (state.IsActive)
+        {
+            var go = await Shell.Current.DisplayAlert(
+                "Pågående pass",
+                "Du har redan ett aktivt pass. Vill du gå till det?",
+                "Gå till passet", "Avbryt");
+            if (go) await Shell.Current.GoToAsync(nameof(ActiveWorkoutPage));
+            return;
+        }
         await Shell.Current.GoToAsync(nameof(ActiveWorkoutPage), new Dictionary<string, object>
         {
             { "TemplateId", 0 }
