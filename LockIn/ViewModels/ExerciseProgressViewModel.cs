@@ -18,6 +18,12 @@ public partial class ExerciseProgressViewModel(DatabaseService db) : ObservableO
     [ObservableProperty] private bool _isLoading;
     [ObservableProperty] private bool _hasData;
     [ObservableProperty] private IReadOnlyList<ChartPoint> _chartPoints = [];
+    [ObservableProperty] private string _equipmentName = "";
+    [ObservableProperty] private string _secondaryMusclesText = "";
+    [ObservableProperty] private string _levelName = "";
+    [ObservableProperty] private string _mechanicName = "";
+    [ObservableProperty] private string _forceName = "";
+    [ObservableProperty] private bool _hasMetadata;
 
     private Exercise? _exercise;
 
@@ -39,6 +45,13 @@ public partial class ExerciseProgressViewModel(DatabaseService db) : ObservableO
             ExerciseNotes       = _exercise.Notes ?? "";
             ExerciseDescription = _exercise.Description ?? "";
             HasDescription      = !string.IsNullOrWhiteSpace(ExerciseDescription);
+            EquipmentName       = EquipmentLabel(_exercise.Equipment);
+            SecondaryMusclesText = _exercise.SecondaryMuscles ?? "";
+            LevelName           = LevelLabel(_exercise.Level);
+            MechanicName        = MechanicLabel(_exercise.Mechanic);
+            ForceName           = ForceLabel(_exercise.Force);
+            HasMetadata         = EquipmentName.Length > 0 || SecondaryMusclesText.Length > 0
+                                  || LevelName.Length > 0 || MechanicName.Length > 0 || ForceName.Length > 0;
         }
 
         var history = await db.GetBestSetPerSessionForExerciseAsync(exerciseId);
@@ -67,6 +80,44 @@ public partial class ExerciseProgressViewModel(DatabaseService db) : ObservableO
         _exercise.Notes = ExerciseNotes;
         await db.SaveExerciseAsync(_exercise);
     }
+
+    private static string EquipmentLabel(EquipmentType e) => e switch
+    {
+        EquipmentType.Barbell      => "Skivstång",
+        EquipmentType.Dumbbell     => "Hantel",
+        EquipmentType.Cable        => "Kabel",
+        EquipmentType.Machine      => "Maskin",
+        EquipmentType.BodyOnly     => "Kroppsvikt",
+        EquipmentType.EZBar        => "EZ-stång",
+        EquipmentType.Kettlebell   => "Kettlebell",
+        EquipmentType.Bands        => "Band",
+        EquipmentType.FoamRoll     => "Foam roll",
+        EquipmentType.MedicineBall => "Medicinboll",
+        _                          => ""
+    };
+
+    private static string LevelLabel(ExerciseLevel l) => l switch
+    {
+        ExerciseLevel.Beginner     => "Nybörjare",
+        ExerciseLevel.Intermediate => "Medel",
+        ExerciseLevel.Expert       => "Avancerad",
+        _                          => ""
+    };
+
+    private static string MechanicLabel(ExerciseMechanic m) => m switch
+    {
+        ExerciseMechanic.Compound  => "Compound",
+        ExerciseMechanic.Isolation => "Isolering",
+        _                          => ""
+    };
+
+    private static string ForceLabel(ExerciseForce f) => f switch
+    {
+        ExerciseForce.Push   => "Push",
+        ExerciseForce.Pull   => "Pull",
+        ExerciseForce.Static => "Statisk",
+        _                    => ""
+    };
 
     private static string MuscleGroupLabel(MuscleGroup mg) => mg switch
     {
