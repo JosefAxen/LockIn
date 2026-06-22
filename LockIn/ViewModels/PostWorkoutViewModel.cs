@@ -231,6 +231,7 @@ public partial class PostWorkoutViewModel(DatabaseService db, IHealthService hea
             _loadedSession.Notes = Notes;
             await db.SaveSessionAsync(_loadedSession);
         }
+        await Shell.Current.Navigation.PopToRootAsync(false);
         await Shell.Current.GoToAsync("//TrainPage");
     }
 

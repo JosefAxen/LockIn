@@ -64,7 +64,7 @@
             </VerticalStackLayout>
         </Grid>
 
-    <Grid ZIndex="2">
+    <Grid ZIndex="2" SafeAreaEdges="None">
 
         <ScrollView VerticalScrollBarVisibility="Never" Scrolled="OnScrolled">
             <StackLayout Padding="16,0,16,120" Spacing="16">

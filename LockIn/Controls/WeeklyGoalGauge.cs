@@ -16,8 +16,9 @@ public class WeeklyGoalGauge : SKCanvasView
         set => SetValue(ProgressProperty, value);
     }
 
-    private const float StartAngleDeg = 120f;
-    private const float TotalSweepDeg = 300f;
+    private const float StartAngleDeg    = 120f;
+    private const float TotalSweepDeg    = 300f;
+    private const int   GradientSegments = 80;
 
     // Logical dp — multiplied by display density at render time
     private const float StrokeWidthDp  = 20f;
@@ -64,34 +65,23 @@ public class WeeklyGoalGauge : SKCanvasView
         if (progress <= 0f) return;
 
         float activeSweep = TotalSweepDeg * progress;
-        float endAngle    = StartAngleDeg + activeSweep;
+        float segSweep    = activeSweep / GradientSegments;
 
-        // Bygg färgstopp längs bågvinkeln (ersätter 80 separata SKPaint-allokationer)
-        const int stops = 16;
-        var colors    = new SKColor[stops];
-        var positions = new float[stops];
-        for (int i = 0; i < stops; i++)
+        for (int i = 0; i < GradientSegments; i++)
         {
-            float t   = (float)i / (stops - 1);
-            colors[i]    = InterpolateColor(t);
-            positions[i] = t;
+            float t     = (float)i / GradientSegments;
+            float start = StartAngleDeg + segSweep * i;
+            using var paint = new SKPaint
+            {
+                IsAntialias = true,
+                Style       = SKPaintStyle.Stroke,
+                StrokeWidth = sw,
+                StrokeCap   = SKStrokeCap.Butt,
+                Color       = InterpolateColor(t)
+            };
+            using var path = BuildArcPath(cx, cy, radius, start, segSweep);
+            canvas.DrawPath(path, paint);
         }
-
-        using var shader = SKShader.CreateSweepGradient(
-            new SKPoint(cx, cy), colors, positions,
-            SKShaderTileMode.Clamp, StartAngleDeg, endAngle);
-
-        using var paint = new SKPaint
-        {
-            IsAntialias = true,
-            Style       = SKPaintStyle.Stroke,
-            StrokeWidth = sw,
-            StrokeCap   = SKStrokeCap.Round,
-            Shader      = shader
-        };
-
-        using var path = BuildArcPath(cx, cy, radius, StartAngleDeg, activeSweep);
-        canvas.DrawPath(path, paint);
     }
 
     private static void DrawEndpointDot(SKCanvas canvas, float cx, float cy, float radius, float sw, float progress)

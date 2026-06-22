@@ -55,7 +55,6 @@ public partial class KroppPage : ContentPage
         base.OnDisappearing();
         _vm.HeatmapReady -= BuildHeatmapGrid;
         _vm.PropertyChanged -= OnKroppVmPropertyChanged;
-        _heatmapCts?.Cancel();
     }
 
     private async void OnLogMatsTapped(object sender, TappedEventArgs e)
