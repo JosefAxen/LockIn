@@ -110,28 +110,32 @@
                         <Label Text="ÖVNINGSINFO" Style="{StaticResource SectionLabel}"/>
                         <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="12" RowSpacing="8">
 
-                            <VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="2">
+                            <VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="2"
+                                                 IsVisible="{Binding EquipmentName, Converter={StaticResource StringNotEmptyConverter}}">
                                 <Label Text="UTRUSTNING" Style="{StaticResource SectionLabel}" FontSize="10"/>
                                 <Label Text="{Binding EquipmentName}"
                                        FontFamily="DMSansMedium" FontSize="13"
                                        TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
                             </VerticalStackLayout>
 
-                            <VerticalStackLayout Grid.Row="0" Grid.Column="1" Spacing="2">
+                            <VerticalStackLayout Grid.Row="0" Grid.Column="1" Spacing="2"
+                                                 IsVisible="{Binding LevelName, Converter={StaticResource StringNotEmptyConverter}}">
                                 <Label Text="NIVÅ" Style="{StaticResource SectionLabel}" FontSize="10"/>
                                 <Label Text="{Binding LevelName}"
                                        FontFamily="DMSansMedium" FontSize="13"
                                        TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
                             </VerticalStackLayout>
 
-                            <VerticalStackLayout Grid.Row="1" Grid.Column="0" Spacing="2">
+                            <VerticalStackLayout Grid.Row="1" Grid.Column="0" Spacing="2"
+                                                 IsVisible="{Binding MechanicName, Converter={StaticResource StringNotEmptyConverter}}">
                                 <Label Text="TYP" Style="{StaticResource SectionLabel}" FontSize="10"/>
                                 <Label Text="{Binding MechanicName}"
                                        FontFamily="DMSansMedium" FontSize="13"
                                        TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
                             </VerticalStackLayout>
 
-                            <VerticalStackLayout Grid.Row="1" Grid.Column="1" Spacing="2">
+                            <VerticalStackLayout Grid.Row="1" Grid.Column="1" Spacing="2"
+                                                 IsVisible="{Binding ForceName, Converter={StaticResource StringNotEmptyConverter}}">
                                 <Label Text="RÖRELSE" Style="{StaticResource SectionLabel}" FontSize="10"/>
                                 <Label Text="{Binding ForceName}"
                                        FontFamily="DMSansMedium" FontSize="13"

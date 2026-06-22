@@ -50,8 +50,11 @@ public partial class ExerciseProgressViewModel(DatabaseService db) : ObservableO
             LevelName           = LevelLabel(_exercise.Level);
             MechanicName        = MechanicLabel(_exercise.Mechanic);
             ForceName           = ForceLabel(_exercise.Force);
-            HasMetadata         = EquipmentName.Length > 0 || SecondaryMusclesText.Length > 0
-                                  || LevelName.Length > 0 || MechanicName.Length > 0 || ForceName.Length > 0;
+            HasMetadata         = _exercise.Equipment != EquipmentType.Other
+                                  || (_exercise.SecondaryMuscles ?? "").Length > 0
+                                  || _exercise.Level != ExerciseLevel.Beginner
+                                  || _exercise.Mechanic != ExerciseMechanic.Other
+                                  || _exercise.Force != ExerciseForce.Other;
         }
 
         var history = await db.GetBestSetPerSessionForExerciseAsync(exerciseId);
