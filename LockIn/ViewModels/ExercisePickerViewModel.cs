@@ -16,6 +16,8 @@ public partial class ExercisePickerViewModel(DatabaseService db) : ObservableObj
 
     public ObservableCollection<ExercisePickerRow> FilteredExercises { get; } = new();
     public ObservableCollection<MuscleGroupChip> MuscleChips { get; } = new();
+    public ObservableCollection<EquipmentChip> EquipmentChips { get; } = new();
+    private EquipmentType? _selectedEquipment;
 
     [ObservableProperty] private string _searchText = "";
     [ObservableProperty] private bool _isLoading;
@@ -33,6 +35,17 @@ public partial class ExercisePickerViewModel(DatabaseService db) : ObservableObj
         foreach (var g in groups)
             MuscleChips.Add(new MuscleGroupChip { Label = MuscleGroupLabel(g), MuscleGroup = g });
 
+        EquipmentChips.Clear();
+        EquipmentChips.Add(new EquipmentChip { Label = "ALLA", Equipment = null, IsSelected = true });
+        foreach (var eq in _allExercises
+            .Select(e => e.Equipment)
+            .Where(e => e != EquipmentType.Other)
+            .Distinct()
+            .OrderBy(e => e.ToString()))
+        {
+            EquipmentChips.Add(new EquipmentChip { Label = EquipmentTypeLabel(eq), Equipment = eq });
+        }
+
         ApplyFilter();
         IsLoading = false;
     }
@@ -45,6 +58,15 @@ public partial class ExercisePickerViewModel(DatabaseService db) : ObservableObj
         ApplyFilter();
     }
 
+    [RelayCommand]
+    private void SelectEquipmentChip(EquipmentChip chip)
+    {
+        foreach (var c in EquipmentChips) c.IsSelected = false;
+        chip.IsSelected = true;
+        _selectedEquipment = chip.Equipment;
+        ApplyFilter();
+    }
+
     private void ApplyFilter()
     {
         var q = SearchText.Trim().ToLowerInvariant();
@@ -53,6 +75,8 @@ public partial class ExercisePickerViewModel(DatabaseService db) : ObservableObj
 
         if (selected?.MuscleGroup is MuscleGroup mg)
             source = source.Where(e => e.MuscleGroup == mg);
+        if (_selectedEquipment.HasValue)
+            source = source.Where(e => e.Equipment == _selectedEquipment.Value);
         if (!string.IsNullOrEmpty(q))
             source = source.Where(e => e.Name.ToLowerInvariant().Contains(q));
 
@@ -93,6 +117,21 @@ public partial class ExercisePickerViewModel(DatabaseService db) : ObservableObj
         MuscleGroup.FullBody  => Color.FromArgb("#EF4444"),
         _                     => Color.FromArgb("#52525E"),
     };
+
+    private static string EquipmentTypeLabel(EquipmentType e) => e switch
+    {
+        EquipmentType.Barbell      => "SKIVSTÅNG",
+        EquipmentType.Dumbbell     => "HANTEL",
+        EquipmentType.Cable        => "KABEL",
+        EquipmentType.Machine      => "MASKIN",
+        EquipmentType.BodyOnly     => "KROPPSVIKT",
+        EquipmentType.EZBar        => "EZ-STÅNG",
+        EquipmentType.Kettlebell   => "KETTLEBELL",
+        EquipmentType.Bands        => "BAND",
+        EquipmentType.FoamRoll     => "FOAM ROLL",
+        EquipmentType.MedicineBall => "MEDICINBOLL",
+        _                          => "ÖVRIGT"
+    };
 }
 
 public class ExercisePickerRow
@@ -102,19 +141,52 @@ public class ExercisePickerRow
     public bool IsCustom => Exercise.IsCustom;
     public string MuscleLabel { get; }
     public Color MuscleColor { get; }
+    public string EquipmentLabel { get; }
 
     public ExercisePickerRow(Exercise exercise, string muscleLabel, Color muscleColor)
     {
         Exercise = exercise;
         MuscleLabel = muscleLabel;
         MuscleColor = muscleColor;
+        EquipmentLabel = EquipmentTypeLabel(exercise.Equipment);
     }
+
+    private static string EquipmentTypeLabel(EquipmentType e) => e switch
+    {
+        EquipmentType.Barbell      => "SKIVSTÅNG",
+        EquipmentType.Dumbbell     => "HANTEL",
+        EquipmentType.Cable        => "KABEL",
+        EquipmentType.Machine      => "MASKIN",
+        EquipmentType.BodyOnly     => "KROPPSVIKT",
+        EquipmentType.EZBar        => "EZ-STÅNG",
+        EquipmentType.Kettlebell   => "KETTLEBELL",
+        EquipmentType.Bands        => "BAND",
+        EquipmentType.FoamRoll     => "FOAM ROLL",
+        EquipmentType.MedicineBall => "MEDICINBOLL",
+        _                          => ""
+    };
 }
 
 public partial class MuscleGroupChip : ObservableObject
 {
     public string Label { get; set; } = "";
     public MuscleGroup? MuscleGroup { get; set; }
+    [ObservableProperty] private bool _isSelected;
+
+    public Color Background => IsSelected ? DesignTokens.ChipActiveBg : DesignTokens.ChipInactiveBg;
+    public Color Foreground => IsSelected ? DesignTokens.ChipActiveFg : DesignTokens.ChipInactiveFg;
+
+    partial void OnIsSelectedChanged(bool value)
+    {
+        OnPropertyChanged(nameof(Background));
+        OnPropertyChanged(nameof(Foreground));
+    }
+}
+
+public partial class EquipmentChip : ObservableObject
+{
+    public string Label { get; set; } = "";
+    public EquipmentType? Equipment { get; set; }
     [ObservableProperty] private bool _isSelected;
 
     public Color Background => IsSelected ? DesignTokens.ChipActiveBg : DesignTokens.ChipInactiveBg;

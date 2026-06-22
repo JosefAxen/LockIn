@@ -65,6 +65,8 @@ public partial class LibraryViewModel(DatabaseService db) : ObservableObject
 
     public ObservableCollection<ExerciseGroup> Groups { get; } = new();
     public ObservableCollection<MuscleGroupChip> MuscleChips { get; } = new();
+    public ObservableCollection<EquipmentChip> EquipmentChips { get; } = new();
+    private EquipmentType? _selectedEquipment;
 
     [ObservableProperty] private string _searchText = "";
     [ObservableProperty] private bool _isLoading;
@@ -80,6 +82,17 @@ public partial class LibraryViewModel(DatabaseService db) : ObservableObject
         MuscleChips.Add(new MuscleGroupChip { Label = "ALLA", MuscleGroup = null, IsSelected = true });
         foreach (var g in _allExercises.Select(e => e.MuscleGroup).Distinct().OrderBy(g => g.ToString()))
             MuscleChips.Add(new MuscleGroupChip { Label = MuscleGroupLabel(g), MuscleGroup = g });
+
+        EquipmentChips.Clear();
+        EquipmentChips.Add(new EquipmentChip { Label = "ALLA", Equipment = null, IsSelected = true });
+        foreach (var eq in _allExercises
+            .Select(e => e.Equipment)
+            .Where(e => e != EquipmentType.Other)
+            .Distinct()
+            .OrderBy(e => e.ToString()))
+        {
+            EquipmentChips.Add(new EquipmentChip { Label = EquipmentTypeLabel(eq), Equipment = eq });
+        }
 
         ApplyFilter();
         if (SelectedTab == 1) await LoadTemplatesAsync();
@@ -103,12 +116,23 @@ public partial class LibraryViewModel(DatabaseService db) : ObservableObject
         ApplyFilter();
     }
 
+    [RelayCommand]
+    private void SelectEquipmentChip(EquipmentChip chip)
+    {
+        foreach (var c in EquipmentChips) c.IsSelected = false;
+        chip.IsSelected = true;
+        _selectedEquipment = chip.Equipment;
+        ApplyFilter();
+    }
+
     private void ApplyFilter()
     {
         var q = SearchText.Trim().ToLowerInvariant();
         var source = _allExercises.AsEnumerable();
         if (_selectedMuscleGroup.HasValue)
             source = source.Where(e => e.MuscleGroup == _selectedMuscleGroup.Value);
+        if (_selectedEquipment.HasValue)
+            source = source.Where(e => e.Equipment == _selectedEquipment.Value);
         if (!string.IsNullOrEmpty(q))
             source = source.Where(e => e.Name.ToLowerInvariant().Contains(q));
 
@@ -210,6 +234,21 @@ public partial class LibraryViewModel(DatabaseService db) : ObservableObject
         MuscleGroup.Core      => "Core",
         MuscleGroup.FullBody  => "Helkropp",
         _                     => "Övrigt"
+    };
+
+    private static string EquipmentTypeLabel(EquipmentType e) => e switch
+    {
+        EquipmentType.Barbell      => "SKIVSTÅNG",
+        EquipmentType.Dumbbell     => "HANTEL",
+        EquipmentType.Cable        => "KABEL",
+        EquipmentType.Machine      => "MASKIN",
+        EquipmentType.BodyOnly     => "KROPPSVIKT",
+        EquipmentType.EZBar        => "EZ-STÅNG",
+        EquipmentType.Kettlebell   => "KETTLEBELL",
+        EquipmentType.Bands        => "BAND",
+        EquipmentType.FoamRoll     => "FOAM ROLL",
+        EquipmentType.MedicineBall => "MEDICINBOLL",
+        _                          => "ÖVRIGT"
     };
 }
 
