@@ -63,7 +63,7 @@ public partial class LibraryPage : ContentPage
         if (e.PropertyName == nameof(LibraryViewModel.SelectedTab))
         {
             StickyHeader.Opacity = 0;
-            UpdateTabIndicator(animated: true);
+            UpdateAllTabIndicators(animated: true);
         }
     }
 
@@ -71,18 +71,28 @@ public partial class LibraryPage : ContentPage
     {
         if (sender is not VisualElement ve || ve.Width <= 0) return;
         _tabColumnWidth = ve.Width / 3.0;
-        TabIndicator.WidthRequest = _tabColumnWidth;
-        UpdateTabIndicator(animated: false);
+        TabIndicator.WidthRequest  = _tabColumnWidth;
+        TabIndicator1.WidthRequest = _tabColumnWidth;
+        TabIndicator2.WidthRequest = _tabColumnWidth;
+        UpdateAllTabIndicators(animated: false);
     }
 
-    private void UpdateTabIndicator(bool animated)
+    private void UpdateAllTabIndicators(bool animated)
     {
         if (_tabColumnWidth <= 0) return;
         var targetX = _vm.SelectedTab * _tabColumnWidth;
         if (animated)
+        {
             TabIndicator.TranslateTo(targetX, 0, 280, Easing.SpringOut);
+            TabIndicator1.TranslateTo(targetX, 0, 280, Easing.SpringOut);
+            TabIndicator2.TranslateTo(targetX, 0, 280, Easing.SpringOut);
+        }
         else
-            TabIndicator.TranslationX = targetX;
+        {
+            TabIndicator.TranslationX  = targetX;
+            TabIndicator1.TranslationX = targetX;
+            TabIndicator2.TranslationX = targetX;
+        }
     }
 
     protected override async void OnNavigatedTo(NavigatedToEventArgs args)
@@ -95,18 +105,17 @@ public partial class LibraryPage : ContentPage
         => MainThread.BeginInvokeOnMainThread(() => WorkoutBanner.IsVisible = _state.IsActive);
 
     private void OnExercisesScrolled(object sender, ItemsViewScrolledEventArgs e)
-        => StickyHeader.Opacity = Math.Clamp(e.VerticalOffset / 40.0, 0, 1);
+        => StickyHeader.Opacity = Math.Clamp((e.VerticalOffset - 80.0) / 40.0, 0, 1);
 
     private void OnTemplatesScrolled(object sender, ItemsViewScrolledEventArgs e)
-        => StickyHeader.Opacity = Math.Clamp(e.VerticalOffset / 40.0, 0, 1);
+        => StickyHeader.Opacity = Math.Clamp((e.VerticalOffset - 80.0) / 40.0, 0, 1);
 
     private void OnProgramsScrolled(object sender, ScrolledEventArgs e)
-        => StickyHeader.Opacity = Math.Clamp(e.ScrollY / 50.0, 0, 1);
+        => StickyHeader.Opacity = Math.Clamp((e.ScrollY - 80.0) / 40.0, 0, 1);
 
     private async void OnPillTapped(object sender, TappedEventArgs e)
         => await AnimationHelper.PressAsync(sender);
 
     private async void OnWorkoutBannerTapped(object sender, TappedEventArgs e)
         => await Shell.Current.GoToAsync(nameof(ActiveWorkoutPage));
-
 }

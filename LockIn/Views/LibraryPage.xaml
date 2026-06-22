@@ -21,13 +21,13 @@
         <views:EquipmentNotOtherConverter x:Key="EquipmentNotOtherConverter"/>
     </ContentPage.Resources>
 
-    <Grid RowDefinitions="Auto,*" SafeAreaEdges="None">
+    <Grid SafeAreaEdges="None">
 
         <!-- Atmosfärisk bakgrund -->
-        <controls:AtmosphericBackgroundView Grid.RowSpan="5" InputTransparent="True"/>
+        <controls:AtmosphericBackgroundView InputTransparent="True"/>
 
         <!-- Permanent status bar gradient (alltid synlig, fyller Dynamic Island-zonen) -->
-        <BoxView Grid.RowSpan="6" VerticalOptions="Start" HeightRequest="90" InputTransparent="True" ZIndex="19">
+        <BoxView VerticalOptions="Start" HeightRequest="90" InputTransparent="True" ZIndex="19">
             <BoxView.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                     <GradientStop Color="{AppThemeBinding Light=#28FCFCFC, Dark=#28141418}" Offset="0.0"/>
@@ -37,7 +37,7 @@
         </BoxView>
 
         <!-- Sticky header (fades in on scroll) -->
-        <Grid x:Name="StickyHeader" Grid.RowSpan="6" VerticalOptions="Start" ZIndex="20" Opacity="0"
+        <Grid x:Name="StickyHeader" VerticalOptions="Start" ZIndex="20" Opacity="0"
               HeightRequest="150" SafeAreaEdges="None">
             <BoxView InputTransparent="True">
                 <BoxView.Background>
@@ -63,74 +63,14 @@
             </Grid>
         </Grid>
 
-        <!-- Tab segment control — iOS glass pill med glidande indikator -->
-        <Border x:Name="TabSegment" Grid.Row="0" Margin="16,56,16,10"
-                BackgroundColor="#33787882"
-                StrokeThickness="0"
-                StrokeShape="RoundRectangle 50"
-                Padding="2">
-            <Grid x:Name="TabPills" ColumnDefinitions="*,*,*" HeightRequest="40"
-                  SizeChanged="OnTabContainerSizeChanged">
-
-                <!-- Glidande indikator — flyttar mellan tabbar -->
-                <Border x:Name="TabIndicator" Grid.ColumnSpan="3"
-                        BackgroundColor="#525260"
-                        StrokeThickness="0"
-                        StrokeShape="RoundRectangle 48"
-                        HorizontalOptions="Start"
-                        VerticalOptions="Fill"/>
-
-                <Border Grid.Column="0"
-                        BackgroundColor="Transparent"
-                        StrokeThickness="0"
-                        Padding="0,9">
-                    <Label Text="ÖVNINGAR"
-                           TextColor="{Binding Tab0Fg}"
-                           FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
-                           HorizontalOptions="Center" VerticalOptions="Center"/>
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 0}" Tapped="OnPillTapped"/>
-                    </Border.GestureRecognizers>
-                </Border>
-
-                <Border Grid.Column="1"
-                        BackgroundColor="Transparent"
-                        StrokeThickness="0"
-                        Padding="0,9">
-                    <Label Text="MALLAR"
-                           TextColor="{Binding Tab1Fg}"
-                           FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
-                           HorizontalOptions="Center" VerticalOptions="Center"/>
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 1}" Tapped="OnPillTapped"/>
-                    </Border.GestureRecognizers>
-                </Border>
-
-                <Border Grid.Column="2"
-                        BackgroundColor="Transparent"
-                        StrokeThickness="0"
-                        Padding="0,9">
-                    <Label Text="PROGRAM"
-                           TextColor="{Binding Tab2Fg}"
-                           FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
-                           HorizontalOptions="Center" VerticalOptions="Center"/>
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 2}" Tapped="OnPillTapped"/>
-                    </Border.GestureRecognizers>
-                </Border>
-
-            </Grid>
-        </Border>
-
         <!-- Loading indicator -->
-        <ActivityIndicator Grid.Row="1"
-                           IsRunning="{Binding IsLoading}"
+        <ActivityIndicator IsRunning="{Binding IsLoading}"
                            IsVisible="{Binding IsLoading}"
-                           HorizontalOptions="Center"/>
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"/>
 
         <!-- Tab 0: Exercises -->
-        <CollectionView Grid.Row="1"
-                        IsVisible="{Binding ShowExercises}"
+        <CollectionView IsVisible="{Binding ShowExercises}"
                         ItemsSource="{Binding Groups}"
                         IsGrouped="True"
                         Scrolled="OnExercisesScrolled"
@@ -139,7 +79,7 @@
             <CollectionView.Header>
                 <VerticalStackLayout Spacing="0">
                     <!-- Sidrubrik — scrollar bort med innehållet -->
-                    <Grid ColumnDefinitions="*,Auto" Padding="16,8,16,8">
+                    <Grid ColumnDefinitions="*,Auto" Padding="16,56,16,8">
                         <Label Grid.Column="0" Text="BIBLIOTEK"
                                FontFamily="BebasNeue" FontSize="34" CharacterSpacing="1"
                                TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
@@ -152,7 +92,47 @@
                                 Command="{Binding ActionButtonCommand}"
                                 VerticalOptions="Center"/>
                     </Grid>
-                    <!-- Pill-formad sökruta (scrollar med innehållet) -->
+                    <!-- Tab-pills — scrollar bort med innehållet -->
+                    <Border x:Name="TabSegment" Margin="16,0,16,10"
+                            BackgroundColor="#33787882"
+                            StrokeThickness="0"
+                            StrokeShape="RoundRectangle 50"
+                            Padding="2">
+                        <Grid x:Name="TabPills" ColumnDefinitions="*,*,*" HeightRequest="40"
+                              SizeChanged="OnTabContainerSizeChanged">
+                            <Border x:Name="TabIndicator" Grid.ColumnSpan="3"
+                                    BackgroundColor="#525260"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 48"
+                                    HorizontalOptions="Start"
+                                    VerticalOptions="Fill"/>
+                            <Border Grid.Column="0" BackgroundColor="Transparent" StrokeThickness="0" Padding="0,9">
+                                <Label Text="ÖVNINGAR" TextColor="{Binding Tab0Fg}"
+                                       FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
+                                       HorizontalOptions="Center" VerticalOptions="Center"/>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 0}" Tapped="OnPillTapped"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+                            <Border Grid.Column="1" BackgroundColor="Transparent" StrokeThickness="0" Padding="0,9">
+                                <Label Text="MALLAR" TextColor="{Binding Tab1Fg}"
+                                       FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
+                                       HorizontalOptions="Center" VerticalOptions="Center"/>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 1}" Tapped="OnPillTapped"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+                            <Border Grid.Column="2" BackgroundColor="Transparent" StrokeThickness="0" Padding="0,9">
+                                <Label Text="PROGRAM" TextColor="{Binding Tab2Fg}"
+                                       FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
+                                       HorizontalOptions="Center" VerticalOptions="Center"/>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 2}" Tapped="OnPillTapped"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+                        </Grid>
+                    </Border>
+                    <!-- Pill-formad sökruta -->
                     <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface2}}"
                             StrokeShape="RoundRectangle 26"
                             StrokeThickness="0"
@@ -175,7 +155,7 @@
                                    VerticalOptions="Center"/>
                         </Grid>
                     </Border>
-                    <!-- Muskelchips (horisontell scroll, BindableLayout) -->
+                    <!-- Muskelchips -->
                     <ScrollView Orientation="Horizontal"
                                 HorizontalScrollBarVisibility="Never"
                                 Margin="16,0,16,8">
@@ -201,7 +181,7 @@
                             </BindableLayout.ItemTemplate>
                         </HorizontalStackLayout>
                     </ScrollView>
-                    <!-- Equipment-chips (horisontell scroll) -->
+                    <!-- Equipment-chips -->
                     <ScrollView Orientation="Horizontal"
                                 HorizontalScrollBarVisibility="Never"
                                 Margin="16,0,16,12">
@@ -288,25 +268,67 @@
         </CollectionView>
 
         <!-- Tab 1: Templates -->
-        <Grid Grid.Row="1" IsVisible="{Binding ShowTemplates}">
+        <Grid IsVisible="{Binding ShowTemplates}">
             <CollectionView ItemsSource="{Binding Templates}"
                             Scrolled="OnTemplatesScrolled"
                             HorizontalScrollBarVisibility="Never"
                             VerticalScrollBarVisibility="Never">
                 <CollectionView.Header>
-                    <Grid ColumnDefinitions="*,Auto" Padding="16,8,16,8">
-                        <Label Grid.Column="0" Text="BIBLIOTEK"
-                               FontFamily="BebasNeue" FontSize="34" CharacterSpacing="1"
-                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
-                               VerticalOptions="Center"/>
-                        <Button Grid.Column="1"
-                                IsVisible="{Binding ShowActionButton}"
-                                Text="+ Lägg till"
-                                Style="{StaticResource SecondaryButton}"
-                                Padding="12,8" HeightRequest="36"
-                                Command="{Binding ActionButtonCommand}"
-                                VerticalOptions="Center"/>
-                    </Grid>
+                    <VerticalStackLayout Spacing="0">
+                        <Grid ColumnDefinitions="*,Auto" Padding="16,56,16,8">
+                            <Label Grid.Column="0" Text="BIBLIOTEK"
+                                   FontFamily="BebasNeue" FontSize="34" CharacterSpacing="1"
+                                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                                   VerticalOptions="Center"/>
+                            <Button Grid.Column="1"
+                                    IsVisible="{Binding ShowActionButton}"
+                                    Text="+ Lägg till"
+                                    Style="{StaticResource SecondaryButton}"
+                                    Padding="12,8" HeightRequest="36"
+                                    Command="{Binding ActionButtonCommand}"
+                                    VerticalOptions="Center"/>
+                        </Grid>
+                        <!-- Tab-pills — scrollar bort med innehållet -->
+                        <Border x:Name="TabSegment1" Margin="16,0,16,10"
+                                BackgroundColor="#33787882"
+                                StrokeThickness="0"
+                                StrokeShape="RoundRectangle 50"
+                                Padding="2">
+                            <Grid x:Name="TabPills1" ColumnDefinitions="*,*,*" HeightRequest="40"
+                                  SizeChanged="OnTabContainerSizeChanged">
+                                <Border x:Name="TabIndicator1" Grid.ColumnSpan="3"
+                                        BackgroundColor="#525260"
+                                        StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 48"
+                                        HorizontalOptions="Start"
+                                        VerticalOptions="Fill"/>
+                                <Border Grid.Column="0" BackgroundColor="Transparent" StrokeThickness="0" Padding="0,9">
+                                    <Label Text="ÖVNINGAR" TextColor="{Binding Tab0Fg}"
+                                           FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
+                                           HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 0}" Tapped="OnPillTapped"/>
+                                    </Border.GestureRecognizers>
+                                </Border>
+                                <Border Grid.Column="1" BackgroundColor="Transparent" StrokeThickness="0" Padding="0,9">
+                                    <Label Text="MALLAR" TextColor="{Binding Tab1Fg}"
+                                           FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
+                                           HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 1}" Tapped="OnPillTapped"/>
+                                    </Border.GestureRecognizers>
+                                </Border>
+                                <Border Grid.Column="2" BackgroundColor="Transparent" StrokeThickness="0" Padding="0,9">
+                                    <Label Text="PROGRAM" TextColor="{Binding Tab2Fg}"
+                                           FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
+                                           HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 2}" Tapped="OnPillTapped"/>
+                                    </Border.GestureRecognizers>
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </VerticalStackLayout>
                 </CollectionView.Header>
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:WorkoutTemplate">
@@ -376,64 +398,105 @@
         </Grid>
 
         <!-- Tab 2: Programs -->
-        <ScrollView Grid.Row="1" IsVisible="{Binding ShowPrograms}" VerticalScrollBarVisibility="Never"
+        <ScrollView IsVisible="{Binding ShowPrograms}" VerticalScrollBarVisibility="Never"
                     Scrolled="OnProgramsScrolled">
-            <VerticalStackLayout Padding="16,0,16,40" Spacing="0">
+            <VerticalStackLayout Spacing="0">
                 <!-- Sidrubrik — scrollar bort med innehållet -->
-                <Grid ColumnDefinitions="*,Auto" Margin="0,8,0,12">
+                <Grid ColumnDefinitions="*,Auto" Padding="16,56,16,8">
                     <Label Grid.Column="0" Text="BIBLIOTEK"
                            FontFamily="BebasNeue" FontSize="34" CharacterSpacing="1"
                            TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
                            VerticalOptions="Center"/>
                 </Grid>
-                <StackLayout BindableLayout.ItemsSource="{Binding Programs}" Spacing="12">
-                <BindableLayout.ItemTemplate>
-                    <DataTemplate x:DataType="data:WorkoutProgram">
-                        <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
-                                StrokeShape="RoundRectangle 18"
+                <!-- Tab-pills — scrollar bort med innehållet -->
+                <Border x:Name="TabSegment2" Margin="16,0,16,10"
+                        BackgroundColor="#33787882"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 50"
+                        Padding="2">
+                    <Grid x:Name="TabPills2" ColumnDefinitions="*,*,*" HeightRequest="40"
+                          SizeChanged="OnTabContainerSizeChanged">
+                        <Border x:Name="TabIndicator2" Grid.ColumnSpan="3"
+                                BackgroundColor="#525260"
                                 StrokeThickness="0"
-                                Padding="18,14">
-                            <Border.Shadow>
-                                <Shadow Brush="Black" Offset="0,2" Radius="10" Opacity="0.18"/>
-                            </Border.Shadow>
+                                StrokeShape="RoundRectangle 48"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Fill"/>
+                        <Border Grid.Column="0" BackgroundColor="Transparent" StrokeThickness="0" Padding="0,9">
+                            <Label Text="ÖVNINGAR" TextColor="{Binding Tab0Fg}"
+                                   FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
                             <Border.GestureRecognizers>
-                                <TapGestureRecognizer
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}}, Path=OpenProgramCommand}"
-                                    CommandParameter="{Binding .}"/>
+                                <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 0}" Tapped="OnPillTapped"/>
                             </Border.GestureRecognizers>
-                            <StackLayout Spacing="8">
-                                <Grid ColumnDefinitions="*,Auto">
-                                    <Label Grid.Column="0"
-                                           Text="{Binding Name}"
-                                           FontFamily="BebasNeue" FontSize="20"
-                                           CharacterSpacing="1"/>
-                                    <Border Grid.Column="1"
-                                            BackgroundColor="{StaticResource ForgeAccentPurpleDim}"
-                                            StrokeShape="RoundRectangle 10"
-                                            StrokeThickness="0" Padding="10,5">
-                                        <Label Text="{Binding DaysPerWeek, StringFormat='{0} dgr/v'}"
-                                               TextColor="{StaticResource ForgeAccentPurple}"
-                                               FontFamily="DMSansMedium" FontSize="12"/>
-                                    </Border>
-                                </Grid>
-                                <Label Text="{Binding Description}"
-                                       Style="{StaticResource MutedLabel}"
-                                       LineBreakMode="WordWrap"/>
-                                <Label Text="SE PROGRAM →"
-                                       TextColor="{StaticResource ForgeAccentPurple}"
-                                       FontFamily="BebasNeue" FontSize="13"
-                                       CharacterSpacing="2"/>
-                            </StackLayout>
                         </Border>
-                    </DataTemplate>
-                </BindableLayout.ItemTemplate>
-            </StackLayout>
+                        <Border Grid.Column="1" BackgroundColor="Transparent" StrokeThickness="0" Padding="0,9">
+                            <Label Text="MALLAR" TextColor="{Binding Tab1Fg}"
+                                   FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 1}" Tapped="OnPillTapped"/>
+                            </Border.GestureRecognizers>
+                        </Border>
+                        <Border Grid.Column="2" BackgroundColor="Transparent" StrokeThickness="0" Padding="0,9">
+                            <Label Text="PROGRAM" TextColor="{Binding Tab2Fg}"
+                                   FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 2}" Tapped="OnPillTapped"/>
+                            </Border.GestureRecognizers>
+                        </Border>
+                    </Grid>
+                </Border>
+                <!-- Programs content -->
+                <StackLayout Margin="16,0,16,40" Spacing="12"
+                             BindableLayout.ItemsSource="{Binding Programs}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="data:WorkoutProgram">
+                            <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
+                                    StrokeShape="RoundRectangle 18"
+                                    StrokeThickness="0"
+                                    Padding="18,14">
+                                <Border.Shadow>
+                                    <Shadow Brush="Black" Offset="0,2" Radius="10" Opacity="0.18"/>
+                                </Border.Shadow>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}}, Path=OpenProgramCommand}"
+                                        CommandParameter="{Binding .}"/>
+                                </Border.GestureRecognizers>
+                                <StackLayout Spacing="8">
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <Label Grid.Column="0"
+                                               Text="{Binding Name}"
+                                               FontFamily="BebasNeue" FontSize="20"
+                                               CharacterSpacing="1"/>
+                                        <Border Grid.Column="1"
+                                                BackgroundColor="{StaticResource ForgeAccentPurpleDim}"
+                                                StrokeShape="RoundRectangle 10"
+                                                StrokeThickness="0" Padding="10,5">
+                                            <Label Text="{Binding DaysPerWeek, StringFormat='{0} dgr/v'}"
+                                                   TextColor="{StaticResource ForgeAccentPurple}"
+                                                   FontFamily="DMSansMedium" FontSize="12"/>
+                                        </Border>
+                                    </Grid>
+                                    <Label Text="{Binding Description}"
+                                           Style="{StaticResource MutedLabel}"
+                                           LineBreakMode="WordWrap"/>
+                                    <Label Text="SE PROGRAM →"
+                                           TextColor="{StaticResource ForgeAccentPurple}"
+                                           FontFamily="BebasNeue" FontSize="13"
+                                           CharacterSpacing="2"/>
+                                </StackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </StackLayout>
             </VerticalStackLayout>
         </ScrollView>
 
         <!-- Active workout banner — overlay, alltid i botten -->
         <Border x:Name="WorkoutBanner"
-                Grid.Row="0" Grid.RowSpan="2"
                 IsVisible="False"
                 BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
                 Stroke="{StaticResource ForgeAccent}"
@@ -463,17 +526,18 @@
                 <TapGestureRecognizer Tapped="OnWorkoutBannerTapped"/>
             </Border.GestureRecognizers>
         </Border>
-    <!-- Bottom gradient fade behind floating tab bar — matchar topp-gradienten spegelvänt -->
-    <BoxView Grid.RowSpan="99" InputTransparent="True" VerticalOptions="End" HeightRequest="150">
-        <BoxView.Background>
-            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark=#00141418}" Offset="0.0"/>
-                <GradientStop Color="{AppThemeBinding Light=#38FCFCFC, Dark=#38141418}" Offset="0.35"/>
-                <GradientStop Color="{AppThemeBinding Light=#90FCFCFC, Dark=#90141418}" Offset="0.65"/>
-                <GradientStop Color="{AppThemeBinding Light=#FCFCFC, Dark=#141418}" Offset="1.0"/>
-            </LinearGradientBrush>
-        </BoxView.Background>
-    </BoxView>
+
+        <!-- Bottom gradient fade behind floating tab bar -->
+        <BoxView InputTransparent="True" VerticalOptions="End" HeightRequest="150">
+            <BoxView.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark=#00141418}" Offset="0.0"/>
+                    <GradientStop Color="{AppThemeBinding Light=#38FCFCFC, Dark=#38141418}" Offset="0.35"/>
+                    <GradientStop Color="{AppThemeBinding Light=#90FCFCFC, Dark=#90141418}" Offset="0.65"/>
+                    <GradientStop Color="{AppThemeBinding Light=#FCFCFC, Dark=#141418}" Offset="1.0"/>
+                </LinearGradientBrush>
+            </BoxView.Background>
+        </BoxView>
 
     </Grid>
 </ContentPage>
