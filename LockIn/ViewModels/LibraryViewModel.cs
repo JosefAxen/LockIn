@@ -187,18 +187,11 @@ public partial class LibraryViewModel(DatabaseService db) : ObservableObject
                 }
             }
 
-            // Sync items within group using individual Remove/Insert —
-            // no Clear() — so inner ObservableCollection fires DeleteItems/
-            // InsertItems rather than ReloadSections, which preserves focus.
-            var toKeep = items.ToHashSet();
-            for (int j = group.Count - 1; j >= 0; j--)
-                if (!toKeep.Contains(group[j])) group.RemoveAt(j);
-            for (int j = 0; j < items.Count; j++)
-            {
-                int cur = group.IndexOf(items[j]);
-                if (cur < 0) group.Insert(j, items[j]);
-                else if (cur != j) { group.RemoveAt(cur); group.Insert(j, items[j]); }
-            }
+            // group.Clear() fires Reset on the inner ExerciseGroup, which causes
+            // ReloadSections (not ReloadData) — keyboard focus is preserved and
+            // it is O(n) rather than the O(n²) item-by-item diffing approach.
+            group.Clear();
+            foreach (var e in items) group.Add(e);
         }
     }
 

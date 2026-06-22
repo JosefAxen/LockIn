@@ -73,14 +73,13 @@ public class WeeklyGoalGauge : SKCanvasView
         float ex = cx + radius * 0.5f;    // cos(60°)  ≈  0.5
         float ey = cy + radius * 0.866f;  // sin(60°)  ≈  0.866
 
-        // Forge multi-accent: Coral → Purple → Blue (warm → cool progression)
         using var shader = SKShader.CreateLinearGradient(
             new SKPoint(sx, sy),
             new SKPoint(ex, ey),
             new[] {
-                new SKColor(0xFB, 0x71, 0x85),  // ForgeAccentCoral
-                new SKColor(0xA7, 0x8B, 0xFA),  // ForgeAccentPurple
-                new SKColor(0x38, 0xBD, 0xF8)   // ForgeAccentBlue
+                new SKColor(192,  57,  43),  // mörk tegelröd
+                new SKColor(142,  68, 173),  // dämpad lila
+                new SKColor( 52, 152, 219)   // mellanblå
             },
             new[] { 0f, 0.5f, 1.0f },
             SKShaderTileMode.Clamp);
