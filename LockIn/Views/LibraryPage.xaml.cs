@@ -25,8 +25,6 @@ public partial class LibraryPage : ContentPage
         _vm.PropertyChanged += OnVmPropertyChanged;
 
         StickyHeader.Opacity = 0;
-        PageTitleRow.Opacity = 1;
-        TabSegment.Opacity = 1;
 
         if (!_hasLoaded)
         {
@@ -65,8 +63,6 @@ public partial class LibraryPage : ContentPage
         if (e.PropertyName == nameof(LibraryViewModel.SelectedTab))
         {
             StickyHeader.Opacity = 0;
-            PageTitleRow.Opacity = 1;
-            TabSegment.Opacity = 1;
             UpdateTabIndicator(animated: true);
         }
     }
@@ -99,28 +95,13 @@ public partial class LibraryPage : ContentPage
         => MainThread.BeginInvokeOnMainThread(() => WorkoutBanner.IsVisible = _state.IsActive);
 
     private void OnExercisesScrolled(object sender, ItemsViewScrolledEventArgs e)
-    {
-        var opacity = Math.Clamp(e.VerticalOffset / 40.0, 0, 1);
-        StickyHeader.Opacity = opacity;
-        PageTitleRow.Opacity = 1 - opacity;
-        TabSegment.Opacity = 1 - opacity;
-    }
+        => StickyHeader.Opacity = Math.Clamp(e.VerticalOffset / 40.0, 0, 1);
 
     private void OnTemplatesScrolled(object sender, ItemsViewScrolledEventArgs e)
-    {
-        var opacity = Math.Clamp(e.VerticalOffset / 40.0, 0, 1);
-        StickyHeader.Opacity = opacity;
-        PageTitleRow.Opacity = 1 - opacity;
-        TabSegment.Opacity = 1 - opacity;
-    }
+        => StickyHeader.Opacity = Math.Clamp(e.VerticalOffset / 40.0, 0, 1);
 
     private void OnProgramsScrolled(object sender, ScrolledEventArgs e)
-    {
-        var opacity = Math.Clamp((e.ScrollY - 80.0) / 40.0, 0, 1);
-        StickyHeader.Opacity = opacity;
-        PageTitleRow.Opacity = 1 - opacity;
-        TabSegment.Opacity = 1 - opacity;
-    }
+        => StickyHeader.Opacity = Math.Clamp(e.ScrollY / 50.0, 0, 1);
 
     private async void OnPillTapped(object sender, TappedEventArgs e)
         => await AnimationHelper.PressAsync(sender);

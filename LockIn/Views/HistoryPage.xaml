@@ -136,7 +136,7 @@
                             <Grid x:Name="PeriodPills" ColumnDefinitions="*,*,*" HeightRequest="40"
                                   SizeChanged="OnPeriodContainerSizeChanged">
                                 <Border x:Name="PeriodIndicator" Grid.ColumnSpan="3"
-                                        BackgroundColor="{StaticResource ForgePrimary}"
+                                        BackgroundColor="#525260"
                                         StrokeThickness="0"
                                         StrokeShape="RoundRectangle 48"
                                         HorizontalOptions="Start" VerticalOptions="Fill"/>
@@ -173,7 +173,7 @@
                             <Grid x:Name="SortPills" ColumnDefinitions="*,*" HeightRequest="38"
                                   SizeChanged="OnSortContainerSizeChanged">
                                 <Border x:Name="SortIndicator" Grid.ColumnSpan="2"
-                                        BackgroundColor="{StaticResource ForgePrimary}"
+                                        BackgroundColor="#525260"
                                         StrokeThickness="0"
                                         StrokeShape="RoundRectangle 48"
                                         HorizontalOptions="Start" VerticalOptions="Fill"/>

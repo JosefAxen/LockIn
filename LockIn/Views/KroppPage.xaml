@@ -98,7 +98,7 @@
                         <Grid x:Name="TabPills" ColumnDefinitions="*,*,*" HeightRequest="40"
                               SizeChanged="OnTabContainerSizeChanged">
                             <Border x:Name="TabIndicator" Grid.ColumnSpan="3"
-                                    BackgroundColor="{StaticResource ForgePrimary}"
+                                    BackgroundColor="#525260"
                                     StrokeThickness="0"
                                     StrokeShape="RoundRectangle 48"
                                     HorizontalOptions="Start" VerticalOptions="Fill"/>

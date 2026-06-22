@@ -19,7 +19,7 @@
         <vm:MuscleGroupLabelConverter x:Key="MuscleGroupLabelConverter"/>
     </ContentPage.Resources>
 
-    <Grid RowDefinitions="Auto,Auto,Auto,Auto,*" SafeAreaEdges="None">
+    <Grid RowDefinitions="Auto,*" SafeAreaEdges="None">
 
         <!-- Atmosfärisk bakgrund -->
         <controls:AtmosphericBackgroundView Grid.RowSpan="5" InputTransparent="True"/>
@@ -61,23 +61,8 @@
             </Grid>
         </Grid>
 
-        <!-- Page title (crossfades with sticky header) -->
-        <Grid x:Name="PageTitleRow" Grid.Row="0" Padding="16,56,16,8" ColumnDefinitions="*,Auto">
-            <Label Grid.Column="0" Text="BIBLIOTEK"
-                   FontFamily="BebasNeue" FontSize="34" CharacterSpacing="1"
-                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
-                   VerticalOptions="Center"/>
-            <Button Grid.Column="1"
-                    IsVisible="{Binding ShowActionButton}"
-                    Text="+ Lägg till"
-                    Style="{StaticResource SecondaryButton}"
-                    Padding="12,8" HeightRequest="36"
-                    Command="{Binding ActionButtonCommand}"
-                    VerticalOptions="Center"/>
-        </Grid>
-
         <!-- Tab segment control — iOS glass pill med glidande indikator -->
-        <Border x:Name="TabSegment" Grid.Row="1" Margin="16,8,16,10"
+        <Border x:Name="TabSegment" Grid.Row="0" Margin="16,56,16,10"
                 BackgroundColor="#33787882"
                 StrokeThickness="0"
                 StrokeShape="RoundRectangle 50"
@@ -87,7 +72,7 @@
 
                 <!-- Glidande indikator — flyttar mellan tabbar -->
                 <Border x:Name="TabIndicator" Grid.ColumnSpan="3"
-                        BackgroundColor="{StaticResource ForgePrimary}"
+                        BackgroundColor="#525260"
                         StrokeThickness="0"
                         StrokeShape="RoundRectangle 48"
                         HorizontalOptions="Start"
@@ -136,13 +121,13 @@
         </Border>
 
         <!-- Loading indicator -->
-        <ActivityIndicator Grid.Row="4"
+        <ActivityIndicator Grid.Row="1"
                            IsRunning="{Binding IsLoading}"
                            IsVisible="{Binding IsLoading}"
                            HorizontalOptions="Center"/>
 
         <!-- Tab 0: Exercises -->
-        <CollectionView Grid.Row="4"
+        <CollectionView Grid.Row="1"
                         IsVisible="{Binding ShowExercises}"
                         ItemsSource="{Binding Groups}"
                         IsGrouped="True"
@@ -151,6 +136,20 @@
                         VerticalScrollBarVisibility="Never">
             <CollectionView.Header>
                 <VerticalStackLayout Spacing="0">
+                    <!-- Sidrubrik — scrollar bort med innehållet -->
+                    <Grid ColumnDefinitions="*,Auto" Padding="16,8,16,8">
+                        <Label Grid.Column="0" Text="BIBLIOTEK"
+                               FontFamily="BebasNeue" FontSize="34" CharacterSpacing="1"
+                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                               VerticalOptions="Center"/>
+                        <Button Grid.Column="1"
+                                IsVisible="{Binding ShowActionButton}"
+                                Text="+ Lägg till"
+                                Style="{StaticResource SecondaryButton}"
+                                Padding="12,8" HeightRequest="36"
+                                Command="{Binding ActionButtonCommand}"
+                                VerticalOptions="Center"/>
+                    </Grid>
                     <!-- Pill-formad sökruta (scrollar med innehållet) -->
                     <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface2}}"
                             StrokeShape="RoundRectangle 26"
@@ -254,11 +253,26 @@
         </CollectionView>
 
         <!-- Tab 1: Templates -->
-        <Grid Grid.Row="4" IsVisible="{Binding ShowTemplates}">
+        <Grid Grid.Row="1" IsVisible="{Binding ShowTemplates}">
             <CollectionView ItemsSource="{Binding Templates}"
                             Scrolled="OnTemplatesScrolled"
                             HorizontalScrollBarVisibility="Never"
                             VerticalScrollBarVisibility="Never">
+                <CollectionView.Header>
+                    <Grid ColumnDefinitions="*,Auto" Padding="16,8,16,8">
+                        <Label Grid.Column="0" Text="BIBLIOTEK"
+                               FontFamily="BebasNeue" FontSize="34" CharacterSpacing="1"
+                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                               VerticalOptions="Center"/>
+                        <Button Grid.Column="1"
+                                IsVisible="{Binding ShowActionButton}"
+                                Text="+ Lägg till"
+                                Style="{StaticResource SecondaryButton}"
+                                Padding="12,8" HeightRequest="36"
+                                Command="{Binding ActionButtonCommand}"
+                                VerticalOptions="Center"/>
+                    </Grid>
+                </CollectionView.Header>
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:WorkoutTemplate">
                         <Border Margin="16,0,16,10"
@@ -327,10 +341,17 @@
         </Grid>
 
         <!-- Tab 2: Programs -->
-        <ScrollView Grid.Row="4" IsVisible="{Binding ShowPrograms}" VerticalScrollBarVisibility="Never"
+        <ScrollView Grid.Row="1" IsVisible="{Binding ShowPrograms}" VerticalScrollBarVisibility="Never"
                     Scrolled="OnProgramsScrolled">
-            <StackLayout BindableLayout.ItemsSource="{Binding Programs}"
-                         Padding="16,0,16,40" Spacing="12">
+            <VerticalStackLayout Padding="16,0,16,40" Spacing="0">
+                <!-- Sidrubrik — scrollar bort med innehållet -->
+                <Grid ColumnDefinitions="*,Auto" Margin="0,8,0,12">
+                    <Label Grid.Column="0" Text="BIBLIOTEK"
+                           FontFamily="BebasNeue" FontSize="34" CharacterSpacing="1"
+                           TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                           VerticalOptions="Center"/>
+                </Grid>
+                <StackLayout BindableLayout.ItemsSource="{Binding Programs}" Spacing="12">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate x:DataType="data:WorkoutProgram">
                         <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
@@ -372,11 +393,12 @@
                     </DataTemplate>
                 </BindableLayout.ItemTemplate>
             </StackLayout>
+            </VerticalStackLayout>
         </ScrollView>
 
         <!-- Active workout banner — overlay, alltid i botten -->
         <Border x:Name="WorkoutBanner"
-                Grid.Row="0" Grid.RowSpan="5"
+                Grid.Row="0" Grid.RowSpan="2"
                 IsVisible="False"
                 BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
                 Stroke="{StaticResource ForgeAccent}"
