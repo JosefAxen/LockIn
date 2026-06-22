@@ -79,6 +79,18 @@ public class DatabaseService
         try { await _db.ExecuteAsync("ALTER TABLE LoggedSets ADD COLUMN RIR INTEGER NOT NULL DEFAULT 0"); }
         catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
 
+        // Fas 5: Exercise metadata från free-exercise-db
+        try { await _db.ExecuteAsync("ALTER TABLE Exercises ADD COLUMN Equipment INTEGER NOT NULL DEFAULT 0"); }
+        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
+        try { await _db.ExecuteAsync("ALTER TABLE Exercises ADD COLUMN SecondaryMuscles TEXT NOT NULL DEFAULT ''"); }
+        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
+        try { await _db.ExecuteAsync("ALTER TABLE Exercises ADD COLUMN Force INTEGER NOT NULL DEFAULT 0"); }
+        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
+        try { await _db.ExecuteAsync("ALTER TABLE Exercises ADD COLUMN Level INTEGER NOT NULL DEFAULT 0"); }
+        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
+        try { await _db.ExecuteAsync("ALTER TABLE Exercises ADD COLUMN Mechanic INTEGER NOT NULL DEFAULT 0"); }
+        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
+
         await SeedAsync();
         await SeedExerciseDescriptionsAsync();
         await SeedForearmExercisesAsync();
@@ -207,8 +219,9 @@ public class DatabaseService
 
     private async Task SeedExerciseDbAsync()
     {
+        // Kör om igen om Exercise-rader saknar Equipment-data (ny kolumn, gammal seed)
         var alreadySeeded = await _db.ExecuteScalarAsync<int>(
-            "SELECT COUNT(*) FROM Exercises WHERE Name = 'Bench Press'") > 0;
+            "SELECT COUNT(*) FROM Exercises WHERE Name = 'Bench Press' AND Equipment != 0") > 0;
         if (alreadySeeded) return;
 
         await using var stream = await FileSystem.OpenAppPackageFileAsync("exercises_db.json");
@@ -216,8 +229,7 @@ public class DatabaseService
                       ?? new List<ExerciseDbEntry>();
 
         var existing = (await _db.Table<Exercise>().ToListAsync())
-            .Select(e => e.Name.ToLowerInvariant())
-            .ToHashSet();
+            .ToDictionary(e => e.Name.ToLowerInvariant(), e => e);
 
         var gymEquipment = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
@@ -226,54 +238,126 @@ public class DatabaseService
         };
 
         var toInsert = new List<Exercise>();
+        var toUpdate = new List<Exercise>();
+
         foreach (var e in entries)
         {
             if (e.Equipment is null || !gymEquipment.Contains(e.Equipment)) continue;
             if (string.Equals(e.Category, "cardio", StringComparison.OrdinalIgnoreCase)) continue;
             if (e.Name is null) continue;
-            if (existing.Contains(e.Name.ToLowerInvariant())) continue;
 
-            var muscle = MapExerciseDbMuscle(e.PrimaryMuscles?.FirstOrDefault());
-            var rest = string.Equals(e.Mechanic, "compound", StringComparison.OrdinalIgnoreCase) ? 150 : 90;
+            var muscle    = MapDbMuscle(e.PrimaryMuscles?.FirstOrDefault());
+            var equipment = MapDbEquipment(e.Equipment);
+            var force     = MapDbForce(e.Force);
+            var level     = MapDbLevel(e.Level);
+            var mechanic  = MapDbMechanic(e.Mechanic);
+            var secondary = e.SecondaryMuscles is { Count: > 0 }
+                ? string.Join(", ", e.SecondaryMuscles)
+                : "";
             var desc = e.Instructions is { Count: > 0 }
                 ? string.Join(" ", e.Instructions.Take(2))
                 : "";
+            var rest = mechanic == ExerciseMechanic.Compound ? 150 : 90;
 
-            toInsert.Add(new Exercise
+            if (existing.TryGetValue(e.Name.ToLowerInvariant(), out var ex))
             {
-                Name = e.Name,
-                MuscleGroup = muscle,
-                DefaultRestSeconds = rest,
-                Description = desc
-            });
+                ex.Equipment       = equipment;
+                ex.SecondaryMuscles = secondary;
+                ex.Force           = force;
+                ex.Level           = level;
+                ex.Mechanic        = mechanic;
+                if (string.IsNullOrEmpty(ex.Description) && desc.Length > 0)
+                    ex.Description = desc;
+                toUpdate.Add(ex);
+            }
+            else
+            {
+                toInsert.Add(new Exercise
+                {
+                    Name             = e.Name,
+                    MuscleGroup      = muscle,
+                    DefaultRestSeconds = rest,
+                    Description      = desc,
+                    Equipment        = equipment,
+                    SecondaryMuscles = secondary,
+                    Force            = force,
+                    Level            = level,
+                    Mechanic         = mechanic,
+                });
+            }
         }
 
-        if (toInsert.Count > 0)
-            await _db.InsertAllAsync(toInsert);
+        await _db.RunInTransactionAsync(conn =>
+        {
+            foreach (var ex in toUpdate)
+                conn.Update(ex);
+            if (toInsert.Count > 0)
+                conn.InsertAll(toInsert);
+        });
     }
 
-    private static MuscleGroup MapExerciseDbMuscle(string? muscle) => muscle?.ToLowerInvariant() switch
+    private static MuscleGroup MapDbMuscle(string? m) => m?.ToLowerInvariant() switch
     {
-        "chest"                                                          => MuscleGroup.Chest,
-        "lats" or "middle back" or "lower back" or "traps"              => MuscleGroup.Back,
-        "shoulders"                                                      => MuscleGroup.Shoulders,
-        "biceps"                                                         => MuscleGroup.Biceps,
-        "triceps"                                                        => MuscleGroup.Triceps,
+        "chest"                                                      => MuscleGroup.Chest,
+        "lats" or "middle back" or "lower back" or "traps"          => MuscleGroup.Back,
+        "shoulders"                                                  => MuscleGroup.Shoulders,
+        "biceps"                                                     => MuscleGroup.Biceps,
+        "triceps"                                                    => MuscleGroup.Triceps,
         "quadriceps" or "hamstrings" or "glutes" or "calves"
-            or "adductors" or "abductors"                                => MuscleGroup.Legs,
-        "abdominals"                                                     => MuscleGroup.Core,
-        "forearms"                                                       => MuscleGroup.Forearms,
-        _                                                                => MuscleGroup.Other
+            or "adductors" or "abductors"                            => MuscleGroup.Legs,
+        "abdominals"                                                 => MuscleGroup.Core,
+        "forearms"                                                   => MuscleGroup.Forearms,
+        _                                                            => MuscleGroup.Other
+    };
+
+    private static EquipmentType MapDbEquipment(string? e) => e?.ToLowerInvariant() switch
+    {
+        "barbell"       => EquipmentType.Barbell,
+        "dumbbell"      => EquipmentType.Dumbbell,
+        "cable"         => EquipmentType.Cable,
+        "machine"       => EquipmentType.Machine,
+        "body only"     => EquipmentType.BodyOnly,
+        "e-z curl bar"  => EquipmentType.EZBar,
+        "kettlebells"   => EquipmentType.Kettlebell,
+        "bands"         => EquipmentType.Bands,
+        "foam roll"     => EquipmentType.FoamRoll,
+        "medicine ball" => EquipmentType.MedicineBall,
+        _               => EquipmentType.Other
+    };
+
+    private static ExerciseForce MapDbForce(string? f) => f?.ToLowerInvariant() switch
+    {
+        "push"   => ExerciseForce.Push,
+        "pull"   => ExerciseForce.Pull,
+        "static" => ExerciseForce.Static,
+        _        => ExerciseForce.Other
+    };
+
+    private static ExerciseLevel MapDbLevel(string? l) => l?.ToLowerInvariant() switch
+    {
+        "intermediate" => ExerciseLevel.Intermediate,
+        "expert"       => ExerciseLevel.Expert,
+        _              => ExerciseLevel.Beginner
+    };
+
+    private static ExerciseMechanic MapDbMechanic(string? m) => m?.ToLowerInvariant() switch
+    {
+        "compound"  => ExerciseMechanic.Compound,
+        "isolation" => ExerciseMechanic.Isolation,
+        _           => ExerciseMechanic.Other
     };
 
     private sealed class ExerciseDbEntry
     {
-        [JsonPropertyName("name")]           public string?       Name           { get; set; }
-        [JsonPropertyName("equipment")]      public string?       Equipment      { get; set; }
-        [JsonPropertyName("mechanic")]       public string?       Mechanic       { get; set; }
-        [JsonPropertyName("category")]       public string?       Category       { get; set; }
-        [JsonPropertyName("primaryMuscles")] public List<string>? PrimaryMuscles { get; set; }
-        [JsonPropertyName("instructions")]   public List<string>? Instructions   { get; set; }
+        [JsonPropertyName("name")]             public string?       Name             { get; set; }
+        [JsonPropertyName("equipment")]        public string?       Equipment        { get; set; }
+        [JsonPropertyName("mechanic")]         public string?       Mechanic         { get; set; }
+        [JsonPropertyName("force")]            public string?       Force            { get; set; }
+        [JsonPropertyName("level")]            public string?       Level            { get; set; }
+        [JsonPropertyName("category")]         public string?       Category         { get; set; }
+        [JsonPropertyName("primaryMuscles")]   public List<string>? PrimaryMuscles   { get; set; }
+        [JsonPropertyName("secondaryMuscles")] public List<string>? SecondaryMuscles { get; set; }
+        [JsonPropertyName("instructions")]     public List<string>? Instructions     { get; set; }
     }
 
     // ── Exercises ──────────────────────────────────────────────────────────
