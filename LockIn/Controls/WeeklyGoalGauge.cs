@@ -64,15 +64,20 @@ public class WeeklyGoalGauge : SKCanvasView
         if (progress <= 0f) return;
 
         float activeSweep = TotalSweepDeg * progress;
-        float endAngleDeg = StartAngleDeg + activeSweep;
 
-        using var shader = SKShader.CreateSweepGradient(
-            new SKPoint(cx, cy),
-            new[] { new SKColor(192, 57, 43), new SKColor(142, 68, 173), new SKColor(52, 152, 219) },
-            new[] { 0f, 0.5f, 1.0f },
-            SKShaderTileMode.Clamp,
-            StartAngleDeg,
-            endAngleDeg);
+        // Linear gradient from arc start (bottom-left) to arc end (bottom-right).
+        // Avoids sweep-gradient wrapping past 360° at high progress values.
+        float sx = cx - radius * 0.5f;
+        float sy = cy + radius * 0.866f;
+        float ex = cx + radius * 0.5f;
+        float ey = cy + radius * 0.866f;
+
+        using var shader = SKShader.CreateLinearGradient(
+            new SKPoint(sx, sy),
+            new SKPoint(ex, ey),
+            new[] { new SKColor(0xB8, 0xB8, 0xBC), SKColors.White },
+            null,
+            SKShaderTileMode.Clamp);
 
         using var paint = new SKPaint
         {

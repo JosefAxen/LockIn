@@ -79,7 +79,7 @@
             <CollectionView.Header>
                 <VerticalStackLayout Spacing="0">
                     <!-- Sidrubrik — scrollar bort med innehållet -->
-                    <Grid ColumnDefinitions="*,Auto" Padding="16,56,16,8">
+                    <Grid ColumnDefinitions="*,Auto" Padding="16,72,16,8">
                         <Label Grid.Column="0" Text="BIBLIOTEK"
                                FontFamily="BebasNeue" FontSize="34" CharacterSpacing="1"
                                TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
@@ -275,7 +275,7 @@
                             VerticalScrollBarVisibility="Never">
                 <CollectionView.Header>
                     <VerticalStackLayout Spacing="0">
-                        <Grid ColumnDefinitions="*,Auto" Padding="16,56,16,8">
+                        <Grid ColumnDefinitions="*,Auto" Padding="16,72,16,8">
                             <Label Grid.Column="0" Text="BIBLIOTEK"
                                    FontFamily="BebasNeue" FontSize="34" CharacterSpacing="1"
                                    TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"

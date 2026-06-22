@@ -22,7 +22,19 @@ public partial class ExercisePickerViewModel(DatabaseService db) : ObservableObj
     [ObservableProperty] private string _searchText = "";
     [ObservableProperty] private bool _isLoading;
 
-    partial void OnSearchTextChanged(string value) => ApplyFilter();
+    private CancellationTokenSource? _searchCts;
+
+    partial void OnSearchTextChanged(string value)
+    {
+        _searchCts?.Cancel();
+        _searchCts = new CancellationTokenSource();
+        var token = _searchCts.Token;
+        Task.Delay(300, token).ContinueWith(
+            _ => MainThread.BeginInvokeOnMainThread(ApplyFilter),
+            token,
+            TaskContinuationOptions.OnlyOnRanToCompletion,
+            TaskScheduler.Default);
+    }
 
     public async Task LoadAsync()
     {
