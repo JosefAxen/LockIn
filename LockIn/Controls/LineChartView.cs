@@ -66,9 +66,9 @@ public class LineChartView : SKCanvasView
             (byte)(c.Blue * 255),
             (byte)(c.Alpha * 255));
 
-        var separatorColor = new SKColor(0x2A, 0x2A, 0x2A);
-        var labelColor     = new SKColor(0x88, 0x88, 0x88);
-        var dotBorder      = new SKColor(0x12, 0x12, 0x12);
+        var separatorColor = SkiaTokens.ChartSep;
+        var labelColor     = SkiaTokens.AxisText;
+        var dotBorder      = SkiaTokens.DotBorder;
 
         // Horizontal separator lines + y-labels (4 steps)
         using var sepPaint = new SKPaint

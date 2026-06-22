@@ -22,8 +22,11 @@ public partial class ExercisePickerPage : ContentPage
     private async void OnBackClicked(object sender, EventArgs e) =>
         await Shell.Current.GoToAsync("..");
 
-    private async void OnAddCustomExerciseTapped(object sender, TappedEventArgs e) =>
+    private async void OnAddCustomExerciseTapped(object sender, TappedEventArgs e)
+    {
+        await AnimationHelper.PressAsync(sender);
         await Shell.Current.GoToAsync(nameof(CreateExercisePage));
+    }
 
     private static async void OnExercisePointerPressed(object? sender, PointerEventArgs e)
     {

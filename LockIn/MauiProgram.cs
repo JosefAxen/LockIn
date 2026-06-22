@@ -32,6 +32,7 @@ public static class MauiProgram
 
         // Services
         builder.Services.AddSingleton<DatabaseService>();
+        builder.Services.AddTransient<PhotoService>();
         builder.Services.AddSingleton<PRService>();
         builder.Services.AddSingleton<RestTimerService>();
         builder.Services.AddSingleton<ActiveWorkoutStateService>();
@@ -84,6 +85,7 @@ public static class MauiProgram
         builder.Services.AddTransient<CreateExerciseViewModel>();
         builder.Services.AddTransient<OnboardingPage>();
         builder.Services.AddTransient<OnboardingViewModel>();
+        builder.Services.AddSingleton<AppShell>();
 
 #if DEBUG
         builder.Logging.AddDebug();

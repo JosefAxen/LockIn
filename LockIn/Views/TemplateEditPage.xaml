@@ -242,7 +242,7 @@
                                                 CharacterSpacing="1"
                                                 HeightRequest="30" Padding="10,0"
                                                 CornerRadius="6"
-                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TemplateEditViewModel}}, Path=ToggleSupersetCommand}"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TemplateEditViewModel}}, Path=ToggleSupersetAsyncCommand}"
                                                 CommandParameter="{Binding .}"/>
                                     </Grid>
 

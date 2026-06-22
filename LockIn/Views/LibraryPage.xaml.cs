@@ -122,6 +122,9 @@ public partial class LibraryPage : ContentPage
         TabSegment.Opacity = 1 - opacity;
     }
 
+    private async void OnPillTapped(object sender, TappedEventArgs e)
+        => await AnimationHelper.PressAsync(sender);
+
     private async void OnWorkoutBannerTapped(object sender, TappedEventArgs e)
         => await Shell.Current.GoToAsync(nameof(ActiveWorkoutPage));
 

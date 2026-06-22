@@ -111,11 +111,27 @@
 
         <!-- Log button -->
         <Grid Grid.Row="2" Padding="16,8,16,36">
-            <Button Text="LOGGA VIKT"
-                    ImageSource="ic_plus.png"
-                    ContentLayout="Left, 10"
-                    Style="{StaticResource PrimaryButton}"
-                    Command="{Binding LogWeightCommand}"/>
+            <Border BackgroundColor="{StaticResource ForgePrimary}"
+                    StrokeShape="RoundRectangle 26"
+                    StrokeThickness="0"
+                    HeightRequest="56"
+                    HorizontalOptions="Fill">
+                <HorizontalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="10">
+                    <views:AppIcon Source="ic_plus.png"
+                                   WidthRequest="18" HeightRequest="18"
+                                   ForceTint="{StaticResource ForgePrimaryForeground}"
+                                   VerticalOptions="Center"/>
+                    <Label Text="LOGGA VIKT"
+                           TextColor="{StaticResource ForgePrimaryForeground}"
+                           FontFamily="BebasNeue"
+                           FontSize="20"
+                           CharacterSpacing="3"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding LogWeightCommand}" Tapped="OnLoggaViktTapped"/>
+                </Border.GestureRecognizers>
+            </Border>
         </Grid>
 
     </Grid>

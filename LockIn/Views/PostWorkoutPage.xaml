@@ -277,13 +277,25 @@
     </Grid>
 
     <!-- Floating KLAR-knapp — fast längst ner, ingen container/gradient -->
-    <Button Text="KLAR"
-            Style="{StaticResource PrimaryButton}"
+    <Border BackgroundColor="{StaticResource ForgePrimary}"
+            StrokeShape="RoundRectangle 26"
+            StrokeThickness="0"
+            HeightRequest="56"
             HorizontalOptions="Fill"
             VerticalOptions="End"
             Margin="16,0,16,40"
-            ZIndex="23"
-            Command="{Binding DoneCommand}"/>
+            ZIndex="23">
+        <Label Text="KLAR"
+               TextColor="{StaticResource ForgePrimaryForeground}"
+               FontFamily="BebasNeue"
+               FontSize="20"
+               CharacterSpacing="3"
+               HorizontalOptions="Center"
+               VerticalOptions="Center"/>
+        <Border.GestureRecognizers>
+            <TapGestureRecognizer Command="{Binding DoneCommand}" Tapped="OnKlarTapped"/>
+        </Border.GestureRecognizers>
+    </Border>
 
     <controls:ConfettiView x:Name="ConfettiOverlay"/>
 

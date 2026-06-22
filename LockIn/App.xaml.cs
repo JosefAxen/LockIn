@@ -70,9 +70,8 @@ public partial class App : Application
         await MainThread.InvokeOnMainThreadAsync(() =>
         {
             window.Page = settings.HasCompletedOnboarding
-                ? (Page)new AppShell()
+                ? (Page)services.GetRequiredService<AppShell>()
                 : services.GetRequiredService<OnboardingPage>();
-
         });
     }
 }

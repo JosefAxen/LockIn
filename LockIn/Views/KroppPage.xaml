@@ -98,7 +98,7 @@
                         <Grid x:Name="TabPills" ColumnDefinitions="*,*,*" HeightRequest="40"
                               SizeChanged="OnTabContainerSizeChanged">
                             <Border x:Name="TabIndicator" Grid.ColumnSpan="3"
-                                    BackgroundColor="{StaticResource ForgeSurface}"
+                                    BackgroundColor="{StaticResource ForgePrimary}"
                                     StrokeThickness="0"
                                     StrokeShape="RoundRectangle 48"
                                     HorizontalOptions="Start" VerticalOptions="Fill"/>
@@ -109,7 +109,7 @@
                                        TextColor="{Binding Tab0Fg}"
                                        HorizontalOptions="Center" VerticalOptions="Center"/>
                                 <Border.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 0}"/>
+                                    <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 0}" Tapped="OnLogMatsTapped"/>
                                 </Border.GestureRecognizers>
                             </Border>
                             <Border Grid.Column="1" BackgroundColor="Transparent"
@@ -119,7 +119,7 @@
                                        TextColor="{Binding Tab1Fg}"
                                        HorizontalOptions="Center" VerticalOptions="Center"/>
                                 <Border.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 1}"/>
+                                    <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 1}" Tapped="OnLogMatsTapped"/>
                                 </Border.GestureRecognizers>
                             </Border>
                             <Border Grid.Column="2" BackgroundColor="Transparent"
@@ -129,7 +129,7 @@
                                        TextColor="{Binding Tab2Fg}"
                                        HorizontalOptions="Center" VerticalOptions="Center"/>
                                 <Border.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 2}"/>
+                                    <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 2}" Tapped="OnLogMatsTapped"/>
                                 </Border.GestureRecognizers>
                             </Border>
                         </Grid>
@@ -221,7 +221,7 @@
                                        TextColor="{StaticResource ForgeAccentBlue}" VerticalOptions="Center"/>
                             </HorizontalStackLayout>
                             <Border.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding LogWeightCommand}"/>
+                                <TapGestureRecognizer Command="{Binding LogWeightCommand}" Tapped="OnLogMatsTapped"/>
                             </Border.GestureRecognizers>
                         </Border>
 
@@ -328,7 +328,7 @@
                                        TextColor="{StaticResource ForgeAccentPurple}" VerticalOptions="Center"/>
                             </HorizontalStackLayout>
                             <Border.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding LogCompositionCommand}"/>
+                                <TapGestureRecognizer Command="{Binding LogCompositionCommand}" Tapped="OnLogMatsTapped"/>
                             </Border.GestureRecognizers>
                         </Border>
 

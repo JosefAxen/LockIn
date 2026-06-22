@@ -12,15 +12,8 @@ public class PRService(DatabaseService db)
 
     public async Task<bool> IsPRAsync(int exerciseId, decimal weightKg, int reps, int excludeLoggedSetId = 0)
     {
-        var allSets = await db.GetAllSetsForExerciseAsync(exerciseId);
         var newEstimate = CalculateEpley1RM(weightKg, reps);
-
-        double maxPrevious = allSets
-            .Where(s => s.Id != excludeLoggedSetId)
-            .Select(s => CalculateEpley1RM(s.WeightKg, s.Reps))
-            .DefaultIfEmpty(0)
-            .Max();
-
+        var maxPrevious = await db.GetMaxEpley1RMAsync(exerciseId, excludeLoggedSetId);
         return newEstimate > maxPrevious;
     }
 }

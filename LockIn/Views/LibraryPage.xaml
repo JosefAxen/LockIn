@@ -87,7 +87,7 @@
 
                 <!-- Glidande indikator — flyttar mellan tabbar -->
                 <Border x:Name="TabIndicator" Grid.ColumnSpan="3"
-                        BackgroundColor="{StaticResource ForgeSurface}"
+                        BackgroundColor="{StaticResource ForgePrimary}"
                         StrokeThickness="0"
                         StrokeShape="RoundRectangle 48"
                         HorizontalOptions="Start"
@@ -102,7 +102,7 @@
                            FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
                            HorizontalOptions="Center" VerticalOptions="Center"/>
                     <Border.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 0}"/>
+                        <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 0}" Tapped="OnPillTapped"/>
                     </Border.GestureRecognizers>
                 </Border>
 
@@ -115,7 +115,7 @@
                            FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
                            HorizontalOptions="Center" VerticalOptions="Center"/>
                     <Border.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 1}"/>
+                        <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 1}" Tapped="OnPillTapped"/>
                     </Border.GestureRecognizers>
                 </Border>
 
@@ -128,7 +128,7 @@
                            FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
                            HorizontalOptions="Center" VerticalOptions="Center"/>
                     <Border.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 2}"/>
+                        <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 2}" Tapped="OnPillTapped"/>
                     </Border.GestureRecognizers>
                 </Border>
 

@@ -7,6 +7,8 @@ namespace LockIn.ViewModels;
 
 public partial class HemViewModel(DatabaseService db, IHealthService health) : ObservableObject
 {
+    private static bool _permissionsRequested;
+
     [ObservableProperty] private double _trainingScore;
     [ObservableProperty] private string _trainingScoreText = "–";
     [ObservableProperty] private string _streakLabel = "–";
@@ -68,7 +70,11 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
         IsLoading = true;
         try
         {
-            await health.RequestPermissionsAsync();
+            if (!_permissionsRequested)
+            {
+                _permissionsRequested = true;
+                await health.RequestPermissionsAsync();
+            }
 
             var weekStart    = GetMondayThisWeek();
             var sevenAgo     = DateTime.Today.AddDays(-6);

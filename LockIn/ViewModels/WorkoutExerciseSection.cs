@@ -8,11 +8,13 @@ public partial class WorkoutExerciseSection : ObservableObject
 {
     public int SessionExerciseId { get; set; }
     public int ExerciseId { get; set; }
+    public int TemplateExerciseId { get; set; }
     public string ExerciseName { get; set; } = "";
     public string ExerciseDescription { get; set; } = "";
     public bool HasDescription => !string.IsNullOrWhiteSpace(ExerciseDescription);
     public int DefaultRestSeconds { get; set; }
     public int TargetReps { get; set; } = 0;
+    public int TargetRepsMin { get; set; } = 0;
     public int TargetRepsMax { get; set; } = 0;
     public decimal WeightIncrementKg { get; set; } = 2.5m;
     public int AutoProgressMode { get; set; } = 0;

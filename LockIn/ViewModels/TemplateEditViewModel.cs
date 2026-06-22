@@ -95,25 +95,25 @@ public partial class TemplateEditViewModel(DatabaseService db) : ObservableObjec
     }
 
     [RelayCommand]
-    private void ToggleSuperset(TemplateExerciseRow row)
+    private async Task ToggleSupersetAsync(TemplateExerciseRow row)
     {
         var index = Exercises.IndexOf(row);
         if (index < 0) return;
 
         if (row.SupersetGroupId.HasValue)
         {
-            // Ta bort från supersets — nolla hela gruppen
             var gid = row.SupersetGroupId.Value;
             foreach (var r in Exercises)
                 if (r.SupersetGroupId == gid) r.SupersetGroupId = null;
         }
         else
         {
-            // Koppla till nästa övning i listan
-            if (index + 1 >= Exercises.Count) return;
+            if (index + 1 >= Exercises.Count)
+            {
+                await Toast.Make("Lägg till en övning efter den här för att skapa ett superset.").Show();
+                return;
+            }
             var next = Exercises[index + 1];
-
-            // Använd befintlig grupp-id om nästa redan är i superset, annars skapa ny
             var gid = next.SupersetGroupId ?? (Exercises.Max(r => r.SupersetGroupId ?? 0) + 1);
             row.SupersetGroupId = gid;
             next.SupersetGroupId = gid;
@@ -132,16 +132,9 @@ public partial class TemplateEditViewModel(DatabaseService db) : ObservableObjec
         _template.Name = TemplateName.Trim();
         await db.SaveTemplateAsync(_template);
 
-        if (TemplateId != 0)
+        // Bygg listan av exercises att spara innan transaktionen
+        var toSave = Exercises.Select((row, i) =>
         {
-            var existing = await db.GetTemplateExercisesAsync(_template.Id);
-            foreach (var old in existing)
-                await db.DeleteTemplateExerciseAsync(old);
-        }
-
-        for (int i = 0; i < Exercises.Count; i++)
-        {
-            var row = Exercises[i];
             var te = row.TemplateExercise;
             te.TemplateId = _template.Id;
             te.OrderIndex = i;
@@ -159,8 +152,10 @@ public partial class TemplateEditViewModel(DatabaseService db) : ObservableObjec
                 System.Globalization.NumberStyles.Any,
                 System.Globalization.CultureInfo.InvariantCulture, out var inc) ? inc : 2.5m;
             te.SupersetGroupId = row.SupersetGroupId;
-            await db.SaveTemplateExerciseAsync(te);
-        }
+            return te;
+        }).ToList();
+
+        await db.ReplaceTemplateExercisesAsync(_template.Id, toSave);
 
         await Shell.Current.GoToAsync("..");
     }

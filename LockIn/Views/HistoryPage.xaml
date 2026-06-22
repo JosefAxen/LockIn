@@ -51,7 +51,7 @@
                         Padding="12,8">
                     <Label Text="🏆" FontSize="18" VerticalOptions="Center"/>
                     <Border.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding OpenAchievementsCommand}"/>
+                        <TapGestureRecognizer Command="{Binding OpenAchievementsCommand}" Tapped="OnAchievementTapped"/>
                     </Border.GestureRecognizers>
                 </Border>
             </Grid>
@@ -79,7 +79,7 @@
                                 Padding="12,8" VerticalOptions="Center">
                             <Label Text="🏆" FontSize="18" VerticalOptions="Center"/>
                             <Border.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding OpenAchievementsCommand}"/>
+                                <TapGestureRecognizer Command="{Binding OpenAchievementsCommand}" Tapped="OnAchievementTapped"/>
                             </Border.GestureRecognizers>
                         </Border>
                     </Grid>
@@ -136,7 +136,7 @@
                             <Grid x:Name="PeriodPills" ColumnDefinitions="*,*,*" HeightRequest="40"
                                   SizeChanged="OnPeriodContainerSizeChanged">
                                 <Border x:Name="PeriodIndicator" Grid.ColumnSpan="3"
-                                        BackgroundColor="{StaticResource ForgeSurface}"
+                                        BackgroundColor="{StaticResource ForgePrimary}"
                                         StrokeThickness="0"
                                         StrokeShape="RoundRectangle 48"
                                         HorizontalOptions="Start" VerticalOptions="Fill"/>
@@ -146,7 +146,7 @@
                                            FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1.5"
                                            TextColor="{Binding Period0Fg}" VerticalOptions="Center"/>
                                     <Border.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding SelectPeriodCommand}" CommandParameter="{x:Int32 0}"/>
+                                        <TapGestureRecognizer Command="{Binding SelectPeriodCommand}" CommandParameter="{x:Int32 0}" Tapped="OnPillTapped"/>
                                     </Border.GestureRecognizers>
                                 </Border>
                                 <Border Grid.Column="1" BackgroundColor="Transparent"
@@ -155,7 +155,7 @@
                                            FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1.5"
                                            TextColor="{Binding Period1Fg}" VerticalOptions="Center"/>
                                     <Border.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding SelectPeriodCommand}" CommandParameter="{x:Int32 1}"/>
+                                        <TapGestureRecognizer Command="{Binding SelectPeriodCommand}" CommandParameter="{x:Int32 1}" Tapped="OnPillTapped"/>
                                     </Border.GestureRecognizers>
                                 </Border>
                                 <Border Grid.Column="2" BackgroundColor="Transparent"
@@ -164,7 +164,7 @@
                                            FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1.5"
                                            TextColor="{Binding Period2Fg}" VerticalOptions="Center"/>
                                     <Border.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding SelectPeriodCommand}" CommandParameter="{x:Int32 2}"/>
+                                        <TapGestureRecognizer Command="{Binding SelectPeriodCommand}" CommandParameter="{x:Int32 2}" Tapped="OnPillTapped"/>
                                     </Border.GestureRecognizers>
                                 </Border>
                             </Grid>
@@ -173,7 +173,7 @@
                             <Grid x:Name="SortPills" ColumnDefinitions="*,*" HeightRequest="38"
                                   SizeChanged="OnSortContainerSizeChanged">
                                 <Border x:Name="SortIndicator" Grid.ColumnSpan="2"
-                                        BackgroundColor="{StaticResource ForgeSurface}"
+                                        BackgroundColor="{StaticResource ForgePrimary}"
                                         StrokeThickness="0"
                                         StrokeShape="RoundRectangle 48"
                                         HorizontalOptions="Start" VerticalOptions="Fill"/>
@@ -183,7 +183,7 @@
                                            FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1.5"
                                            TextColor="{Binding Sort0Fg}" VerticalOptions="Center"/>
                                     <Border.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding SelectSortCommand}" CommandParameter="{x:Int32 0}"/>
+                                        <TapGestureRecognizer Command="{Binding SelectSortCommand}" CommandParameter="{x:Int32 0}" Tapped="OnPillTapped"/>
                                     </Border.GestureRecognizers>
                                 </Border>
                                 <Border Grid.Column="1" BackgroundColor="Transparent"
@@ -192,7 +192,7 @@
                                            FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1.5"
                                            TextColor="{Binding Sort1Fg}" VerticalOptions="Center"/>
                                     <Border.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding SelectSortCommand}" CommandParameter="{x:Int32 1}"/>
+                                        <TapGestureRecognizer Command="{Binding SelectSortCommand}" CommandParameter="{x:Int32 1}" Tapped="OnPillTapped"/>
                                     </Border.GestureRecognizers>
                                 </Border>
                             </Grid>

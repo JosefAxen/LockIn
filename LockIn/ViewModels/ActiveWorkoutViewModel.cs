@@ -17,8 +17,8 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
     private WorkoutExerciseSection? _currentTimerSection;
     private DateTime _startTime;
     private CancellationTokenSource? _clockCts;
-    // SupersetGroupId → SessionExerciseIds som gjort set i nuvarande runda
     private readonly Dictionary<int, HashSet<int>> _supersetRound = new();
+    private readonly object _supersetLock = new();
 
     [ObservableProperty] private string _templateName = "FRITT PASS";
     [ObservableProperty] private string _elapsedTime = "0:00";
@@ -38,6 +38,9 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         int templateId = 0;
         if (query.TryGetValue("TemplateId", out var val) && val is int id)
             templateId = id;
+        // Navigating back to an ongoing workout (e.g. via "PASS PÅGÅR" banner) — no TemplateId in query
+        if (state.IsActive && !query.ContainsKey("TemplateId"))
+            return;
         // Return early only when navigating back from a sub-page during the same ongoing workout
         if (_session is not null && _session.TemplateId == templateId)
             return;
@@ -50,6 +53,10 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         try
         {
             Exercises.Clear();
+            HasPR = false;
+            PrMessage = "";
+            HasAutoProgress = false;
+            AutoProgressMessage = "";
 
             if (templateId != 0)
             {
@@ -58,6 +65,8 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
                 TemplateName = template?.Name ?? "PASS";
             }
 
+            // Skapa sessionen EFTER att övningar laddats, för att undvika orphan sessions
+            // vid avbrutet pass (t.ex. Back-gesture innan SessionExercises skapas)
             _session = new WorkoutSession { TemplateId = templateId, StartedAt = DateTime.Now };
             await db.SaveSessionAsync(_session);
             _startTime = _session.StartedAt;
@@ -73,7 +82,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
                     await AddExerciseSectionAsync(exercise, i, te.Sets, te.Reps,
                         te.TargetWeight, te.DefaultRestSeconds,
                         te.TargetRepsMin, te.TargetRepsMax, te.WeightIncrementKg,
-                        te.AutoProgressMode, te.SupersetGroupId);
+                        te.AutoProgressMode, te.SupersetGroupId, te.Id);
                 }
             }
 
@@ -82,6 +91,13 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         }
         catch
         {
+            // Om sessionen hann sparas i DB men laddningen misslyckades — stäng den direkt
+            // så att den inte hamnar som en "orphan" session utan sets och utan CompletedAt.
+            if (_session is not null)
+            {
+                _session.CompletedAt = DateTime.Now;
+                _ = db.SaveSessionAsync(_session);
+            }
             _session = null;
             Exercises.Clear();
         }
@@ -95,7 +111,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         Exercise exercise, int orderIndex, int sets = 3, int reps = 8,
         decimal targetWeight = 0, int restSeconds = 90,
         int targetRepsMin = 0, int targetRepsMax = 0, decimal weightIncrementKg = 2.5m,
-        int autoProgressMode = 0, int? supersetGroupId = null)
+        int autoProgressMode = 0, int? supersetGroupId = null, int templateExerciseId = 0)
     {
         var se = new SessionExercise
         {
@@ -110,11 +126,13 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         {
             SessionExerciseId = se.Id,
             ExerciseId = exercise.Id,
+            TemplateExerciseId = templateExerciseId,
             ExerciseName = exercise.Name,
             ExerciseDescription = exercise.Description ?? "",
             DefaultRestSeconds = restSeconds,
             RestSeconds = restSeconds,
-            TargetReps = targetRepsMax > 0 ? targetRepsMax : reps,
+            TargetReps = reps,
+            TargetRepsMin = targetRepsMin,
             TargetRepsMax = targetRepsMax,
             WeightIncrementKg = weightIncrementKg,
             AutoProgressMode = autoProgressMode,
@@ -127,16 +145,24 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         for (int s = 1; s <= sets; s++)
         {
             var prev = prevSets.ElementAtOrDefault(s - 1);
+
+            // Progression äger hints när aktiv, annars senaste session
+            var weightHint = autoProgressMode > 0 && targetWeight > 0
+                ? targetWeight.ToString("G")
+                : (prev is { WeightKg: > 0 } ? prev.WeightKg.ToString("G") : "");
+            var repsHint = autoProgressMode > 0
+                ? reps.ToString()
+                : (prev is { Reps: > 0 } ? prev.Reps.ToString() : "");
+
             section.Sets.Add(new LoggedSetRow
             {
                 SessionExerciseId = se.Id,
                 ExerciseId = exercise.Id,
                 SetNumber = s,
-                WeightText = targetWeight > 0 ? targetWeight.ToString() :
-                             (prev is { WeightKg: > 0 } ? prev.WeightKg.ToString("G") : ""),
-                RepsText = reps.ToString(),
-                PrevWeightHint = prev is { WeightKg: > 0 } ? prev.WeightKg.ToString("G") : "",
-                PrevRepsHint = prev is { Reps: > 0 } ? prev.Reps.ToString() : "",
+                WeightText = "",
+                RepsText = "",
+                PrevWeightHint = weightHint,
+                PrevRepsHint = repsHint,
                 TargetReps = reps
             });
         }
@@ -219,6 +245,12 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
     [RelayCommand]
     private async Task CompleteSetAsync(LoggedSetRow set)
     {
+        // Auto-fill från hint om fälten är tomma
+        if (string.IsNullOrWhiteSpace(set.WeightText) && !string.IsNullOrWhiteSpace(set.PrevWeightHint))
+            set.WeightText = set.PrevWeightHint;
+        if (set.SetType != SetType.Time && string.IsNullOrWhiteSpace(set.RepsText) && !string.IsNullOrWhiteSpace(set.PrevRepsHint))
+            set.RepsText = set.PrevRepsHint;
+
         decimal weight = 0;
         int reps = 0;
         int durationSeconds = 0;
@@ -292,28 +324,28 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             return;
         }
 
-        // Superset: spåra vilka övningar i gruppen som gjort ett set denna runda
-        if (!_supersetRound.TryGetValue(groupId, out var done))
+        bool allDone;
+        WorkoutExerciseSection? next;
+        lock (_supersetLock)
         {
-            done = new HashSet<int>();
-            _supersetRound[groupId] = done;
-        }
-        done.Add(sessionExerciseId);
+            if (!_supersetRound.TryGetValue(groupId, out var done))
+            {
+                done = new HashSet<int>();
+                _supersetRound[groupId] = done;
+            }
+            done.Add(sessionExerciseId);
 
-        var groupSections = Exercises.Where(e => e.SupersetGroupId == groupId).ToList();
-        if (done.Count >= groupSections.Count)
-        {
-            // Hela gruppen klar — starta timer, nollställ rundan
-            _supersetRound.Remove(groupId);
+            var groupSections = Exercises.Where(e => e.SupersetGroupId == groupId).ToList();
+            allDone = done.Count >= groupSections.Count;
+            if (allDone)
+                _supersetRound.Remove(groupId);
+            next = allDone ? null : groupSections.FirstOrDefault(e => !done.Contains(e.SessionExerciseId));
+        }
+
+        if (allDone)
             StartTimerForSection(sessionExerciseId);
-        }
-        else
-        {
-            // Scrolla till nästa övning i gruppen som inte gjort set ännu
-            var next = groupSections.FirstOrDefault(e => !done.Contains(e.SessionExerciseId));
-            if (next != null)
-                ScrollToSectionRequested?.Invoke(this, next.SessionExerciseId);
-        }
+        else if (next != null)
+            ScrollToSectionRequested?.Invoke(this, next.SessionExerciseId);
     }
 
     private void CheckAutoProgression(int sessionExerciseId)
@@ -324,11 +356,11 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         var normalSets = section.Sets.Where(s => s.SetType == SetType.Normal).ToList();
         if (normalSets.Count == 0 || !normalSets.All(s => s.IsCompleted)) return;
 
-        var targetMax = section.TargetRepsMax > 0 ? section.TargetRepsMax : section.TargetReps;
-        if (targetMax <= 0) return;
+        var currentTarget = section.TargetReps;
+        if (currentTarget <= 0) return;
 
         bool allHitTarget = normalSets.All(s =>
-            int.TryParse(s.RepsText, out var r) && r >= targetMax);
+            int.TryParse(s.RepsText, out var r) && r >= currentTarget);
         if (!allHitTarget) return;
 
         var maxWeight = normalSets
@@ -339,8 +371,17 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
 
         if (maxWeight <= 0) return;
 
-        var increment = section.WeightIncrementKg > 0 ? section.WeightIncrementKg : 2.5m;
-        AutoProgressMessage = $"Öka till {maxWeight + increment:G} kg nästa {section.ExerciseName}-pass";
+        bool hitsWeightThreshold = section.TargetRepsMax > 0 && currentTarget >= section.TargetRepsMax;
+        if (hitsWeightThreshold)
+        {
+            var increment = section.WeightIncrementKg > 0 ? section.WeightIncrementKg : 2.5m;
+            var resetReps = section.TargetRepsMin > 0 ? section.TargetRepsMin : currentTarget;
+            AutoProgressMessage = $"Nästa {section.ExerciseName}-pass: {maxWeight + increment:G} kg × {resetReps} reps";
+        }
+        else
+        {
+            AutoProgressMessage = $"Bra jobbat! Nästa mål: {currentTarget + 1} reps @ {maxWeight:G} kg";
+        }
         HasAutoProgress = true;
     }
 
@@ -421,6 +462,13 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
 
     public void ForceDeactivate()
     {
+        // Stäng eventuell orphan-session (inga sets loggades)
+        if (_session is not null && !Exercises.Any(s => s.Sets.Any(r => r.IsCompleted)))
+        {
+            var s = _session;
+            s.CompletedAt = DateTime.Now;
+            _ = db.SaveSessionAsync(s);
+        }
         _session = null;
         _clockCts?.Cancel();
         timer.Tick -= OnTimerTick;
@@ -457,14 +505,18 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         var token = _clockCts.Token;
         _ = Task.Run(async () =>
         {
-            while (!token.IsCancellationRequested)
+            try
             {
-                await Task.Delay(1000, token).ContinueWith(_ => { });
-                if (token.IsCancellationRequested) break;
-                var elapsed = DateTime.Now - _startTime;
-                MainThread.BeginInvokeOnMainThread(() =>
-                    ElapsedTime = $"{(int)elapsed.TotalMinutes}:{elapsed.Seconds:D2}");
+                while (!token.IsCancellationRequested)
+                {
+                    await Task.Delay(1000, token).ContinueWith(_ => { });
+                    if (token.IsCancellationRequested) break;
+                    var elapsed = DateTime.Now - _startTime;
+                    MainThread.BeginInvokeOnMainThread(() =>
+                        ElapsedTime = $"{(int)elapsed.TotalMinutes}:{elapsed.Seconds:D2}");
+                }
             }
+            catch (OperationCanceledException) { }
         }, token);
     }
 
@@ -484,6 +536,8 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         _session.CompletedAt = DateTime.Now;
         await db.SaveSessionAsync(_session);
 
+        await ApplyProgressionAsync();
+
         var sessionId = _session.Id;
         _session = null;
         state.Deactivate();
@@ -493,5 +547,54 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         {
             { "SessionId", sessionId }
         });
+    }
+
+    private async Task ApplyProgressionAsync()
+    {
+        if (_session?.TemplateId is not int templateId || templateId == 0) return;
+
+        var templateExercises = await db.GetTemplateExercisesAsync(templateId);
+
+        foreach (var section in Exercises)
+        {
+            if (section.AutoProgressMode == 0 || section.TemplateExerciseId == 0) continue;
+
+            var te = templateExercises.FirstOrDefault(t => t.Id == section.TemplateExerciseId);
+            if (te is null) continue;
+
+            var normalSets = section.Sets
+                .Where(s => s.SetType == SetType.Normal && s.IsCompleted)
+                .ToList();
+            if (normalSets.Count == 0) continue;
+
+            var currentTarget = section.TargetReps;
+            if (currentTarget <= 0) continue;
+
+            bool allHitTarget = normalSets.All(s =>
+                int.TryParse(s.RepsText, out var r) && r >= currentTarget);
+            if (!allHitTarget) continue;
+
+            bool hitsWeightThreshold = section.TargetRepsMax > 0 && currentTarget >= section.TargetRepsMax;
+            if (hitsWeightThreshold)
+            {
+                var maxWeight = normalSets
+                    .Select(s => decimal.TryParse(s.WeightText.Replace(',', '.'),
+                        NumberStyles.Number, CultureInfo.InvariantCulture, out var w) ? w : 0m)
+                    .DefaultIfEmpty(0m)
+                    .Max();
+                if (maxWeight > 0)
+                {
+                    var increment = section.WeightIncrementKg > 0 ? section.WeightIncrementKg : 2.5m;
+                    te.TargetWeight = maxWeight + increment;
+                    te.Reps = section.TargetRepsMin > 0 ? section.TargetRepsMin : currentTarget;
+                }
+            }
+            else
+            {
+                te.Reps = currentTarget + 1;
+            }
+
+            await db.SaveTemplateExerciseAsync(te);
+        }
     }
 }

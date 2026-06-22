@@ -9,6 +9,7 @@ public partial class HemPage : ContentPage
     private readonly HemViewModel _vm;
     private readonly ActiveWorkoutStateService _state;
     private bool _hasLoaded;
+    private CancellationTokenSource? _heatmapCts;
 
     public HemPage(HemViewModel vm, ActiveWorkoutStateService state)
     {
@@ -50,7 +51,9 @@ public partial class HemPage : ContentPage
 
         ScrollStreakToToday();
         AnimateGauge();
-        HeatmapBuilder.Build(HemHeatmapGrid, _vm.HeatmapItems);
+        _heatmapCts?.Cancel();
+        _heatmapCts = new CancellationTokenSource();
+        HeatmapBuilder.Build(HemHeatmapGrid, _vm.HeatmapItems, _heatmapCts.Token);
     }
 
     private void ScrollStreakToToday()
@@ -70,6 +73,7 @@ public partial class HemPage : ContentPage
     {
         base.OnDisappearing();
         _state.StateChanged -= OnWorkoutStateChanged;
+        _heatmapCts?.Cancel();
     }
 
     private void OnWorkoutStateChanged()

@@ -19,7 +19,7 @@ public partial class SettingsViewModel(DatabaseService db, IHealthService health
 
     public async Task LoadAsync()
     {
-        var settings = await db.GetSettingsAsync();
+        var settings = await db.GetAppSettingsAsync();
         UseKg      = settings.WeightUnit == WeightUnit.Kg;
         WeeklyGoal = settings.WeeklyWorkoutGoal > 0 ? settings.WeeklyWorkoutGoal : 4;
         HapticEnabled        = Preferences.Default.Get("haptic_enabled", true);
@@ -45,9 +45,9 @@ public partial class SettingsViewModel(DatabaseService db, IHealthService health
 
     private async Task SaveSettingsAsync()
     {
-        var settings = await db.GetSettingsAsync();
+        var settings = await db.GetAppSettingsAsync();
         settings.WeightUnit = UseKg ? WeightUnit.Kg : WeightUnit.Lbs;
-        await db.SaveSettingsAsync(settings);
+        await db.SaveAppSettingsAsync(settings);
     }
 
     [RelayCommand]
@@ -62,9 +62,9 @@ public partial class SettingsViewModel(DatabaseService db, IHealthService health
         var trimmed = result.Trim();
         if (trimmed.Length == 0) return;
         UserName = trimmed;
-        var settings = await db.GetSettingsAsync();
+        var settings = await db.GetAppSettingsAsync();
         settings.UserName = trimmed;
-        await db.SaveSettingsAsync(settings);
+        await db.SaveAppSettingsAsync(settings);
     }
 
     [RelayCommand]
@@ -78,9 +78,9 @@ public partial class SettingsViewModel(DatabaseService db, IHealthService health
             maxLength: 1);
         if (!int.TryParse(result, out var goal) || goal < 1 || goal > 7) return;
         WeeklyGoal = goal;
-        var settings = await db.GetSettingsAsync();
+        var settings = await db.GetAppSettingsAsync();
         settings.WeeklyWorkoutGoal = goal;
-        await db.SaveSettingsAsync(settings);
+        await db.SaveAppSettingsAsync(settings);
     }
 
     [RelayCommand]

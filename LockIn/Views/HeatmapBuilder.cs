@@ -4,7 +4,7 @@ namespace LockIn.Views;
 
 public static class HeatmapBuilder
 {
-    public static void Build(Grid grid, IReadOnlyList<HeatmapTile> tiles)
+    public static void Build(Grid grid, IReadOnlyList<HeatmapTile> tiles, CancellationToken ct = default)
     {
         grid.RowDefinitions.Clear();
         grid.Children.Clear();
@@ -123,7 +123,8 @@ public static class HeatmapBuilder
             var delay = i * 30;
             _ = Task.Run(async () =>
             {
-                await Task.Delay(delay);
+                try { await Task.Delay(delay, ct); }
+                catch (OperationCanceledException) { return; }
                 MainThread.BeginInvokeOnMainThread(async () =>
                 {
                     await Task.WhenAll(

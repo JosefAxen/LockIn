@@ -9,6 +9,7 @@ public partial class KroppPage : ContentPage
     private readonly KroppViewModel _vm;
     private readonly ActiveWorkoutStateService _state;
     private bool _hasLoaded;
+    private CancellationTokenSource? _heatmapCts;
 
     public KroppPage(KroppViewModel vm, ActiveWorkoutStateService state)
     {
@@ -54,7 +55,11 @@ public partial class KroppPage : ContentPage
         base.OnDisappearing();
         _vm.HeatmapReady -= BuildHeatmapGrid;
         _vm.PropertyChanged -= OnKroppVmPropertyChanged;
+        _heatmapCts?.Cancel();
     }
+
+    private async void OnLogMatsTapped(object sender, TappedEventArgs e)
+        => await AnimationHelper.PressAsync(sender);
 
     private void OnScrolled(object sender, ScrolledEventArgs e)
         => StickyHeader.Opacity = Math.Clamp((e.ScrollY - 80.0) / 40.0, 0, 1);
@@ -62,8 +67,12 @@ public partial class KroppPage : ContentPage
     private void BuildHeatmapGrid() =>
         MainThread.BeginInvokeOnMainThread(BuildHeatmap);
 
-    private void BuildHeatmap() =>
-        HeatmapBuilder.Build(HeatmapGrid, _vm.HeatmapTiles);
+    private void BuildHeatmap()
+    {
+        _heatmapCts?.Cancel();
+        _heatmapCts = new CancellationTokenSource();
+        HeatmapBuilder.Build(HeatmapGrid, _vm.HeatmapTiles, _heatmapCts.Token);
+    }
 
     private async void OnWorkoutBannerTapped(object sender, TappedEventArgs e)
         => await Shell.Current.GoToAsync(nameof(ActiveWorkoutPage));

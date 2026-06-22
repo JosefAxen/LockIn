@@ -84,6 +84,9 @@ public partial class ActiveWorkoutPage : ContentPage
         );
     }
 
+    private async void OnAddExerciseTapped(object sender, TappedEventArgs e)
+        => await AnimationHelper.PressAsync(sender);
+
     // Generic border press animation (scale 0.93)
     private static async void OnElemPointerPressed(object? sender, PointerEventArgs e)
     {
@@ -98,20 +101,16 @@ public partial class ActiveWorkoutPage : ContentPage
             await ve.ScaleTo(1.0, 230, Easing.SpringOut);
     }
 
-    // Done-button press animation (deeper + bounce)
     private static async void OnDonePointerPressed(object? sender, PointerEventArgs e)
     {
-        HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
+        HapticFeedback.Default.Perform(HapticFeedbackType.Click);
         if (sender is PointerGestureRecognizer pgr && pgr.Parent is VisualElement ve)
-            await ve.ScaleTo(0.88, 70, Easing.CubicOut);
+            await ve.ScaleTo(0.93, 65, Easing.CubicOut);
     }
 
     private static async void OnDonePointerReleased(object? sender, PointerEventArgs e)
     {
         if (sender is PointerGestureRecognizer pgr && pgr.Parent is VisualElement ve)
-        {
-            await ve.ScaleTo(1.12, 180, Easing.SpringOut);
-            await ve.ScaleTo(1.0, 100, Easing.CubicIn);
-        }
+            await ve.ScaleTo(1.0, 230, Easing.SpringOut);
     }
 }

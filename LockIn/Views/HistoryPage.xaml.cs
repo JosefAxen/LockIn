@@ -187,7 +187,13 @@ public partial class HistoryPage : ContentPage
         }
     }
 
+    private async void OnPillTapped(object sender, TappedEventArgs e)
+        => await AnimationHelper.PressAsync(sender);
+
     internal async void OnSessionTapped(object sender, TappedEventArgs e)
+        => await AnimationHelper.PressAsync(sender);
+
+    private async void OnAchievementTapped(object sender, TappedEventArgs e)
         => await AnimationHelper.PressAsync(sender);
 
     private async void OnCalNavTapped(object sender, TappedEventArgs e)

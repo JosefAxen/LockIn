@@ -73,6 +73,10 @@ public class DatabaseService
         try { await _db.ExecuteAsync("ALTER TABLE SessionExercises ADD COLUMN SupersetGroupId INTEGER NULL"); }
         catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
 
+        // Fas 4: RIR explicit column (äldre rader kan ha NULL utan denna migration)
+        try { await _db.ExecuteAsync("ALTER TABLE LoggedSets ADD COLUMN RIR INTEGER NOT NULL DEFAULT 0"); }
+        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
+
         await SeedAsync();
         await SeedExerciseDescriptionsAsync();
         await SeedForearmExercisesAsync();
@@ -265,6 +269,17 @@ public class DatabaseService
         return await _db.DeleteAsync(te);
     }
 
+    public async Task ReplaceTemplateExercisesAsync(int templateId, List<TemplateExercise> exercises)
+    {
+        await InitAsync();
+        await _db.RunInTransactionAsync(db =>
+        {
+            db.Execute("DELETE FROM TemplateExercises WHERE TemplateId = ?", templateId);
+            foreach (var te in exercises)
+                db.Insert(te);
+        });
+    }
+
     // ── Sessions ───────────────────────────────────────────────────────────
 
     public async Task<int> SaveSessionAsync(WorkoutSession session)
@@ -327,6 +342,17 @@ public class DatabaseService
               ORDER BY se.Id, ls.SetNumber", sessionId);
     }
 
+    public async Task<double> GetMaxEpley1RMAsync(int exerciseId, int excludeLoggedSetId = 0)
+    {
+        await InitAsync();
+        return await _db.ExecuteScalarAsync<double>(
+            @"SELECT COALESCE(MAX(WeightKg * (1.0 + CAST(Reps AS REAL) / 30.0)), 0)
+              FROM LoggedSets ls
+              JOIN SessionExercises se ON se.Id = ls.SessionExerciseId
+              WHERE se.ExerciseId = ? AND ls.Id != ?",
+            exerciseId, excludeLoggedSetId);
+    }
+
     public async Task<List<LoggedSet>> GetAllSetsForExerciseAsync(int exerciseId)
     {
         await InitAsync();
@@ -375,6 +401,7 @@ public class DatabaseService
                 return (best.SessionDate, best.WeightKg, best.Reps,
                     (double)best.WeightKg * (1 + best.Reps / 30.0), best.IsPR);
             })
+            .OrderBy(r => r.SessionDate)
             .ToList();
     }
 
@@ -520,6 +547,7 @@ public class DatabaseService
         await _db.DeleteAllAsync<BodyWeightEntry>();
         await _db.DeleteAllAsync<BodyCompositionEntry>();
         await _db.DeleteAllAsync<UserAchievement>();
+        await _db.DeleteAllAsync<AppSettings>();
         // Delete photo files and records
         var photos = await _db.Table<WorkoutPhoto>().ToListAsync();
         foreach (var p in photos)
@@ -805,20 +833,6 @@ public class DatabaseService
         if (File.Exists(photo.FilePath))
             File.Delete(photo.FilePath);
         return await _db.DeleteAsync(photo);
-    }
-
-    // ── Settings ───────────────────────────────────────────────────────────
-
-    public async Task<AppSettings> GetSettingsAsync()
-    {
-        await InitAsync();
-        return await _db.Table<AppSettings>().FirstAsync();
-    }
-
-    public async Task<int> SaveSettingsAsync(AppSettings settings)
-    {
-        await InitAsync();
-        return await _db.UpdateAsync(settings);
     }
 
     // ── Program activation ─────────────────────────────────────────────────

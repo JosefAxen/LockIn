@@ -18,7 +18,6 @@ public class WeeklyGoalGauge : SKCanvasView
 
     private const float StartAngleDeg = 120f;
     private const float TotalSweepDeg = 300f;
-    private const int GradientSegments = 80;
 
     // Logical dp — multiplied by display density at render time
     private const float StrokeWidthDp  = 20f;
@@ -54,7 +53,7 @@ public class WeeklyGoalGauge : SKCanvasView
             Style       = SKPaintStyle.Stroke,
             StrokeWidth = sw,
             StrokeCap   = SKStrokeCap.Round,
-            Color       = new SKColor(0x25, 0x25, 0x25)
+            Color       = SkiaTokens.TrackBg
         };
         using var path = BuildArcPath(cx, cy, radius, StartAngleDeg, TotalSweepDeg);
         canvas.DrawPath(path, paint);
@@ -64,49 +63,35 @@ public class WeeklyGoalGauge : SKCanvasView
     {
         if (progress <= 0f) return;
 
-        float activeSweep     = TotalSweepDeg * progress;
-        float sweepPerSegment = activeSweep / GradientSegments;
+        float activeSweep = TotalSweepDeg * progress;
+        float endAngle    = StartAngleDeg + activeSweep;
 
-        for (int i = 0; i < GradientSegments; i++)
+        // Bygg färgstopp längs bågvinkeln (ersätter 80 separata SKPaint-allokationer)
+        const int stops = 16;
+        var colors    = new SKColor[stops];
+        var positions = new float[stops];
+        for (int i = 0; i < stops; i++)
         {
-            float t        = (float)i / GradientSegments;
-            float segStart = StartAngleDeg + i * sweepPerSegment;
-            float segEnd   = segStart + sweepPerSegment + 0.5f;
-
-            using var paint = new SKPaint
-            {
-                IsAntialias = true,
-                Style       = SKPaintStyle.Stroke,
-                StrokeWidth = sw,
-                StrokeCap   = SKStrokeCap.Butt,
-                Color       = InterpolateColor(t)
-            };
-            using var path = BuildArcPath(cx, cy, radius, segStart, segEnd - segStart);
-            canvas.DrawPath(path, paint);
+            float t   = (float)i / (stops - 1);
+            colors[i]    = InterpolateColor(t);
+            positions[i] = t;
         }
 
-        using var startPaint = new SKPaint
-        {
-            IsAntialias = true,
-            Style       = SKPaintStyle.Stroke,
-            StrokeWidth = sw,
-            StrokeCap   = SKStrokeCap.Round,
-            Color       = InterpolateColor(0f)
-        };
-        using var startPath = BuildArcPath(cx, cy, radius, StartAngleDeg, sweepPerSegment);
-        canvas.DrawPath(startPath, startPaint);
+        using var shader = SKShader.CreateSweepGradient(
+            new SKPoint(cx, cy), colors, positions,
+            SKShaderTileMode.Clamp, StartAngleDeg, endAngle);
 
-        float lastStart = StartAngleDeg + activeSweep - sweepPerSegment;
-        using var endPaint = new SKPaint
+        using var paint = new SKPaint
         {
             IsAntialias = true,
             Style       = SKPaintStyle.Stroke,
             StrokeWidth = sw,
             StrokeCap   = SKStrokeCap.Round,
-            Color       = InterpolateColor(1f)
+            Shader      = shader
         };
-        using var endPath = BuildArcPath(cx, cy, radius, lastStart, sweepPerSegment);
-        canvas.DrawPath(endPath, endPaint);
+
+        using var path = BuildArcPath(cx, cy, radius, StartAngleDeg, activeSweep);
+        canvas.DrawPath(path, paint);
     }
 
     private static void DrawEndpointDot(SKCanvas canvas, float cx, float cy, float radius, float sw, float progress)
@@ -121,7 +106,7 @@ public class WeeklyGoalGauge : SKCanvasView
         {
             IsAntialias  = true,
             Style        = SKPaintStyle.Fill,
-            Color        = new SKColor(0xFF, 0xFF, 0xFF, 0x55),
+            Color        = SkiaTokens.GlowWhite,
             MaskFilter   = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, sw * 0.5f)
         };
         canvas.DrawCircle(dotX, dotY, sw * 0.75f, glowPaint);
@@ -153,7 +138,7 @@ public class WeeklyGoalGauge : SKCanvasView
         using var subPaint = new SKPaint
         {
             IsAntialias = true,
-            Color       = new SKColor(0x88, 0x88, 0x88),
+            Color       = SkiaTokens.AxisText,
             TextSize    = subTs,
             TextAlign   = SKTextAlign.Center
         };

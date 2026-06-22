@@ -2,6 +2,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn.Data;
 using LockIn.Services;
+using Microsoft.Extensions.DependencyInjection;
+using LockIn;
 
 namespace LockIn.ViewModels;
 
@@ -144,7 +146,8 @@ public partial class OnboardingViewModel(DatabaseService db) : ObservableObject
 
         MainThread.BeginInvokeOnMainThread(() =>
         {
-            Application.Current!.Windows[0].Page = new AppShell();
+            var shell = IPlatformApplication.Current!.Services.GetRequiredService<AppShell>();
+            Application.Current!.Windows[0].Page = shell;
         });
     }
 

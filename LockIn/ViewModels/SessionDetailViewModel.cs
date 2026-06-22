@@ -7,7 +7,7 @@ using static LockIn.Services.DatabaseService;
 
 namespace LockIn.ViewModels;
 
-public partial class SessionDetailViewModel(DatabaseService db) : ObservableObject, IQueryAttributable
+public partial class SessionDetailViewModel(DatabaseService db, PhotoService photos) : ObservableObject, IQueryAttributable
 {
     public ObservableCollection<SessionExerciseGroup> ExerciseGroups { get; } = new();
     public ObservableCollection<PhotoRow> Photos { get; } = new();
@@ -85,7 +85,7 @@ public partial class SessionDetailViewModel(DatabaseService db) : ObservableObje
             {
                 var file = await MediaPicker.Default.CapturePhotoAsync();
                 if (file is not null)
-                    await SavePhotoFileAsync(file, dir);
+                    await photos.SaveAsync(file, _sessionId, dir);
             }
             else if (action == "Välj från bibliotek")
             {
@@ -93,35 +93,12 @@ public partial class SessionDetailViewModel(DatabaseService db) : ObservableObje
                 if (files is not null)
                     foreach (var file in files)
                         if (file is not null)
-                            await SavePhotoFileAsync(file, dir);
+                            await photos.SaveAsync(file, _sessionId, dir);
             }
         }
         catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"[Photos] Fel vid fotoval: {ex.Message}"); return; }
 
         await RefreshPhotosAsync();
-    }
-
-    private async Task SavePhotoFileAsync(FileResult file, string dir)
-    {
-        var destPath = Path.Combine(dir, $"session_{_sessionId}_{Guid.NewGuid():N}.jpg");
-        using var stream = await file.OpenReadAsync();
-        using var dest = File.Create(destPath);
-        await stream.CopyToAsync(dest);
-        try
-        {
-            await db.SavePhotoAsync(new WorkoutPhoto
-            {
-                SessionId = _sessionId,
-                FilePath = destPath,
-                TakenAt = DateTime.Now
-            });
-        }
-        catch (Exception ex)
-        {
-            System.Diagnostics.Debug.WriteLine($"[Photos] DB-fel, tar bort orphan: {ex.Message}");
-            try { File.Delete(destPath); } catch { }
-            throw;
-        }
     }
 
     [RelayCommand]

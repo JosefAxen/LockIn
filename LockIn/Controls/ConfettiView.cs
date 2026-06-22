@@ -41,7 +41,9 @@ public sealed class ConfettiView : SKCanvasView
         _running = true;
         IsVisible = true;
 
-        _timer = Application.Current!.Dispatcher.CreateTimer();
+        var app = Application.Current;
+        if (app is null) return;
+        _timer = app.Dispatcher.CreateTimer();
         _timer.Interval = TimeSpan.FromMilliseconds(16);
         _timer.Tick += OnTick;
         _timer.Start();

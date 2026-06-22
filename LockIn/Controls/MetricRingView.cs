@@ -70,7 +70,7 @@ public class MetricRingView : SKCanvasView
             Style       = SKPaintStyle.Stroke,
             StrokeWidth = sw,
             StrokeCap   = SKStrokeCap.Round,
-            Color       = new SKColor(0x2A, 0x2A, 0x2E)
+            Color       = SkiaTokens.RingTrack
         };
         canvas.DrawPath(trackPath, trackPaint);
 

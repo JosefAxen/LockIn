@@ -350,8 +350,7 @@
                        TextColor="#0E0E10" VerticalOptions="Center"/>
             </HorizontalStackLayout>
             <Border.GestureRecognizers>
-                <TapGestureRecognizer Command="{Binding StartFreeWorkoutCommand}"/>
-                <PointerGestureRecognizer PointerPressed="OnFabPressed" PointerReleased="OnFabReleased"/>
+                <TapGestureRecognizer Command="{Binding StartFreeWorkoutCommand}" Tapped="OnFabTapped"/>
             </Border.GestureRecognizers>
         </Border>
     <!-- Bottom gradient fade behind floating tab bar — matchar topp-gradienten spegelvänt -->

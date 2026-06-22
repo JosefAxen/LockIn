@@ -36,6 +36,9 @@ public partial class PostWorkoutPage : ContentPage
         ConfettiOverlay.Stop();
     }
 
+    private async void OnKlarTapped(object sender, TappedEventArgs e)
+        => await AnimationHelper.PressAsync(sender);
+
     private void OnAchievementsChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         if (e.Action != NotifyCollectionChangedAction.Add || e.NewItems?.Count == 0) return;

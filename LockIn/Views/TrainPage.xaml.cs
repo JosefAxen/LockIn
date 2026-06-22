@@ -69,18 +69,8 @@ public partial class TrainPage : ContentPage
     private async void OnProgramTapped(object sender, TappedEventArgs e)
         => await AnimationHelper.PressAsync(sender);
 
-    private static async void OnFabPressed(object? sender, PointerEventArgs e)
-    {
-        HapticFeedback.Default.Perform(HapticFeedbackType.Click);
-        if (sender is PointerGestureRecognizer pgr && pgr.Parent is VisualElement ve)
-            await ve.ScaleTo(0.93, 70, Easing.CubicOut);
-    }
-
-    private static async void OnFabReleased(object? sender, PointerEventArgs e)
-    {
-        if (sender is PointerGestureRecognizer pgr && pgr.Parent is VisualElement ve)
-            await ve.ScaleTo(1.0, 200, Easing.SpringOut);
-    }
+    private async void OnFabTapped(object sender, TappedEventArgs e)
+        => await AnimationHelper.PressAsync(sender);
 
     private async void OnMuscleBarLoaded(object sender, EventArgs e)
     {

@@ -12,6 +12,9 @@ public partial class BodyWeightPage : ContentPage
         BindingContext = _vm = vm;
     }
 
+    private async void OnLoggaViktTapped(object sender, TappedEventArgs e)
+        => await AnimationHelper.PressAsync(sender);
+
     protected override async void OnAppearing()
     {
         base.OnAppearing();

@@ -453,18 +453,19 @@
                 </StackLayout>
 
                 <!-- Add exercise button (inside scroll, after exercises) -->
-                <Button Text="+ LÄGG TILL ÖVNING"
-                        Style="{StaticResource SecondaryButton}"
-                        BorderColor="{StaticResource ForgeBorderLight}"
-                        BorderWidth="1"
-                        FontFamily="BebasNeue" FontSize="16"
-                        CharacterSpacing="1"
-                        HeightRequest="48"
-                        Command="{Binding AddExerciseCommand}">
-                    <Button.Behaviors>
-                        <views:AnimatedButtonBehavior/>
-                    </Button.Behaviors>
-                </Button>
+                <Border HeightRequest="48"
+                        BackgroundColor="Transparent"
+                        StrokeShape="RoundRectangle 12"
+                        Stroke="{StaticResource ForgeBorderLight}"
+                        StrokeThickness="1">
+                    <Label Text="+ LÄGG TILL ÖVNING"
+                           FontFamily="BebasNeue" FontSize="16" CharacterSpacing="1"
+                           TextColor="{StaticResource ForgeText}"
+                           HorizontalOptions="Center" VerticalOptions="Center"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding AddExerciseCommand}" Tapped="OnAddExerciseTapped"/>
+                    </Border.GestureRecognizers>
+                </Border>
 
             </StackLayout>
         </ScrollView>
@@ -489,24 +490,39 @@
             </BoxView.Background>
         </BoxView>
 
-        <!-- Floating FAB: avsluta pass -->
-        <Button Grid.Row="1"
-                Text="AVSLUTA PASS"
-                Style="{StaticResource PrimaryButton}"
-                BackgroundColor="{StaticResource ForgeAccent}"
-                TextColor="White"
-                HorizontalOptions="End"
-                VerticalOptions="End"
-                Margin="0,0,20,44"
-                HeightRequest="48"
-                WidthRequest="172"
-                CornerRadius="24"
-                ZIndex="23"
-                Command="{Binding FinishWorkoutCommand}">
-            <Button.Behaviors>
-                <views:AnimatedButtonBehavior/>
-            </Button.Behaviors>
-        </Button>
+        <!-- Floating FAB: avsluta pass — silver pill (samma stil som FRITT PASS) -->
+        <Border Grid.Row="1"
+                StrokeShape="RoundRectangle 28" StrokeThickness="0"
+                HorizontalOptions="End" VerticalOptions="End"
+                Margin="0,0,18,44"
+                HeightRequest="56" WidthRequest="192"
+                Padding="20,0"
+                ZIndex="30">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#FAFAFA" Offset="0.0"/>
+                    <GradientStop Color="#E5E5E8" Offset="0.25"/>
+                    <GradientStop Color="#B8B8BC" Offset="0.60"/>
+                    <GradientStop Color="#7A7A80" Offset="1.0"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            <Border.Shadow>
+                <Shadow Brush="#B8B8BC" Offset="0,6" Radius="28" Opacity="0.45"/>
+            </Border.Shadow>
+            <HorizontalStackLayout Spacing="10" HorizontalOptions="Center" VerticalOptions="Center">
+                <views:AppIcon Source="ic_check.png"
+                               WidthRequest="18" HeightRequest="18"
+                               ForceTint="#0E0E10"
+                               VerticalOptions="Center"/>
+                <Label Text="AVSLUTA PASS"
+                       FontFamily="BebasNeue" FontSize="17" CharacterSpacing="2"
+                       TextColor="#0E0E10" VerticalOptions="Center"/>
+            </HorizontalStackLayout>
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding FinishWorkoutCommand}"/>
+                <PointerGestureRecognizer PointerPressed="OnDonePointerPressed" PointerReleased="OnDonePointerReleased"/>
+            </Border.GestureRecognizers>
+        </Border>
 
     </Grid>
 
