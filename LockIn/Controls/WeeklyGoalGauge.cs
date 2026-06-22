@@ -16,9 +16,8 @@ public class WeeklyGoalGauge : SKCanvasView
         set => SetValue(ProgressProperty, value);
     }
 
-    private const float StartAngleDeg    = 120f;
-    private const float TotalSweepDeg    = 300f;
-    private const int   GradientSegments = 80;
+    private const float StartAngleDeg = 120f;
+    private const float TotalSweepDeg = 300f;
 
     // Logical dp — multiplied by display density at render time
     private const float StrokeWidthDp  = 20f;
@@ -65,23 +64,27 @@ public class WeeklyGoalGauge : SKCanvasView
         if (progress <= 0f) return;
 
         float activeSweep = TotalSweepDeg * progress;
-        float segSweep    = activeSweep / GradientSegments;
+        float endAngleDeg = StartAngleDeg + activeSweep;
 
-        for (int i = 0; i < GradientSegments; i++)
+        using var shader = SKShader.CreateSweepGradient(
+            new SKPoint(cx, cy),
+            new[] { new SKColor(192, 57, 43), new SKColor(142, 68, 173), new SKColor(52, 152, 219) },
+            new[] { 0f, 0.5f, 1.0f },
+            SKShaderTileMode.Clamp,
+            StartAngleDeg,
+            endAngleDeg);
+
+        using var paint = new SKPaint
         {
-            float t     = (float)i / GradientSegments;
-            float start = StartAngleDeg + segSweep * i;
-            using var paint = new SKPaint
-            {
-                IsAntialias = true,
-                Style       = SKPaintStyle.Stroke,
-                StrokeWidth = sw,
-                StrokeCap   = SKStrokeCap.Butt,
-                Color       = InterpolateColor(t)
-            };
-            using var path = BuildArcPath(cx, cy, radius, start, segSweep);
-            canvas.DrawPath(path, paint);
-        }
+            IsAntialias = true,
+            Style       = SKPaintStyle.Stroke,
+            StrokeWidth = sw,
+            StrokeCap   = SKStrokeCap.Round,
+            Shader      = shader
+        };
+
+        using var path = BuildArcPath(cx, cy, radius, StartAngleDeg, activeSweep);
+        canvas.DrawPath(path, paint);
     }
 
     private static void DrawEndpointDot(SKCanvas canvas, float cx, float cy, float radius, float sw, float progress)
@@ -164,22 +167,4 @@ public class WeeklyGoalGauge : SKCanvasView
         return path;
     }
 
-    private static SKColor InterpolateColor(float t)
-    {
-        t = Math.Clamp(t, 0f, 1f);
-        float r, g, b;
-        if (t < 0.5f)
-        {
-            float l = t / 0.5f;
-            r = Lerp(192, 142, l); g = Lerp(57, 68, l); b = Lerp(43, 173, l);
-        }
-        else
-        {
-            float l = (t - 0.5f) / 0.5f;
-            r = Lerp(142, 52, l); g = Lerp(68, 152, l); b = Lerp(173, 219, l);
-        }
-        return new SKColor((byte)r, (byte)g, (byte)b);
-    }
-
-    private static float Lerp(float a, float b, float t) => a + (b - a) * t;
 }
