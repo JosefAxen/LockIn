@@ -65,18 +65,24 @@ public class WeeklyGoalGauge : SKCanvasView
 
         float activeSweep = TotalSweepDeg * progress;
 
-        // Linear gradient from arc start (bottom-left) to arc end (bottom-right).
-        // Avoids sweep-gradient wrapping past 360° at high progress values.
-        float sx = cx - radius * 0.5f;
-        float sy = cy + radius * 0.866f;
-        float ex = cx + radius * 0.5f;
-        float ey = cy + radius * 0.866f;
+        // Linear gradient from arc start (bottom-left, ~120°) to arc end
+        // (bottom-right, ~60° after full rotation). Avoids sweep-gradient
+        // wrapping past 360° which caused the arc to turn red at high progress.
+        float sx = cx - radius * 0.5f;    // cos(120°) ≈ -0.5
+        float sy = cy + radius * 0.866f;  // sin(120°) ≈  0.866
+        float ex = cx + radius * 0.5f;    // cos(60°)  ≈  0.5
+        float ey = cy + radius * 0.866f;  // sin(60°)  ≈  0.866
 
+        // Forge multi-accent: Coral → Purple → Blue (warm → cool progression)
         using var shader = SKShader.CreateLinearGradient(
             new SKPoint(sx, sy),
             new SKPoint(ex, ey),
-            new[] { new SKColor(0xB8, 0xB8, 0xBC), SKColors.White },
-            null,
+            new[] {
+                new SKColor(0xFB, 0x71, 0x85),  // ForgeAccentCoral
+                new SKColor(0xA7, 0x8B, 0xFA),  // ForgeAccentPurple
+                new SKColor(0x38, 0xBD, 0xF8)   // ForgeAccentBlue
+            },
+            new[] { 0f, 0.5f, 1.0f },
             SKShaderTileMode.Clamp);
 
         using var paint = new SKPaint

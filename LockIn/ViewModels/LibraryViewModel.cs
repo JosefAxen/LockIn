@@ -149,13 +149,56 @@ public partial class LibraryViewModel(DatabaseService db) : ObservableObject
             source = source.Where(e => e.Name.ToLowerInvariant().Contains(q)
                                     || e.SwedishName.ToLowerInvariant().Contains(q));
 
-        Groups.Clear();
-        foreach (var group in source.GroupBy(e => e.MuscleGroup).OrderBy(g => g.Key.ToString()))
+        var desired = source
+            .GroupBy(e => e.MuscleGroup)
+            .OrderBy(g => g.Key.ToString())
+            .Select(g => (Title: MuscleGroupLabel(g.Key), Items: g.OrderBy(e => e.Name).ToList()))
+            .ToList();
+
+        // Remove groups no longer in result (backward to preserve indices).
+        // Uses individual RemoveAt — never Clear() — so CollectionView fires
+        // DeleteSections rather than ReloadData(), preserving keyboard focus.
+        for (int i = Groups.Count - 1; i >= 0; i--)
+            if (desired.All(d => d.Title != Groups[i].Title))
+                Groups.RemoveAt(i);
+
+        for (int i = 0; i < desired.Count; i++)
         {
-            var g = new ExerciseGroup(MuscleGroupLabel(group.Key));
-            foreach (var e in group.OrderBy(e => e.Name))
-                g.Add(e);
-            Groups.Add(g);
+            var (title, items) = desired[i];
+
+            int existingIdx = -1;
+            for (int k = i; k < Groups.Count; k++)
+                if (Groups[k].Title == title) { existingIdx = k; break; }
+
+            ExerciseGroup group;
+            if (existingIdx < 0)
+            {
+                group = new ExerciseGroup(title);
+                if (i < Groups.Count) Groups.Insert(i, group);
+                else Groups.Add(group);
+            }
+            else
+            {
+                group = Groups[existingIdx];
+                if (existingIdx != i)
+                {
+                    Groups.RemoveAt(existingIdx);
+                    Groups.Insert(i, group);
+                }
+            }
+
+            // Sync items within group using individual Remove/Insert —
+            // no Clear() — so inner ObservableCollection fires DeleteItems/
+            // InsertItems rather than ReloadSections, which preserves focus.
+            var toKeep = items.ToHashSet();
+            for (int j = group.Count - 1; j >= 0; j--)
+                if (!toKeep.Contains(group[j])) group.RemoveAt(j);
+            for (int j = 0; j < items.Count; j++)
+            {
+                int cur = group.IndexOf(items[j]);
+                if (cur < 0) group.Insert(j, items[j]);
+                else if (cur != j) { group.RemoveAt(cur); group.Insert(j, items[j]); }
+            }
         }
     }
 
