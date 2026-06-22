@@ -65,24 +65,23 @@ public class WeeklyGoalGauge : SKCanvasView
 
         float activeSweep = TotalSweepDeg * progress;
 
-        // Linear gradient from arc start (bottom-left, ~120°) to arc end
-        // (bottom-right, ~60° after full rotation). Avoids sweep-gradient
-        // wrapping past 360° which caused the arc to turn red at high progress.
-        float sx = cx - radius * 0.5f;    // cos(120°) ≈ -0.5
-        float sy = cy + radius * 0.866f;  // sin(120°) ≈  0.866
-        float ex = cx + radius * 0.5f;    // cos(60°)  ≈  0.5
-        float ey = cy + radius * 0.866f;  // sin(60°)  ≈  0.866
-
-        using var shader = SKShader.CreateLinearGradient(
-            new SKPoint(sx, sy),
-            new SKPoint(ex, ey),
-            new[] {
-                new SKColor(192,  57,  43),  // mörk tegelröd
-                new SKColor(142,  68, 173),  // dämpad lila
-                new SKColor( 52, 152, 219)   // mellanblå
+        // Sweep-gradient med fast 0°–360°-range. Färgstopp placerade vid arcens
+        // nyckelpoitioner: start(120°)→t=0.333, topp(270°)→t=0.750, slut(60°)→t=0.167.
+        // t=0 och t=1 har samma färg → sömlös övergång vid 360°-gränsen.
+        // Ingen dynamisk endAngle → ingen 360°-wrapping-bugg.
+        using var shader = SKShader.CreateSweepGradient(
+            new SKPoint(cx, cy),
+            new SKColor[] {
+                new SKColor( 88, 118, 201),  // t=0.000   0°  – högersidesblend (sömlöst)
+                new SKColor( 52, 152, 219),  // t=0.167  60°  – arcslut (blå)
+                new SKColor(192,  57,  43),  // t=0.333 120°  – arcstart (röd)
+                new SKColor(142,  68, 173),  // t=0.750 270°  – arctopp (lila)
+                new SKColor( 88, 118, 201),  // t=1.000 360°  – samma som t=0
             },
-            new[] { 0f, 0.5f, 1.0f },
-            SKShaderTileMode.Clamp);
+            new float[] { 0f, 0.167f, 0.333f, 0.75f, 1.0f },
+            SKShaderTileMode.Clamp,
+            0f,
+            360f);
 
         using var paint = new SKPaint
         {
