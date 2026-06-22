@@ -187,11 +187,27 @@ public partial class LibraryViewModel(DatabaseService db) : ObservableObject
                 }
             }
 
-            // group.Clear() fires Reset on the inner ExerciseGroup, which causes
-            // ReloadSections (not ReloadData) — keyboard focus is preserved and
-            // it is O(n) rather than the O(n²) item-by-item diffing approach.
-            group.Clear();
-            foreach (var e in items) group.Add(e);
+            // Sync group items in O(n) without any Clear() or IndexOf:
+            //   1. Remove items not in desired set (backward pass, O(n))
+            //   2. Merge-insert missing items using two-pointer (O(n))
+            // Both group (after removals) and items are sorted by Name, so
+            // the merge is a straight in-order pass. Never fires Reset, so
+            // CollectionView never calls ReloadData() — keyboard focus preserved.
+            var keepSet = items.ToHashSet();
+            for (int j = group.Count - 1; j >= 0; j--)
+                if (!keepSet.Contains(group[j])) group.RemoveAt(j);
+
+            int gi = 0;
+            for (int ii = 0; ii < items.Count; ii++)
+            {
+                if (gi < group.Count && ReferenceEquals(group[gi], items[ii]))
+                    gi++;
+                else
+                {
+                    group.Insert(gi, items[ii]);
+                    gi++;
+                }
+            }
         }
     }
 
