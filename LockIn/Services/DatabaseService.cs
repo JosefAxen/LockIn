@@ -303,10 +303,13 @@ public class DatabaseService
 
     private async Task SeedSwedishNamesAsync()
     {
-        foreach (var (englishName, swedishName) in SwedishExerciseNames.Map)
-            await _db.ExecuteAsync(
-                "UPDATE Exercises SET SwedishName = ? WHERE Name = ? AND SwedishName = ''",
-                swedishName, englishName);
+        await _db.RunInTransactionAsync(conn =>
+        {
+            foreach (var (englishName, swedishName) in SwedishExerciseNames.Map)
+                conn.Execute(
+                    "UPDATE Exercises SET SwedishName = ? WHERE Name = ? AND SwedishName = ''",
+                    swedishName, englishName);
+        });
     }
 
     private static MuscleGroup MapDbMuscle(string? m) => m?.ToLowerInvariant() switch
@@ -725,6 +728,10 @@ public class DatabaseService
             if (File.Exists(p.FilePath)) File.Delete(p.FilePath);
         await _db.DeleteAllAsync<WorkoutPhoto>();
         await SeedAsync();
+        await SeedExerciseDescriptionsAsync();
+        await SeedForearmExercisesAsync();
+        await SeedExerciseDbAsync();
+        await SeedSwedishNamesAsync();
         return 0;
     }
 

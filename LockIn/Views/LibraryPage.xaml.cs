@@ -70,7 +70,9 @@ public partial class LibraryPage : ContentPage
     private void OnTabContainerSizeChanged(object? sender, EventArgs e)
     {
         if (sender is not VisualElement ve || ve.Width <= 0) return;
-        _tabColumnWidth = ve.Width / 3.0;
+        var newWidth = ve.Width / 3.0;
+        if (Math.Abs(newWidth - _tabColumnWidth) < 0.5) return;
+        _tabColumnWidth = newWidth;
         TabIndicator.WidthRequest  = _tabColumnWidth;
         TabIndicator1.WidthRequest = _tabColumnWidth;
         TabIndicator2.WidthRequest = _tabColumnWidth;
