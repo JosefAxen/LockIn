@@ -1,3 +1,5 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using LockIn.Models;
 using SQLite;
 
@@ -80,6 +82,7 @@ public class DatabaseService
         await SeedAsync();
         await SeedExerciseDescriptionsAsync();
         await SeedForearmExercisesAsync();
+        await SeedExerciseDbAsync();
     }
 
     private async Task SeedExerciseDescriptionsAsync()
@@ -200,6 +203,77 @@ public class DatabaseService
         var settings = await _db.Table<AppSettings>().FirstOrDefaultAsync();
         if (settings is null)
             await _db.InsertAsync(new AppSettings());
+    }
+
+    private async Task SeedExerciseDbAsync()
+    {
+        var alreadySeeded = await _db.ExecuteScalarAsync<int>(
+            "SELECT COUNT(*) FROM Exercises WHERE Name = 'Bench Press'") > 0;
+        if (alreadySeeded) return;
+
+        await using var stream = await FileSystem.OpenAppPackageFileAsync("exercises_db.json");
+        var entries = await JsonSerializer.DeserializeAsync<List<ExerciseDbEntry>>(stream)
+                      ?? new List<ExerciseDbEntry>();
+
+        var existing = (await _db.Table<Exercise>().ToListAsync())
+            .Select(e => e.Name.ToLowerInvariant())
+            .ToHashSet();
+
+        var gymEquipment = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "barbell", "dumbbell", "cable", "machine", "body only",
+            "e-z curl bar", "kettlebells", "bands"
+        };
+
+        var toInsert = new List<Exercise>();
+        foreach (var e in entries)
+        {
+            if (e.Equipment is null || !gymEquipment.Contains(e.Equipment)) continue;
+            if (string.Equals(e.Category, "cardio", StringComparison.OrdinalIgnoreCase)) continue;
+            if (e.Name is null) continue;
+            if (existing.Contains(e.Name.ToLowerInvariant())) continue;
+
+            var muscle = MapExerciseDbMuscle(e.PrimaryMuscles?.FirstOrDefault());
+            var rest = string.Equals(e.Mechanic, "compound", StringComparison.OrdinalIgnoreCase) ? 150 : 90;
+            var desc = e.Instructions is { Count: > 0 }
+                ? string.Join(" ", e.Instructions.Take(2))
+                : "";
+
+            toInsert.Add(new Exercise
+            {
+                Name = e.Name,
+                MuscleGroup = muscle,
+                DefaultRestSeconds = rest,
+                Description = desc
+            });
+        }
+
+        if (toInsert.Count > 0)
+            await _db.InsertAllAsync(toInsert);
+    }
+
+    private static MuscleGroup MapExerciseDbMuscle(string? muscle) => muscle?.ToLowerInvariant() switch
+    {
+        "chest"                                                          => MuscleGroup.Chest,
+        "lats" or "middle back" or "lower back" or "traps"              => MuscleGroup.Back,
+        "shoulders"                                                      => MuscleGroup.Shoulders,
+        "biceps"                                                         => MuscleGroup.Biceps,
+        "triceps"                                                        => MuscleGroup.Triceps,
+        "quadriceps" or "hamstrings" or "glutes" or "calves"
+            or "adductors" or "abductors"                                => MuscleGroup.Legs,
+        "abdominals"                                                     => MuscleGroup.Core,
+        "forearms"                                                       => MuscleGroup.Forearms,
+        _                                                                => MuscleGroup.Other
+    };
+
+    private sealed class ExerciseDbEntry
+    {
+        [JsonPropertyName("name")]           public string?       Name           { get; set; }
+        [JsonPropertyName("equipment")]      public string?       Equipment      { get; set; }
+        [JsonPropertyName("mechanic")]       public string?       Mechanic       { get; set; }
+        [JsonPropertyName("category")]       public string?       Category       { get; set; }
+        [JsonPropertyName("primaryMuscles")] public List<string>? PrimaryMuscles { get; set; }
+        [JsonPropertyName("instructions")]   public List<string>? Instructions   { get; set; }
     }
 
     // ── Exercises ──────────────────────────────────────────────────────────
