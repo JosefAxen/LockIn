@@ -93,9 +93,27 @@ public partial class ExercisePickerViewModel(DatabaseService db) : ObservableObj
             source = source.Where(e => e.Name.ToLowerInvariant().Contains(q)
                                     || e.SwedishName.ToLowerInvariant().Contains(q));
 
-        FilteredExercises.Clear();
-        foreach (var e in source.OrderBy(e => e.Name))
-            FilteredExercises.Add(new ExercisePickerRow(e, MuscleGroupLabel(e.MuscleGroup), GetMuscleColor(e.MuscleGroup)));
+        var desired = source.OrderBy(e => e.Name).ToList();
+
+        // Aldrig Clear() — det avfyrar CollectionChanged.Reset → iOS ReloadData()
+        // → Entry förlorar focus → tangentbordet stängs.
+        // Bakåtpass tar bort rader som filtrerats bort, sedan merge-infoga nya.
+        var keepIds = desired.Select(e => e.Id).ToHashSet();
+        for (int i = FilteredExercises.Count - 1; i >= 0; i--)
+            if (!keepIds.Contains(FilteredExercises[i].Exercise.Id))
+                FilteredExercises.RemoveAt(i);
+
+        int fi = 0;
+        foreach (var ex in desired)
+        {
+            if (fi < FilteredExercises.Count && FilteredExercises[fi].Exercise.Id == ex.Id)
+                fi++;
+            else
+            {
+                FilteredExercises.Insert(fi, new ExercisePickerRow(ex, MuscleGroupLabel(ex.MuscleGroup), GetMuscleColor(ex.MuscleGroup)));
+                fi++;
+            }
+        }
     }
 
     [RelayCommand]
