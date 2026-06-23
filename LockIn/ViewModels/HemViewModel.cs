@@ -32,6 +32,10 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
     [ObservableProperty] private string _recoveryText = "–";
     [ObservableProperty] private string _recoveryComponentsText = "";
     [ObservableProperty] private SleepStages _sleepStages = new(0, 0, 0, 0, 0, 0);
+    [ObservableProperty] private string _coreSleepText  = "–";
+    [ObservableProperty] private string _deepSleepText  = "–";
+    [ObservableProperty] private string _remSleepText   = "–";
+    [ObservableProperty] private string _awakeSleepText = "–";
     [ObservableProperty] private string _todayRecommendation       = "Hämtar data…";
     [ObservableProperty] private string _todayRecommendationDetail = "";
     [ObservableProperty] private float  _strainTarget;
@@ -97,11 +101,21 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
             var hrSamplesTask      = health.GetTodayHeartRateSamplesAsync();
             var maxHrTask          = health.GetEstimatedMaxHeartRateAsync();
 
+            // Volym × intensitet idag + ACWR-fönster (acute = senaste 7d inkl idag, chronic = 28d).
+            // ACWR (Acute:Chronic Workload Ratio) är en etablerad metod inom sport science
+            // för att bedöma träningsbelastning vs kapacitet — sweet spot ~0.8–1.3, risk >1.5.
+            var today        = DateTime.Today;
+            var tomorrow     = today.AddDays(1);
+            var volTodayTask = db.GetVolumeIntensityForRangeAsync(today, tomorrow);
+            var volAcuteTask = db.GetVolumeIntensityForRangeAsync(today.AddDays(-6), tomorrow);   // 7d
+            var volChrTask   = db.GetVolumeIntensityForRangeAsync(today.AddDays(-27), tomorrow); // 28d
+
             await Task.WhenAll(weekSessionsTask, recentSessionsTask, streakSessionsTask, settingsTask,
                 stepsTask, caloriesTask, heartRateTask,
                 weeklyStepsTask, weeklyCaloriesTask, weeklyMaxHRTask,
                 sleepHoursTask, sleepStagesTask, hrvTask, rhrTask,
-                hrSamplesTask, maxHrTask);
+                hrSamplesTask, maxHrTask,
+                volTodayTask, volAcuteTask, volChrTask);
 
             var weekSessions   = weekSessionsTask.Result;
             var recentSessions = recentSessionsTask.Result;
@@ -141,41 +155,85 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
             ActiveValues    = BuildWeeklyActiveMinutes(recentSessions);
             HeartRateValues = weeklyMaxHRTask.Result.ToArray();
 
-            // Strain (Ansträngning) = TRIMP-baserad zon-score från dagens HR-samples
+            // Strain (Ansträngning) = HR-TRIMP + träningsvolym, log-mappad till 0–100.
+            // Båda källorna summeras okappat och komprimeras via tanh — toppen är
+            // asymptotisk (à la Whoop) så "ordinär hård dag" hamnar 60–75 och
+            // exceptionella dagar 90+ men 100 är reserverat för verkligen extrema dagar.
             var hrSamples   = hrSamplesTask.Result;
             var estMaxHr    = maxHrTask.Result;
             var restingBpm  = rhrTask.Result.TodayBpm > 0
                 ? (int)rhrTask.Result.TodayBpm
                 : (rhrTask.Result.BaselineBpm > 0 ? (int)rhrTask.Result.BaselineBpm : 60);
-            double strainPct = CalculateStrain(hrSamples, estMaxHr, restingBpm);
+            double hrStrainRaw  = CalculateStrainRaw(hrSamples, estMaxHr, restingBpm);
+            double volStrainRaw = volTodayTask.Result / 100.0;
+            double rawCombined  = hrStrainRaw + volStrainRaw;
+            double strainPct    = 100.0 * Math.Tanh(rawCombined / 80.0);
+
             StrainProgress = (float)(strainPct / 100.0);
-            StrainText     = hrSamples.Count > 5 ? ((int)strainPct).ToString() : "–";
+            bool hasStrainData = hrSamples.Count > 5 || volStrainRaw > 0;
+            StrainText     = hasStrainData ? ((int)strainPct).ToString() : "–";
 
             var hrv   = hrvTask.Result;
             var rhr   = rhrTask.Result;
             var stages = sleepStagesTask.Result;
             double sleepH = sleepHoursTask.Result;
 
-            // Komponenter à la Whoop. Var komponent skalas till 0–100 från ett rimligt intervall.
-            // Saknad data ger 50 (neutralt) så Recovery inte krashar till 0.
-            double hrvComp = hrv.BaselineMs > 0 && hrv.TodayMs > 0
-                ? Math.Clamp((hrv.TodayMs / hrv.BaselineMs - 0.7) / 0.6, 0, 1) * 100
-                : 50;
+            // HRV-komponent: lnSDNN z-score mot 14-dagars baseline.
+            // HRV är log-normalfördelad; CV ~20% är typisk inom-individ-variabilitet (Plews et al.).
+            // z = (ln(today) − ln(baseline)) / 0.2, mappad linjärt till 0–100 runt z=0 → 50.
+            double hrvComp;
+            if (hrv.BaselineMs > 0 && hrv.TodayMs > 0)
+            {
+                double z = (Math.Log(hrv.TodayMs) - Math.Log(hrv.BaselineMs)) / 0.20;
+                hrvComp = Math.Clamp(50 + z * 25, 0, 100); // z=+2 → 100, z=−2 → 0
+            }
+            else hrvComp = 50;
+
+            // Vilopuls: lägre än baseline ⇒ bättre. Skala kring ±15% kring baseline.
             double rhrComp = rhr.BaselineBpm > 0 && rhr.TodayBpm > 0
                 ? Math.Clamp((rhr.BaselineBpm / rhr.TodayBpm - 0.85) / 0.3, 0, 1) * 100
                 : 50;
-            double sleepComp = sleepH > 0 ? Math.Clamp(sleepH / 8.0, 0, 1) * 100 : 50;
 
-            double recoveryPct = hrvComp * 0.5 + rhrComp * 0.3 + sleepComp * 0.2;
+            // Sömn: viktad mot stadier — deep + REM är de regenerativa faserna.
+            // 50% × stadier-score (4h deep+REM = max) + 50% × total-tid-score (8h = max).
+            double sleepComp;
+            if (stages.TotalHours > 0)
+            {
+                double deepRemH = (stages.DeepMinutes + stages.RemMinutes) / 60.0;
+                double stageScore = Math.Clamp(deepRemH / 4.0, 0, 1) * 100;
+                double totalScore = Math.Clamp(stages.TotalHours / 8.0, 0, 1) * 100;
+                sleepComp = stageScore * 0.5 + totalScore * 0.5;
+            }
+            else if (sleepH > 0)
+            {
+                sleepComp = Math.Clamp(sleepH / 8.0, 0, 1) * 100;
+            }
+            else sleepComp = 50;
+
+            // Fatigue: ACWR (acute 7d / chronic 28d-snitt). Sweet spot 0.8–1.3, risk >1.5.
+            // Skalar till 0–100 där hög ACWR = lågt score = mer trötthet.
+            double acute = volAcuteTask.Result / 7.0;
+            double chronicAvg = volChrTask.Result / 28.0;
+            double acwr = chronicAvg > 0 ? acute / chronicAvg : 0;
+            // ACWR 1.0 = perfekt (100 fatigueComp), 0.8 = lite under-tränad, 1.5+ = ackumulerad trötthet
+            double fatigueComp = chronicAvg < 50  // för lite historik för meningsfull ACWR
+                ? 100 - Math.Clamp(volAcuteTask.Result / 700.0, 0, 1) * 100
+                : Math.Clamp(100 - Math.Max(0, acwr - 1.0) * 80, 20, 100);
+
+            double recoveryPct = hrvComp * 0.55 + rhrComp * 0.20 + sleepComp * 0.15 + fatigueComp * 0.10;
             RecoveryProgress = (float)(recoveryPct / 100.0);
             RecoveryText     = ((int)recoveryPct).ToString();
             RecoveryComponentsText = hrv.TodayMs > 0
                 ? $"HRV {hrv.TodayMs:F0}ms · VILOPULS {rhr.TodayBpm:F0}bpm · SÖMN {sleepH:F1}h"
                 : "Anslut Apple Watch för riktig återhämtningsdata";
 
-            SleepStages   = stages;
-            SleepProgress = sleepH > 0 ? (float)Math.Clamp(sleepH / 8.0, 0.0, 1.0) : 0f;
-            SleepText     = sleepH > 0 ? $"{sleepH:F1}h" : "–";
+            SleepStages    = stages;
+            CoreSleepText  = FormatSleepDuration(stages.CoreMinutes);
+            DeepSleepText  = FormatSleepDuration(stages.DeepMinutes);
+            RemSleepText   = FormatSleepDuration(stages.RemMinutes);
+            AwakeSleepText = FormatSleepDuration(stages.AwakeMinutes);
+            SleepProgress  = sleepH > 0 ? (float)Math.Clamp(sleepH / 8.0, 0.0, 1.0) : 0f;
+            SleepText      = sleepH > 0 ? $"{sleepH:F1}h" : "–";
 
             // Strain-target = optimal träningsbelastning baserat på recovery (Whoop-stil)
             StrainTarget     = (float)(recoveryPct / 100.0);
@@ -279,6 +337,17 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
         return streak;
     }
 
+    /// <summary>Formaterar sömnstadier. Över 60 min ⇒ "1h 23m"; annars "47m".</summary>
+    private static string FormatSleepDuration(double minutes)
+    {
+        if (minutes < 1) return "0m";
+        if (minutes < 60) return $"{minutes:F0}m";
+        int totalMin = (int)Math.Round(minutes);
+        int h = totalMin / 60;
+        int m = totalMin % 60;
+        return m == 0 ? $"{h}h" : $"{h}h {m}m";
+    }
+
     private static int CalculateActiveMinutesToday(List<WorkoutSession> sessions)
     {
         var today = DateTime.Today;
@@ -288,12 +357,13 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
     }
 
     /// <summary>
-    /// TRIMP-inspirerad Strain (Ansträngning) — viktar tid i 5 HR-zoner.
+    /// Edwards TRIMP-inspirerad raw Strain — viktar tid i 5 HR-zoner.
     /// Karvonen-formel för %-of-Reserve: (HR - HRrest) / (HRmax - HRrest).
     /// Zon 1 (50-60% reserve) × 1, Zon 2 × 2, ... Zon 5 × 5.
-    /// Summa minuter × zon-multiplikator, normaliserad till 0-100.
+    /// Returnerar okappade poäng dividerade med 3 — komprimering till 0–100
+    /// sker via tanh-mappning i LoadAsync så toppen blir asymptotisk.
     /// </summary>
-    private static double CalculateStrain(IReadOnlyList<HeartRateSample> samples, int maxHr, int restingHr)
+    private static double CalculateStrainRaw(IReadOnlyList<HeartRateSample> samples, int maxHr, int restingHr)
     {
         if (samples.Count < 2 || maxHr <= restingHr) return 0;
 
@@ -320,9 +390,8 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
             points += minutes * multiplier;
         }
 
-        // Normalisering: 300 points (60 min Zon 5) → 100.
-        // En genomsnittlig dag landar ofta på 20-40 strain, en intensiv pass-dag på 70-90.
-        return Math.Min(100, points / 3.0);
+        // Returnera okappade poäng / 3 (typisk hård cardio-timme ≈ 100, monster-pass kan gå >150).
+        return points / 3.0;
     }
 
     private static (string Headline, string Detail) BuildRecommendation(

@@ -23,10 +23,18 @@
 
         <!-- Header -->
         <Grid Grid.Row="0" Padding="16,56,16,8" ColumnDefinitions="Auto,*">
-            <Button Grid.Column="0" Text="‹"
-                    Style="{StaticResource SecondaryButton}"
-                    WidthRequest="44" HeightRequest="44" Padding="0"
-                    Command="{Binding GoBackCommand}"/>
+            <Border Grid.Column="0"
+                    WidthRequest="36" HeightRequest="36"
+                    StrokeShape="Ellipse"
+                    BackgroundColor="{AppThemeBinding Light=#1A000000, Dark=#17FFFFFF}"
+                    Stroke="{AppThemeBinding Light=#0D000000, Dark=#29FFFFFF}"
+                    StrokeThickness="0.5"
+                    VerticalOptions="Center">
+                <Path Style="{StaticResource BackChevron}"/>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding GoBackCommand}"/>
+                </Border.GestureRecognizers>
+            </Border>
             <Label Grid.Column="1"
                    Text="KROPPSVIKT"
                    Style="{StaticResource DisplayLabel}"

@@ -163,6 +163,34 @@
         <Setter Property="Color" Value="{StaticResource ForgeAccent}" />
     </Style>
 
+    <!-- Apple-style chevron för back-knappar — vektorbaserad, matchar SF Symbol chevron.backward -->
+    <Style x:Key="BackChevron" TargetType="Path">
+        <Setter Property="Data" Value="M 7,1 L 1,7 L 7,13" />
+        <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}" />
+        <Setter Property="StrokeThickness" Value="2" />
+        <Setter Property="StrokeLineCap" Value="Round" />
+        <Setter Property="StrokeLineJoin" Value="Round" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="Margin" Value="0,0,2,0" />
+        <Setter Property="WidthRequest" Value="10" />
+        <Setter Property="HeightRequest" Value="16" />
+    </Style>
+
+    <!-- Spegelvänd: forward chevron — matchar SF Symbol chevron.forward. Default-färg dimmad. -->
+    <Style x:Key="ForwardChevron" TargetType="Path">
+        <Setter Property="Data" Value="M 1,1 L 7,7 L 1,13" />
+        <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}" />
+        <Setter Property="StrokeThickness" Value="2" />
+        <Setter Property="StrokeLineCap" Value="Round" />
+        <Setter Property="StrokeLineJoin" Value="Round" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="Margin" Value="2,0,0,0" />
+        <Setter Property="WidthRequest" Value="10" />
+        <Setter Property="HeightRequest" Value="16" />
+    </Style>
+
     <Style TargetType="ProgressBar">
         <Setter Property="ProgressColor" Value="{StaticResource ForgeAccent}" />
     </Style>

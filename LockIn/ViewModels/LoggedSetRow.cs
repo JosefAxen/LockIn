@@ -21,6 +21,10 @@ public partial class LoggedSetRow : ObservableObject
     public string PrevRepsHint { get; init; } = "";
     public int TargetReps { get; init; } = 0;
 
+    /// <summary>Markerad när raden precis lades till via +SET — Loaded-handlern
+    /// kör en "veckla ut"-animation och nollställer flaggan.</summary>
+    public bool IsFreshlyAdded { get; set; }
+
     public string RirDisplay => Rir >= 0 ? Rir.ToString() : "RIR";
     public Color  RirColor   => Rir >= 0 ? Color.FromArgb("#4ADE80") : DesignTokens.SetNormal;
 

@@ -60,9 +60,7 @@
                         Stroke="#29FFFFFF"
                         StrokeThickness="0.5"
                         VerticalOptions="Center">
-                    <Label Text="‹" FontSize="22" FontFamily="DMSansMedium"
-                           HorizontalOptions="Center" VerticalOptions="Center"
-                           TextColor="{StaticResource ForgeText}"/>
+                    <Path Style="{StaticResource BackChevron}"/>
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnBackClicked"/>
                     </Border.GestureRecognizers>
@@ -99,9 +97,7 @@
                             Stroke="#29FFFFFF"
                             StrokeThickness="0.5"
                             VerticalOptions="Center">
-                        <Label Text="‹" FontSize="22" FontFamily="DMSansMedium"
-                               HorizontalOptions="Center" VerticalOptions="Center"
-                               TextColor="{StaticResource ForgeText}"/>
+                        <Path Style="{StaticResource BackChevron}"/>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnBackClicked"/>
                         </Border.GestureRecognizers>
@@ -265,15 +261,6 @@
                                     <StackLayout BindableLayout.ItemsSource="{Binding Sets}" Spacing="0">
                                         <BindableLayout.ItemTemplate>
                                             <DataTemplate x:DataType="vm:LoggedSetRow">
-                                                <SwipeView>
-                                                    <SwipeView.RightItems>
-                                                        <SwipeItems>
-                                                            <SwipeItem Text="Ta bort"
-                                                                       BackgroundColor="#E53E3E"
-                                                                       Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ActiveWorkoutViewModel}}, Path=DeleteSetCommand}"
-                                                                       CommandParameter="{Binding .}"/>
-                                                        </SwipeItems>
-                                                    </SwipeView.RightItems>
                                                 <Grid ColumnDefinitions="32,*,14,*,42,36"
                                                       Padding="16,5,16,5" ColumnSpacing="6"
                                                       HeightRequest="46"
@@ -389,7 +376,6 @@
                                                     </Border>
 
                                                 </Grid>
-                                                </SwipeView>
                                             </DataTemplate>
                                         </BindableLayout.ItemTemplate>
                                     </StackLayout>
@@ -419,8 +405,7 @@
                                                 FontFamily="BebasNeue" FontSize="14"
                                                 CharacterSpacing="1"
                                                 HeightRequest="36"
-                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ActiveWorkoutViewModel}}, Path=RemoveSetCommand}"
-                                                CommandParameter="{Binding .}">
+                                                Clicked="OnRemoveSetClicked">
                                             <Button.Behaviors>
                                                 <views:AnimatedButtonBehavior/>
                                             </Button.Behaviors>

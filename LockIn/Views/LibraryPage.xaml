@@ -563,11 +563,8 @@
                            FontFamily="BebasNeue" FontSize="13" CharacterSpacing="3"
                            TextColor="{StaticResource ForgeText}"
                            VerticalOptions="Center"/>
-                    <Label Text="›"
-                           FontFamily="BebasNeue" FontSize="20"
-                           TextColor="{StaticResource ForgeAccent}"
-                           VerticalOptions="Center"
-                           Margin="3,-4,0,0"/>
+                    <Path Style="{StaticResource ForwardChevron}"
+                          Stroke="{StaticResource ForgeAccent}"/>
                 </HorizontalStackLayout>
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Tapped="OnWorkoutBannerTapped"/>

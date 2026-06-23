@@ -49,9 +49,7 @@
                     Stroke="#29FFFFFF"
                     StrokeThickness="0.5"
                     VerticalOptions="Center">
-                <Label Text="‹" FontSize="22" FontFamily="DMSansMedium"
-                       HorizontalOptions="Center" VerticalOptions="Center"
-                       TextColor="{StaticResource ForgeText}"/>
+                <Path Style="{StaticResource BackChevron}"/>
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding GoBackCommand}"/>
                 </Border.GestureRecognizers>

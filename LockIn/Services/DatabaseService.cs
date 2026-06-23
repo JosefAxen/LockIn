@@ -516,6 +516,35 @@ public class DatabaseService
               ORDER BY se.Id, ls.SetNumber", sessionId);
     }
 
+    /// <summary>
+    /// Volym × intensitet för alla loggade set i ett datumintervall.
+    /// Per set: WeightKg × Reps × intensity, där intensity = (1 − RIR/6)^1.5.
+    /// Icke-linjär RIR-vikt: validitet sjunker längre från failure (RIR 4–6
+    /// underrapporteras ofta), så set nära failure väger relativt tyngre.
+    /// </summary>
+    public async Task<double> GetVolumeIntensityForRangeAsync(DateTime from, DateTime toExclusive)
+    {
+        await InitAsync();
+        // CASE-tabell för (1 − RIR/6)^1.5 — RIR är begränsat till 0..6 av UI.
+        return await _db.ExecuteScalarAsync<double>(
+            @"SELECT COALESCE(SUM(
+                WeightKg * Reps * CASE RIR
+                    WHEN 0 THEN 1.0000
+                    WHEN 1 THEN 0.7607
+                    WHEN 2 THEN 0.5443
+                    WHEN 3 THEN 0.3536
+                    WHEN 4 THEN 0.1925
+                    WHEN 5 THEN 0.0680
+                    ELSE 0.0
+                END
+              ), 0)
+              FROM LoggedSets
+              WHERE LoggedAt >= ? AND LoggedAt < ?", from, toExclusive);
+    }
+
+    public Task<double> GetVolumeIntensityForDateAsync(DateTime date)
+        => GetVolumeIntensityForRangeAsync(date.Date, date.Date.AddDays(1));
+
     public async Task<double> GetMaxEpley1RMAsync(int exerciseId, int excludeLoggedSetId = 0)
     {
         await InitAsync();

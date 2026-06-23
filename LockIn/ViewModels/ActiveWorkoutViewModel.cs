@@ -207,7 +207,8 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             SetNumber = section.Sets.Count + 1,
             WeightText = last?.WeightText ?? "",
             RepsText = last?.RepsText ?? "8",
-            TargetReps = section.TargetReps
+            TargetReps = section.TargetReps,
+            IsFreshlyAdded = true
         });
     }
 

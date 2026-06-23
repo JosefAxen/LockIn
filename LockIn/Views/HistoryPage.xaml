@@ -262,10 +262,7 @@
                                                            TextColor="{StaticResource ForgeAccentAmber}"/>
                                                     <Label Text="PRs" Style="{StaticResource SectionLabel}"/>
                                                 </StackLayout>
-                                                <Label Grid.Column="3" Text="›"
-                                                       FontSize="22"
-                                                       TextColor="{StaticResource ForgeMuted}"
-                                                       VerticalOptions="Center"/>
+                                                <Path Grid.Column="3" Style="{StaticResource ForwardChevron}"/>
                                             </Grid>
                                     </StackLayout>
                                     <Border.GestureRecognizers>
@@ -322,11 +319,8 @@
                                FontFamily="BebasNeue" FontSize="13" CharacterSpacing="3"
                                TextColor="{StaticResource ForgeText}"
                                VerticalOptions="Center"/>
-                        <Label Text="›"
-                               FontFamily="BebasNeue" FontSize="20"
-                               TextColor="{StaticResource ForgeAccent}"
-                               VerticalOptions="Center"
-                               Margin="3,-4,0,0"/>
+                        <Path Style="{StaticResource ForwardChevron}"
+                              Stroke="{StaticResource ForgeAccent}"/>
                     </HorizontalStackLayout>
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnWorkoutBannerTapped"/>

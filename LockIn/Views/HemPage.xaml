@@ -178,25 +178,25 @@
                     </Border.Shadow>
                     <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="10">
                         <VerticalStackLayout Grid.Column="0" Spacing="2">
-                            <Label Text="{Binding SleepStages.CoreMinutes, StringFormat='{0:F0}m'}"
+                            <Label Text="{Binding CoreSleepText}"
                                    FontSize="22" FontAttributes="Bold"
                                    TextColor="{StaticResource ForgeAccentBlue}"/>
                             <Label Text="CORE" Style="{StaticResource SectionLabel}" FontSize="9"/>
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Column="1" Spacing="2">
-                            <Label Text="{Binding SleepStages.DeepMinutes, StringFormat='{0:F0}m'}"
+                            <Label Text="{Binding DeepSleepText}"
                                    FontSize="22" FontAttributes="Bold"
                                    TextColor="{StaticResource ForgeAccentPurple}"/>
                             <Label Text="DEEP" Style="{StaticResource SectionLabel}" FontSize="9"/>
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Column="2" Spacing="2">
-                            <Label Text="{Binding SleepStages.RemMinutes, StringFormat='{0:F0}m'}"
+                            <Label Text="{Binding RemSleepText}"
                                    FontSize="22" FontAttributes="Bold"
                                    TextColor="{StaticResource ForgeAccent}"/>
                             <Label Text="REM" Style="{StaticResource SectionLabel}" FontSize="9"/>
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Column="3" Spacing="2">
-                            <Label Text="{Binding SleepStages.AwakeMinutes, StringFormat='{0:F0}m'}"
+                            <Label Text="{Binding AwakeSleepText}"
                                    FontSize="22" FontAttributes="Bold"
                                    TextColor="{StaticResource ForgeAccentAmber}"/>
                             <Label Text="AWAKE" Style="{StaticResource SectionLabel}" FontSize="9"/>
@@ -384,12 +384,8 @@
                            TextColor="{StaticResource ForgeText}"
                            VerticalOptions="Center"/>
 
-                    <Label Text="›"
-                           FontFamily="BebasNeue"
-                           FontSize="20"
-                           TextColor="{StaticResource ForgeAccent}"
-                           VerticalOptions="Center"
-                           Margin="3,-4,0,0"/>
+                    <Path Style="{StaticResource ForwardChevron}"
+                          Stroke="{StaticResource ForgeAccent}"/>
                 </HorizontalStackLayout>
 
                 <Border.GestureRecognizers>

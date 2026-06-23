@@ -33,8 +33,7 @@
                     StrokeShape="RoundRectangle 12" StrokeThickness="0"
                     WidthRequest="40" HeightRequest="40"
                     HorizontalOptions="Start">
-                <Label Text="‹" TextColor="{StaticResource ForgeText}"
-                       FontSize="22" HorizontalOptions="Center" VerticalOptions="Center"/>
+                <Path Style="{StaticResource BackChevron}"/>
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding BackCommand}"/>
                 </Border.GestureRecognizers>
@@ -166,7 +165,7 @@
                                 <Label Text="NYBÖRJARE" FontFamily="BebasNeue" FontSize="22" CharacterSpacing="1" TextColor="{Binding Exp0Fg}"/>
                                 <Label Text="Under 1 år" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding Exp0Fg}" Opacity="0.7"/>
                             </VerticalStackLayout>
-                            <Label Grid.Column="1" Text="›" FontSize="22" TextColor="{Binding Exp0Fg}" VerticalOptions="Center"/>
+                            <Path Grid.Column="1" Style="{StaticResource ForwardChevron}" Stroke="{Binding Exp0Fg}"/>
                         </Grid>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding SelectExperienceCommand}" CommandParameter="{x:Int32 0}"/>
@@ -178,7 +177,7 @@
                                 <Label Text="MELLANNIVÅ" FontFamily="BebasNeue" FontSize="22" CharacterSpacing="1" TextColor="{Binding Exp1Fg}"/>
                                 <Label Text="1–3 år" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding Exp1Fg}" Opacity="0.7"/>
                             </VerticalStackLayout>
-                            <Label Grid.Column="1" Text="›" FontSize="22" TextColor="{Binding Exp1Fg}" VerticalOptions="Center"/>
+                            <Path Grid.Column="1" Style="{StaticResource ForwardChevron}" Stroke="{Binding Exp1Fg}"/>
                         </Grid>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding SelectExperienceCommand}" CommandParameter="{x:Int32 1}"/>
@@ -190,7 +189,7 @@
                                 <Label Text="AVANCERAD" FontFamily="BebasNeue" FontSize="22" CharacterSpacing="1" TextColor="{Binding Exp2Fg}"/>
                                 <Label Text="3+ år" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding Exp2Fg}" Opacity="0.7"/>
                             </VerticalStackLayout>
-                            <Label Grid.Column="1" Text="›" FontSize="22" TextColor="{Binding Exp2Fg}" VerticalOptions="Center"/>
+                            <Path Grid.Column="1" Style="{StaticResource ForwardChevron}" Stroke="{Binding Exp2Fg}"/>
                         </Grid>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding SelectExperienceCommand}" CommandParameter="{x:Int32 2}"/>
@@ -214,7 +213,7 @@
                                 <Label Text="STYRKA" FontFamily="BebasNeue" FontSize="28" CharacterSpacing="1" TextColor="{Binding GoalStrengthFg}"/>
                                 <Label Text="Bli starkare och lyfta tyngre" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding GoalStrengthFg}" Opacity="0.7"/>
                             </VerticalStackLayout>
-                            <Label Grid.Column="1" Text="›" FontSize="24" TextColor="{Binding GoalStrengthFg}" VerticalOptions="Center"/>
+                            <Path Grid.Column="1" Style="{StaticResource ForwardChevron}" Stroke="{Binding GoalStrengthFg}"/>
                         </Grid>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding SelectGoalCommand}" CommandParameter="{x:Int32 0}"/>
@@ -226,7 +225,7 @@
                                 <Label Text="HYPERTROFI" FontFamily="BebasNeue" FontSize="28" CharacterSpacing="1" TextColor="{Binding GoalHyperFg}"/>
                                 <Label Text="Bygga muskler och förändra kroppen" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding GoalHyperFg}" Opacity="0.7"/>
                             </VerticalStackLayout>
-                            <Label Grid.Column="1" Text="›" FontSize="24" TextColor="{Binding GoalHyperFg}" VerticalOptions="Center"/>
+                            <Path Grid.Column="1" Style="{StaticResource ForwardChevron}" Stroke="{Binding GoalHyperFg}"/>
                         </Grid>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding SelectGoalCommand}" CommandParameter="{x:Int32 1}"/>

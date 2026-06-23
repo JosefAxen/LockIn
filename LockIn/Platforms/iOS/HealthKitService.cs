@@ -234,20 +234,58 @@ public class HealthKitService : IHealthService
 
     public async Task<HrvSample> GetHrvSampleAsync()
     {
-        var today    = await GetWindowAverageAsync(HKQuantityTypeIdentifier.HeartRateVariabilitySdnn, s_ms,
-                                                   DateTime.Today.AddHours(-12), DateTime.Now);
+        // 14-dagars baseline ger stabilare jämförelsegrund än 7d (HRV är brusig).
+        // Today: fallback till senaste 48h om dagens HRV ännu inte beräknats av Apple Watch.
+        var today = await GetWindowAverageAsync(HKQuantityTypeIdentifier.HeartRateVariabilitySdnn, s_ms,
+                                                DateTime.Today.AddHours(-12), DateTime.Now);
+        if (today <= 0)
+            today = await GetLatestSampleValueAsync(HKQuantityTypeIdentifier.HeartRateVariabilitySdnn, s_ms,
+                                                    DateTime.Today.AddDays(-7));
         var baseline = await GetWindowAverageAsync(HKQuantityTypeIdentifier.HeartRateVariabilitySdnn, s_ms,
-                                                   DateTime.Today.AddDays(-7), DateTime.Today);
+                                                   DateTime.Today.AddDays(-14), DateTime.Today);
         return new HrvSample(today, baseline);
     }
 
     public async Task<RestingHrSample> GetRestingHrSampleAsync()
     {
-        var today    = await GetWindowAverageAsync(HKQuantityTypeIdentifier.RestingHeartRate, s_bpm,
-                                                   DateTime.Today, DateTime.Now);
+        // Apple Watch loggar RHR-värdet sent på dagen — ofta hela morgonen utan data.
+        // Fallback: senaste samplade RHR från senaste 7 dagarna.
+        var today = await GetWindowAverageAsync(HKQuantityTypeIdentifier.RestingHeartRate, s_bpm,
+                                                DateTime.Today, DateTime.Now);
+        if (today <= 0)
+            today = await GetLatestSampleValueAsync(HKQuantityTypeIdentifier.RestingHeartRate, s_bpm,
+                                                   DateTime.Today.AddDays(-7));
         var baseline = await GetWindowAverageAsync(HKQuantityTypeIdentifier.RestingHeartRate, s_bpm,
-                                                   DateTime.Today.AddDays(-7), DateTime.Today);
+                                                   DateTime.Today.AddDays(-14), DateTime.Today);
         return new RestingHrSample(today, baseline);
+    }
+
+    /// <summary>
+    /// Hämtar senast registrerade quantity-sample-värdet i ett tidsfönster.
+    /// Använd när "today"-snittet kan vara tomt (Apple Watch synkar HRV/RHR försenat).
+    /// </summary>
+    private async Task<double> GetLatestSampleValueAsync(
+        HKQuantityTypeIdentifier typeId, HKUnit unit, DateTime from)
+    {
+        if (!HKHealthStore.IsHealthDataAvailable) return 0.0;
+        var type = HKQuantityType.Create(typeId);
+        if (type is null) return 0.0;
+
+        var pred = HKQuery.GetPredicateForSamples(ToNSDate(from), ToNSDate(DateTime.Now), HKQueryOptions.StrictStartDate);
+        var sort = new[] { new NSSortDescriptor("startDate", false) };
+        var tcs  = new TaskCompletionSource<double>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var query = new HKSampleQuery(type, pred, 1, sort, (_, samples, err) =>
+        {
+            if (err is not null)
+                System.Diagnostics.Debug.WriteLine($"[HealthKit] Latest sample err {typeId}: {err.LocalizedDescription}");
+            double v = 0;
+            if (samples is not null && samples.Length > 0 && samples[0] is HKQuantitySample qs)
+                v = qs.Quantity.GetDoubleValue(unit);
+            tcs.TrySetResult(v);
+        });
+        _store.ExecuteQuery(query);
+        try   { return await tcs.Task.WaitAsync(TimeSpan.FromSeconds(10)); }
+        catch (TimeoutException) { return 0.0; }
     }
 
     private async Task<double> GetWindowAverageAsync(

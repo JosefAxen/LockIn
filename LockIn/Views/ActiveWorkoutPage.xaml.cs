@@ -76,12 +76,89 @@ public partial class ActiveWorkoutPage : ContentPage
     private static async void OnSetRowLoaded(object sender, EventArgs e)
     {
         if (sender is not VisualElement ve) return;
-        ve.Opacity = 0;
-        ve.TranslationY = -6;
-        await Task.WhenAll(
-            ve.FadeTo(1, 180, Easing.CubicOut),
-            ve.TranslateTo(0, 0, 180, Easing.CubicOut)
-        );
+        bool freshlyAdded = ve.BindingContext is LoggedSetRow row && row.IsFreshlyAdded;
+
+        if (freshlyAdded)
+        {
+            // Veckla ut: layout-höjden växer parallellt med fade/scale så +SET-knappen
+            // glider ner mjukt istället för att snappa 46dp direkt.
+            const double targetHeight = 46;
+            ((LoggedSetRow)ve.BindingContext!).IsFreshlyAdded = false;
+            ve.HeightRequest = 0;
+            ve.Opacity = 0;
+            ve.TranslationY = -6;
+            ve.Scale = 0.96;
+            await Task.WhenAll(
+                AnimateHeightAsync(ve, 0, targetHeight, 220),
+                ve.FadeTo(1, 260, Easing.CubicOut),
+                ve.TranslateTo(0, 0, 260, Easing.CubicOut),
+                ve.ScaleTo(1, 260, Easing.SpringOut)
+            );
+        }
+        else
+        {
+            // Initial laddning: enklare fade-in utan layout-animation
+            ve.Opacity = 0;
+            ve.TranslationY = -4;
+            await Task.WhenAll(
+                ve.FadeTo(1, 180, Easing.CubicOut),
+                ve.TranslateTo(0, 0, 180, Easing.CubicOut)
+            );
+        }
+    }
+
+    private async void OnRemoveSetClicked(object sender, EventArgs e)
+    {
+        if (sender is not Button btn) return;
+        if (btn.BindingContext is not WorkoutExerciseSection section) return;
+        if (section.Sets.Count <= 1) return;
+
+        // Hitta StackLayout som innehåller set-raderna (sibling till +/- knappraden).
+        var setsLayout = FindSetsLayout(btn);
+        var lastRow = setsLayout?.Children.LastOrDefault() as VisualElement;
+
+        if (lastRow != null)
+        {
+            HapticFeedback.Default.Perform(HapticFeedbackType.Click);
+            var startHeight = lastRow.Height > 0 ? lastRow.Height : 46;
+            await Task.WhenAll(
+                lastRow.FadeTo(0, 220, Easing.CubicIn),
+                lastRow.TranslateTo(0, -6, 220, Easing.CubicIn),
+                AnimateHeightAsync(lastRow, startHeight, 0, 220)
+            );
+        }
+
+        // Ta bort från VM efter animationen — resterande rader är redan på plats
+        if (BindingContext is ActiveWorkoutViewModel vm)
+            vm.RemoveSetCommand.Execute(section);
+    }
+
+    private static Task AnimateHeightAsync(VisualElement ve, double from, double to, uint duration)
+    {
+        var tcs = new TaskCompletionSource<bool>();
+        var anim = new Animation(v => ve.HeightRequest = v, from, to, Easing.CubicIn);
+        anim.Commit(ve, "RowCollapse", length: duration, rate: 16,
+            finished: (_, __) => tcs.TrySetResult(true));
+        return tcs.Task;
+    }
+
+    private static StackLayout? FindSetsLayout(Element start)
+    {
+        // Walk upp tills vi når section-templatet, leta efter syskon-StackLayout med BindableLayout.
+        var parent = start.Parent;
+        while (parent != null)
+        {
+            if (parent is Layout layout)
+            {
+                foreach (var child in layout.Children)
+                {
+                    if (child is StackLayout sl && BindableLayout.GetItemsSource(sl) != null)
+                        return sl;
+                }
+            }
+            parent = parent.Parent;
+        }
+        return null;
     }
 
     private async void OnAddExerciseTapped(object sender, TappedEventArgs e)
