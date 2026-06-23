@@ -67,7 +67,7 @@ public partial class TrainPage : ContentPage
     {
         base.OnDisappearing();
         _state.StateChanged -= OnWorkoutStateChanged;
-        this.AbortAnimation("BannerPulse");
+        BannerPulseRing.StopPulse();
     }
 
     private void OnWorkoutStateChanged()
@@ -79,19 +79,10 @@ public partial class TrainPage : ContentPage
         WorkoutBanner.IsVisible = active;
         FrittPassButton.IsVisible = !active;
         if (active) StartBannerPulse();
-        else this.AbortAnimation("BannerPulse");
+        else BannerPulseRing.StopPulse();
     }
 
-    private void StartBannerPulse()
-    {
-        this.AbortAnimation("BannerPulse");
-        BannerPulseRing.Scale = 1.0;
-        BannerPulseRing.Opacity = 0;
-        var pulse = new Animation();
-        pulse.Add(0, 1, new Animation(v => BannerPulseRing.Scale = v, 1.0, 2.4, Easing.CubicOut));
-        pulse.Add(0, 1, new Animation(v => BannerPulseRing.Opacity = v, 0.65, 0.0, Easing.CubicOut));
-        pulse.Commit(this, "BannerPulse", length: 1400, repeat: () => WorkoutBanner.IsVisible);
-    }
+    private void StartBannerPulse() => BannerPulseRing.StartPulse();
 
     private async void OnWorkoutBannerTapped(object sender, TappedEventArgs e)
         => await Shell.Current.GoToAsync(nameof(ActiveWorkoutPage));

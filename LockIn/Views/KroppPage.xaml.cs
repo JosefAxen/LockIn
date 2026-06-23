@@ -56,19 +56,10 @@ public partial class KroppPage : ContentPage
         base.OnDisappearing();
         _vm.HeatmapReady -= BuildHeatmapGrid;
         _vm.PropertyChanged -= OnKroppVmPropertyChanged;
-        this.AbortAnimation("BannerPulse");
+        BannerPulseRing.StopPulse();
     }
 
-    private void StartBannerPulse()
-    {
-        this.AbortAnimation("BannerPulse");
-        BannerPulseRing.Scale = 1.0;
-        BannerPulseRing.Opacity = 0;
-        var pulse = new Animation();
-        pulse.Add(0, 1, new Animation(v => BannerPulseRing.Scale = v, 1.0, 2.4, Easing.CubicOut));
-        pulse.Add(0, 1, new Animation(v => BannerPulseRing.Opacity = v, 0.65, 0.0, Easing.CubicOut));
-        pulse.Commit(this, "BannerPulse", length: 1400, repeat: () => WorkoutBanner.IsVisible);
-    }
+    private void StartBannerPulse() => BannerPulseRing.StartPulse();
 
     private async void OnLogMatsTapped(object sender, TappedEventArgs e)
         => await AnimationHelper.PressAsync(sender);

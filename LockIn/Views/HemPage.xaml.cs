@@ -75,7 +75,7 @@ public partial class HemPage : ContentPage
         base.OnDisappearing();
         _state.StateChanged -= OnWorkoutStateChanged;
         _heatmapCts?.Cancel();
-        this.AbortAnimation("BannerPulse");
+        BannerPulseRing.StopPulse();
     }
 
     private void OnWorkoutStateChanged()
@@ -83,19 +83,10 @@ public partial class HemPage : ContentPage
         {
             WorkoutBanner.IsVisible = _state.IsActive;
             if (_state.IsActive) StartBannerPulse();
-            else this.AbortAnimation("BannerPulse");
+            else BannerPulseRing.StopPulse();
         });
 
-    private void StartBannerPulse()
-    {
-        this.AbortAnimation("BannerPulse");
-        BannerPulseRing.Scale = 1.0;
-        BannerPulseRing.Opacity = 0;
-        var pulse = new Animation();
-        pulse.Add(0, 1, new Animation(v => BannerPulseRing.Scale = v, 1.0, 2.4, Easing.CubicOut));
-        pulse.Add(0, 1, new Animation(v => BannerPulseRing.Opacity = v, 0.65, 0.0, Easing.CubicOut));
-        pulse.Commit(this, "BannerPulse", length: 1400, repeat: () => WorkoutBanner.IsVisible);
-    }
+    private void StartBannerPulse() => BannerPulseRing.StartPulse();
 
     private void OnScrolled(object sender, ScrolledEventArgs e)
         => StickyHeader.Opacity = Math.Clamp((e.ScrollY - 80.0) / 40.0, 0, 1);

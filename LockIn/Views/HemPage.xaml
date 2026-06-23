@@ -365,17 +365,8 @@
 
                 <HorizontalStackLayout Spacing="11" VerticalOptions="Center">
 
-                    <!-- Heartbeat: animerad ring + solid kärna -->
-                    <Grid WidthRequest="16" HeightRequest="16" VerticalOptions="Center">
-                        <Ellipse x:Name="BannerPulseRing"
-                                 Fill="{StaticResource ForgeAccentCoral}"
-                                 WidthRequest="10" HeightRequest="10"
-                                 Opacity="0"
-                                 HorizontalOptions="Center" VerticalOptions="Center"/>
-                        <Ellipse Fill="{StaticResource ForgeAccentCoral}"
-                                 WidthRequest="7" HeightRequest="7"
-                                 HorizontalOptions="Center" VerticalOptions="Center"/>
-                    </Grid>
+                    <controls:ForgeLiveDotView x:Name="BannerPulseRing"
+                                               VerticalOptions="Center"/>
 
                     <Label Text="PASS PÅGÅR"
                            FontFamily="BebasNeue"

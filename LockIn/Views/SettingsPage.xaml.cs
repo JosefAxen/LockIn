@@ -54,17 +54,8 @@ public partial class SettingsPage : ContentPage
     protected override void OnDisappearing()
     {
         base.OnDisappearing();
-        this.AbortAnimation("BannerPulse");
+        BannerPulseRing.StopPulse();
     }
 
-    private void StartBannerPulse()
-    {
-        this.AbortAnimation("BannerPulse");
-        BannerPulseRing.Scale = 1.0;
-        BannerPulseRing.Opacity = 0;
-        var pulse = new Animation();
-        pulse.Add(0, 1, new Animation(v => BannerPulseRing.Scale = v, 1.0, 2.4, Easing.CubicOut));
-        pulse.Add(0, 1, new Animation(v => BannerPulseRing.Opacity = v, 0.65, 0.0, Easing.CubicOut));
-        pulse.Commit(this, "BannerPulse", length: 1400, repeat: () => WorkoutBanner.IsVisible);
-    }
+    private void StartBannerPulse() => BannerPulseRing.StartPulse();
 }
