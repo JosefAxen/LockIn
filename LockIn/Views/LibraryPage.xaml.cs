@@ -9,6 +9,7 @@ public partial class LibraryPage : ContentPage
     private readonly LibraryViewModel _vm;
     private readonly ActiveWorkoutStateService _state;
     private bool _hasLoaded;
+    private CancellationTokenSource? _loaderCts;
 
     public LibraryPage(LibraryViewModel vm, ActiveWorkoutStateService state)
     {
@@ -26,26 +27,18 @@ public partial class LibraryPage : ContentPage
 
         StickyHeader.Opacity = 0;
 
+        // Ladda direkt utan att dölja Content — atmosfärisk bakgrund + stålband-loader
+        // är synliga under laddning så användaren får omedelbar feedback.
         if (!_hasLoaded)
         {
-            Content.Opacity = 0;
-            Content.TranslationY = 16;
+            StartLoaderAnimation();
             await _vm.LoadAsync();
+            StopLoaderAnimation();
             _hasLoaded = true;
-            await Task.WhenAll(
-                Content.FadeTo(1, 400, Easing.CubicOut),
-                Content.TranslateTo(0, 0, 400, Easing.CubicOut)
-            );
         }
         else
         {
-            Content.Opacity = 0;
-            Content.TranslationY = 12;
-            await Task.WhenAll(
-                _vm.LoadAsync(),
-                Content.FadeTo(1, 320, Easing.CubicOut),
-                Content.TranslateTo(0, 0, 320, Easing.CubicOut)
-            );
+            await _vm.LoadAsync();
         }
     }
 
@@ -54,6 +47,35 @@ public partial class LibraryPage : ContentPage
         base.OnDisappearing();
         _state.StateChanged -= OnWorkoutStateChanged;
         _vm.PropertyChanged -= OnVmPropertyChanged;
+        StopLoaderAnimation();
+    }
+
+    private void StartLoaderAnimation()
+    {
+        _loaderCts?.Cancel();
+        _loaderCts = new CancellationTokenSource();
+        var token = _loaderCts.Token;
+
+        // Highlight: glid -40 → 140 i loop på 1.4s
+        var highlightAnim = new Animation(
+            v => LoaderHighlight.TranslationX = v,
+            -40, 140, Easing.Linear);
+        highlightAnim.Commit(this, "LoaderHighlight",
+            length: 1400, repeat: () => !token.IsCancellationRequested);
+
+        // Label: opacity-puls 0.4 → 1.0 → 0.4 på 1.0s
+        var pulseAnim = new Animation();
+        pulseAnim.Add(0.0, 0.5, new Animation(v => LoaderLabel.Opacity = v, 0.4, 1.0, Easing.SinInOut));
+        pulseAnim.Add(0.5, 1.0, new Animation(v => LoaderLabel.Opacity = v, 1.0, 0.4, Easing.SinInOut));
+        pulseAnim.Commit(this, "LoaderLabel",
+            length: 1000, repeat: () => !token.IsCancellationRequested);
+    }
+
+    private void StopLoaderAnimation()
+    {
+        _loaderCts?.Cancel();
+        this.AbortAnimation("LoaderHighlight");
+        this.AbortAnimation("LoaderLabel");
     }
 
     private double _tabColumnWidth;
@@ -95,12 +117,6 @@ public partial class LibraryPage : ContentPage
             TabIndicator1.TranslationX = targetX;
             TabIndicator2.TranslationX = targetX;
         }
-    }
-
-    protected override async void OnNavigatedTo(NavigatedToEventArgs args)
-    {
-        base.OnNavigatedTo(args);
-        await _vm.LoadAsync();
     }
 
     private void OnWorkoutStateChanged()

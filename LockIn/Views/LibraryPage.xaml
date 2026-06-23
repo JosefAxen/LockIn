@@ -63,11 +63,39 @@
             </Grid>
         </Grid>
 
-        <!-- Loading indicator -->
-        <ActivityIndicator IsRunning="{Binding IsLoading}"
-                           IsVisible="{Binding IsLoading}"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center"/>
+        <!-- Loading indicator — Forge stålband -->
+        <VerticalStackLayout IsVisible="{Binding IsLoading}"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center"
+                             Spacing="14"
+                             ZIndex="5">
+            <Grid WidthRequest="140" HeightRequest="2">
+                <BoxView Color="{StaticResource ForgeSurface3}"
+                         HeightRequest="2" WidthRequest="140"/>
+                <Border x:Name="LoaderHighlight"
+                        WidthRequest="40" HeightRequest="2"
+                        HorizontalOptions="Start"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 1"
+                        TranslationX="-40">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+                            <GradientStop Color="#00B8B8BC" Offset="0"/>
+                            <GradientStop Color="{StaticResource ForgeAccent}" Offset="0.5"/>
+                            <GradientStop Color="#00B8B8BC" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                </Border>
+            </Grid>
+            <Label x:Name="LoaderLabel"
+                   Text="LOCKING IN"
+                   FontFamily="BebasNeue"
+                   FontSize="12"
+                   CharacterSpacing="4"
+                   TextColor="{StaticResource ForgeMuted}"
+                   HorizontalOptions="Center"
+                   Opacity="0.6"/>
+        </VerticalStackLayout>
 
         <!-- Tab 0: Exercises -->
         <CollectionView IsVisible="{Binding ShowExercises}"
