@@ -185,8 +185,8 @@
                                         </Border>
                                     </Grid>
 
-                                    <!-- Exercise header: punkt + name + info + rest time badge -->
-                                    <Grid ColumnDefinitions="12,*,Auto,Auto" ColumnSpacing="10"
+                                    <!-- Exercise header: punkt + name + info + rest time badge + remove -->
+                                    <Grid ColumnDefinitions="12,*,Auto,Auto,Auto" ColumnSpacing="10"
                                           Padding="18,12,12,10">
                                         <Ellipse Grid.Column="0"
                                                  WidthRequest="10" HeightRequest="10"
@@ -237,6 +237,22 @@
                                                 <PointerGestureRecognizer
                                                     PointerPressed="OnElemPointerPressed"
                                                     PointerReleased="OnElemPointerReleased"/>
+                                            </Border.GestureRecognizers>
+                                        </Border>
+
+                                        <!-- Remove exercise button -->
+                                        <Border Grid.Column="4"
+                                                BackgroundColor="Transparent"
+                                                StrokeThickness="0"
+                                                Padding="8,6,4,6">
+                                            <Label Text="✕"
+                                                   TextColor="{StaticResource ForgeMuted}"
+                                                   FontSize="14"
+                                                   VerticalOptions="Center"/>
+                                            <Border.GestureRecognizers>
+                                                <TapGestureRecognizer
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ActiveWorkoutViewModel}}, Path=RemoveExerciseCommand}"
+                                                    CommandParameter="{Binding .}"/>
                                             </Border.GestureRecognizers>
                                         </Border>
                                     </Grid>

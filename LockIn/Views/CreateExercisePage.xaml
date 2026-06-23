@@ -97,6 +97,40 @@
                     </VerticalStackLayout>
                 </Border>
 
+                <!-- Equipment -->
+                <Border Style="{StaticResource CardFrame}" Padding="16,14">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="UTRUSTNING" Style="{StaticResource SectionLabel}"/>
+                        <CollectionView ItemsSource="{Binding EquipmentOptions}"
+                                        SelectionMode="None"
+                                        HeightRequest="40">
+                            <CollectionView.ItemsLayout>
+                                <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8"/>
+                            </CollectionView.ItemsLayout>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="vm:EquipmentOption">
+                                    <Border BackgroundColor="Transparent"
+                                            Stroke="{Binding BorderColor}"
+                                            StrokeShape="RoundRectangle 10"
+                                            StrokeThickness="1.5"
+                                            Padding="12,8">
+                                        <Label Text="{Binding Label}"
+                                               TextColor="{Binding TextColor}"
+                                               FontFamily="BebasNeue" FontSize="11"
+                                               CharacterSpacing="0.5"
+                                               VerticalOptions="Center"/>
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CreateExerciseViewModel}}, Path=SelectEquipmentCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                        </Border.GestureRecognizers>
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Border>
+
                 <!-- Rest time -->
                 <Border Style="{StaticResource CardFrame}" Padding="16,14">
                     <VerticalStackLayout Spacing="8">

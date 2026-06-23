@@ -395,32 +395,72 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
         double recoveryPct,
         IReadOnlyList<WorkoutSession> recentSessions)
     {
+        var completed = recentSessions
+            .Where(s => s.CompletedAt.HasValue)
+            .OrderByDescending(s => s.CompletedAt!.Value)
+            .ToList();
+
+        var lastSession = completed.FirstOrDefault();
+        double hoursSinceLast = lastSession is not null
+            ? (DateTime.Now - lastSession.CompletedAt!.Value).TotalHours
+            : double.MaxValue;
+
+        // Nyss tränat (< 3 timmar)
+        if (hoursSinceLast < 3)
+            return ("VÄLKÖRT!", "Bra pass! Prioritera mat och vila de kommande timmarna.");
+
+        // Långt uppehåll (5+ dagar sedan senaste pass)
+        if (hoursSinceLast > 120)
+            return ("DAGS ATT TRÄNA", "Du har tagit ett uppehåll — dags att komma igång. Börja lugnt.");
+
+        // Konsekutiva dagar med låg återhämtning
+        int streak = CountConsecutiveTrainingDays(completed);
+        if (streak >= 3 && recoveryPct < 50)
+            return ("PLANERA VILA",
+                $"Du har kört {streak} dagar i rad och kroppen signalerar trötthet. En vilodag ger bättre resultat nu.");
+
+        // Basscenario på återhämtning
         string headline = recoveryPct switch
         {
-            < 33 => "VILA",
-            < 66 => "LÄTT PASS",
-            _    => "KÖR HÅRT"
+            < 33 => "PRIORITERA VILA",
+            < 50 => "LÄTT RÖRELSE",
+            < 66 => "NORMALT PASS",
+            < 85 => "KÖR HÅRT",
+            _    => "TOPPFORM",
         };
 
         string body = recoveryPct switch
         {
-            < 33 => "Återhämtning prioriteras. Cardio på låg puls eller vilodag.",
+            < 33 => "Kroppen behöver återhämtning. Promenad, stretch eller komplett vila.",
+            < 50 => "Lätt cardio eller mobilitet — spara tyngre lyft till imorgon.",
             < 66 => "Måttlig volym idag — undvik tunga PR-försök.",
-            _    => "Du är redo för tunga lyft och PR-försök."
+            < 85 => "Du är redo för tunga lyft och PR-försök.",
+            _    => "Maximal återhämtning — perfekt dag för ett PR-försök.",
         };
 
-        var lastSession = recentSessions
-            .Where(s => s.CompletedAt.HasValue)
-            .OrderByDescending(s => s.CompletedAt!.Value)
-            .FirstOrDefault();
-        if (lastSession is not null && recoveryPct >= 33)
-        {
-            var hoursSince = (DateTime.Now - lastSession.CompletedAt!.Value).TotalHours;
-            if (hoursSince < 36)
-                body += " Träna annan muskelgrupp än senaste passet.";
-        }
+        if (lastSession is not null && hoursSinceLast < 48 && recoveryPct >= 50)
+            body += " Träna annan muskelgrupp än senaste passet.";
 
         return (headline, body);
+    }
+
+    private static int CountConsecutiveTrainingDays(IReadOnlyList<WorkoutSession> orderedSessions)
+    {
+        if (orderedSessions.Count == 0) return 0;
+        var uniqueDays = orderedSessions
+            .Select(s => s.CompletedAt!.Value.Date)
+            .Distinct()
+            .OrderByDescending(d => d)
+            .ToList();
+        int count = 0;
+        for (int i = 0; i < uniqueDays.Count; i++)
+        {
+            if (uniqueDays[i] == DateTime.Today.AddDays(-i))
+                count++;
+            else
+                break;
+        }
+        return count;
     }
 
     private static double[] BuildWeeklyActiveMinutes(List<WorkoutSession> sessions)

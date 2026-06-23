@@ -168,8 +168,12 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         }
 
         Exercises.Add(section);
+        ScrollToSectionRequested?.Invoke(this, section.SessionExerciseId);
         return section;
     }
+
+    public Task AddExerciseFromPickerAsync(Exercise exercise)
+        => AddExerciseSectionAsync(exercise, Exercises.Count);
 
     [RelayCommand]
     private async Task AddExerciseAsync()
@@ -181,6 +185,18 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
                 await AddExerciseSectionAsync(ex, Exercises.Count);
             })}
         });
+    }
+
+    [RelayCommand]
+    private async Task RemoveExerciseAsync(WorkoutExerciseSection section)
+    {
+        var ok = await Shell.Current.DisplayAlert(
+            "Ta bort övning",
+            $"Ta bort {section.ExerciseName} från passet?",
+            "Ta bort", "Avbryt");
+        if (!ok) return;
+        await db.DeleteSessionExerciseWithSetsAsync(section.SessionExerciseId);
+        Exercises.Remove(section);
     }
 
     [RelayCommand]
@@ -314,6 +330,15 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             HandlePostSetTimer(set.SessionExerciseId);
 
         CheckAutoProgression(set.SessionExerciseId);
+
+        // Auto-scroll till nästa övning när alla sets i sektionen är klara
+        var completedSection = Exercises.FirstOrDefault(e => e.SessionExerciseId == set.SessionExerciseId);
+        if (completedSection is not null && completedSection.Sets.All(s => s.IsCompleted))
+        {
+            var nextIdx = Exercises.IndexOf(completedSection) + 1;
+            if (nextIdx < Exercises.Count)
+                ScrollToSectionRequested?.Invoke(this, Exercises[nextIdx].SessionExerciseId);
+        }
     }
 
     private void HandlePostSetTimer(int sessionExerciseId)

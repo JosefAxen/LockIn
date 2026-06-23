@@ -489,6 +489,13 @@ public class DatabaseService
             .ToListAsync();
     }
 
+    public async Task DeleteSessionExerciseWithSetsAsync(int sessionExerciseId)
+    {
+        await InitAsync();
+        await _db.ExecuteAsync("DELETE FROM LoggedSets WHERE SessionExerciseId = ?", sessionExerciseId);
+        await _db.ExecuteAsync("DELETE FROM SessionExercises WHERE Id = ?", sessionExerciseId);
+    }
+
     // ── Logged Sets ────────────────────────────────────────────────────────
 
     public async Task<int> SaveLoggedSetAsync(LoggedSet set)
