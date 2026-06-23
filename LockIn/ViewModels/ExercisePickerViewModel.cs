@@ -202,15 +202,15 @@ public partial class MuscleGroupChip : ObservableObject
 {
     public string Label { get; set; } = "";
     public MuscleGroup? MuscleGroup { get; set; }
-    [ObservableProperty] private bool _isSelected;
 
-    public Color Background => IsSelected ? DesignTokens.ChipActiveBg : DesignTokens.ChipInactiveBg;
-    public Color Foreground => IsSelected ? DesignTokens.ChipActiveFg : DesignTokens.ChipInactiveFg;
+    [ObservableProperty] private bool _isSelected;
+    [ObservableProperty] private Color _background = DesignTokens.ChipInactiveBg;
+    [ObservableProperty] private Color _foreground = DesignTokens.ChipInactiveFg;
 
     partial void OnIsSelectedChanged(bool value)
     {
-        OnPropertyChanged(nameof(Background));
-        OnPropertyChanged(nameof(Foreground));
+        Background = value ? DesignTokens.ChipActiveBg : DesignTokens.ChipInactiveBg;
+        Foreground = value ? DesignTokens.ChipActiveFg : DesignTokens.ChipInactiveFg;
     }
 }
 
@@ -218,14 +218,14 @@ public partial class EquipmentChip : ObservableObject
 {
     public string Label { get; set; } = "";
     public EquipmentType? Equipment { get; set; }
-    [ObservableProperty] private bool _isSelected;
 
-    public Color Background => IsSelected ? DesignTokens.ChipActiveBg : DesignTokens.ChipInactiveBg;
-    public Color Foreground => IsSelected ? DesignTokens.ChipActiveFg : DesignTokens.ChipInactiveFg;
+    [ObservableProperty] private bool _isSelected;
+    [ObservableProperty] private Color _background = DesignTokens.ChipInactiveBg;
+    [ObservableProperty] private Color _foreground = DesignTokens.ChipInactiveFg;
 
     partial void OnIsSelectedChanged(bool value)
     {
-        OnPropertyChanged(nameof(Background));
-        OnPropertyChanged(nameof(Foreground));
+        Background = value ? DesignTokens.ChipActiveBg : DesignTokens.ChipInactiveBg;
+        Foreground = value ? DesignTokens.ChipActiveFg : DesignTokens.ChipInactiveFg;
     }
 }

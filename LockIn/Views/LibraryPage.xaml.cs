@@ -41,6 +41,8 @@ public partial class LibraryPage : ContentPage
         {
             await _vm.LoadAsync();
         }
+
+        UpdateAllTabIndicators(animated: false);
     }
 
     protected override void OnDisappearing()

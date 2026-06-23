@@ -16,10 +16,10 @@
         <views:InvertedBoolConverter x:Key="InvertedBoolConverter"/>
     </ContentPage.Resources>
 
-    <Grid RowDefinitions="Auto,*,Auto" SafeAreaEdges="None">
+    <Grid RowDefinitions="Auto,*" SafeAreaEdges="None">
 
         <!-- Atmosfärisk bakgrund -->
-        <controls:AtmosphericBackgroundView Grid.RowSpan="3" InputTransparent="True"/>
+        <controls:AtmosphericBackgroundView Grid.RowSpan="2" InputTransparent="True"/>
 
         <!-- Header -->
         <Grid Grid.Row="0" Padding="16,56,16,8" ColumnDefinitions="Auto,*">
@@ -43,7 +43,7 @@
         </Grid>
 
         <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Never">
-            <VerticalStackLayout Padding="16,4,16,32" Spacing="12">
+            <VerticalStackLayout Padding="16,4,16,48" Spacing="12">
 
                 <!-- Latest weight hero -->
                 <Border Style="{StaticResource CardFrame}" Padding="24,20">
@@ -73,6 +73,29 @@
                                Margin="4,0,0,0"/>
                         <controls:LineChartView Points="{Binding ChartPoints}" StrokeColor="#6EA8DC" HeightRequest="180" BackgroundColor="Transparent"/>
                     </VerticalStackLayout>
+                </Border>
+
+                <!-- Log button -->
+                <Border BackgroundColor="{StaticResource ForgePrimary}"
+                        StrokeShape="RoundRectangle 26"
+                        StrokeThickness="0"
+                        HeightRequest="56"
+                        HorizontalOptions="Fill">
+                    <HorizontalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="10">
+                        <views:AppIcon Source="ic_plus.png"
+                                       WidthRequest="18" HeightRequest="18"
+                                       ForceTint="{StaticResource ForgePrimaryForeground}"
+                                       VerticalOptions="Center"/>
+                        <Label Text="LOGGA VIKT"
+                               TextColor="{StaticResource ForgePrimaryForeground}"
+                               FontFamily="BebasNeue"
+                               FontSize="20"
+                               CharacterSpacing="3"
+                               VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding LogWeightCommand}" Tapped="OnLoggaViktTapped"/>
+                    </Border.GestureRecognizers>
                 </Border>
 
                 <!-- Recent entries -->
@@ -114,33 +137,22 @@
                     </StackLayout>
                 </Border>
 
+                <!-- Visa fler -->
+                <Border Style="{StaticResource CardFrame}"
+                        Padding="0,4"
+                        IsVisible="{Binding HasMore}">
+                    <Label Text="VISA FLER"
+                           FontFamily="BebasNeue" FontSize="15" CharacterSpacing="2"
+                           TextColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"
+                           HorizontalOptions="Center"
+                           Padding="0,10"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding LoadMoreCommand}"/>
+                    </Border.GestureRecognizers>
+                </Border>
+
             </VerticalStackLayout>
         </ScrollView>
-
-        <!-- Log button -->
-        <Grid Grid.Row="2" Padding="16,8,16,36">
-            <Border BackgroundColor="{StaticResource ForgePrimary}"
-                    StrokeShape="RoundRectangle 26"
-                    StrokeThickness="0"
-                    HeightRequest="56"
-                    HorizontalOptions="Fill">
-                <HorizontalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="10">
-                    <views:AppIcon Source="ic_plus.png"
-                                   WidthRequest="18" HeightRequest="18"
-                                   ForceTint="{StaticResource ForgePrimaryForeground}"
-                                   VerticalOptions="Center"/>
-                    <Label Text="LOGGA VIKT"
-                           TextColor="{StaticResource ForgePrimaryForeground}"
-                           FontFamily="BebasNeue"
-                           FontSize="20"
-                           CharacterSpacing="3"
-                           VerticalOptions="Center"/>
-                </HorizontalStackLayout>
-                <Border.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding LogWeightCommand}" Tapped="OnLoggaViktTapped"/>
-                </Border.GestureRecognizers>
-            </Border>
-        </Grid>
 
     </Grid>
 </ContentPage>

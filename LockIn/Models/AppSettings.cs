@@ -17,4 +17,8 @@ public class AppSettings
     public string UserName { get; set; } = "";
 
     public bool HasCompletedOnboarding { get; set; } = false;
+
+    // Fryst morgon-recovery för ansträngningsmål — sätts en gång per dag vid första laddning.
+    public string MorningRecoveryDate { get; set; } = "";
+    public double MorningRecoveryPct  { get; set; } = 0;
 }

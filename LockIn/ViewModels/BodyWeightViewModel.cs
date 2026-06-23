@@ -8,10 +8,15 @@ namespace LockIn.ViewModels;
 
 public partial class BodyWeightViewModel(DatabaseService db) : ObservableObject
 {
+    private const int PageSize = 10;
+    private List<BodyWeightEntry> _allEntries = [];
+    private int _displayedCount;
+
     [ObservableProperty] private string _latestWeight = "–";
     [ObservableProperty] private string _latestDate = "";
     [ObservableProperty] private bool _hasData;
     [ObservableProperty] private bool _isLoading;
+    [ObservableProperty] private bool _hasMore;
     [ObservableProperty] private IReadOnlyList<ChartPoint> _chartPoints = [];
 
     public ObservableCollection<BodyWeightEntry> RecentEntries { get; } = new();
@@ -19,26 +24,38 @@ public partial class BodyWeightViewModel(DatabaseService db) : ObservableObject
     public async Task LoadAsync()
     {
         IsLoading = true;
-        var entries = await db.GetBodyWeightEntriesAsync();
-        HasData = entries.Count > 0;
+        _allEntries = await db.GetBodyWeightEntriesAsync();
+        HasData = _allEntries.Count > 0;
 
         if (HasData)
         {
-            var latest = entries[0];
+            var latest = _allEntries[0];
             LatestWeight = $"{latest.WeightKg:F1} kg";
             LatestDate   = latest.LoggedAt.ToString("d MMM yyyy");
 
-            ChartPoints = entries
+            ChartPoints = _allEntries
                 .OrderBy(e => e.LoggedAt)
                 .Select(e => new ChartPoint(e.LoggedAt, (double)e.WeightKg))
                 .ToList();
         }
 
+        _displayedCount = Math.Min(PageSize, _allEntries.Count);
         RecentEntries.Clear();
-        foreach (var e in entries.Take(10))
+        foreach (var e in _allEntries.Take(_displayedCount))
             RecentEntries.Add(e);
+        HasMore = _allEntries.Count > _displayedCount;
 
         IsLoading = false;
+    }
+
+    [RelayCommand]
+    private void LoadMore()
+    {
+        var next = Math.Min(_displayedCount + PageSize, _allEntries.Count);
+        for (int i = _displayedCount; i < next; i++)
+            RecentEntries.Add(_allEntries[i]);
+        _displayedCount = next;
+        HasMore = _allEntries.Count > _displayedCount;
     }
 
     [RelayCommand]

@@ -177,29 +177,33 @@
                         <Shadow Brush="Black" Offset="0,2" Radius="10" Opacity="0.18"/>
                     </Border.Shadow>
                     <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="10">
-                        <VerticalStackLayout Grid.Column="0" Spacing="2">
+                        <VerticalStackLayout Grid.Column="0" Spacing="2" HorizontalOptions="Center">
                             <Label Text="{Binding CoreSleepText}"
                                    FontSize="22" FontAttributes="Bold"
+                                   HorizontalTextAlignment="Center"
                                    TextColor="{StaticResource ForgeAccentBlue}"/>
-                            <Label Text="CORE" Style="{StaticResource SectionLabel}" FontSize="9"/>
+                            <Label Text="CORE" Style="{StaticResource SectionLabel}" FontSize="9" HorizontalTextAlignment="Center"/>
                         </VerticalStackLayout>
-                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                        <VerticalStackLayout Grid.Column="1" Spacing="2" HorizontalOptions="Center">
                             <Label Text="{Binding DeepSleepText}"
                                    FontSize="22" FontAttributes="Bold"
+                                   HorizontalTextAlignment="Center"
                                    TextColor="{StaticResource ForgeAccentPurple}"/>
-                            <Label Text="DEEP" Style="{StaticResource SectionLabel}" FontSize="9"/>
+                            <Label Text="DEEP" Style="{StaticResource SectionLabel}" FontSize="9" HorizontalTextAlignment="Center"/>
                         </VerticalStackLayout>
-                        <VerticalStackLayout Grid.Column="2" Spacing="2">
+                        <VerticalStackLayout Grid.Column="2" Spacing="2" HorizontalOptions="Center">
                             <Label Text="{Binding RemSleepText}"
                                    FontSize="22" FontAttributes="Bold"
+                                   HorizontalTextAlignment="Center"
                                    TextColor="{StaticResource ForgeAccent}"/>
-                            <Label Text="REM" Style="{StaticResource SectionLabel}" FontSize="9"/>
+                            <Label Text="REM" Style="{StaticResource SectionLabel}" FontSize="9" HorizontalTextAlignment="Center"/>
                         </VerticalStackLayout>
-                        <VerticalStackLayout Grid.Column="3" Spacing="2">
+                        <VerticalStackLayout Grid.Column="3" Spacing="2" HorizontalOptions="Center">
                             <Label Text="{Binding AwakeSleepText}"
                                    FontSize="22" FontAttributes="Bold"
+                                   HorizontalTextAlignment="Center"
                                    TextColor="{StaticResource ForgeAccentAmber}"/>
-                            <Label Text="AWAKE" Style="{StaticResource SectionLabel}" FontSize="9"/>
+                            <Label Text="AWAKE" Style="{StaticResource SectionLabel}" FontSize="9" HorizontalTextAlignment="Center"/>
                         </VerticalStackLayout>
                     </Grid>
                 </Border>

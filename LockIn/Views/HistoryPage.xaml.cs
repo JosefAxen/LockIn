@@ -48,6 +48,9 @@ public partial class HistoryPage : ContentPage
                 Content.TranslateTo(0, 0, 320, Easing.CubicOut)
             );
         }
+
+        UpdatePeriodIndicator(animated: false);
+        UpdateSortIndicator(animated: false);
     }
 
     private void OnScrolled(object sender, ScrolledEventArgs e)

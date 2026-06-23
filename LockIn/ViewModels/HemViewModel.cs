@@ -235,9 +235,20 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
             SleepProgress  = sleepH > 0 ? (float)Math.Clamp(sleepH / 8.0, 0.0, 1.0) : 0f;
             SleepText      = sleepH > 0 ? $"{sleepH:F1}h" : "–";
 
-            // Strain-target = optimal träningsbelastning baserat på recovery (Whoop-stil)
-            StrainTarget     = (float)(recoveryPct / 100.0);
-            StrainTargetText = $"MÅL {(int)recoveryPct}";
+            // Strain-target = fryst morgon-recovery. Sätts en gång per dag vid första laddning
+            // så att sjunkande vilopuls under dagen inte sänker målet.
+            string todayKey = today.ToString("yyyy-MM-dd");
+            double target   = (settings.MorningRecoveryDate == todayKey && settings.MorningRecoveryPct > 0)
+                ? settings.MorningRecoveryPct
+                : recoveryPct;
+            if (settings.MorningRecoveryDate != todayKey || settings.MorningRecoveryPct <= 0)
+            {
+                settings.MorningRecoveryDate = todayKey;
+                settings.MorningRecoveryPct  = recoveryPct;
+                await db.SaveAppSettingsAsync(settings);
+            }
+            StrainTarget     = (float)(target / 100.0);
+            StrainTargetText = $"MÅL {(int)target}";
 
             var (recHead, recDetail) = BuildRecommendation(recoveryPct, recentSessions);
             TodayRecommendation       = recHead;
