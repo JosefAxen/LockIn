@@ -19,6 +19,10 @@ public partial class HistoryViewModel(DatabaseService db) : ObservableObject
 
     private List<SessionSummaryRow> _allSessions = new();
 
+    // Pagination: visa 5 i taget, ladda 5 till när användaren scrollar nära botten.
+    private List<SessionSummaryRow> _filteredSessions = new();
+    private const int SessionsPerPage = 5;
+
     // Calendar state
     public int CalendarYear { get; private set; } = DateTime.Today.Year;
     public int CalendarMonth { get; private set; } = DateTime.Today.Month;
@@ -161,11 +165,20 @@ public partial class HistoryViewModel(DatabaseService db) : ObservableObject
             ? filtered.OrderByDescending(s => s.TotalVolume)
             : filtered.OrderByDescending(s => s.StartedAt);
 
+        _filteredSessions = sorted.ToList();
         Sessions.Clear();
-        foreach (var s in sorted)
+        foreach (var s in _filteredSessions.Take(SessionsPerPage))
             Sessions.Add(s);
 
-        HasNoSessions = Sessions.Count == 0;
+        HasNoSessions = _filteredSessions.Count == 0;
+    }
+
+    [RelayCommand]
+    public void LoadMoreSessions()
+    {
+        if (Sessions.Count >= _filteredSessions.Count) return;
+        var next = _filteredSessions.Skip(Sessions.Count).Take(SessionsPerPage).ToList();
+        foreach (var s in next) Sessions.Add(s);
     }
 
     [RelayCommand]

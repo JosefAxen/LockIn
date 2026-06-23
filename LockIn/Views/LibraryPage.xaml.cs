@@ -143,8 +143,8 @@ public partial class LibraryPage : ContentPage
     private void OnExercisesScrolled(object sender, ItemsViewScrolledEventArgs e)
         => StickyHeader.Opacity = Math.Clamp((e.VerticalOffset - 80.0) / 40.0, 0, 1);
 
-    private void OnTemplatesScrolled(object sender, ItemsViewScrolledEventArgs e)
-        => StickyHeader.Opacity = Math.Clamp((e.VerticalOffset - 80.0) / 40.0, 0, 1);
+    private void OnTemplatesScrolled(object sender, ScrolledEventArgs e)
+        => StickyHeader.Opacity = Math.Clamp((e.ScrollY - 80.0) / 40.0, 0, 1);
 
     private void OnProgramsScrolled(object sender, ScrolledEventArgs e)
         => StickyHeader.Opacity = Math.Clamp((e.ScrollY - 80.0) / 40.0, 0, 1);

@@ -342,10 +342,7 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
     {
         if (minutes < 1) return "0m";
         if (minutes < 60) return $"{minutes:F0}m";
-        int totalMin = (int)Math.Round(minutes);
-        int h = totalMin / 60;
-        int m = totalMin % 60;
-        return m == 0 ? $"{h}h" : $"{h}h {m}m";
+        return $"{minutes / 60.0:F1}h";
     }
 
     private static int CalculateActiveMinutesToday(List<WorkoutSession> sessions)

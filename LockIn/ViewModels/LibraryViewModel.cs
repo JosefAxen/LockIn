@@ -63,6 +63,11 @@ public partial class LibraryViewModel(DatabaseService db) : ObservableObject
     private List<Exercise> _allExercises = [];
     private MuscleGroup? _selectedMuscleGroup;
 
+    // Pagination per muskelgrupp: visa en åt gången, ladda nästa när användaren
+    // scrollar nära botten. Resterande grupper väntar i _pendingGroups.
+    private List<(string Title, List<Exercise> Items)> _pendingGroups = new();
+    private const int InitialGroupsToShow = 1;
+
     public ObservableCollection<ExerciseGroup> Groups { get; } = new();
     public ObservableCollection<MuscleGroupChip> MuscleChips { get; } = new();
     public ObservableCollection<EquipmentChip> EquipmentChips { get; } = new();
@@ -149,11 +154,16 @@ public partial class LibraryViewModel(DatabaseService db) : ObservableObject
             source = source.Where(e => e.Name.ToLowerInvariant().Contains(q)
                                     || e.SwedishName.ToLowerInvariant().Contains(q));
 
-        var desired = source
+        var allDesired = source
             .GroupBy(e => e.MuscleGroup)
             .OrderBy(g => g.Key.ToString())
             .Select(g => (Title: MuscleGroupLabel(g.Key), Items: g.OrderBy(e => e.Name).ToList()))
             .ToList();
+
+        // Visa endast första N grupper; resten ligger i kö tills användaren scrollar.
+        var visibleCount = Math.Min(InitialGroupsToShow, allDesired.Count);
+        var desired = allDesired.Take(visibleCount).ToList();
+        _pendingGroups = allDesired.Skip(visibleCount).ToList();
 
         // Remove groups no longer in result (backward to preserve indices).
         // Uses individual RemoveAt — never Clear() — so CollectionView fires
@@ -212,6 +222,18 @@ public partial class LibraryViewModel(DatabaseService db) : ObservableObject
                 }
             }
         }
+    }
+
+    [RelayCommand]
+    private void LoadMoreGroups()
+    {
+        if (_pendingGroups.Count == 0) return;
+        var next = _pendingGroups[0];
+        _pendingGroups.RemoveAt(0);
+
+        var g = new ExerciseGroup(next.Title);
+        foreach (var e in next.Items) g.Add(e);
+        Groups.Add(g);
     }
 
     [RelayCommand]

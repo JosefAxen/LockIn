@@ -51,7 +51,17 @@ public partial class HistoryPage : ContentPage
     }
 
     private void OnScrolled(object sender, ScrolledEventArgs e)
-        => StickyHeader.Opacity = Math.Clamp((e.ScrollY - 80.0) / 40.0, 0, 1);
+    {
+        StickyHeader.Opacity = Math.Clamp((e.ScrollY - 80.0) / 40.0, 0, 1);
+
+        // Ladda fler sessions när användaren scrollat nära botten (300px buffer).
+        if (sender is ScrollView sv && sv.ContentSize.Height > 0)
+        {
+            var distanceFromBottom = sv.ContentSize.Height - (e.ScrollY + sv.Height);
+            if (distanceFromBottom < 300)
+                _vm.LoadMoreSessionsCommand.Execute(null);
+        }
+    }
 
     private double _periodColumnWidth;
     private double _sortColumnWidth;

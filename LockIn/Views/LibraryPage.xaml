@@ -63,8 +63,8 @@
             </Grid>
         </Grid>
 
-        <!-- Loading indicator — Forge stålband -->
-        <VerticalStackLayout IsVisible="{Binding IsLoading}"
+        <!-- Loading indicator — Forge stålband (avstängd, behålls för återanvändning) -->
+        <VerticalStackLayout IsVisible="False"
                              HorizontalOptions="Center"
                              VerticalOptions="Center"
                              Spacing="14"
@@ -102,12 +102,14 @@
                         ItemsSource="{Binding Groups}"
                         IsGrouped="True"
                         Scrolled="OnExercisesScrolled"
+                        RemainingItemsThreshold="3"
+                        RemainingItemsThresholdReachedCommand="{Binding LoadMoreGroupsCommand}"
                         HorizontalScrollBarVisibility="Never"
                         VerticalScrollBarVisibility="Never">
             <CollectionView.Header>
                 <VerticalStackLayout Spacing="0">
                     <!-- Sidrubrik — scrollar bort med innehållet -->
-                    <Grid ColumnDefinitions="*,Auto" Padding="16,72,16,8">
+                    <Grid ColumnDefinitions="*,Auto" Padding="16,106,16,8">
                         <Label Grid.Column="0" Text="BIBLIOTEK"
                                FontFamily="BebasNeue" FontSize="34" CharacterSpacing="1"
                                TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
@@ -296,134 +298,132 @@
         </CollectionView>
 
         <!-- Tab 1: Templates -->
-        <Grid IsVisible="{Binding ShowTemplates}" SafeAreaEdges="None">
-            <CollectionView ItemsSource="{Binding Templates}"
-                            Scrolled="OnTemplatesScrolled"
-                            HorizontalScrollBarVisibility="Never"
-                            VerticalScrollBarVisibility="Never">
-                <CollectionView.Header>
-                    <VerticalStackLayout Spacing="0">
-                        <Grid ColumnDefinitions="*,Auto" Padding="16,72,16,8">
-                            <Label Grid.Column="0" Text="BIBLIOTEK"
-                                   FontFamily="BebasNeue" FontSize="34" CharacterSpacing="1"
-                                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
-                                   VerticalOptions="Center"/>
-                            <Button Grid.Column="1"
-                                    IsVisible="{Binding ShowActionButton}"
-                                    Text="+ Lägg till"
-                                    Style="{StaticResource SecondaryButton}"
-                                    Padding="12,8" HeightRequest="36"
-                                    Command="{Binding ActionButtonCommand}"
-                                    VerticalOptions="Center"/>
-                        </Grid>
-                        <!-- Tab-pills — scrollar bort med innehållet -->
-                        <Border x:Name="TabSegment1" Margin="16,0,16,10"
-                                BackgroundColor="#33787882"
+        <ScrollView IsVisible="{Binding ShowTemplates}" VerticalScrollBarVisibility="Never"
+                    Scrolled="OnTemplatesScrolled">
+            <VerticalStackLayout Spacing="0">
+                <!-- Sidrubrik — scrollar bort med innehållet -->
+                <Grid ColumnDefinitions="*,Auto" Padding="16,56,16,8">
+                    <Label Grid.Column="0" Text="BIBLIOTEK"
+                           FontFamily="BebasNeue" FontSize="34" CharacterSpacing="1"
+                           TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                           VerticalOptions="Center"/>
+                    <Button Grid.Column="1"
+                            IsVisible="{Binding ShowActionButton}"
+                            Text="+ Lägg till"
+                            Style="{StaticResource SecondaryButton}"
+                            Padding="12,8" HeightRequest="36"
+                            Command="{Binding ActionButtonCommand}"
+                            VerticalOptions="Center"/>
+                </Grid>
+                <!-- Tab-pills — scrollar bort med innehållet -->
+                <Border x:Name="TabSegment1" Margin="16,0,16,10"
+                        BackgroundColor="#33787882"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 50"
+                        Padding="2">
+                    <Grid x:Name="TabPills1" ColumnDefinitions="*,*,*" HeightRequest="40"
+                          SizeChanged="OnTabContainerSizeChanged">
+                        <Border x:Name="TabIndicator1" Grid.ColumnSpan="3"
+                                BackgroundColor="#525260"
                                 StrokeThickness="0"
-                                StrokeShape="RoundRectangle 50"
-                                Padding="2">
-                            <Grid x:Name="TabPills1" ColumnDefinitions="*,*,*" HeightRequest="40"
-                                  SizeChanged="OnTabContainerSizeChanged">
-                                <Border x:Name="TabIndicator1" Grid.ColumnSpan="3"
-                                        BackgroundColor="#525260"
-                                        StrokeThickness="0"
-                                        StrokeShape="RoundRectangle 48"
-                                        HorizontalOptions="Start"
-                                        VerticalOptions="Fill"/>
-                                <Border Grid.Column="0" BackgroundColor="Transparent" StrokeThickness="0" Padding="0,9">
-                                    <Label Text="ÖVNINGAR" TextColor="{Binding Tab0Fg}"
-                                           FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
-                                           HorizontalOptions="Center" VerticalOptions="Center"/>
-                                    <Border.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 0}" Tapped="OnPillTapped"/>
-                                    </Border.GestureRecognizers>
-                                </Border>
-                                <Border Grid.Column="1" BackgroundColor="Transparent" StrokeThickness="0" Padding="0,9">
-                                    <Label Text="MALLAR" TextColor="{Binding Tab1Fg}"
-                                           FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
-                                           HorizontalOptions="Center" VerticalOptions="Center"/>
-                                    <Border.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 1}" Tapped="OnPillTapped"/>
-                                    </Border.GestureRecognizers>
-                                </Border>
-                                <Border Grid.Column="2" BackgroundColor="Transparent" StrokeThickness="0" Padding="0,9">
-                                    <Label Text="PROGRAM" TextColor="{Binding Tab2Fg}"
-                                           FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
-                                           HorizontalOptions="Center" VerticalOptions="Center"/>
-                                    <Border.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 2}" Tapped="OnPillTapped"/>
-                                    </Border.GestureRecognizers>
-                                </Border>
-                            </Grid>
-                        </Border>
-                    </VerticalStackLayout>
-                </CollectionView.Header>
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="models:WorkoutTemplate">
-                        <Border Margin="16,0,16,10"
-                                BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
-                                StrokeShape="RoundRectangle 18"
-                                StrokeThickness="0"
-                                Padding="18,14,8,14">
-                            <Border.Shadow>
-                                <Shadow Brush="Black" Offset="0,2" Radius="10" Opacity="0.18"/>
-                            </Border.Shadow>
+                                StrokeShape="RoundRectangle 48"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Fill"/>
+                        <Border Grid.Column="0" BackgroundColor="Transparent" StrokeThickness="0" Padding="0,9">
+                            <Label Text="ÖVNINGAR" TextColor="{Binding Tab0Fg}"
+                                   FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
                             <Border.GestureRecognizers>
-                                <TapGestureRecognizer
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}}, Path=EditTemplateCommand}"
-                                    CommandParameter="{Binding .}"/>
+                                <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 0}" Tapped="OnPillTapped"/>
                             </Border.GestureRecognizers>
-                            <Grid ColumnDefinitions="12,*,44,40" ColumnSpacing="10">
-                                <Ellipse Grid.Column="0"
-                                         WidthRequest="10" HeightRequest="10"
-                                         Fill="{StaticResource ForgeAccentCoral}"
-                                         VerticalOptions="Center"/>
-                                <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                                    <Label Text="{Binding Name}"
-                                           FontFamily="BebasNeue" FontSize="20" CharacterSpacing="1"/>
-                                    <Label Text="TRYCK FÖR ATT REDIGERA"
-                                           Style="{StaticResource SectionLabel}" FontSize="9"/>
-                                </StackLayout>
-                                <Border Grid.Column="2"
-                                        WidthRequest="36" HeightRequest="36"
-                                        BackgroundColor="{StaticResource ForgeAccentCoral}"
-                                        StrokeShape="Ellipse" StrokeThickness="0"
-                                        VerticalOptions="Center">
-                                    <views:AppIcon Source="ic_play.png"
-                                                   WidthRequest="18" HeightRequest="18"
-                                                   ForceTint="White"
-                                                   HorizontalOptions="Center"
-                                                   VerticalOptions="Center"/>
-                                    <Border.GestureRecognizers>
-                                        <TapGestureRecognizer
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}}, Path=StartFromTemplateCommand}"
-                                            CommandParameter="{Binding .}"/>
-                                    </Border.GestureRecognizers>
-                                </Border>
-                                <Button Grid.Column="3"
-                                        Text="✕"
-                                        BackgroundColor="Transparent"
-                                        TextColor="{StaticResource ForgeMuted}"
-                                        FontSize="15" HeightRequest="36"
-                                        Padding="0"
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}}, Path=DeleteTemplateCommand}"
-                                        CommandParameter="{Binding .}"/>
-                            </Grid>
                         </Border>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-                <CollectionView.EmptyView>
-                    <StackLayout Padding="24,40" Spacing="8">
-                        <Label Text="Inga mallar ännu"
-                               FontFamily="DMSansMedium" FontSize="15"
-                               HorizontalOptions="Center"/>
-                        <Label Text="Tryck '+ Lägg till' för att skapa din första mall."
-                               Style="{StaticResource MutedLabel}"
-                               HorizontalTextAlignment="Center"/>
-                    </StackLayout>
-                </CollectionView.EmptyView>
-            </CollectionView>
-        </Grid>
+                        <Border Grid.Column="1" BackgroundColor="Transparent" StrokeThickness="0" Padding="0,9">
+                            <Label Text="MALLAR" TextColor="{Binding Tab1Fg}"
+                                   FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 1}" Tapped="OnPillTapped"/>
+                            </Border.GestureRecognizers>
+                        </Border>
+                        <Border Grid.Column="2" BackgroundColor="Transparent" StrokeThickness="0" Padding="0,9">
+                            <Label Text="PROGRAM" TextColor="{Binding Tab2Fg}"
+                                   FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 2}" Tapped="OnPillTapped"/>
+                            </Border.GestureRecognizers>
+                        </Border>
+                    </Grid>
+                </Border>
+                <!-- Mallar-lista -->
+                <StackLayout BindableLayout.ItemsSource="{Binding Templates}" Spacing="0">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="models:WorkoutTemplate">
+                            <Border Margin="16,0,16,10"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
+                                    StrokeShape="RoundRectangle 18"
+                                    StrokeThickness="0"
+                                    Padding="18,14,8,14">
+                                <Border.Shadow>
+                                    <Shadow Brush="Black" Offset="0,2" Radius="10" Opacity="0.18"/>
+                                </Border.Shadow>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}}, Path=EditTemplateCommand}"
+                                        CommandParameter="{Binding .}"/>
+                                </Border.GestureRecognizers>
+                                <Grid ColumnDefinitions="12,*,44,40" ColumnSpacing="10">
+                                    <Ellipse Grid.Column="0"
+                                             WidthRequest="10" HeightRequest="10"
+                                             Fill="{StaticResource ForgeAccentCoral}"
+                                             VerticalOptions="Center"/>
+                                    <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                        <Label Text="{Binding Name}"
+                                               FontFamily="BebasNeue" FontSize="20" CharacterSpacing="1"/>
+                                        <Label Text="TRYCK FÖR ATT REDIGERA"
+                                               Style="{StaticResource SectionLabel}" FontSize="9"/>
+                                    </StackLayout>
+                                    <Border Grid.Column="2"
+                                            WidthRequest="36" HeightRequest="36"
+                                            BackgroundColor="{StaticResource ForgeAccentCoral}"
+                                            StrokeShape="Ellipse" StrokeThickness="0"
+                                            VerticalOptions="Center">
+                                        <views:AppIcon Source="ic_play.png"
+                                                       WidthRequest="18" HeightRequest="18"
+                                                       ForceTint="White"
+                                                       HorizontalOptions="Center"
+                                                       VerticalOptions="Center"/>
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}}, Path=StartFromTemplateCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                        </Border.GestureRecognizers>
+                                    </Border>
+                                    <Button Grid.Column="3"
+                                            Text="✕"
+                                            BackgroundColor="Transparent"
+                                            TextColor="{StaticResource ForgeMuted}"
+                                            FontSize="15" HeightRequest="36"
+                                            Padding="0"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}}, Path=DeleteTemplateCommand}"
+                                            CommandParameter="{Binding .}"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                    <BindableLayout.EmptyView>
+                        <StackLayout Padding="24,40" Spacing="8">
+                            <Label Text="Inga mallar ännu"
+                                   FontFamily="DMSansMedium" FontSize="15"
+                                   HorizontalOptions="Center"/>
+                            <Label Text="Tryck '+ Lägg till' för att skapa din första mall."
+                                   Style="{StaticResource MutedLabel}"
+                                   HorizontalTextAlignment="Center"/>
+                        </StackLayout>
+                    </BindableLayout.EmptyView>
+                </StackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
 
         <!-- Tab 2: Programs -->
         <ScrollView IsVisible="{Binding ShowPrograms}" VerticalScrollBarVisibility="Never"
