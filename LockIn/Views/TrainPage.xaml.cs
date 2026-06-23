@@ -26,6 +26,9 @@ public partial class TrainPage : ContentPage
         // den skapade en evig loop när användaren tryckte tillbaka från passet.
         // Borttagen. Användaren kommer tillbaka till passet via "PASS PÅGÅR"-bannern.
 
+        UpdateBannerState();
+        _state.StateChanged += OnWorkoutStateChanged;
+
         StickyHeader.Opacity = 0;
         Content.Opacity = 0;
         Content.TranslationY = _hasLoaded ? 12 : 16;
@@ -59,6 +62,39 @@ public partial class TrainPage : ContentPage
             Content.TranslationY = 0;
         }
     }
+
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+        _state.StateChanged -= OnWorkoutStateChanged;
+        this.AbortAnimation("BannerPulse");
+    }
+
+    private void OnWorkoutStateChanged()
+        => MainThread.BeginInvokeOnMainThread(UpdateBannerState);
+
+    private void UpdateBannerState()
+    {
+        var active = _state.IsActive;
+        WorkoutBanner.IsVisible = active;
+        FrittPassButton.IsVisible = !active;
+        if (active) StartBannerPulse();
+        else this.AbortAnimation("BannerPulse");
+    }
+
+    private void StartBannerPulse()
+    {
+        this.AbortAnimation("BannerPulse");
+        BannerPulseRing.Scale = 1.0;
+        BannerPulseRing.Opacity = 0;
+        var pulse = new Animation();
+        pulse.Add(0, 1, new Animation(v => BannerPulseRing.Scale = v, 1.0, 2.4, Easing.CubicOut));
+        pulse.Add(0, 1, new Animation(v => BannerPulseRing.Opacity = v, 0.65, 0.0, Easing.CubicOut));
+        pulse.Commit(this, "BannerPulse", length: 1400, repeat: () => WorkoutBanner.IsVisible);
+    }
+
+    private async void OnWorkoutBannerTapped(object sender, TappedEventArgs e)
+        => await Shell.Current.GoToAsync(nameof(ActiveWorkoutPage));
 
     private void OnScrolled(object sender, ScrolledEventArgs e)
         => StickyHeader.Opacity = Math.Clamp((e.ScrollY - 80.0) / 40.0, 0, 1);

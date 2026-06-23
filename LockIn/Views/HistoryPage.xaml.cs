@@ -21,6 +21,7 @@ public partial class HistoryPage : ContentPage
     {
         base.OnAppearing();
         WorkoutBanner.IsVisible = _state.IsActive;
+        if (_state.IsActive) StartBannerPulse();
         _vm.CalendarChanged += RebuildCalendar;
         _vm.PropertyChanged += OnHistoryVmPropertyChanged;
 
@@ -104,6 +105,18 @@ public partial class HistoryPage : ContentPage
         base.OnDisappearing();
         _vm.CalendarChanged -= RebuildCalendar;
         _vm.PropertyChanged -= OnHistoryVmPropertyChanged;
+        this.AbortAnimation("BannerPulse");
+    }
+
+    private void StartBannerPulse()
+    {
+        this.AbortAnimation("BannerPulse");
+        BannerPulseRing.Scale = 1.0;
+        BannerPulseRing.Opacity = 0;
+        var pulse = new Animation();
+        pulse.Add(0, 1, new Animation(v => BannerPulseRing.Scale = v, 1.0, 2.4, Easing.CubicOut));
+        pulse.Add(0, 1, new Animation(v => BannerPulseRing.Opacity = v, 0.65, 0.0, Easing.CubicOut));
+        pulse.Commit(this, "BannerPulse", length: 1400, repeat: () => WorkoutBanner.IsVisible);
     }
 
     private void RebuildCalendar() =>

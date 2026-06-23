@@ -22,6 +22,7 @@ public partial class LibraryPage : ContentPage
     {
         base.OnAppearing();
         WorkoutBanner.IsVisible = _state.IsActive;
+        if (_state.IsActive) StartBannerPulse();
         _state.StateChanged += OnWorkoutStateChanged;
         _vm.PropertyChanged += OnVmPropertyChanged;
 
@@ -48,6 +49,18 @@ public partial class LibraryPage : ContentPage
         _state.StateChanged -= OnWorkoutStateChanged;
         _vm.PropertyChanged -= OnVmPropertyChanged;
         StopLoaderAnimation();
+        this.AbortAnimation("BannerPulse");
+    }
+
+    private void StartBannerPulse()
+    {
+        this.AbortAnimation("BannerPulse");
+        BannerPulseRing.Scale = 1.0;
+        BannerPulseRing.Opacity = 0;
+        var pulse = new Animation();
+        pulse.Add(0, 1, new Animation(v => BannerPulseRing.Scale = v, 1.0, 2.4, Easing.CubicOut));
+        pulse.Add(0, 1, new Animation(v => BannerPulseRing.Opacity = v, 0.65, 0.0, Easing.CubicOut));
+        pulse.Commit(this, "BannerPulse", length: 1400, repeat: () => WorkoutBanner.IsVisible);
     }
 
     private void StartLoaderAnimation()
@@ -120,7 +133,12 @@ public partial class LibraryPage : ContentPage
     }
 
     private void OnWorkoutStateChanged()
-        => MainThread.BeginInvokeOnMainThread(() => WorkoutBanner.IsVisible = _state.IsActive);
+        => MainThread.BeginInvokeOnMainThread(() =>
+        {
+            WorkoutBanner.IsVisible = _state.IsActive;
+            if (_state.IsActive) StartBannerPulse();
+            else this.AbortAnimation("BannerPulse");
+        });
 
     private void OnExercisesScrolled(object sender, ItemsViewScrolledEventArgs e)
         => StickyHeader.Opacity = Math.Clamp((e.VerticalOffset - 80.0) / 40.0, 0, 1);

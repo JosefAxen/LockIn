@@ -523,37 +523,57 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- Active workout banner — overlay, alltid i botten -->
-        <Border x:Name="WorkoutBanner"
-                IsVisible="False"
-                BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
-                Stroke="{StaticResource ForgeAccent}"
-                StrokeThickness="1.5"
-                StrokeShape="RoundRectangle 18,18,0,0"
-                Padding="20,14,20,16"
-                Margin="0,0,0,83"
-                VerticalOptions="End"
-                ZIndex="10">
-            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
-                <Ellipse Grid.Column="0"
-                         Fill="{StaticResource ForgeAccent}"
-                         WidthRequest="8" HeightRequest="8"
-                         VerticalOptions="Center"/>
-                <Label Grid.Column="1"
-                       Text="PASS PÅGÅR"
-                       FontFamily="BebasNeue" FontSize="16" CharacterSpacing="2"
-                       TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
-                       VerticalOptions="Center"/>
-                <Label Grid.Column="2"
-                       Text="ÖPPNA ›"
-                       FontFamily="BebasNeue" FontSize="14" CharacterSpacing="1"
-                       TextColor="{StaticResource ForgeAccent}"
-                       VerticalOptions="Center"/>
-            </Grid>
-            <Border.GestureRecognizers>
-                <TapGestureRecognizer Tapped="OnWorkoutBannerTapped"/>
-            </Border.GestureRecognizers>
-        </Border>
+        <!-- ═══ WORKOUT BANNER — Live Forge Capsule ═══ -->
+        <Grid x:Name="WorkoutBanner"
+              IsVisible="False"
+              VerticalOptions="End"
+              HorizontalOptions="Center"
+              Margin="0,0,0,96"
+              ZIndex="10">
+            <Border StrokeThickness="0"
+                    StrokeShape="RoundRectangle 36"
+                    BackgroundColor="{StaticResource ForgeAccentGlow}"
+                    Margin="-18,-14"
+                    InputTransparent="True"/>
+            <Border StrokeThickness="1"
+                    Stroke="#55B8B8BC"
+                    StrokeShape="RoundRectangle 22"
+                    Padding="16,9,18,10">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#26262E" Offset="0"/>
+                        <GradientStop Color="#18181C" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Border.Shadow>
+                    <Shadow Brush="Black" Offset="0,6" Radius="22" Opacity="0.55"/>
+                </Border.Shadow>
+                <HorizontalStackLayout Spacing="11" VerticalOptions="Center">
+                    <Grid WidthRequest="16" HeightRequest="16" VerticalOptions="Center">
+                        <Ellipse x:Name="BannerPulseRing"
+                                 Fill="{StaticResource ForgeAccentCoral}"
+                                 WidthRequest="10" HeightRequest="10"
+                                 Opacity="0"
+                                 HorizontalOptions="Center" VerticalOptions="Center"/>
+                        <Ellipse Fill="{StaticResource ForgeAccentCoral}"
+                                 WidthRequest="7" HeightRequest="7"
+                                 HorizontalOptions="Center" VerticalOptions="Center"/>
+                    </Grid>
+                    <Label Text="PASS PÅGÅR"
+                           FontFamily="BebasNeue" FontSize="13" CharacterSpacing="3"
+                           TextColor="{StaticResource ForgeText}"
+                           VerticalOptions="Center"/>
+                    <Label Text="›"
+                           FontFamily="BebasNeue" FontSize="20"
+                           TextColor="{StaticResource ForgeAccent}"
+                           VerticalOptions="Center"
+                           Margin="3,-4,0,0"/>
+                </HorizontalStackLayout>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnWorkoutBannerTapped"/>
+                </Border.GestureRecognizers>
+            </Border>
+        </Grid>
 
         <!-- Bottom gradient fade behind floating tab bar -->
         <BoxView InputTransparent="True" VerticalOptions="End" HeightRequest="150">
