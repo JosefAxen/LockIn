@@ -8,8 +8,7 @@
              x:DataType="vm:OnboardingViewModel"
              Shell.NavBarIsVisible="False"
              BackgroundColor="Transparent"
-             ios:Page.UseSafeArea="False"
-             ios:Page.UsePageWithSafeArea="True">
+             ios:Page.UseSafeArea="False">
 
     <ContentPage.Resources>
         <Style x:Key="StepCard" TargetType="Border">
