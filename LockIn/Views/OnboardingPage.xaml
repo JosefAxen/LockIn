@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:LockIn.ViewModels"
              xmlns:controls="clr-namespace:LockIn.Controls"
+             xmlns:loc="clr-namespace:LockIn.Resources.Strings"
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
              x:Class="LockIn.Views.OnboardingPage"
              x:DataType="vm:OnboardingViewModel"
@@ -66,7 +67,7 @@
                     MinimumHeightRequest="44"
                     Padding="10,0"
                     VerticalOptions="Center">
-                <Label Text="Hoppa över"
+                <Label Text="{loc:Localize Onboarding_SkipLink}"
                        FontFamily="DMSansMedium" FontSize="13"
                        TextColor="{StaticResource ForgeMuted}"
                        HorizontalOptions="Center"
@@ -84,15 +85,15 @@
 
                 <!-- ══ Steg 0: Namn ══════════════════════════════════════ -->
                 <VerticalStackLayout x:Name="Step0" IsVisible="{Binding IsStep0}" Spacing="0">
-                    <Label Text="VÄLKOMMEN"
+                    <Label Text="{loc:Localize Onboarding_Step0_Welcome}"
                            FontFamily="BebasNeue" FontSize="44" CharacterSpacing="2"
                            TextColor="{StaticResource ForgeAccent}"
                            Margin="0,0,0,4"/>
-                    <Label Text="Vad heter du?"
+                    <Label Text="{loc:Localize Onboarding_Step0_Question}"
                            FontFamily="BebasNeue" FontSize="28" CharacterSpacing="1"
                            TextColor="{StaticResource ForgeText}"
                            Margin="0,0,0,8"/>
-                    <Label Text="Vi använder bara namnet för att hälsa på dig — inget delas."
+                    <Label Text="{loc:Localize Onboarding_Step0_Privacy}"
                            FontFamily="DMSansRegular" FontSize="13"
                            TextColor="{StaticResource ForgeMuted}"
                            Margin="0,0,0,32"/>
@@ -102,7 +103,7 @@
                             StrokeThickness="1"
                             Padding="4,0">
                         <Entry Text="{Binding UserNameInput}"
-                               Placeholder="Ditt namn..."
+                               Placeholder="{loc:Localize Onboarding_Step0_Placeholder}"
                                PlaceholderColor="{StaticResource ForgeMuted}"
                                FontFamily="DMSansMedium" FontSize="18"
                                TextColor="{StaticResource ForgeText}"
@@ -115,11 +116,11 @@
 
                 <!-- ══ Steg 1: Veckomål ══════════════════════════════════ -->
                 <VerticalStackLayout x:Name="Step1" IsVisible="{Binding IsStep1}" Spacing="10">
-                    <Label Text="VECKANS MÅL"
+                    <Label Text="{loc:Localize Onboarding_Step1_Title}"
                            FontFamily="BebasNeue" FontSize="44" CharacterSpacing="2"
                            TextColor="{StaticResource ForgeAccent}"
                            Margin="0,0,0,4"/>
-                    <Label Text="Hur många pass per vecka?"
+                    <Label Text="{loc:Localize Onboarding_Step1_Question}"
                            FontFamily="BebasNeue" FontSize="28" CharacterSpacing="1"
                            TextColor="{StaticResource ForgeText}"
                            Margin="0,0,0,28"/>
@@ -127,8 +128,8 @@
                         <Grid ColumnDefinitions="56,*" ColumnSpacing="14" VerticalOptions="Center">
                             <Label Grid.Column="0" Text="2" FontFamily="BebasNeue" FontSize="42" TextColor="{Binding Wk2Fg}" HorizontalOptions="Center" VerticalOptions="Center"/>
                             <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                                <Label Text="2 PASS / VECKA" FontFamily="BebasNeue" FontSize="20" CharacterSpacing="1" TextColor="{Binding Wk2Fg}"/>
-                                <Label Text="Lätt start — bygg vanan" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding Wk2Fg}" Opacity="0.7"/>
+                                <Label Text="{loc:Localize Onboarding_Step1_Wk2_Title}" FontFamily="BebasNeue" FontSize="20" CharacterSpacing="1" TextColor="{Binding Wk2Fg}"/>
+                                <Label Text="{loc:Localize Onboarding_Step1_Wk2_Sub}" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding Wk2Fg}" Opacity="0.7"/>
                             </VerticalStackLayout>
                         </Grid>
                         <Border.GestureRecognizers>
@@ -139,8 +140,8 @@
                         <Grid ColumnDefinitions="56,*" ColumnSpacing="14" VerticalOptions="Center">
                             <Label Grid.Column="0" Text="3" FontFamily="BebasNeue" FontSize="42" TextColor="{Binding Wk3Fg}" HorizontalOptions="Center" VerticalOptions="Center"/>
                             <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                                <Label Text="3 PASS / VECKA" FontFamily="BebasNeue" FontSize="20" CharacterSpacing="1" TextColor="{Binding Wk3Fg}"/>
-                                <Label Text="Klassisk balans — stabil utveckling" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding Wk3Fg}" Opacity="0.7"/>
+                                <Label Text="{loc:Localize Onboarding_Step1_Wk3_Title}" FontFamily="BebasNeue" FontSize="20" CharacterSpacing="1" TextColor="{Binding Wk3Fg}"/>
+                                <Label Text="{loc:Localize Onboarding_Step1_Wk3_Sub}" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding Wk3Fg}" Opacity="0.7"/>
                             </VerticalStackLayout>
                         </Grid>
                         <Border.GestureRecognizers>
@@ -151,8 +152,8 @@
                         <Grid ColumnDefinitions="56,*" ColumnSpacing="14" VerticalOptions="Center">
                             <Label Grid.Column="0" Text="4" FontFamily="BebasNeue" FontSize="42" TextColor="{Binding Wk4Fg}" HorizontalOptions="Center" VerticalOptions="Center"/>
                             <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                                <Label Text="4 PASS / VECKA" FontFamily="BebasNeue" FontSize="20" CharacterSpacing="1" TextColor="{Binding Wk4Fg}"/>
-                                <Label Text="Snabbare progress — kräver återhämtning" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding Wk4Fg}" Opacity="0.7"/>
+                                <Label Text="{loc:Localize Onboarding_Step1_Wk4_Title}" FontFamily="BebasNeue" FontSize="20" CharacterSpacing="1" TextColor="{Binding Wk4Fg}"/>
+                                <Label Text="{loc:Localize Onboarding_Step1_Wk4_Sub}" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding Wk4Fg}" Opacity="0.7"/>
                             </VerticalStackLayout>
                         </Grid>
                         <Border.GestureRecognizers>
@@ -163,8 +164,8 @@
                         <Grid ColumnDefinitions="56,*" ColumnSpacing="14" VerticalOptions="Center">
                             <Label Grid.Column="0" Text="5" FontFamily="BebasNeue" FontSize="42" TextColor="{Binding Wk5Fg}" HorizontalOptions="Center" VerticalOptions="Center"/>
                             <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                                <Label Text="5 PASS / VECKA" FontFamily="BebasNeue" FontSize="20" CharacterSpacing="1" TextColor="{Binding Wk5Fg}"/>
-                                <Label Text="Intensiv — för engagerade lyftare" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding Wk5Fg}" Opacity="0.7"/>
+                                <Label Text="{loc:Localize Onboarding_Step1_Wk5_Title}" FontFamily="BebasNeue" FontSize="20" CharacterSpacing="1" TextColor="{Binding Wk5Fg}"/>
+                                <Label Text="{loc:Localize Onboarding_Step1_Wk5_Sub}" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding Wk5Fg}" Opacity="0.7"/>
                             </VerticalStackLayout>
                         </Grid>
                         <Border.GestureRecognizers>
@@ -175,8 +176,8 @@
                         <Grid ColumnDefinitions="56,*" ColumnSpacing="14" VerticalOptions="Center">
                             <Label Grid.Column="0" Text="6" FontFamily="BebasNeue" FontSize="42" TextColor="{Binding Wk6Fg}" HorizontalOptions="Center" VerticalOptions="Center"/>
                             <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                                <Label Text="6 PASS / VECKA" FontFamily="BebasNeue" FontSize="20" CharacterSpacing="1" TextColor="{Binding Wk6Fg}"/>
-                                <Label Text="Hardcore — bara om du vet vad du gör" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding Wk6Fg}" Opacity="0.7"/>
+                                <Label Text="{loc:Localize Onboarding_Step1_Wk6_Title}" FontFamily="BebasNeue" FontSize="20" CharacterSpacing="1" TextColor="{Binding Wk6Fg}"/>
+                                <Label Text="{loc:Localize Onboarding_Step1_Wk6_Sub}" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding Wk6Fg}" Opacity="0.7"/>
                             </VerticalStackLayout>
                         </Grid>
                         <Border.GestureRecognizers>
@@ -187,19 +188,19 @@
 
                 <!-- ══ Steg 2: Erfarenhet ════════════════════════════════ -->
                 <VerticalStackLayout x:Name="Step2" IsVisible="{Binding IsStep2}" Spacing="12">
-                    <Label Text="ERFARENHET"
+                    <Label Text="{loc:Localize Onboarding_Step2_Title}"
                            FontFamily="BebasNeue" FontSize="44" CharacterSpacing="2"
                            TextColor="{StaticResource ForgeAccent}"
                            Margin="0,0,0,4"/>
-                    <Label Text="Hur länge har du tränat?"
+                    <Label Text="{loc:Localize Onboarding_Step2_Question}"
                            FontFamily="BebasNeue" FontSize="28" CharacterSpacing="1"
                            TextColor="{StaticResource ForgeText}"
                            Margin="0,0,0,28"/>
                     <Border Style="{StaticResource StepCard}" BackgroundColor="{Binding Exp0Bg}">
                         <Grid ColumnDefinitions="*,Auto">
                             <VerticalStackLayout Grid.Column="0" Spacing="2">
-                                <Label Text="NYBÖRJARE" FontFamily="BebasNeue" FontSize="22" CharacterSpacing="1" TextColor="{Binding Exp0Fg}"/>
-                                <Label Text="Under 1 år · Linjär progression vecka för vecka" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding Exp0Fg}" Opacity="0.7"/>
+                                <Label Text="{loc:Localize Onboarding_Step2_Exp0_Title}" FontFamily="BebasNeue" FontSize="22" CharacterSpacing="1" TextColor="{Binding Exp0Fg}"/>
+                                <Label Text="{loc:Localize Onboarding_Step2_Exp0_Sub}" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding Exp0Fg}" Opacity="0.7"/>
                             </VerticalStackLayout>
                             <Label Grid.Column="1" Text="✓" FontFamily="DMSansMedium" FontSize="22" TextColor="{Binding Exp0Fg}" VerticalOptions="Center" IsVisible="{Binding Exp0Selected}"/>
                         </Grid>
@@ -210,8 +211,8 @@
                     <Border Style="{StaticResource StepCard}" BackgroundColor="{Binding Exp1Bg}">
                         <Grid ColumnDefinitions="*,Auto">
                             <VerticalStackLayout Grid.Column="0" Spacing="2">
-                                <Label Text="MELLANNIVÅ" FontFamily="BebasNeue" FontSize="22" CharacterSpacing="1" TextColor="{Binding Exp1Fg}"/>
-                                <Label Text="1–3 år · Periodisering och tyngre lyft" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding Exp1Fg}" Opacity="0.7"/>
+                                <Label Text="{loc:Localize Onboarding_Step2_Exp1_Title}" FontFamily="BebasNeue" FontSize="22" CharacterSpacing="1" TextColor="{Binding Exp1Fg}"/>
+                                <Label Text="{loc:Localize Onboarding_Step2_Exp1_Sub}" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding Exp1Fg}" Opacity="0.7"/>
                             </VerticalStackLayout>
                             <Label Grid.Column="1" Text="✓" FontFamily="DMSansMedium" FontSize="22" TextColor="{Binding Exp1Fg}" VerticalOptions="Center" IsVisible="{Binding Exp1Selected}"/>
                         </Grid>
@@ -222,8 +223,8 @@
                     <Border Style="{StaticResource StepCard}" BackgroundColor="{Binding Exp2Bg}">
                         <Grid ColumnDefinitions="*,Auto">
                             <VerticalStackLayout Grid.Column="0" Spacing="2">
-                                <Label Text="AVANCERAD" FontFamily="BebasNeue" FontSize="22" CharacterSpacing="1" TextColor="{Binding Exp2Fg}"/>
-                                <Label Text="3+ år · Avancerade scheman med deload" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding Exp2Fg}" Opacity="0.7"/>
+                                <Label Text="{loc:Localize Onboarding_Step2_Exp2_Title}" FontFamily="BebasNeue" FontSize="22" CharacterSpacing="1" TextColor="{Binding Exp2Fg}"/>
+                                <Label Text="{loc:Localize Onboarding_Step2_Exp2_Sub}" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding Exp2Fg}" Opacity="0.7"/>
                             </VerticalStackLayout>
                             <Label Grid.Column="1" Text="✓" FontFamily="DMSansMedium" FontSize="22" TextColor="{Binding Exp2Fg}" VerticalOptions="Center" IsVisible="{Binding Exp2Selected}"/>
                         </Grid>
@@ -235,19 +236,19 @@
 
                 <!-- ══ Steg 3: Mål ═══════════════════════════════════════ -->
                 <VerticalStackLayout x:Name="Step3" IsVisible="{Binding IsStep3}" Spacing="12">
-                    <Label Text="DITT MÅL"
+                    <Label Text="{loc:Localize Onboarding_Step3_Title}"
                            FontFamily="BebasNeue" FontSize="44" CharacterSpacing="2"
                            TextColor="{StaticResource ForgeAccent}"
                            Margin="0,0,0,4"/>
-                    <Label Text="Vad vill du uppnå?"
+                    <Label Text="{loc:Localize Onboarding_Step3_Question}"
                            FontFamily="BebasNeue" FontSize="28" CharacterSpacing="1"
                            TextColor="{StaticResource ForgeText}"
                            Margin="0,0,0,28"/>
                     <Border Style="{StaticResource StepCard}" BackgroundColor="{Binding GoalStrengthBg}" HeightRequest="100">
                         <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
                             <VerticalStackLayout Grid.Column="0" Spacing="4" VerticalOptions="Center">
-                                <Label Text="STYRKA" FontFamily="BebasNeue" FontSize="28" CharacterSpacing="1" TextColor="{Binding GoalStrengthFg}"/>
-                                <Label Text="Bli starkare och lyfta tyngre" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding GoalStrengthFg}" Opacity="0.7"/>
+                                <Label Text="{loc:Localize Onboarding_Step3_Strength_Title}" FontFamily="BebasNeue" FontSize="28" CharacterSpacing="1" TextColor="{Binding GoalStrengthFg}"/>
+                                <Label Text="{loc:Localize Onboarding_Step3_Strength_Sub}" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding GoalStrengthFg}" Opacity="0.7"/>
                             </VerticalStackLayout>
                             <Label Grid.Column="1" Text="✓" FontFamily="DMSansMedium" FontSize="26" TextColor="{Binding GoalStrengthFg}" VerticalOptions="Center" IsVisible="{Binding GoalStrengthSelected}"/>
                         </Grid>
@@ -258,8 +259,8 @@
                     <Border Style="{StaticResource StepCard}" BackgroundColor="{Binding GoalHyperBg}" HeightRequest="100">
                         <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
                             <VerticalStackLayout Grid.Column="0" Spacing="4" VerticalOptions="Center">
-                                <Label Text="HYPERTROFI" FontFamily="BebasNeue" FontSize="28" CharacterSpacing="1" TextColor="{Binding GoalHyperFg}"/>
-                                <Label Text="Bygga muskler och förändra kroppen" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding GoalHyperFg}" Opacity="0.7"/>
+                                <Label Text="{loc:Localize Onboarding_Step3_Hyper_Title}" FontFamily="BebasNeue" FontSize="28" CharacterSpacing="1" TextColor="{Binding GoalHyperFg}"/>
+                                <Label Text="{loc:Localize Onboarding_Step3_Hyper_Sub}" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding GoalHyperFg}" Opacity="0.7"/>
                             </VerticalStackLayout>
                             <Label Grid.Column="1" Text="✓" FontFamily="DMSansMedium" FontSize="26" TextColor="{Binding GoalHyperFg}" VerticalOptions="Center" IsVisible="{Binding GoalHyperSelected}"/>
                         </Grid>
@@ -271,11 +272,11 @@
 
                 <!-- ══ Steg 4: Rekommendation ════════════════════════════ -->
                 <VerticalStackLayout x:Name="Step4" IsVisible="{Binding IsStep4}" Spacing="0">
-                    <Label Text="PERFEKT MATCH"
+                    <Label Text="{loc:Localize Onboarding_Step4_Title}"
                            FontFamily="BebasNeue" FontSize="44" CharacterSpacing="2"
                            TextColor="{StaticResource ForgeAccent}"
                            Margin="0,0,0,4"/>
-                    <Label Text="Vi rekommenderar:"
+                    <Label Text="{loc:Localize Onboarding_Step4_Subtitle}"
                            FontFamily="BebasNeue" FontSize="28" CharacterSpacing="1"
                            TextColor="{StaticResource ForgeText}"
                            Margin="0,0,0,32"/>
@@ -304,7 +305,7 @@
                         </VerticalStackLayout>
                     </Border>
 
-                    <Button Text="AKTIVERA PROGRAM →"
+                    <Button Text="{loc:Localize Onboarding_Step4_Activate}"
                             Style="{StaticResource PrimaryButton}"
                             BackgroundColor="{StaticResource ForgeAccent}"
                             TextColor="{StaticResource ForgeBackground}"
@@ -313,7 +314,7 @@
                             Margin="0,0,0,12"
                             Command="{Binding ActivateProgramCommand}"/>
 
-                    <Label Text="Hoppa över, jag väljer själv"
+                    <Label Text="{loc:Localize Onboarding_Step4_SkipProgram}"
                            FontFamily="DMSansMedium" FontSize="14"
                            TextColor="{StaticResource ForgeMuted}"
                            HorizontalOptions="Center"
@@ -331,7 +332,7 @@
         <Grid Grid.Row="2"
               IsVisible="{Binding IsStep4, Converter={x:Static vm:InverseBoolConverter.Instance}}"
               Padding="24,12,24,44">
-            <Button Text="FORTSÄTT →"
+            <Button Text="{loc:Localize Onboarding_Continue}"
                     Style="{StaticResource PrimaryButton}"
                     BackgroundColor="{Binding CanGoNext, Converter={x:Static vm:OnboardingButtonColorConverter.Instance}}"
                     TextColor="{StaticResource ForgeBackground}"
