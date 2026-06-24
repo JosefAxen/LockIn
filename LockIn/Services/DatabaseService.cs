@@ -427,6 +427,20 @@ public class DatabaseService
         return await _db.DeleteAsync(template);
     }
 
+    public async Task<Dictionary<int, DateTime>> GetLastSessionDatePerTemplateAsync()
+    {
+        await InitAsync();
+        var rows = await _db.QueryAsync<TemplateLastUsedRow>(
+            "SELECT TemplateId, MAX(CompletedAt) as LastUsedAt FROM WorkoutSessions WHERE CompletedAt IS NOT NULL AND TemplateId > 0 GROUP BY TemplateId");
+        return rows.ToDictionary(r => r.TemplateId, r => r.LastUsedAt);
+    }
+
+    private class TemplateLastUsedRow
+    {
+        public int TemplateId { get; set; }
+        public DateTime LastUsedAt { get; set; }
+    }
+
     public async Task<List<TemplateExercise>> GetTemplateExercisesAsync(int templateId)
     {
         await InitAsync();

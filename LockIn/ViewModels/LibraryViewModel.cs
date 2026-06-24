@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using LockIn;
 using LockIn.Data;
 using LockIn.Models;
 using LockIn.Services;
@@ -19,10 +20,10 @@ public partial class LibraryViewModel(DatabaseService db) : ObservableObject
     public bool ShowPrograms  => SelectedTab == 2;
     public bool ShowActionButton => SelectedTab < 2;
 
-    private static readonly Color _glassActiveBg   = Color.FromArgb("#2BFFFFFF");
-    private static readonly Color _glassActiveFg   = Color.FromArgb("#E2E8F0");
-    private static readonly Color _glassInactiveBg = Colors.Transparent;
-    private static readonly Color _glassInactiveFg = Color.FromArgb("#80FFFFFF");
+    private static readonly Color _glassActiveBg   = DesignTokens.GlassActiveBg;
+    private static readonly Color _glassActiveFg   = DesignTokens.GlassActiveFg;
+    private static readonly Color _glassInactiveBg = DesignTokens.GlassInactiveBg;
+    private static readonly Color _glassInactiveFg = DesignTokens.GlassInactiveFg;
 
     private static Color ActiveTabBg   => _glassActiveBg;
     private static Color ActiveTabFg   => _glassActiveFg;

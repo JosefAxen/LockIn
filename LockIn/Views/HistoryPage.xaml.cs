@@ -141,7 +141,7 @@ public partial class HistoryPage : ContentPage
         int rows = (totalCells + 6) / 7;
 
         for (int r = 0; r < rows; r++)
-            grid.RowDefinitions.Add(new RowDefinition(new GridLength(42)));
+            grid.RowDefinitions.Add(new RowDefinition(new GridLength(44)));
 
         int day = 1;
         for (int cell = 0; cell < rows * 7; cell++)

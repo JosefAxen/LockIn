@@ -1,3 +1,5 @@
+using SkiaSharp;
+
 namespace LockIn;
 
 /// <summary>
@@ -48,6 +50,44 @@ public static class DesignTokens
     public static readonly Color SetDropset = Color.FromArgb("#FB7185");
     public static readonly Color SetTime    = Color.FromArgb("#38BDF8");
     public static Color          SetNormal  => Color.FromArgb(IsDark ? "#52525E" : "#70707A");
+
+    // ─── FAB foreground (dark text on silver metallic button) ────────────────
+    public static readonly Color FabForeground = Color.FromArgb("#0E0E10");
+
+    // ─── Low-emphasis text (barely visible, for empty/inactive states) ───────
+    public static readonly Color TextDim = Color.FromArgb("#303038");
+
+    // ─── Filter pills ────────────────────────────────────────────────────────
+    public static readonly Color PillTrack      = Color.FromArgb("#33787882");
+    public static readonly Color PillIndicator  = Color.FromArgb("#525260");
+
+    // ─── Workout banner ──────────────────────────────────────────────────────
+    public static readonly Color BannerStroke   = Color.FromArgb("#55B8B8BC");
+
+    // ─── Glass segment pill states (HistoryPage) ─────────────────────────────
+    public static readonly Color GlassActiveBg   = Color.FromArgb("#2BFFFFFF");
+    public static readonly Color GlassActiveFg   = Color.FromArgb("#E2E8F0");
+    public static readonly Color GlassInactiveBg = Colors.Transparent;
+    public static readonly Color GlassInactiveFg = Color.FromArgb("#80FFFFFF");
+
+    // ─── Multi-accent colors ─────────────────────────────────────────────────
+    public static readonly Color AccentBlue   = Color.FromArgb("#38BDF8");
+    public static readonly Color AccentCoral  = Color.FromArgb("#FB7185");
+    public static readonly Color AccentPurple = Color.FromArgb("#A78BFA");
+    public static readonly Color AccentAmber  = Color.FromArgb("#FBBF24");
+    public static readonly Color AccentOrange = Color.FromArgb("#FB923C");
+
+    // ─── Primary foreground (text on primary buttons) ────────────────────────
+    public static readonly Color PrimaryForeground = Color.FromArgb("#FAFAFA");
+
+    // ─── SkiaSharp surface / spark tokens ────────────────────────────────────
+    public static readonly SKColor SK_Background  = SKColor.Parse("#141418");
+    public static readonly SKColor SK_AccentGlow1 = SKColor.Parse("#28B8B8BC");
+    public static readonly SKColor SK_AccentGlow2 = SKColor.Parse("#1CB8B8BC");
+    public static readonly SKColor SK_Vignette    = SKColor.Parse("#22000000");
+    public static readonly SKColor SK_SparkCore   = SKColor.Parse("#FDE68A");
+    public static readonly SKColor SK_SparkMid    = SKColor.Parse("#FBBF24");
+    public static readonly SKColor SK_SparkOuter  = SKColor.Parse("#FB923C");
 
     // ─── Icon tinting ────────────────────────────────────────────────────────
     public static Color IconTint => Color.FromArgb(IsDark ? "#C8C8D2" : "#3A3A44");

@@ -8,7 +8,8 @@
              x:DataType="vm:OnboardingViewModel"
              Shell.NavBarIsVisible="False"
              BackgroundColor="Transparent"
-             ios:Page.UseSafeArea="False">
+             ios:Page.UseSafeArea="False"
+             ios:Page.UsePageWithSafeArea="True">
 
     <ContentPage.Resources>
         <Style x:Key="StepCard" TargetType="Border">
@@ -23,15 +24,15 @@
         <!-- Atmosfärisk bakgrund -->
         <controls:AtmosphericBackgroundView Grid.RowSpan="3" InputTransparent="True"/>
 
-        <!-- Top bar: back + step dots -->
-        <Grid Grid.Row="0" Padding="20,56,20,12" ColumnDefinitions="44,*,44">
+        <!-- Top bar: back + step dots + skip -->
+        <Grid Grid.Row="0" Padding="16,56,16,12" ColumnDefinitions="44,*,Auto">
 
             <!-- Back button -->
             <Border Grid.Column="0"
                     IsVisible="{Binding ShowBackButton}"
                     BackgroundColor="{StaticResource ForgeSurface2}"
                     StrokeShape="RoundRectangle 12" StrokeThickness="0"
-                    WidthRequest="40" HeightRequest="40"
+                    WidthRequest="44" HeightRequest="44"
                     HorizontalOptions="Start">
                 <Path Style="{StaticResource BackChevron}"/>
                 <Border.GestureRecognizers>
@@ -58,6 +59,24 @@
                          BackgroundColor="{Binding IsStep4, Converter={x:Static vm:DotColorConverter.Instance}}"/>
             </HorizontalStackLayout>
 
+            <!-- Skip link — synlig på alla steg så erfarna lyftare kan bail när som helst -->
+            <Border Grid.Column="2"
+                    BackgroundColor="Transparent"
+                    StrokeThickness="0"
+                    MinimumWidthRequest="44"
+                    MinimumHeightRequest="44"
+                    Padding="10,0"
+                    VerticalOptions="Center">
+                <Label Text="Hoppa över"
+                       FontFamily="DMSansMedium" FontSize="13"
+                       TextColor="{StaticResource ForgeMuted}"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"/>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding SkipOnboardingCommand}"/>
+                </Border.GestureRecognizers>
+            </Border>
+
         </Grid>
 
         <!-- Step content -->
@@ -65,15 +84,19 @@
             <VerticalStackLayout Padding="24,0,24,24" Spacing="0">
 
                 <!-- ══ Steg 0: Namn ══════════════════════════════════════ -->
-                <VerticalStackLayout IsVisible="{Binding IsStep0}" Spacing="0">
+                <VerticalStackLayout x:Name="Step0" IsVisible="{Binding IsStep0}" Spacing="0">
                     <Label Text="VÄLKOMMEN"
-                           FontFamily="BebasNeue" FontSize="52" CharacterSpacing="2"
+                           FontFamily="BebasNeue" FontSize="44" CharacterSpacing="2"
                            TextColor="{StaticResource ForgeAccent}"
                            Margin="0,0,0,4"/>
                     <Label Text="Vad heter du?"
-                           FontFamily="BebasNeue" FontSize="32" CharacterSpacing="1"
+                           FontFamily="BebasNeue" FontSize="28" CharacterSpacing="1"
                            TextColor="{StaticResource ForgeText}"
-                           Margin="0,0,0,40"/>
+                           Margin="0,0,0,8"/>
+                    <Label Text="Vi använder bara namnet för att hälsa på dig — inget delas."
+                           FontFamily="DMSansRegular" FontSize="13"
+                           TextColor="{StaticResource ForgeMuted}"
+                           Margin="0,0,0,32"/>
                     <Border BackgroundColor="{StaticResource ForgeSurface}"
                             StrokeShape="RoundRectangle 14"
                             Stroke="{StaticResource ForgeBorderLight}"
@@ -86,12 +109,13 @@
                                TextColor="{StaticResource ForgeText}"
                                BackgroundColor="Transparent"
                                HeightRequest="56"
-                               ReturnType="Next"/>
+                               ReturnType="Done"
+                               ReturnCommand="{Binding NextCommand}"/>
                     </Border>
                 </VerticalStackLayout>
 
                 <!-- ══ Steg 1: Veckomål ══════════════════════════════════ -->
-                <VerticalStackLayout IsVisible="{Binding IsStep1}" Spacing="0">
+                <VerticalStackLayout x:Name="Step1" IsVisible="{Binding IsStep1}" Spacing="10">
                     <Label Text="VECKANS MÅL"
                            FontFamily="BebasNeue" FontSize="44" CharacterSpacing="2"
                            TextColor="{StaticResource ForgeAccent}"
@@ -99,58 +123,71 @@
                     <Label Text="Hur många pass per vecka?"
                            FontFamily="BebasNeue" FontSize="28" CharacterSpacing="1"
                            TextColor="{StaticResource ForgeText}"
-                           Margin="0,0,0,40"/>
-                    <Grid ColumnDefinitions="*,*,*,*,*" ColumnSpacing="8">
-                        <Border Grid.Column="0" Style="{StaticResource StepCard}" BackgroundColor="{Binding Wk2Bg}">
-                            <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
-                                <Label Text="2" FontSize="34" FontAttributes="Bold" TextColor="{Binding Wk2Fg}" HorizontalOptions="Center"/>
-                                <Label Text="DGRS" FontFamily="BebasNeue" FontSize="10" CharacterSpacing="1" TextColor="{Binding Wk2Fg}" HorizontalOptions="Center"/>
+                           Margin="0,0,0,28"/>
+                    <Border Style="{StaticResource StepCard}" BackgroundColor="{Binding Wk2Bg}">
+                        <Grid ColumnDefinitions="56,*" ColumnSpacing="14" VerticalOptions="Center">
+                            <Label Grid.Column="0" Text="2" FontFamily="BebasNeue" FontSize="42" TextColor="{Binding Wk2Fg}" HorizontalOptions="Center" VerticalOptions="Center"/>
+                            <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                <Label Text="2 PASS / VECKA" FontFamily="BebasNeue" FontSize="20" CharacterSpacing="1" TextColor="{Binding Wk2Fg}"/>
+                                <Label Text="Lätt start — bygg vanan" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding Wk2Fg}" Opacity="0.7"/>
                             </VerticalStackLayout>
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding SelectWeeklyGoalCommand}" CommandParameter="{x:Int32 2}"/>
-                            </Border.GestureRecognizers>
-                        </Border>
-                        <Border Grid.Column="1" Style="{StaticResource StepCard}" BackgroundColor="{Binding Wk3Bg}">
-                            <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
-                                <Label Text="3" FontSize="34" FontAttributes="Bold" TextColor="{Binding Wk3Fg}" HorizontalOptions="Center"/>
-                                <Label Text="DGRS" FontFamily="BebasNeue" FontSize="10" CharacterSpacing="1" TextColor="{Binding Wk3Fg}" HorizontalOptions="Center"/>
+                        </Grid>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectWeeklyGoalCommand}" CommandParameter="{x:Int32 2}"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+                    <Border Style="{StaticResource StepCard}" BackgroundColor="{Binding Wk3Bg}">
+                        <Grid ColumnDefinitions="56,*" ColumnSpacing="14" VerticalOptions="Center">
+                            <Label Grid.Column="0" Text="3" FontFamily="BebasNeue" FontSize="42" TextColor="{Binding Wk3Fg}" HorizontalOptions="Center" VerticalOptions="Center"/>
+                            <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                <Label Text="3 PASS / VECKA" FontFamily="BebasNeue" FontSize="20" CharacterSpacing="1" TextColor="{Binding Wk3Fg}"/>
+                                <Label Text="Klassisk balans — stabil utveckling" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding Wk3Fg}" Opacity="0.7"/>
                             </VerticalStackLayout>
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding SelectWeeklyGoalCommand}" CommandParameter="{x:Int32 3}"/>
-                            </Border.GestureRecognizers>
-                        </Border>
-                        <Border Grid.Column="2" Style="{StaticResource StepCard}" BackgroundColor="{Binding Wk4Bg}">
-                            <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
-                                <Label Text="4" FontSize="34" FontAttributes="Bold" TextColor="{Binding Wk4Fg}" HorizontalOptions="Center"/>
-                                <Label Text="DGRS" FontFamily="BebasNeue" FontSize="10" CharacterSpacing="1" TextColor="{Binding Wk4Fg}" HorizontalOptions="Center"/>
+                        </Grid>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectWeeklyGoalCommand}" CommandParameter="{x:Int32 3}"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+                    <Border Style="{StaticResource StepCard}" BackgroundColor="{Binding Wk4Bg}">
+                        <Grid ColumnDefinitions="56,*" ColumnSpacing="14" VerticalOptions="Center">
+                            <Label Grid.Column="0" Text="4" FontFamily="BebasNeue" FontSize="42" TextColor="{Binding Wk4Fg}" HorizontalOptions="Center" VerticalOptions="Center"/>
+                            <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                <Label Text="4 PASS / VECKA" FontFamily="BebasNeue" FontSize="20" CharacterSpacing="1" TextColor="{Binding Wk4Fg}"/>
+                                <Label Text="Snabbare progress — kräver återhämtning" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding Wk4Fg}" Opacity="0.7"/>
                             </VerticalStackLayout>
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding SelectWeeklyGoalCommand}" CommandParameter="{x:Int32 4}"/>
-                            </Border.GestureRecognizers>
-                        </Border>
-                        <Border Grid.Column="3" Style="{StaticResource StepCard}" BackgroundColor="{Binding Wk5Bg}">
-                            <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
-                                <Label Text="5" FontSize="34" FontAttributes="Bold" TextColor="{Binding Wk5Fg}" HorizontalOptions="Center"/>
-                                <Label Text="DGRS" FontFamily="BebasNeue" FontSize="10" CharacterSpacing="1" TextColor="{Binding Wk5Fg}" HorizontalOptions="Center"/>
+                        </Grid>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectWeeklyGoalCommand}" CommandParameter="{x:Int32 4}"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+                    <Border Style="{StaticResource StepCard}" BackgroundColor="{Binding Wk5Bg}">
+                        <Grid ColumnDefinitions="56,*" ColumnSpacing="14" VerticalOptions="Center">
+                            <Label Grid.Column="0" Text="5" FontFamily="BebasNeue" FontSize="42" TextColor="{Binding Wk5Fg}" HorizontalOptions="Center" VerticalOptions="Center"/>
+                            <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                <Label Text="5 PASS / VECKA" FontFamily="BebasNeue" FontSize="20" CharacterSpacing="1" TextColor="{Binding Wk5Fg}"/>
+                                <Label Text="Intensiv — för engagerade lyftare" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding Wk5Fg}" Opacity="0.7"/>
                             </VerticalStackLayout>
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding SelectWeeklyGoalCommand}" CommandParameter="{x:Int32 5}"/>
-                            </Border.GestureRecognizers>
-                        </Border>
-                        <Border Grid.Column="4" Style="{StaticResource StepCard}" BackgroundColor="{Binding Wk6Bg}">
-                            <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
-                                <Label Text="6" FontSize="34" FontAttributes="Bold" TextColor="{Binding Wk6Fg}" HorizontalOptions="Center"/>
-                                <Label Text="DGRS" FontFamily="BebasNeue" FontSize="10" CharacterSpacing="1" TextColor="{Binding Wk6Fg}" HorizontalOptions="Center"/>
+                        </Grid>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectWeeklyGoalCommand}" CommandParameter="{x:Int32 5}"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+                    <Border Style="{StaticResource StepCard}" BackgroundColor="{Binding Wk6Bg}">
+                        <Grid ColumnDefinitions="56,*" ColumnSpacing="14" VerticalOptions="Center">
+                            <Label Grid.Column="0" Text="6" FontFamily="BebasNeue" FontSize="42" TextColor="{Binding Wk6Fg}" HorizontalOptions="Center" VerticalOptions="Center"/>
+                            <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                <Label Text="6 PASS / VECKA" FontFamily="BebasNeue" FontSize="20" CharacterSpacing="1" TextColor="{Binding Wk6Fg}"/>
+                                <Label Text="Hardcore — bara om du vet vad du gör" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding Wk6Fg}" Opacity="0.7"/>
                             </VerticalStackLayout>
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding SelectWeeklyGoalCommand}" CommandParameter="{x:Int32 6}"/>
-                            </Border.GestureRecognizers>
-                        </Border>
-                    </Grid>
+                        </Grid>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectWeeklyGoalCommand}" CommandParameter="{x:Int32 6}"/>
+                        </Border.GestureRecognizers>
+                    </Border>
                 </VerticalStackLayout>
 
                 <!-- ══ Steg 2: Erfarenhet ════════════════════════════════ -->
-                <VerticalStackLayout IsVisible="{Binding IsStep2}" Spacing="12">
+                <VerticalStackLayout x:Name="Step2" IsVisible="{Binding IsStep2}" Spacing="12">
                     <Label Text="ERFARENHET"
                            FontFamily="BebasNeue" FontSize="44" CharacterSpacing="2"
                            TextColor="{StaticResource ForgeAccent}"
@@ -163,9 +200,9 @@
                         <Grid ColumnDefinitions="*,Auto">
                             <VerticalStackLayout Grid.Column="0" Spacing="2">
                                 <Label Text="NYBÖRJARE" FontFamily="BebasNeue" FontSize="22" CharacterSpacing="1" TextColor="{Binding Exp0Fg}"/>
-                                <Label Text="Under 1 år" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding Exp0Fg}" Opacity="0.7"/>
+                                <Label Text="Under 1 år · Linjär progression vecka för vecka" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding Exp0Fg}" Opacity="0.7"/>
                             </VerticalStackLayout>
-                            <Path Grid.Column="1" Style="{StaticResource ForwardChevron}" Stroke="{Binding Exp0Fg}"/>
+                            <Label Grid.Column="1" Text="✓" FontFamily="DMSansMedium" FontSize="22" TextColor="{Binding Exp0Fg}" VerticalOptions="Center" IsVisible="{Binding Exp0Selected}"/>
                         </Grid>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding SelectExperienceCommand}" CommandParameter="{x:Int32 0}"/>
@@ -175,9 +212,9 @@
                         <Grid ColumnDefinitions="*,Auto">
                             <VerticalStackLayout Grid.Column="0" Spacing="2">
                                 <Label Text="MELLANNIVÅ" FontFamily="BebasNeue" FontSize="22" CharacterSpacing="1" TextColor="{Binding Exp1Fg}"/>
-                                <Label Text="1–3 år" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding Exp1Fg}" Opacity="0.7"/>
+                                <Label Text="1–3 år · Periodisering och tyngre lyft" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding Exp1Fg}" Opacity="0.7"/>
                             </VerticalStackLayout>
-                            <Path Grid.Column="1" Style="{StaticResource ForwardChevron}" Stroke="{Binding Exp1Fg}"/>
+                            <Label Grid.Column="1" Text="✓" FontFamily="DMSansMedium" FontSize="22" TextColor="{Binding Exp1Fg}" VerticalOptions="Center" IsVisible="{Binding Exp1Selected}"/>
                         </Grid>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding SelectExperienceCommand}" CommandParameter="{x:Int32 1}"/>
@@ -187,9 +224,9 @@
                         <Grid ColumnDefinitions="*,Auto">
                             <VerticalStackLayout Grid.Column="0" Spacing="2">
                                 <Label Text="AVANCERAD" FontFamily="BebasNeue" FontSize="22" CharacterSpacing="1" TextColor="{Binding Exp2Fg}"/>
-                                <Label Text="3+ år" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding Exp2Fg}" Opacity="0.7"/>
+                                <Label Text="3+ år · Avancerade scheman med deload" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding Exp2Fg}" Opacity="0.7"/>
                             </VerticalStackLayout>
-                            <Path Grid.Column="1" Style="{StaticResource ForwardChevron}" Stroke="{Binding Exp2Fg}"/>
+                            <Label Grid.Column="1" Text="✓" FontFamily="DMSansMedium" FontSize="22" TextColor="{Binding Exp2Fg}" VerticalOptions="Center" IsVisible="{Binding Exp2Selected}"/>
                         </Grid>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding SelectExperienceCommand}" CommandParameter="{x:Int32 2}"/>
@@ -198,7 +235,7 @@
                 </VerticalStackLayout>
 
                 <!-- ══ Steg 3: Mål ═══════════════════════════════════════ -->
-                <VerticalStackLayout IsVisible="{Binding IsStep3}" Spacing="12">
+                <VerticalStackLayout x:Name="Step3" IsVisible="{Binding IsStep3}" Spacing="12">
                     <Label Text="DITT MÅL"
                            FontFamily="BebasNeue" FontSize="44" CharacterSpacing="2"
                            TextColor="{StaticResource ForgeAccent}"
@@ -213,7 +250,7 @@
                                 <Label Text="STYRKA" FontFamily="BebasNeue" FontSize="28" CharacterSpacing="1" TextColor="{Binding GoalStrengthFg}"/>
                                 <Label Text="Bli starkare och lyfta tyngre" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding GoalStrengthFg}" Opacity="0.7"/>
                             </VerticalStackLayout>
-                            <Path Grid.Column="1" Style="{StaticResource ForwardChevron}" Stroke="{Binding GoalStrengthFg}"/>
+                            <Label Grid.Column="1" Text="✓" FontFamily="DMSansMedium" FontSize="26" TextColor="{Binding GoalStrengthFg}" VerticalOptions="Center" IsVisible="{Binding GoalStrengthSelected}"/>
                         </Grid>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding SelectGoalCommand}" CommandParameter="{x:Int32 0}"/>
@@ -225,7 +262,7 @@
                                 <Label Text="HYPERTROFI" FontFamily="BebasNeue" FontSize="28" CharacterSpacing="1" TextColor="{Binding GoalHyperFg}"/>
                                 <Label Text="Bygga muskler och förändra kroppen" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding GoalHyperFg}" Opacity="0.7"/>
                             </VerticalStackLayout>
-                            <Path Grid.Column="1" Style="{StaticResource ForwardChevron}" Stroke="{Binding GoalHyperFg}"/>
+                            <Label Grid.Column="1" Text="✓" FontFamily="DMSansMedium" FontSize="26" TextColor="{Binding GoalHyperFg}" VerticalOptions="Center" IsVisible="{Binding GoalHyperSelected}"/>
                         </Grid>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding SelectGoalCommand}" CommandParameter="{x:Int32 1}"/>
@@ -234,7 +271,7 @@
                 </VerticalStackLayout>
 
                 <!-- ══ Steg 4: Rekommendation ════════════════════════════ -->
-                <VerticalStackLayout IsVisible="{Binding IsStep4}" Spacing="0">
+                <VerticalStackLayout x:Name="Step4" IsVisible="{Binding IsStep4}" Spacing="0">
                     <Label Text="PERFEKT MATCH"
                            FontFamily="BebasNeue" FontSize="44" CharacterSpacing="2"
                            TextColor="{StaticResource ForgeAccent}"

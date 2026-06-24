@@ -91,14 +91,14 @@
                     </Grid>
 
                     <!-- Segment tabs — iOS glass pill -->
-                    <Border BackgroundColor="#33787882"
+                    <Border BackgroundColor="{StaticResource ForgePillTrack}"
                             StrokeThickness="0"
                             StrokeShape="RoundRectangle 50"
                             Padding="2">
                         <Grid x:Name="TabPills" ColumnDefinitions="*,*,*" HeightRequest="40"
                               SizeChanged="OnTabContainerSizeChanged">
                             <Border x:Name="TabIndicator" Grid.ColumnSpan="3"
-                                    BackgroundColor="#525260"
+                                    BackgroundColor="{StaticResource ForgePillIndicator}"
                                     StrokeThickness="0"
                                     StrokeShape="RoundRectangle 48"
                                     HorizontalOptions="Start" VerticalOptions="Fill"/>
@@ -142,7 +142,7 @@
                         <Border Style="{StaticResource CardFrame}" Padding="24,20">
                             <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
                                 <Label Text="{Binding LatestWeight}"
-                                       FontSize="60" FontAttributes="Bold"
+                                       FontFamily="BebasNeue" FontSize="60"
                                        CharacterSpacing="-1"
                                        TextColor="{AppThemeBinding Light={StaticResource LightAccentBlue}, Dark={StaticResource ForgeAccentBlue}}"
                                        HorizontalOptions="Center"/>
@@ -189,7 +189,7 @@
                                                    VerticalOptions="Center"
                                                    Margin="0,0,12,0"/>
                                             <Border Grid.Column="2"
-                                                    WidthRequest="36" HeightRequest="36"
+                                                    WidthRequest="44" HeightRequest="44"
                                                     BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}"
                                                     StrokeShape="Ellipse" StrokeThickness="0">
                                                 <views:AppIcon Source="ic_trash.png"
@@ -240,35 +240,35 @@
                                                FontFamily="BebasNeue" FontSize="22"
                                                TextColor="{StaticResource ForgeAccentPurple}"
                                                HorizontalOptions="Center"/>
-                                        <Label Text="MIDJA" Style="{StaticResource SectionLabel}" FontSize="9" HorizontalOptions="Center"/>
+                                        <Label Text="MIDJA" Style="{StaticResource SectionLabel}" FontSize="11" HorizontalOptions="Center"/>
                                     </VerticalStackLayout>
                                     <VerticalStackLayout Grid.Column="1" Spacing="3" HorizontalOptions="Center">
                                         <Label Text="{Binding LatestChest}"
                                                FontFamily="BebasNeue" FontSize="22"
                                                TextColor="{StaticResource ForgeAccentPurple}"
                                                HorizontalOptions="Center"/>
-                                        <Label Text="BRÖST" Style="{StaticResource SectionLabel}" FontSize="9" HorizontalOptions="Center"/>
+                                        <Label Text="BRÖST" Style="{StaticResource SectionLabel}" FontSize="11" HorizontalOptions="Center"/>
                                     </VerticalStackLayout>
                                     <VerticalStackLayout Grid.Column="2" Spacing="3" HorizontalOptions="Center">
                                         <Label Text="{Binding LatestHip}"
                                                FontFamily="BebasNeue" FontSize="22"
                                                TextColor="{StaticResource ForgeAccentPurple}"
                                                HorizontalOptions="Center"/>
-                                        <Label Text="HÖFT" Style="{StaticResource SectionLabel}" FontSize="9" HorizontalOptions="Center"/>
+                                        <Label Text="HÖFT" Style="{StaticResource SectionLabel}" FontSize="11" HorizontalOptions="Center"/>
                                     </VerticalStackLayout>
                                     <VerticalStackLayout Grid.Column="3" Spacing="3" HorizontalOptions="Center">
                                         <Label Text="{Binding LatestArm}"
                                                FontFamily="BebasNeue" FontSize="22"
                                                TextColor="{StaticResource ForgeAccentPurple}"
                                                HorizontalOptions="Center"/>
-                                        <Label Text="ARMAR" Style="{StaticResource SectionLabel}" FontSize="9" HorizontalOptions="Center"/>
+                                        <Label Text="ARMAR" Style="{StaticResource SectionLabel}" FontSize="11" HorizontalOptions="Center"/>
                                     </VerticalStackLayout>
                                     <VerticalStackLayout Grid.Column="4" Spacing="3" HorizontalOptions="Center">
                                         <Label Text="{Binding LatestThigh}"
                                                FontFamily="BebasNeue" FontSize="22"
                                                TextColor="{StaticResource ForgeAccentPurple}"
                                                HorizontalOptions="Center"/>
-                                        <Label Text="LÅR" Style="{StaticResource SectionLabel}" FontSize="9" HorizontalOptions="Center"/>
+                                        <Label Text="LÅR" Style="{StaticResource SectionLabel}" FontSize="11" HorizontalOptions="Center"/>
                                     </VerticalStackLayout>
                                 </Grid>
                                 <Label Text="Ingen data ännu – logga dina mått nedan"
@@ -296,7 +296,7 @@
                                                        Style="{StaticResource MutedLabel}" FontSize="12"/>
                                             </VerticalStackLayout>
                                             <Border Grid.Column="1"
-                                                    WidthRequest="36" HeightRequest="36"
+                                                    WidthRequest="44" HeightRequest="44"
                                                     BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}"
                                                     StrokeShape="Ellipse" StrokeThickness="0">
                                                 <views:AppIcon Source="ic_trash.png"
@@ -363,13 +363,13 @@
                         Margin="-18,-14"
                         InputTransparent="True"/>
                 <Border StrokeThickness="1"
-                        Stroke="#55B8B8BC"
+                        Stroke="{StaticResource ForgeBannerStroke}"
                         StrokeShape="RoundRectangle 22"
                         Padding="16,9,18,10">
                     <Border.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                            <GradientStop Color="#26262E" Offset="0"/>
-                            <GradientStop Color="#18181C" Offset="1"/>
+                            <GradientStop Color="{StaticResource ForgeSurface2}" Offset="0"/>
+                            <GradientStop Color="{StaticResource ForgeSurface}" Offset="1"/>
                         </LinearGradientBrush>
                     </Border.Background>
                     <Border.Shadow>

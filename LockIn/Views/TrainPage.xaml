@@ -64,7 +64,7 @@
                         <StackLayout Spacing="2">
                             <views:AppIcon Source="ic_calendar.png" WidthRequest="16" HeightRequest="16"
                                           HorizontalOptions="Start" Margin="0,0,0,2"
-                                          ForceTint="#38BDF8"/>
+                                          ForceTint="{StaticResource ForgeAccentBlue}"/>
                             <Label Text="{Binding WeekCount}"
                                    FontSize="28" FontAttributes="Bold"
                                    TextColor="{StaticResource ForgeAccentBlue}"/>
@@ -75,7 +75,7 @@
                         <StackLayout Spacing="2">
                             <views:AppIcon Source="ic_flame.png" WidthRequest="16" HeightRequest="16"
                                           HorizontalOptions="Start" Margin="0,0,0,2"
-                                          ForceTint="#FBBF24"/>
+                                          ForceTint="{StaticResource ForgeAccentAmber}"/>
                             <Label Text="{Binding Streak}"
                                    FontSize="28" FontAttributes="Bold"
                                    TextColor="{StaticResource ForgeAccentAmber}"/>
@@ -86,7 +86,7 @@
                         <StackLayout Spacing="2">
                             <views:AppIcon Source="ic_barbell.png" WidthRequest="16" HeightRequest="16"
                                           HorizontalOptions="Start" Margin="0,0,0,2"
-                                          ForceTint="#A78BFA"/>
+                                          ForceTint="{StaticResource ForgeAccentPurple}"/>
                             <Label Text="{Binding TotalCount}"
                                    FontSize="28" FontAttributes="Bold"
                                    TextColor="{StaticResource ForgeAccentPurple}"/>
@@ -102,9 +102,8 @@
                         StrokeThickness="1"
                         Stroke="{StaticResource ForgeAccent}"
                         Padding="14,12" Margin="0,0,0,4">
-                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
-                        <Label Grid.Column="0" Text="📉" FontSize="20" VerticalOptions="Center"/>
-                        <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                        <StackLayout Grid.Column="0" Spacing="2" VerticalOptions="Center">
                             <Label Text="DAGS FÖR DELOAD?"
                                    FontFamily="BebasNeue" FontSize="15"
                                    CharacterSpacing="0.5"
@@ -114,7 +113,7 @@
                                    FontSize="12"
                                    LineBreakMode="WordWrap"/>
                         </StackLayout>
-                        <Label Grid.Column="2" Text="✕"
+                        <Label Grid.Column="1" Text="✕"
                                FontSize="16"
                                TextColor="{StaticResource ForgeMuted}"
                                VerticalOptions="Center">
@@ -128,9 +127,13 @@
                 <!-- Muskelpoäng: Senaste 7 dagarna -->
                 <Border Style="{StaticResource CardFrame}" Padding="16,14" Margin="0,0,0,4">
                     <VerticalStackLayout Spacing="0">
-                        <Label Text="SENASTE 7 DAGARNA"
-                               Style="{StaticResource SectionLabel}"
-                               Margin="0,0,0,14"/>
+                        <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,14">
+                            <Label Text="TRÄNINGSVOLYM · 7 DAGAR"
+                                   Style="{StaticResource SectionLabel}"/>
+                            <Label Grid.Column="1" Text="MAX 10"
+                                   Style="{StaticResource SectionLabel}"
+                                   TextColor="{StaticResource ForgeMuted}"/>
+                        </Grid>
                         <StackLayout BindableLayout.ItemsSource="{Binding MuscleScores}" Spacing="13">
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate x:DataType="vm:MuscleScoreRow">
@@ -220,24 +223,35 @@
                                                 <DataTemplate x:DataType="models:WorkoutTemplate">
                                                     <Grid ColumnDefinitions="*,Auto"
                                                           Padding="14,10,12,10">
-                                                        <Label Grid.Column="0" Text="{Binding Name}"
-                                                               FontFamily="DMSansMedium" FontSize="14"
-                                                               VerticalOptions="Center"/>
-                                                        <Border Grid.Column="1"
-                                                                WidthRequest="36" HeightRequest="36"
-                                                                BackgroundColor="{StaticResource ForgeAccentPurple}"
-                                                                StrokeShape="Ellipse" StrokeThickness="0">
-                                                            <views:AppIcon Source="ic_play.png"
-                                                                           WidthRequest="18" HeightRequest="18"
-                                                                           ForceTint="White"
-                                                                           HorizontalOptions="Center"
-                                                                           VerticalOptions="Center"/>
-                                                            <Border.GestureRecognizers>
-                                                                <TapGestureRecognizer
-                                                                    Tapped="OnTemplateTapped"
-                                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TrainViewModel}}, Path=StartWorkoutCommand}"
-                                                                    CommandParameter="{Binding .}"/>
-                                                            </Border.GestureRecognizers>
+                                                        <Grid.GestureRecognizers>
+                                                            <TapGestureRecognizer
+                                                                Tapped="OnTemplateTapped"
+                                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TrainViewModel}}, Path=StartWorkoutCommand}"
+                                                                CommandParameter="{Binding .}"/>
+                                                        </Grid.GestureRecognizers>
+                                                        <StackLayout Grid.Column="0" Spacing="2" VerticalOptions="Center">
+                                                            <Label Text="{Binding Name}"
+                                                                   FontFamily="DMSansMedium" FontSize="14"/>
+                                                            <Label Text="{Binding LastUsedText}"
+                                                                   Style="{StaticResource SectionLabel}" FontSize="9"/>
+                                                        </StackLayout>
+                                                        <Border Grid.Column="2"
+                                                                WidthRequest="44" HeightRequest="44"
+                                                                BackgroundColor="Transparent"
+                                                                StrokeShape="Ellipse" StrokeThickness="0"
+                                                                VerticalOptions="Center"
+                                                                HorizontalOptions="Center">
+                                                            <Border WidthRequest="36" HeightRequest="36"
+                                                                    BackgroundColor="{StaticResource ForgeAccentPurple}"
+                                                                    StrokeShape="Ellipse" StrokeThickness="0"
+                                                                    HorizontalOptions="Center"
+                                                                    VerticalOptions="Center">
+                                                                <views:AppIcon Source="ic_play.png"
+                                                                               WidthRequest="18" HeightRequest="18"
+                                                                               ForceTint="White"
+                                                                               HorizontalOptions="Center"
+                                                                               VerticalOptions="Center"/>
+                                                            </Border>
                                                         </Border>
                                                     </Grid>
                                                 </DataTemplate>
@@ -289,7 +303,7 @@
                                         <StackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center">
                                             <Label Text="{Binding Name}"
                                                    FontFamily="BebasNeue" FontSize="22" CharacterSpacing="1"/>
-                                            <Label Text="TRYCK FÖR ATT STARTA"
+                                            <Label Text="{Binding LastUsedText}"
                                                    Style="{StaticResource SectionLabel}" FontSize="10"/>
                                         </StackLayout>
                                         <Border Grid.Column="2"
@@ -344,11 +358,11 @@
             <HorizontalStackLayout Spacing="10" HorizontalOptions="Center" VerticalOptions="Center">
                 <views:AppIcon Source="ic_play.png"
                                WidthRequest="18" HeightRequest="18"
-                               ForceTint="#0E0E10"
+                               ForceTint="{StaticResource ForgeFabForeground}"
                                VerticalOptions="Center"/>
                 <Label Text="FRITT PASS"
                        FontFamily="BebasNeue" FontSize="17" CharacterSpacing="2"
-                       TextColor="#0E0E10" VerticalOptions="Center"/>
+                       TextColor="{StaticResource ForgeFabForeground}" VerticalOptions="Center"/>
             </HorizontalStackLayout>
             <Border.GestureRecognizers>
                 <TapGestureRecognizer Command="{Binding StartFreeWorkoutCommand}" Tapped="OnFabTapped"/>

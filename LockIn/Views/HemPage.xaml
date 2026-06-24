@@ -40,7 +40,7 @@
                     </LinearGradientBrush>
                 </BoxView.Background>
             </BoxView>
-            <Grid Padding="22,14,48,12" VerticalOptions="Start">
+            <Grid Padding="22,14,22,12" VerticalOptions="Start">
                 <Label Text="{Binding UserName}"
                        HorizontalOptions="Center" HorizontalTextAlignment="Center"
                        FontFamily="BebasNeue" FontSize="18" CharacterSpacing="1"
@@ -98,7 +98,8 @@
                                                   Progress="{Binding GaugeProgress}"
                                                   HeightRequest="260"
                                                   WidthRequest="260"
-                                                  HorizontalOptions="Center"/>
+                                                  HorizontalOptions="Center"
+                                                  SemanticProperties.Description="{Binding GaugeAccessibilityLabel}"/>
                     </VerticalStackLayout>
                 </Border>
 
@@ -112,7 +113,7 @@
                         <Shadow Brush="Black" Offset="0,2" Radius="10" Opacity="0.18"/>
                     </Border.Shadow>
                     <VerticalStackLayout Spacing="6">
-                        <Label Text="IDAG"
+                        <Label Text="REKOMMENDATION"
                                Style="{StaticResource SectionLabel}"
                                TextColor="{StaticResource ForgeAccent}"/>
                         <Label Text="{Binding TodayRecommendation}"
@@ -128,13 +129,14 @@
 
                 <!-- ═══ STRAIN / RECOVERY / SÖMN-RINGAR ═══ -->
                 <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8" Margin="16,18,16,4">
-                    <StackLayout Grid.Column="0" Spacing="6" HorizontalOptions="Center">
+                    <StackLayout Grid.Column="0" Spacing="8" HorizontalOptions="Center">
                         <controls:MetricRingView Progress="{Binding StrainProgress}"
                                                  TargetProgress="{Binding StrainTarget}"
                                                  RingColor="{StaticResource ForgeAccentAmber}"
                                                  CenterText="{Binding StrainText}"
                                                  WidthRequest="90" HeightRequest="90"
-                                                 HorizontalOptions="Center"/>
+                                                 HorizontalOptions="Center"
+                                                 SemanticProperties.Description="{Binding StrainAccessibilityLabel}"/>
                         <Label Text="ANSTRÄNGNING" Style="{StaticResource SectionLabel}" HorizontalTextAlignment="Center"/>
                         <Label Text="{Binding StrainTargetText}"
                                FontFamily="BebasNeue" FontSize="10" CharacterSpacing="1.5"
@@ -147,16 +149,28 @@
                                                  RingColor="{StaticResource ForgeAccent}"
                                                  CenterText="{Binding RecoveryText}"
                                                  WidthRequest="90" HeightRequest="90"
-                                                 HorizontalOptions="Center"/>
+                                                 HorizontalOptions="Center"
+                                                 SemanticProperties.Description="{Binding RecoveryAccessibilityLabel}"/>
                         <Label Text="ÅTERHÄMTNING" Style="{StaticResource SectionLabel}" HorizontalTextAlignment="Center"/>
+                        <Label Text="{Binding RecoveryStatusText}"
+                               FontFamily="BebasNeue" FontSize="9" CharacterSpacing="1.5"
+                               TextColor="{StaticResource ForgeAccent}"
+                               Opacity="0.7"
+                               HorizontalTextAlignment="Center"/>
                     </StackLayout>
                     <StackLayout Grid.Column="2" Spacing="8" HorizontalOptions="Center">
                         <controls:MetricRingView Progress="{Binding SleepProgress}"
                                                  RingColor="{StaticResource ForgeAccentBlue}"
                                                  CenterText="{Binding SleepText}"
                                                  WidthRequest="90" HeightRequest="90"
-                                                 HorizontalOptions="Center"/>
+                                                 HorizontalOptions="Center"
+                                                 SemanticProperties.Description="{Binding SleepAccessibilityLabel}"/>
                         <Label Text="SÖMN" Style="{StaticResource SectionLabel}" HorizontalTextAlignment="Center"/>
+                        <Label Text="{Binding SleepStatusText}"
+                               FontFamily="BebasNeue" FontSize="9" CharacterSpacing="1.5"
+                               TextColor="{StaticResource ForgeAccentBlue}"
+                               Opacity="0.7"
+                               HorizontalTextAlignment="Center"/>
                     </StackLayout>
                 </Grid>
 
@@ -203,7 +217,7 @@
                                    FontSize="22" FontAttributes="Bold"
                                    HorizontalTextAlignment="Center"
                                    TextColor="{StaticResource ForgeAccentAmber}"/>
-                            <Label Text="AWAKE" Style="{StaticResource SectionLabel}" FontSize="9" HorizontalTextAlignment="Center"/>
+                            <Label Text="VAKEN" Style="{StaticResource SectionLabel}" FontSize="9" HorizontalTextAlignment="Center"/>
                         </VerticalStackLayout>
                     </Grid>
                 </Border>
@@ -259,7 +273,7 @@
                 </CollectionView>
 
                 <!-- ═══ STATS HEADER ═══ -->
-                <Label Text="IDAG" Style="{StaticResource SectionLabel}" Margin="22,18,0,10"/>
+                <Label Text="AKTIVITET" Style="{StaticResource SectionLabel}" Margin="22,18,0,10"/>
 
                 <!-- ═══ DATA CARDS 2×2 ═══ -->
                 <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto"
@@ -276,7 +290,8 @@
                                    FontSize="36" CharacterSpacing="0" LineHeight="1"
                                    TextColor="{AppThemeBinding Light={StaticResource LightAccent}, Dark={StaticResource ForgeAccent}}"/>
                             <Label Text="steg idag" Style="{StaticResource MutedLabel}" Margin="0,2,0,6"/>
-                            <controls:SparklineView Values="{Binding StepsValues}" StrokeColor="#B8B8BC" HeightRequest="38" BackgroundColor="Transparent"/>
+                            <controls:SparklineView Values="{Binding StepsValues}" StrokeColor="{StaticResource ForgeAccent}" HeightRequest="38" BackgroundColor="Transparent"
+                                                   SemanticProperties.Description="Stegtrend senaste 7 dagar"/>
                         </VerticalStackLayout>
                     </Border>
 
@@ -291,7 +306,8 @@
                                    FontSize="36" CharacterSpacing="0" LineHeight="1"
                                    TextColor="{AppThemeBinding Light={StaticResource LightAccentCoral}, Dark={StaticResource ForgeAccentCoral}}"/>
                             <Label Text="kcal" Style="{StaticResource MutedLabel}" Margin="0,2,0,6"/>
-                            <controls:SparklineView Values="{Binding CaloriesValues}" StrokeColor="#FB7185" HeightRequest="38" BackgroundColor="Transparent"/>
+                            <controls:SparklineView Values="{Binding CaloriesValues}" StrokeColor="{StaticResource ForgeAccentCoral}" HeightRequest="38" BackgroundColor="Transparent"
+                                                   SemanticProperties.Description="Kalorietrend senaste 7 dagar"/>
                         </VerticalStackLayout>
                     </Border>
 
@@ -306,7 +322,8 @@
                                    FontSize="36" CharacterSpacing="0" LineHeight="1"
                                    TextColor="{AppThemeBinding Light={StaticResource LightAccentBlue}, Dark={StaticResource ForgeAccentBlue}}"/>
                             <Label Text="minuter" Style="{StaticResource MutedLabel}" Margin="0,2,0,6"/>
-                            <controls:SparklineView Values="{Binding ActiveValues}" StrokeColor="#38BDF8" HeightRequest="38" BackgroundColor="Transparent"/>
+                            <controls:SparklineView Values="{Binding ActiveValues}" StrokeColor="{StaticResource ForgeAccentBlue}" HeightRequest="38" BackgroundColor="Transparent"
+                                                   SemanticProperties.Description="Aktiv tid senaste 7 dagar"/>
                         </VerticalStackLayout>
                     </Border>
 
@@ -321,7 +338,8 @@
                                    FontSize="36" CharacterSpacing="0" LineHeight="1"
                                    TextColor="{AppThemeBinding Light={StaticResource LightAccentPurple}, Dark={StaticResource ForgeAccentPurple}}"/>
                             <Label Text="slag/min" Style="{StaticResource MutedLabel}" Margin="0,2,0,6"/>
-                            <controls:SparklineView Values="{Binding HeartRateValues}" StrokeColor="#A78BFA" HeightRequest="38" BackgroundColor="Transparent"/>
+                            <controls:SparklineView Values="{Binding HeartRateValues}" StrokeColor="{StaticResource ForgeAccentPurple}" HeightRequest="38" BackgroundColor="Transparent"
+                                                   SemanticProperties.Description="Maxpuls senaste 7 dagar"/>
                         </VerticalStackLayout>
                     </Border>
                 </Grid>
@@ -359,8 +377,8 @@
                     Padding="16,9,18,10">
                 <Border.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                        <GradientStop Color="#26262E" Offset="0"/>
-                        <GradientStop Color="#18181C" Offset="1"/>
+                        <GradientStop Color="{StaticResource ForgeSurface2}" Offset="0"/>
+                        <GradientStop Color="{StaticResource ForgeSurface}" Offset="1"/>
                     </LinearGradientBrush>
                 </Border.Background>
                 <Border.Shadow>

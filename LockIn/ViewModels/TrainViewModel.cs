@@ -5,6 +5,7 @@ using LockIn.Models;
 using LockIn.Services;
 using LockIn.Views;
 using System.Collections.ObjectModel;
+using LockIn;
 
 namespace LockIn.ViewModels;
 
@@ -26,6 +27,10 @@ public partial class TrainViewModel(DatabaseService db, ActiveWorkoutStateServic
     {
         IsLoading = true;
         var templates = await db.GetTemplatesAsync();
+        var lastUsedMap = await db.GetLastSessionDatePerTemplateAsync();
+        foreach (var t in templates)
+            if (lastUsedMap.TryGetValue(t.Id, out var dt))
+                t.LastUsedAt = dt;
 
         ProgramGroups.Clear();
         var grouped = templates
@@ -179,6 +184,6 @@ public class MuscleScoreRow
     public double ScaleFraction => Score / 10.0;
     public string ScoreText => Score >= 0.05 ? Score.ToString("F1") : "—";
     public Color ScoreColor => Score >= 0.05
-        ? Color.FromArgb("#B8B8BC")
-        : Color.FromArgb("#303038");
+        ? DesignTokens.Accent
+        : DesignTokens.TextDim;
 }

@@ -49,7 +49,8 @@
                         BackgroundColor="{StaticResource ForgeAccentAmberDim}"
                         StrokeShape="RoundRectangle 10" StrokeThickness="0"
                         Padding="12,8">
-                    <Label Text="🏆" FontSize="18" VerticalOptions="Center"/>
+                    <Label Text="MERIT" FontFamily="BebasNeue" FontSize="12" CharacterSpacing="1"
+                           TextColor="{StaticResource ForgeAccentAmber}" VerticalOptions="Center"/>
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding OpenAchievementsCommand}" Tapped="OnAchievementTapped"/>
                     </Border.GestureRecognizers>
@@ -77,7 +78,8 @@
                                 BackgroundColor="{StaticResource ForgeAccentAmberDim}"
                                 StrokeShape="RoundRectangle 10" StrokeThickness="0"
                                 Padding="12,8" VerticalOptions="Center">
-                            <Label Text="🏆" FontSize="18" VerticalOptions="Center"/>
+                            <Label Text="MERIT" FontFamily="BebasNeue" FontSize="12" CharacterSpacing="1"
+                                   TextColor="{StaticResource ForgeAccentAmber}" VerticalOptions="Center"/>
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding OpenAchievementsCommand}" Tapped="OnAchievementTapped"/>
                             </Border.GestureRecognizers>
@@ -90,25 +92,29 @@
 
                             <!-- Månadsnavigering -->
                             <Grid ColumnDefinitions="Auto,*,Auto">
-                                <Label Grid.Column="0" Text="‹"
-                                       FontSize="26" TextColor="{StaticResource ForgeMuted}"
-                                       VerticalOptions="Center" Padding="4,0,12,0">
-                                    <Label.GestureRecognizers>
+                                <Border Grid.Column="0" BackgroundColor="Transparent" StrokeThickness="0"
+                                        MinimumWidthRequest="44" MinimumHeightRequest="44"
+                                        HorizontalOptions="Start" VerticalOptions="Center">
+                                    <Label Text="‹" FontSize="26" TextColor="{StaticResource ForgeMuted}"
+                                           HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    <Border.GestureRecognizers>
                                         <TapGestureRecognizer Tapped="OnCalNavTapped" Command="{Binding PrevMonthCommand}"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
+                                    </Border.GestureRecognizers>
+                                </Border>
                                 <Label Grid.Column="1"
                                        Text="{Binding CalendarTitle}"
                                        FontFamily="BebasNeue" FontSize="18" CharacterSpacing="1"
                                        TextColor="{StaticResource ForgeText}"
                                        HorizontalOptions="Center" VerticalOptions="Center"/>
-                                <Label Grid.Column="2" Text="›"
-                                       FontSize="26" TextColor="{StaticResource ForgeMuted}"
-                                       VerticalOptions="Center" Padding="12,0,4,0">
-                                    <Label.GestureRecognizers>
+                                <Border Grid.Column="2" BackgroundColor="Transparent" StrokeThickness="0"
+                                        MinimumWidthRequest="44" MinimumHeightRequest="44"
+                                        HorizontalOptions="End" VerticalOptions="Center">
+                                    <Label Text="›" FontSize="26" TextColor="{StaticResource ForgeMuted}"
+                                           HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    <Border.GestureRecognizers>
                                         <TapGestureRecognizer Tapped="OnCalNavTapped" Command="{Binding NextMonthCommand}"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
+                                    </Border.GestureRecognizers>
+                                </Border>
                             </Grid>
 
                             <!-- Veckodagsrubriker -->
@@ -132,11 +138,11 @@
 
                     <!-- Filter + Sort -->
                     <StackLayout Spacing="8">
-                        <Border BackgroundColor="#33787882" StrokeThickness="0" StrokeShape="RoundRectangle 50" Padding="2">
+                        <Border BackgroundColor="{StaticResource ForgePillTrack}" StrokeThickness="0" StrokeShape="RoundRectangle 50" Padding="2">
                             <Grid x:Name="PeriodPills" ColumnDefinitions="*,*,*" HeightRequest="40"
                                   SizeChanged="OnPeriodContainerSizeChanged">
                                 <Border x:Name="PeriodIndicator" Grid.ColumnSpan="3"
-                                        BackgroundColor="#525260"
+                                        BackgroundColor="{StaticResource ForgePillIndicator}"
                                         StrokeThickness="0"
                                         StrokeShape="RoundRectangle 48"
                                         HorizontalOptions="Start" VerticalOptions="Fill"/>
@@ -169,11 +175,11 @@
                                 </Border>
                             </Grid>
                         </Border>
-                        <Border BackgroundColor="#33787882" StrokeThickness="0" StrokeShape="RoundRectangle 50" Padding="2">
+                        <Border BackgroundColor="{StaticResource ForgePillTrack}" StrokeThickness="0" StrokeShape="RoundRectangle 50" Padding="2">
                             <Grid x:Name="SortPills" ColumnDefinitions="*,*" HeightRequest="38"
                                   SizeChanged="OnSortContainerSizeChanged">
                                 <Border x:Name="SortIndicator" Grid.ColumnSpan="2"
-                                        BackgroundColor="#525260"
+                                        BackgroundColor="{StaticResource ForgePillIndicator}"
                                         StrokeThickness="0"
                                         StrokeShape="RoundRectangle 48"
                                         HorizontalOptions="Start" VerticalOptions="Fill"/>
@@ -202,12 +208,12 @@
                     <!-- Empty state -->
                     <StackLayout IsVisible="{Binding HasNoSessions}"
                                  HorizontalOptions="Center" Spacing="8" Margin="0,40,0,0">
-                        <Label Text="INGA PASS"
+                        <Label Text="{Binding EmptyStateTitle}"
                                Style="{StaticResource DisplayLabel}"
                                FontSize="22"
                                HorizontalOptions="Center"
                                TextColor="{StaticResource ForgeMuted}"/>
-                        <Label Text="Starta ditt första pass i Träna-fliken"
+                        <Label Text="{Binding EmptyStateSubtitle}"
                                Style="{StaticResource MutedLabel}"
                                HorizontalOptions="Center"
                                HorizontalTextAlignment="Center"/>
@@ -242,10 +248,11 @@
                                                    FontSize="12"
                                                    VerticalOptions="Center"/>
                                         </Grid>
-                                            <Grid ColumnDefinitions="*,*,*,Auto">
+                                            <Grid ColumnDefinitions="*,*,Auto,Auto">
                                                 <StackLayout Grid.Column="0" Spacing="1">
                                                     <Label Text="{Binding TotalVolume, StringFormat='{0:F0}'}"
-                                                           FontSize="28" FontAttributes="Bold"
+                                                           Style="{StaticResource HeroNumber}"
+                                                           FontSize="28"
                                                            TextColor="{StaticResource ForgeAccentBlue}"/>
                                                     <Label Text="KG VOLYM" Style="{StaticResource SectionLabel}"/>
                                                 </StackLayout>
@@ -292,13 +299,13 @@
                         Margin="-18,-14"
                         InputTransparent="True"/>
                 <Border StrokeThickness="1"
-                        Stroke="#55B8B8BC"
+                        Stroke="{StaticResource ForgeBannerStroke}"
                         StrokeShape="RoundRectangle 22"
                         Padding="16,9,18,10">
                     <Border.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                            <GradientStop Color="#26262E" Offset="0"/>
-                            <GradientStop Color="#18181C" Offset="1"/>
+                            <GradientStop Color="{StaticResource ForgeSurface2}" Offset="0"/>
+                            <GradientStop Color="{StaticResource ForgeSurface}" Offset="1"/>
                         </LinearGradientBrush>
                     </Border.Background>
                     <Border.Shadow>

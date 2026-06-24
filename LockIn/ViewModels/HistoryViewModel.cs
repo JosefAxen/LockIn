@@ -4,6 +4,7 @@ using LockIn.Services;
 using LockIn.Views;
 using System.Collections.ObjectModel;
 using static LockIn.Services.DatabaseService;
+using LockIn;
 
 namespace LockIn.ViewModels;
 
@@ -16,6 +17,20 @@ public partial class HistoryViewModel(DatabaseService db) : ObservableObject
     [ObservableProperty] private int _selectedSort = 0;
     [ObservableProperty] private bool _hasNoSessions;
     [ObservableProperty] private string _calendarTitle = "";
+
+    public string EmptyStateTitle => _allSessions.Count == 0
+        ? "INGA PASS"
+        : "INGA TRÄFFAR";
+
+    public string EmptyStateSubtitle => _allSessions.Count == 0
+        ? "Starta ditt första pass i Träna-fliken"
+        : "Prova ett annat filter eller en annan period";
+
+    partial void OnHasNoSessionsChanged(bool value)
+    {
+        OnPropertyChanged(nameof(EmptyStateTitle));
+        OnPropertyChanged(nameof(EmptyStateSubtitle));
+    }
 
     private List<SessionSummaryRow> _allSessions = new();
 
@@ -31,10 +46,10 @@ public partial class HistoryViewModel(DatabaseService db) : ObservableObject
 
     public event Action? CalendarChanged;
 
-    private static readonly Color _glassActiveBg  = Color.FromArgb("#2BFFFFFF");
-    private static readonly Color _glassActiveFg  = Color.FromArgb("#E2E8F0");
-    private static readonly Color _glassInactiveBg = Colors.Transparent;
-    private static readonly Color _glassInactiveFg = Color.FromArgb("#80FFFFFF");
+    private static readonly Color _glassActiveBg  = DesignTokens.GlassActiveBg;
+    private static readonly Color _glassActiveFg  = DesignTokens.GlassActiveFg;
+    private static readonly Color _glassInactiveBg = DesignTokens.GlassInactiveBg;
+    private static readonly Color _glassInactiveFg = DesignTokens.GlassInactiveFg;
 
     // Period tab colors
     public Color Period0Bg => SelectedPeriod == 0 ? _glassActiveBg : _glassInactiveBg;
@@ -130,6 +145,8 @@ public partial class HistoryViewModel(DatabaseService db) : ObservableObject
     public void SelectCalendarDay(int day)
     {
         SelectedCalendarDay = SelectedCalendarDay == day ? 0 : day;
+        if (SelectedCalendarDay > 0)
+            SelectedPeriod = 0;
         ApplyFilterSort();
         CalendarChanged?.Invoke();
     }

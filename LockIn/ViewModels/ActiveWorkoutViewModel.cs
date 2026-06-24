@@ -190,9 +190,13 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
     [RelayCommand]
     private async Task RemoveExerciseAsync(WorkoutExerciseSection section)
     {
+        var loggedCount = section.Sets.Count(s => s.IsCompleted);
+        var detail = loggedCount > 0
+            ? $"Ta bort {section.ExerciseName}? {loggedCount} loggade set försvinner."
+            : $"Ta bort {section.ExerciseName} från passet?";
         var ok = await Shell.Current.DisplayAlert(
             "Ta bort övning",
-            $"Ta bort {section.ExerciseName} från passet?",
+            detail,
             "Ta bort", "Avbryt");
         if (!ok) return;
         await db.DeleteSessionExerciseWithSetsAsync(section.SessionExerciseId);

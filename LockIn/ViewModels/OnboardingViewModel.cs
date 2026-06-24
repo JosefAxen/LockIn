@@ -80,20 +80,51 @@ public partial class OnboardingViewModel(DatabaseService db) : ObservableObject
     // ── Weekly goal selection (2–6) ────────────────────────────────────────
 
     [RelayCommand]
-    private void SelectWeeklyGoal(int days)
+    private async Task SelectWeeklyGoalAsync(int days)
     {
         SelectedWeeklyGoal = days;
         RefreshWeeklyGoalColors();
         OnPropertyChanged(nameof(CanGoNext));
+        await AutoAdvanceAsync();
     }
 
     // ── Experience & goal selection ────────────────────────────────────────
 
     [RelayCommand]
-    private void SelectExperience(int level) => SelectedExperience = level;
+    private async Task SelectExperienceAsync(int level)
+    {
+        SelectedExperience = level;
+        await AutoAdvanceAsync();
+    }
 
     [RelayCommand]
-    private void SelectGoal(int goal) => SelectedGoal = goal;
+    private async Task SelectGoalAsync(int goal)
+    {
+        SelectedGoal = goal;
+        await AutoAdvanceAsync();
+    }
+
+    private async Task AutoAdvanceAsync()
+    {
+        if (!CanGoNext || CurrentStep >= 4) return;
+        // Liten paus så användaren ser sitt val markeras innan vi byter steg
+        await Task.Delay(220);
+        if (CanGoNext && CurrentStep < 4)
+            CurrentStep++;
+    }
+
+    // ── Universal skip (alla steg) ─────────────────────────────────────────
+
+    [RelayCommand]
+    private async Task SkipOnboardingAsync()
+    {
+        var ok = await Shell.Current.DisplayAlert(
+            "Hoppa över?",
+            "Du kan välja program senare i Bibliotek.",
+            "Hoppa över", "Avbryt");
+        if (!ok) return;
+        await FinishOnboardingAsync(activateProgram: false);
+    }
 
     // ── Recommendation ─────────────────────────────────────────────────────
 
@@ -153,10 +184,10 @@ public partial class OnboardingViewModel(DatabaseService db) : ObservableObject
 
     // ── Card colors ────────────────────────────────────────────────────────
 
-    private static Color SelBg  => Color.FromArgb("#B8B8BC");
-    private static Color SelFg  => Color.FromArgb("#0E0E10");
-    private static Color IdleBg => Color.FromArgb("#222228");
-    private static Color IdleFg => Color.FromArgb("#E2E8F0");
+    private static Color SelBg  => DesignTokens.Accent;
+    private static Color SelFg  => DesignTokens.FabForeground;
+    private static Color IdleBg => DesignTokens.Surface2;
+    private static Color IdleFg => DesignTokens.Text;
 
     // Weekly goal (2–6)
     public Color Wk2Bg => SelectedWeeklyGoal == 2 ? SelBg : IdleBg;
@@ -186,12 +217,18 @@ public partial class OnboardingViewModel(DatabaseService db) : ObservableObject
     public Color Exp0Fg => SelectedExperience == 0 ? SelFg : IdleFg;
     public Color Exp1Fg => SelectedExperience == 1 ? SelFg : IdleFg;
     public Color Exp2Fg => SelectedExperience == 2 ? SelFg : IdleFg;
+    public bool  Exp0Selected => SelectedExperience == 0;
+    public bool  Exp1Selected => SelectedExperience == 1;
+    public bool  Exp2Selected => SelectedExperience == 2;
 
     private void RefreshExperienceColors()
     {
         OnPropertyChanged(nameof(Exp0Bg)); OnPropertyChanged(nameof(Exp0Fg));
         OnPropertyChanged(nameof(Exp1Bg)); OnPropertyChanged(nameof(Exp1Fg));
         OnPropertyChanged(nameof(Exp2Bg)); OnPropertyChanged(nameof(Exp2Fg));
+        OnPropertyChanged(nameof(Exp0Selected));
+        OnPropertyChanged(nameof(Exp1Selected));
+        OnPropertyChanged(nameof(Exp2Selected));
     }
 
     // Training goal
@@ -199,6 +236,8 @@ public partial class OnboardingViewModel(DatabaseService db) : ObservableObject
     public Color GoalStrengthFg => SelectedGoal == 0 ? SelFg : IdleFg;
     public Color GoalHyperBg    => SelectedGoal == 1 ? SelBg : IdleBg;
     public Color GoalHyperFg    => SelectedGoal == 1 ? SelFg : IdleFg;
+    public bool  GoalStrengthSelected => SelectedGoal == 0;
+    public bool  GoalHyperSelected    => SelectedGoal == 1;
 
     private void RefreshGoalColors()
     {
@@ -206,5 +245,7 @@ public partial class OnboardingViewModel(DatabaseService db) : ObservableObject
         OnPropertyChanged(nameof(GoalStrengthFg));
         OnPropertyChanged(nameof(GoalHyperBg));
         OnPropertyChanged(nameof(GoalHyperFg));
+        OnPropertyChanged(nameof(GoalStrengthSelected));
+        OnPropertyChanged(nameof(GoalHyperSelected));
     }
 }

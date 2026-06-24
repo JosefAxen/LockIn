@@ -8,7 +8,7 @@ public class MetricRingView : SKCanvasView
 {
     public static readonly BindableProperty ProgressProperty =
         BindableProperty.Create(nameof(Progress), typeof(float), typeof(MetricRingView), 0f,
-            propertyChanged: (b, _, _) => ((MetricRingView)b).InvalidateSurface());
+            propertyChanged: (b, o, n) => ((MetricRingView)b).OnProgressChanged((float)o, (float)n));
 
     public static readonly BindableProperty RingColorProperty =
         BindableProperty.Create(nameof(RingColor), typeof(Color), typeof(MetricRingView), Colors.White,
@@ -48,6 +48,31 @@ public class MetricRingView : SKCanvasView
 
     private const float StartAngleDeg = 135f;
     private const float TotalSweepDeg = 270f;
+
+    // Entrance animation: animera Progress 0 → target första gången värdet sätts (per instans)
+    private bool _isAnimating;
+    private bool _hasAnimatedIn;
+
+    private void OnProgressChanged(float oldValue, float newValue)
+    {
+        if (_isAnimating)
+        {
+            InvalidateSurface();
+            return;
+        }
+        if (!_hasAnimatedIn && newValue > 0.001f)
+        {
+            _hasAnimatedIn = true;
+            _isAnimating = true;
+            var anim = new Animation(v => Progress = (float)v, 0, newValue, Easing.CubicOut);
+            anim.Commit(this, "RingEntry", length: 800, rate: 16,
+                finished: (_, __) => { _isAnimating = false; InvalidateSurface(); });
+        }
+        else
+        {
+            InvalidateSurface();
+        }
+    }
 
     protected override void OnPaintSurface(SKPaintSurfaceEventArgs e)
     {

@@ -21,15 +21,15 @@ public class AtmosphericBackgroundView : SKCanvasView
 
     private static readonly Spark[] _sparks = CreateSparks();
 
-    // ── Cached static colors (parsed once) ──────────────────────────────────
+    // ── Cached static colors (via DesignTokens) ─────────────────────────────
 
-    private static readonly SKColor s_base       = SKColor.Parse("#141418");
-    private static readonly SKColor s_glow1Inner = SKColor.Parse("#28B8B8BC");
-    private static readonly SKColor s_glow2Inner = SKColor.Parse("#1CB8B8BC");
-    private static readonly SKColor s_vigOuter   = SKColor.Parse("#22000000");
-    private static readonly SKColor s_coreColor  = SKColor.Parse("#FDE68A");
-    private static readonly SKColor s_midColor   = SKColor.Parse("#FBBF24");
-    private static readonly SKColor s_outerColor = SKColor.Parse("#FB923C");
+    private static readonly SKColor s_base       = DesignTokens.SK_Background;
+    private static readonly SKColor s_glow1Inner = DesignTokens.SK_AccentGlow1;
+    private static readonly SKColor s_glow2Inner = DesignTokens.SK_AccentGlow2;
+    private static readonly SKColor s_vigOuter   = DesignTokens.SK_Vignette;
+    private static readonly SKColor s_coreColor  = DesignTokens.SK_SparkCore;
+    private static readonly SKColor s_midColor   = DesignTokens.SK_SparkMid;
+    private static readonly SKColor s_outerColor = DesignTokens.SK_SparkOuter;
 
     // ── Pre-baked static background (gradients + vignette) ──────────────────
     // Skapas en gång när storleken är känd. Partiklarna ritas ovanpå varje frame.
@@ -50,6 +50,7 @@ public class AtmosphericBackgroundView : SKCanvasView
 
     private IDispatcherTimer? _timer;
     private readonly DateTime _start = DateTime.Now;
+    private bool _reduceMotion;
 
     // ── Lifecycle ────────────────────────────────────────────────────────────
 
@@ -62,6 +63,14 @@ public class AtmosphericBackgroundView : SKCanvasView
 
     private void StartTimer()
     {
+#if IOS
+        _reduceMotion = UIKit.UIAccessibility.IsReduceMotionEnabled;
+#endif
+        if (_reduceMotion)
+        {
+            InvalidateSurface(); // statisk bakgrund, inga partiklar
+            return;
+        }
         if (_timer is null)
         {
             _timer = Dispatcher.CreateTimer();
@@ -88,7 +97,8 @@ public class AtmosphericBackgroundView : SKCanvasView
 
         EnsureBackground(w, h);
         canvas.DrawBitmap(_bgBitmap, 0, 0);
-        DrawSparks(canvas, w, h);
+        if (!_reduceMotion)
+            DrawSparks(canvas, w, h);
     }
 
     // Skapar (eller återskapar vid storleksändring) den statiska bakgrunden.

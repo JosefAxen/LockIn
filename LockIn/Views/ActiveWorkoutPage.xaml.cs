@@ -13,6 +13,27 @@ public partial class ActiveWorkoutPage : ContentPage
         BindingContext = vm;
         vm.PRScored += (_, _) => MainThread.BeginInvokeOnMainThread(() => Confetti.Start());
         vm.ScrollToSectionRequested += OnScrollToSectionRequested;
+        vm.PropertyChanged += OnVmPropertyChanged;
+    }
+
+    private async void OnVmPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (BindingContext is not ActiveWorkoutViewModel vm) return;
+
+        if (e.PropertyName == nameof(ActiveWorkoutViewModel.HasPR) && vm.HasPR)
+            await SlideInBannerAsync(PrBanner);
+        else if (e.PropertyName == nameof(ActiveWorkoutViewModel.HasAutoProgress) && vm.HasAutoProgress)
+            await SlideInBannerAsync(AutoProgressBanner);
+    }
+
+    private static async Task SlideInBannerAsync(VisualElement banner)
+    {
+        banner.Opacity = 0;
+        banner.TranslationY = -12;
+        await Task.WhenAll(
+            banner.FadeTo(1, 280, Easing.CubicOut),
+            banner.TranslateTo(0, 0, 280, Easing.CubicOut)
+        );
     }
 
     private void OnScrollToSectionRequested(object? sender, int sessionExerciseId)
@@ -187,7 +208,20 @@ public partial class ActiveWorkoutPage : ContentPage
 
     private static async void OnDonePointerReleased(object? sender, PointerEventArgs e)
     {
-        if (sender is PointerGestureRecognizer pgr && pgr.Parent is VisualElement ve)
-            await ve.ScaleTo(1.0, 230, Easing.SpringOut);
+        if (sender is not PointerGestureRecognizer pgr) return;
+        if (pgr.Parent is not VisualElement ve) return;
+
+        await ve.ScaleTo(1.0, 230, Easing.SpringOut);
+
+        // Liten paus så CompleteSetCommand hinner toggla IsCompleted innan vi kollar
+        await Task.Delay(40);
+
+        // Celebrera när settet just blev klart (false→true). Hoppa över toggle-off.
+        if (ve.BindingContext is LoggedSetRow row && row.IsCompleted)
+        {
+            HapticFeedback.Default.Perform(HapticFeedbackType.Click);
+            await ve.ScaleTo(1.18, 110, Easing.CubicOut);
+            await ve.ScaleTo(1.0, 140, Easing.SpringOut);
+        }
     }
 }

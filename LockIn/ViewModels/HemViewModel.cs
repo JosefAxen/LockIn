@@ -43,6 +43,16 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
     [ObservableProperty] private float  _sleepProgress;
     [ObservableProperty] private string _sleepText    = "–";
 
+    // Statusindikatorer — kontext för mätvärden (OPTIMAL / BRA / MEDEL / LÅGT etc.)
+    [ObservableProperty] private string _recoveryStatusText = "";
+    [ObservableProperty] private string _sleepStatusText    = "";
+
+    // Accessibility-labels för SkiaSharp-kontroller (VoiceOver)
+    [ObservableProperty] private string _gaugeAccessibilityLabel    = "Träningsscore laddas";
+    [ObservableProperty] private string _strainAccessibilityLabel   = "Ansträngning laddas";
+    [ObservableProperty] private string _recoveryAccessibilityLabel = "Återhämtning laddas";
+    [ObservableProperty] private string _sleepAccessibilityLabel    = "Sömn laddas";
+
     public float GaugeProgress => (float)(TrainingScore / 100.0);
 
     [ObservableProperty] private string _userName = "";
@@ -249,6 +259,28 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
             }
             StrainTarget     = (float)(target / 100.0);
             StrainTargetText = $"MÅL {(int)target}";
+
+            // Statusindikatorer
+            RecoveryStatusText = recoveryPct switch
+            {
+                >= 80 => "OPTIMAL",
+                >= 60 => "BRA",
+                >= 40 => "MEDEL",
+                _     => "LÅGT"
+            };
+            SleepStatusText = sleepH switch
+            {
+                >= 7.5 => "TILLRÄCKLIG",
+                >= 6.0 => "OK",
+                >= 1.0 => "FÖR LITE",
+                _      => "–"
+            };
+
+            // Accessibility-labels
+            GaugeAccessibilityLabel    = $"Träningsscore: {(int)score} av 100";
+            StrainAccessibilityLabel   = hasStrainData ? $"Ansträngning: {(int)strainPct} av 100" : "Ansträngning: ingen data";
+            RecoveryAccessibilityLabel = $"Återhämtning: {(int)recoveryPct} av 100";
+            SleepAccessibilityLabel    = sleepH > 0 ? $"Sömn: {sleepH:F1} timmar" : "Sömn: ingen data";
 
             var (recHead, recDetail) = BuildRecommendation(recoveryPct, recentSessions);
             TodayRecommendation       = recHead;

@@ -32,8 +32,8 @@
         <BoxView Grid.RowSpan="2" VerticalOptions="Start" HeightRequest="90" InputTransparent="True" ZIndex="19">
             <BoxView.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <GradientStop Color="#28141418" Offset="0.0"/>
-                    <GradientStop Color="#00141418" Offset="1.0"/>
+                    <GradientStop Color="{StaticResource ForgeStatusBarOverlay}" Offset="0.0"/>
+                    <GradientStop Color="{StaticResource ForgeStatusBarOverlayClear}" Offset="1.0"/>
                 </LinearGradientBrush>
             </BoxView.Background>
         </BoxView>
@@ -44,20 +44,20 @@
             <BoxView InputTransparent="True">
                 <BoxView.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                        <GradientStop Color="#D8141418" Offset="0.0"/>
-                        <GradientStop Color="#90141418" Offset="0.35"/>
-                        <GradientStop Color="#38141418" Offset="0.65"/>
-                        <GradientStop Color="#00141418" Offset="1.0"/>
+                        <GradientStop Color="{StaticResource ForgeStickyHeaderTop}" Offset="0.0"/>
+                        <GradientStop Color="{StaticResource ForgeStickyHeaderMid1}" Offset="0.35"/>
+                        <GradientStop Color="{StaticResource ForgeStickyHeaderMid2}" Offset="0.65"/>
+                        <GradientStop Color="{StaticResource ForgeStatusBarOverlayClear}" Offset="1.0"/>
                     </LinearGradientBrush>
                 </BoxView.Background>
             </BoxView>
             <!-- Compact mini-toolbar: back + plate-calc + tid (inget namn) -->
             <Grid Padding="16,56,20,8" ColumnDefinitions="Auto,*,Auto,Auto" VerticalOptions="Start">
                 <Border Grid.Column="0"
-                        WidthRequest="36" HeightRequest="36"
+                        WidthRequest="44" HeightRequest="44"
                         StrokeShape="Ellipse"
-                        BackgroundColor="#17FFFFFF"
-                        Stroke="#29FFFFFF"
+                        BackgroundColor="{StaticResource ForgeOverlayWeak}"
+                        Stroke="{StaticResource ForgeOverlayStroke}"
                         StrokeThickness="0.5"
                         VerticalOptions="Center">
                     <Path Style="{StaticResource BackChevron}"/>
@@ -66,7 +66,7 @@
                     </Border.GestureRecognizers>
                 </Border>
                 <Border Grid.Column="2"
-                        WidthRequest="40" HeightRequest="40"
+                        WidthRequest="44" HeightRequest="44"
                         BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}"
                         StrokeShape="Ellipse" StrokeThickness="0"
                         Margin="0,0,6,0">
@@ -86,15 +86,15 @@
 
         <!-- Scrollable content (TopBar ligger som första element och scrollar bort) -->
         <ScrollView x:Name="MainScrollView" Grid.Row="0" Grid.RowSpan="2" VerticalScrollBarVisibility="Never" Scrolled="OnScrolled">
-            <StackLayout Padding="16,0,16,120" Spacing="12">
+            <StackLayout Padding="16,0,16,140" Spacing="12">
 
                 <!-- Top bar — scrollar med innehållet -->
                 <Grid x:Name="TopBar" Padding="0,56,4,8" ColumnDefinitions="Auto,*,Auto,Auto">
                     <Border Grid.Column="0"
-                            WidthRequest="36" HeightRequest="36"
+                            WidthRequest="44" HeightRequest="44"
                             StrokeShape="Ellipse"
-                            BackgroundColor="#17FFFFFF"
-                            Stroke="#29FFFFFF"
+                            BackgroundColor="{StaticResource ForgeOverlayWeak}"
+                            Stroke="{StaticResource ForgeOverlayStroke}"
                             StrokeThickness="0.5"
                             VerticalOptions="Center">
                         <Path Style="{StaticResource BackChevron}"/>
@@ -105,10 +105,11 @@
                     <Label Grid.Column="1" Text="{Binding TemplateName}"
                            Style="{StaticResource DisplayLabel}"
                            TextColor="{StaticResource ForgeText}"
-                           FontSize="22"
+                           FontSize="20"
+                           CharacterSpacing="0"
                            HorizontalOptions="Center" VerticalOptions="Center"/>
                     <Border Grid.Column="2"
-                            WidthRequest="40" HeightRequest="40"
+                            WidthRequest="44" HeightRequest="44"
                             BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}"
                             StrokeShape="Ellipse" StrokeThickness="0"
                             Margin="0,0,6,0">
@@ -127,7 +128,8 @@
 
 
                 <!-- PR Banner -->
-                <Border IsVisible="{Binding HasPR}"
+                <Border x:Name="PrBanner"
+                        IsVisible="{Binding HasPR}"
                         BackgroundColor="{StaticResource ForgeAccentAmberDim}"
                         Stroke="{StaticResource ForgeAccentAmber}"
                         StrokeShape="RoundRectangle 12"
@@ -143,7 +145,8 @@
                 </Border>
 
                 <!-- Auto-progression Banner -->
-                <Border IsVisible="{Binding HasAutoProgress}"
+                <Border x:Name="AutoProgressBanner"
+                        IsVisible="{Binding HasAutoProgress}"
                         BackgroundColor="{StaticResource ForgeAccentDim}"
                         StrokeShape="RoundRectangle 12"
                         StrokeThickness="0" Padding="14,12">
@@ -166,7 +169,7 @@
                                     StrokeThickness="0"
                                     Padding="0">
                                 <Border.Shadow>
-                                    <Shadow Brush="{Binding AccentBrush}" Offset="0,0" Radius="22" Opacity="0.18"/>
+                                    <Shadow Brush="{Binding AccentBrush}" Offset="0,0" Radius="16" Opacity="0.12"/>
                                 </Border.Shadow>
                                 <StackLayout Spacing="0">
 
@@ -202,10 +205,13 @@
                                                 IsVisible="{Binding HasDescription}"
                                                 BackgroundColor="Transparent"
                                                 StrokeThickness="0"
-                                                Padding="4,6,8,6">
+                                                MinimumWidthRequest="44"
+                                                MinimumHeightRequest="44"
+                                                Padding="10">
                                             <Label Text="ⓘ"
                                                    TextColor="{StaticResource ForgeMuted}"
-                                                   FontSize="16"
+                                                   FontSize="18"
+                                                   HorizontalOptions="Center"
                                                    VerticalOptions="Center"/>
                                             <Border.GestureRecognizers>
                                                 <TapGestureRecognizer
@@ -244,10 +250,13 @@
                                         <Border Grid.Column="4"
                                                 BackgroundColor="Transparent"
                                                 StrokeThickness="0"
-                                                Padding="8,6,4,6">
+                                                MinimumWidthRequest="44"
+                                                MinimumHeightRequest="44"
+                                                Padding="10">
                                             <Label Text="✕"
                                                    TextColor="{StaticResource ForgeMuted}"
-                                                   FontSize="14"
+                                                   FontSize="16"
+                                                   HorizontalOptions="Center"
                                                    VerticalOptions="Center"/>
                                             <Border.GestureRecognizers>
                                                 <TapGestureRecognizer
@@ -258,7 +267,7 @@
                                     </Grid>
 
                                     <!-- Column headers -->
-                                    <Grid ColumnDefinitions="32,*,14,*,42,36"
+                                    <Grid ColumnDefinitions="36,*,14,*,44,44"
                                           Padding="16,0,16,6" ColumnSpacing="6">
                                         <Label Grid.Column="0" Text="SET"
                                                Style="{StaticResource SectionLabel}" FontSize="10"/>
@@ -277,9 +286,9 @@
                                     <StackLayout BindableLayout.ItemsSource="{Binding Sets}" Spacing="0">
                                         <BindableLayout.ItemTemplate>
                                             <DataTemplate x:DataType="vm:LoggedSetRow">
-                                                <Grid ColumnDefinitions="32,*,14,*,42,36"
-                                                      Padding="16,5,16,5" ColumnSpacing="6"
-                                                      HeightRequest="46"
+                                                <Grid ColumnDefinitions="36,*,14,*,44,44"
+                                                      Padding="16,6,16,6" ColumnSpacing="6"
+                                                      HeightRequest="52"
                                                       Opacity="{Binding IsCompleted, Converter={StaticResource CompletedOpacityConverter}}"
                                                       Loaded="OnSetRowLoaded">
 
@@ -288,7 +297,7 @@
                                                             BackgroundColor="Transparent"
                                                             StrokeThickness="0"
                                                             Padding="0"
-                                                            HeightRequest="36">
+                                                            MinimumHeightRequest="44">
                                                         <Grid>
                                                             <Label Text="{Binding SetLabel}"
                                                                    TextColor="{Binding SetLabelColor}"
@@ -297,12 +306,16 @@
                                                                    VerticalOptions="Center"/>
                                                             <!-- PR star badge -->
                                                             <Label Text="★"
-                                                                   FontSize="8"
-                                                                   TextColor="#FBBF24"
+                                                                   FontSize="12"
+                                                                   TextColor="{StaticResource ForgePrStar}"
                                                                    HorizontalOptions="End"
                                                                    VerticalOptions="Start"
                                                                    Margin="0,2,0,0"
-                                                                   IsVisible="{Binding IsPR}"/>
+                                                                   IsVisible="{Binding IsPR}">
+                                                                <Label.Shadow>
+                                                                    <Shadow Brush="{StaticResource ForgePrStarBrush}" Offset="0,0" Radius="6" Opacity="0.55"/>
+                                                                </Label.Shadow>
+                                                            </Label>
                                                         </Grid>
                                                         <Border.GestureRecognizers>
                                                             <TapGestureRecognizer
@@ -327,7 +340,7 @@
                                                                FontFamily="DMSansMedium" FontSize="15"
                                                                BackgroundColor="Transparent"
                                                                TextColor="{StaticResource ForgeText}"
-                                                               HeightRequest="36" Margin="0"/>
+                                                               HeightRequest="44" Margin="0"/>
                                                     </Border>
 
                                                     <!-- Separator (× or ⏱) -->
@@ -350,7 +363,7 @@
                                                                FontFamily="DMSansMedium" FontSize="15"
                                                                BackgroundColor="Transparent"
                                                                TextColor="{StaticResource ForgeText}"
-                                                               HeightRequest="36" Margin="0"/>
+                                                               HeightRequest="44" Margin="0"/>
                                                     </Border>
 
                                                     <!-- RIR — tap to cycle 0-5 -->
@@ -406,7 +419,7 @@
                                                 TextColor="{StaticResource ForgeMuted}"
                                                 FontFamily="BebasNeue" FontSize="14"
                                                 CharacterSpacing="1"
-                                                HeightRequest="36"
+                                                HeightRequest="44"
                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ActiveWorkoutViewModel}}, Path=AddSetCommand}"
                                                 CommandParameter="{Binding .}">
                                             <Button.Behaviors>
@@ -420,7 +433,7 @@
                                                 TextColor="{StaticResource ForgeMuted}"
                                                 FontFamily="BebasNeue" FontSize="14"
                                                 CharacterSpacing="1"
-                                                HeightRequest="36"
+                                                HeightRequest="44"
                                                 Clicked="OnRemoveSetClicked">
                                             <Button.Behaviors>
                                                 <views:AnimatedButtonBehavior/>
@@ -483,10 +496,10 @@
         <BoxView Grid.RowSpan="2" InputTransparent="True" VerticalOptions="End" HeightRequest="150" ZIndex="22">
             <BoxView.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <GradientStop Color="#00141418" Offset="0.0"/>
-                    <GradientStop Color="#38141418" Offset="0.35"/>
-                    <GradientStop Color="#90141418" Offset="0.65"/>
-                    <GradientStop Color="#141418" Offset="1.0"/>
+                    <GradientStop Color="{StaticResource ForgeStatusBarOverlayClear}" Offset="0.0"/>
+                    <GradientStop Color="{StaticResource ForgeBottomFadeMid1}" Offset="0.35"/>
+                    <GradientStop Color="{StaticResource ForgeBottomFadeMid2}" Offset="0.65"/>
+                    <GradientStop Color="{StaticResource ForgeBottomFadeBottom}" Offset="1.0"/>
                 </LinearGradientBrush>
             </BoxView.Background>
         </BoxView>
@@ -501,23 +514,23 @@
                 ZIndex="30">
             <Border.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <GradientStop Color="#FAFAFA" Offset="0.0"/>
-                    <GradientStop Color="#E5E5E8" Offset="0.25"/>
-                    <GradientStop Color="#B8B8BC" Offset="0.60"/>
-                    <GradientStop Color="#7A7A80" Offset="1.0"/>
+                    <GradientStop Color="{StaticResource ForgeFabSilverTop}" Offset="0.0"/>
+                    <GradientStop Color="{StaticResource ForgeFabSilverHigh}" Offset="0.25"/>
+                    <GradientStop Color="{StaticResource ForgeFabSilverMid}" Offset="0.60"/>
+                    <GradientStop Color="{StaticResource ForgeFabSilverDeep}" Offset="1.0"/>
                 </LinearGradientBrush>
             </Border.Background>
             <Border.Shadow>
-                <Shadow Brush="#B8B8BC" Offset="0,6" Radius="28" Opacity="0.45"/>
+                <Shadow Brush="{StaticResource ForgeAccentBrush}" Offset="0,6" Radius="28" Opacity="0.45"/>
             </Border.Shadow>
             <HorizontalStackLayout Spacing="10" HorizontalOptions="Center" VerticalOptions="Center">
                 <views:AppIcon Source="ic_check.png"
                                WidthRequest="18" HeightRequest="18"
-                               ForceTint="#0E0E10"
+                               ForceTint="{StaticResource ForgeFabForeground}"
                                VerticalOptions="Center"/>
                 <Label Text="AVSLUTA PASS"
                        FontFamily="BebasNeue" FontSize="17" CharacterSpacing="2"
-                       TextColor="#0E0E10" VerticalOptions="Center"/>
+                       TextColor="{StaticResource ForgeFabForeground}" VerticalOptions="Center"/>
             </HorizontalStackLayout>
             <Border.GestureRecognizers>
                 <TapGestureRecognizer Command="{Binding FinishWorkoutCommand}"/>

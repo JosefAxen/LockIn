@@ -50,6 +50,20 @@
     <Color x:Key="ForgeSuccessDim">#1F4ADE80</Color>
 
     <Color x:Key="ForgeDestructive">#CA3214</Color>
+    <!-- Dark foreground for use on light/metallic surfaces (e.g. FAB silver button) -->
+    <Color x:Key="ForgeFabForeground">#0E0E10</Color>
+    <!-- Very low-emphasis text, barely visible (empty/inactive states) -->
+    <Color x:Key="ForgeDim">#303038</Color>
+
+    <!-- Filter / segment pill track and active indicator -->
+    <Color x:Key="ForgePillTrack">#33787882</Color>
+    <Color x:Key="ForgePillIndicator">#525260</Color>
+    <!-- Workout banner border stroke (ForgeAccent at 33% opacity) -->
+    <Color x:Key="ForgeBannerStroke">#55B8B8BC</Color>
+    <!-- Glass pill active/inactive states (HistoryPage segment buttons) -->
+    <Color x:Key="ForgeGlassActiveBg">#2BFFFFFF</Color>
+    <Color x:Key="ForgeGlassActiveFg">#E2E8F0</Color>
+    <Color x:Key="ForgeGlassInactiveFg">#80FFFFFF</Color>
 
     <!-- ═══ Light palette ═══ -->
     <Color x:Key="LightBackground">#FCFCFC</Color>
@@ -71,8 +85,35 @@
     <Color x:Key="LightAccentBlue">#0284C7</Color>
     <Color x:Key="LightAccentPurple">#7C3AED</Color>
 
+    <!-- ═══ Status bar / sticky header overlay tokens ═══ -->
+    <!-- Dynamic Island gradient (top fade, alltid synlig) -->
+    <Color x:Key="ForgeStatusBarOverlay">#28141418</Color>
+    <Color x:Key="ForgeStatusBarOverlayClear">#00141418</Color>
+    <!-- Sticky header gradient stops (fades in on scroll) -->
+    <Color x:Key="ForgeStickyHeaderTop">#D8141418</Color>
+    <Color x:Key="ForgeStickyHeaderMid1">#90141418</Color>
+    <Color x:Key="ForgeStickyHeaderMid2">#38141418</Color>
+    <!-- Bottom fade stops (mirror sticky-header inversely) -->
+    <Color x:Key="ForgeBottomFadeMid1">#38141418</Color>
+    <Color x:Key="ForgeBottomFadeMid2">#90141418</Color>
+    <Color x:Key="ForgeBottomFadeBottom">#141418</Color>
+
+    <!-- ═══ FAB silver gradient stops (AVSLUTA PASS / FRITT PASS) ═══ -->
+    <Color x:Key="ForgeFabSilverTop">#FAFAFA</Color>
+    <Color x:Key="ForgeFabSilverHigh">#E5E5E8</Color>
+    <Color x:Key="ForgeFabSilverMid">#B8B8BC</Color>
+    <Color x:Key="ForgeFabSilverDeep">#7A7A80</Color>
+
+    <!-- ═══ Subtle white overlays för icon-knappar på mörk yta ═══ -->
+    <Color x:Key="ForgeOverlayWeak">#17FFFFFF</Color>
+    <Color x:Key="ForgeOverlayStroke">#29FFFFFF</Color>
+
+    <!-- ═══ PR-stjärna ═══ -->
+    <Color x:Key="ForgePrStar">#FBBF24</Color>
+
     <SolidColorBrush x:Key="ForgeAccentBrush" Color="{StaticResource ForgeAccent}" />
     <SolidColorBrush x:Key="ForgeSurfaceBrush" Color="{StaticResource ForgeSurface}" />
     <SolidColorBrush x:Key="ForgeBorderBrush" Color="{StaticResource ForgeBorder}" />
+    <SolidColorBrush x:Key="ForgePrStarBrush" Color="{StaticResource ForgePrStar}" />
 
 </ResourceDictionary>
