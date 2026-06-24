@@ -422,6 +422,7 @@
   <data name="SessionDetail_DeletePhoto_Body" xml:space="preserve"><value>Ta bort det här fotot?</value></data>
 
   <!-- ExercisePicker -->
+  <data name="ExercisePicker_PageTitle" xml:space="preserve"><value>VÄLJ ÖVNING</value></data>
   <data name="ExercisePicker_Title" xml:space="preserve"><value>VÄLJ ÖVNING</value></data>
   <data name="ExercisePicker_SearchPlaceholder" xml:space="preserve"><value>Sök övning...</value></data>
   <data name="ExercisePicker_CreateCustom" xml:space="preserve"><value>Lägg till custom övning</value></data>
@@ -568,6 +569,7 @@
   <data name="Settings_WeeklyGoal_Format" xml:space="preserve"><value>{0} pass / vecka</value></data>
 
   <!-- CreateExercise — XAML labels -->
+  <data name="CreateExercise_PageTitle" xml:space="preserve"><value>NY ÖVNING</value></data>
   <data name="CreateExercise_Title" xml:space="preserve"><value>NY ÖVNING</value></data>
   <data name="CreateExercise_NameLabel" xml:space="preserve"><value>NAMN</value></data>
   <data name="CreateExercise_NamePlaceholder" xml:space="preserve"><value>T.ex. Kabelflyes</value></data>

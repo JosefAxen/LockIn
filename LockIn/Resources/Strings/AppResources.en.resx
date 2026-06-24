@@ -422,6 +422,7 @@
   <data name="SessionDetail_DeletePhoto_Body" xml:space="preserve"><value>Delete this photo?</value></data>
 
   <!-- ExercisePicker -->
+  <data name="ExercisePicker_PageTitle" xml:space="preserve"><value>SELECT EXERCISE</value></data>
   <data name="ExercisePicker_Title" xml:space="preserve"><value>PICK EXERCISE</value></data>
   <data name="ExercisePicker_SearchPlaceholder" xml:space="preserve"><value>Search exercise...</value></data>
   <data name="ExercisePicker_CreateCustom" xml:space="preserve"><value>Create custom exercise</value></data>
@@ -568,6 +569,7 @@
   <data name="Settings_WeeklyGoal_Format" xml:space="preserve"><value>{0} sessions / week</value></data>
 
   <!-- CreateExercise — XAML labels -->
+  <data name="CreateExercise_PageTitle" xml:space="preserve"><value>NEW EXERCISE</value></data>
   <data name="CreateExercise_Title" xml:space="preserve"><value>NEW EXERCISE</value></data>
   <data name="CreateExercise_NameLabel" xml:space="preserve"><value>NAME</value></data>
   <data name="CreateExercise_NamePlaceholder" xml:space="preserve"><value>E.g. Cable Flyes</value></data>
