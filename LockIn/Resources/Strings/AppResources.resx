@@ -10,4 +10,135 @@
   <data name="Common_Skip" xml:space="preserve">
     <value>Hoppa över</value>
   </data>
+
+  <!-- Onboarding — top bar -->
+  <data name="Onboarding_SkipLink" xml:space="preserve">
+    <value>Hoppa över</value>
+  </data>
+  <data name="Onboarding_SkipDialogTitle" xml:space="preserve">
+    <value>Hoppa över?</value>
+  </data>
+  <data name="Onboarding_SkipDialogBody" xml:space="preserve">
+    <value>Du kan välja program senare i Bibliotek.</value>
+  </data>
+
+  <!-- Onboarding — Step 0 -->
+  <data name="Onboarding_Step0_Welcome" xml:space="preserve">
+    <value>VÄLKOMMEN</value>
+  </data>
+  <data name="Onboarding_Step0_Question" xml:space="preserve">
+    <value>Vad heter du?</value>
+  </data>
+  <data name="Onboarding_Step0_Privacy" xml:space="preserve">
+    <value>Vi använder bara namnet för att hälsa på dig — inget delas.</value>
+  </data>
+  <data name="Onboarding_Step0_Placeholder" xml:space="preserve">
+    <value>Ditt namn...</value>
+  </data>
+
+  <!-- Onboarding — Step 1 -->
+  <data name="Onboarding_Step1_Title" xml:space="preserve">
+    <value>VECKANS MÅL</value>
+  </data>
+  <data name="Onboarding_Step1_Question" xml:space="preserve">
+    <value>Hur många pass per vecka?</value>
+  </data>
+  <data name="Onboarding_Step1_Wk2_Title" xml:space="preserve">
+    <value>2 PASS / VECKA</value>
+  </data>
+  <data name="Onboarding_Step1_Wk2_Sub" xml:space="preserve">
+    <value>Lätt start — bygg vanan</value>
+  </data>
+  <data name="Onboarding_Step1_Wk3_Title" xml:space="preserve">
+    <value>3 PASS / VECKA</value>
+  </data>
+  <data name="Onboarding_Step1_Wk3_Sub" xml:space="preserve">
+    <value>Klassisk balans — stabil utveckling</value>
+  </data>
+  <data name="Onboarding_Step1_Wk4_Title" xml:space="preserve">
+    <value>4 PASS / VECKA</value>
+  </data>
+  <data name="Onboarding_Step1_Wk4_Sub" xml:space="preserve">
+    <value>Snabbare progress — kräver återhämtning</value>
+  </data>
+  <data name="Onboarding_Step1_Wk5_Title" xml:space="preserve">
+    <value>5 PASS / VECKA</value>
+  </data>
+  <data name="Onboarding_Step1_Wk5_Sub" xml:space="preserve">
+    <value>Intensiv — för engagerade lyftare</value>
+  </data>
+  <data name="Onboarding_Step1_Wk6_Title" xml:space="preserve">
+    <value>6 PASS / VECKA</value>
+  </data>
+  <data name="Onboarding_Step1_Wk6_Sub" xml:space="preserve">
+    <value>Hardcore — bara om du vet vad du gör</value>
+  </data>
+
+  <!-- Onboarding — Step 2 -->
+  <data name="Onboarding_Step2_Title" xml:space="preserve">
+    <value>ERFARENHET</value>
+  </data>
+  <data name="Onboarding_Step2_Question" xml:space="preserve">
+    <value>Hur länge har du tränat?</value>
+  </data>
+  <data name="Onboarding_Step2_Exp0_Title" xml:space="preserve">
+    <value>NYBÖRJARE</value>
+  </data>
+  <data name="Onboarding_Step2_Exp0_Sub" xml:space="preserve">
+    <value>Under 1 år · Linjär progression vecka för vecka</value>
+  </data>
+  <data name="Onboarding_Step2_Exp1_Title" xml:space="preserve">
+    <value>MELLANNIVÅ</value>
+  </data>
+  <data name="Onboarding_Step2_Exp1_Sub" xml:space="preserve">
+    <value>1–3 år · Periodisering och tyngre lyft</value>
+  </data>
+  <data name="Onboarding_Step2_Exp2_Title" xml:space="preserve">
+    <value>AVANCERAD</value>
+  </data>
+  <data name="Onboarding_Step2_Exp2_Sub" xml:space="preserve">
+    <value>3+ år · Avancerade scheman med deload</value>
+  </data>
+
+  <!-- Onboarding — Step 3 -->
+  <data name="Onboarding_Step3_Title" xml:space="preserve">
+    <value>DITT MÅL</value>
+  </data>
+  <data name="Onboarding_Step3_Question" xml:space="preserve">
+    <value>Vad vill du uppnå?</value>
+  </data>
+  <data name="Onboarding_Step3_Strength_Title" xml:space="preserve">
+    <value>STYRKA</value>
+  </data>
+  <data name="Onboarding_Step3_Strength_Sub" xml:space="preserve">
+    <value>Bli starkare och lyfta tyngre</value>
+  </data>
+  <data name="Onboarding_Step3_Hyper_Title" xml:space="preserve">
+    <value>HYPERTROFI</value>
+  </data>
+  <data name="Onboarding_Step3_Hyper_Sub" xml:space="preserve">
+    <value>Bygga muskler och förändra kroppen</value>
+  </data>
+
+  <!-- Onboarding — Step 4 -->
+  <data name="Onboarding_Step4_Title" xml:space="preserve">
+    <value>PERFEKT MATCH</value>
+  </data>
+  <data name="Onboarding_Step4_Subtitle" xml:space="preserve">
+    <value>Vi rekommenderar:</value>
+  </data>
+  <data name="Onboarding_Step4_Activate" xml:space="preserve">
+    <value>AKTIVERA PROGRAM →</value>
+  </data>
+  <data name="Onboarding_Step4_SkipProgram" xml:space="preserve">
+    <value>Hoppa över, jag väljer själv</value>
+  </data>
+  <data name="Onboarding_RecommendedFormat" xml:space="preserve">
+    <value>{0} dagar/vecka · {1} pass</value>
+  </data>
+
+  <!-- Onboarding — Bottom CTA -->
+  <data name="Onboarding_Continue" xml:space="preserve">
+    <value>FORTSÄTT →</value>
+  </data>
 </root>
