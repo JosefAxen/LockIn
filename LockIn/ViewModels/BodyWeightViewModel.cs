@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn.Models;
+using LockIn.Resources.Strings;
 using LockIn.Services;
 using System.Collections.ObjectModel;
 
@@ -62,8 +63,10 @@ public partial class BodyWeightViewModel(DatabaseService db) : ObservableObject
     private async Task LogWeightAsync()
     {
         var result = await Shell.Current.DisplayPromptAsync(
-            "Logga vikt", "Ange din kroppsvikt i kg:",
-            keyboard: Keyboard.Numeric, placeholder: "t.ex. 80.5");
+            AppResources.BodyWeight_Prompt_Title,
+            AppResources.BodyWeight_Prompt_Body,
+            keyboard: Keyboard.Numeric,
+            placeholder: AppResources.BodyWeight_EntryPlaceholder);
 
         if (string.IsNullOrWhiteSpace(result)) return;
         if (!decimal.TryParse(result.Replace(',', '.'), System.Globalization.NumberStyles.Any,
@@ -76,8 +79,11 @@ public partial class BodyWeightViewModel(DatabaseService db) : ObservableObject
     [RelayCommand]
     private async Task DeleteEntryAsync(BodyWeightEntry entry)
     {
+        var body = string.Format(AppResources.BodyWeight_DeleteBody_Format,
+            $"{entry.WeightKg:F1}", entry.LoggedAt.ToString("d MMM"));
         var confirmed = await Shell.Current.DisplayAlert(
-            "Ta bort", $"Ta bort {entry.WeightKg} kg ({entry.LoggedAt:d MMM})?", "Ta bort", "Avbryt");
+            AppResources.Common_Delete, body,
+            AppResources.Common_Delete, AppResources.Common_Cancel);
         if (!confirmed) return;
         await db.DeleteBodyWeightEntryAsync(entry);
         await LoadAsync();

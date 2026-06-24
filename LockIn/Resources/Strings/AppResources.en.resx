@@ -571,4 +571,18 @@
   <data name="CreateExercise_RestUnit" xml:space="preserve"><value>SEC</value></data>
   <data name="CreateExercise_NotesLabel" xml:space="preserve"><value>NOTES (OPTIONAL)</value></data>
   <data name="CreateExercise_NotesPlaceholder" xml:space="preserve"><value>Technique notes, variations...</value></data>
+
+  <!-- BodyWeight — XAML labels -->
+  <data name="BodyWeight_Title" xml:space="preserve"><value>BODY WEIGHT</value></data>
+  <data name="BodyWeight_NoData" xml:space="preserve"><value>No data yet – log your first weight below</value></data>
+  <data name="BodyWeight_ChartTitle" xml:space="preserve"><value>WEIGHT PROGRESS</value></data>
+  <data name="BodyWeight_LogButton" xml:space="preserve"><value>LOG WEIGHT</value></data>
+  <data name="BodyWeight_RecentLogs" xml:space="preserve"><value>RECENT LOGS</value></data>
+  <data name="BodyWeight_ShowMore" xml:space="preserve"><value>SHOW MORE</value></data>
+
+  <!-- BodyWeight — VM strings -->
+  <data name="BodyWeight_Prompt_Title" xml:space="preserve"><value>Log weight</value></data>
+  <data name="BodyWeight_Prompt_Body" xml:space="preserve"><value>Enter your body weight in kg:</value></data>
+  <data name="BodyWeight_EntryPlaceholder" xml:space="preserve"><value>e.g. 80.5</value></data>
+  <data name="BodyWeight_DeleteBody_Format" xml:space="preserve"><value>Delete {0} kg ({1})?</value></data>
 </root>

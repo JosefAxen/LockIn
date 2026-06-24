@@ -5,6 +5,7 @@
              xmlns:models="clr-namespace:LockIn.Models"
              xmlns:views="clr-namespace:LockIn.Views"
              xmlns:controls="clr-namespace:LockIn.Controls"
+             xmlns:loc="clr-namespace:LockIn.Resources.Strings"
              x:Class="LockIn.Views.BodyWeightPage"
              x:DataType="vm:BodyWeightViewModel"
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
@@ -36,7 +37,7 @@
                 </Border.GestureRecognizers>
             </Border>
             <Label Grid.Column="1"
-                   Text="KROPPSVIKT"
+                   Text="{loc:Localize BodyWeight_Title}"
                    Style="{StaticResource DisplayLabel}"
                    FontSize="28"
                    HorizontalOptions="Center" VerticalOptions="Center"/>
@@ -56,7 +57,7 @@
                         <Label Text="{Binding LatestDate}"
                                Style="{StaticResource MutedLabel}"
                                HorizontalOptions="Center"/>
-                        <Label Text="Ingen data ännu – logga din första vikt nedan"
+                        <Label Text="{loc:Localize BodyWeight_NoData}"
                                Style="{StaticResource MutedLabel}"
                                HorizontalOptions="Center"
                                HorizontalTextAlignment="Center"
@@ -68,7 +69,7 @@
                 <Border Style="{StaticResource CardFrame}" Padding="12,14,12,10"
                         IsVisible="{Binding HasData}">
                     <VerticalStackLayout Spacing="6">
-                        <Label Text="VIKTUTVECKLING"
+                        <Label Text="{loc:Localize BodyWeight_ChartTitle}"
                                Style="{StaticResource SectionLabel}"
                                Margin="4,0,0,0"/>
                         <controls:LineChartView Points="{Binding ChartPoints}" StrokeColor="#6EA8DC" HeightRequest="180" BackgroundColor="Transparent"/>
@@ -86,7 +87,7 @@
                                        WidthRequest="18" HeightRequest="18"
                                        ForceTint="{StaticResource ForgePrimaryForeground}"
                                        VerticalOptions="Center"/>
-                        <Label Text="LOGGA VIKT"
+                        <Label Text="{loc:Localize BodyWeight_LogButton}"
                                TextColor="{StaticResource ForgePrimaryForeground}"
                                FontFamily="BebasNeue"
                                FontSize="20"
@@ -99,7 +100,7 @@
                 </Border>
 
                 <!-- Recent entries -->
-                <Label Text="SENASTE LOGGNINGAR"
+                <Label Text="{loc:Localize BodyWeight_RecentLogs}"
                        Style="{StaticResource SectionLabel}"
                        IsVisible="{Binding HasData}"/>
                 <Border Style="{StaticResource CardFrame}" Padding="0,4"
@@ -141,7 +142,7 @@
                 <Border Style="{StaticResource CardFrame}"
                         Padding="0,4"
                         IsVisible="{Binding HasMore}">
-                    <Label Text="VISA FLER"
+                    <Label Text="{loc:Localize BodyWeight_ShowMore}"
                            FontFamily="BebasNeue" FontSize="15" CharacterSpacing="2"
                            TextColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"
                            HorizontalOptions="Center"

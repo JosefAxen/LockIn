@@ -571,4 +571,18 @@
   <data name="CreateExercise_RestUnit" xml:space="preserve"><value>SEK</value></data>
   <data name="CreateExercise_NotesLabel" xml:space="preserve"><value>ANTECKNINGAR (VALFRITT)</value></data>
   <data name="CreateExercise_NotesPlaceholder" xml:space="preserve"><value>Tekniknoteringar, varianter...</value></data>
+
+  <!-- BodyWeight — XAML labels -->
+  <data name="BodyWeight_Title" xml:space="preserve"><value>KROPPSVIKT</value></data>
+  <data name="BodyWeight_NoData" xml:space="preserve"><value>Ingen data ännu – logga din första vikt nedan</value></data>
+  <data name="BodyWeight_ChartTitle" xml:space="preserve"><value>VIKTUTVECKLING</value></data>
+  <data name="BodyWeight_LogButton" xml:space="preserve"><value>LOGGA VIKT</value></data>
+  <data name="BodyWeight_RecentLogs" xml:space="preserve"><value>SENASTE LOGGNINGAR</value></data>
+  <data name="BodyWeight_ShowMore" xml:space="preserve"><value>VISA FLER</value></data>
+
+  <!-- BodyWeight — VM strings -->
+  <data name="BodyWeight_Prompt_Title" xml:space="preserve"><value>Logga vikt</value></data>
+  <data name="BodyWeight_Prompt_Body" xml:space="preserve"><value>Ange din kroppsvikt i kg:</value></data>
+  <data name="BodyWeight_EntryPlaceholder" xml:space="preserve"><value>t.ex. 80.5</value></data>
+  <data name="BodyWeight_DeleteBody_Format" xml:space="preserve"><value>Ta bort {0} kg ({1})?</value></data>
 </root>

@@ -441,6 +441,18 @@ public static class AppResources
     public static string Settings_ClearData_Toast       => Get(nameof(Settings_ClearData_Toast));
     public static string Settings_WeeklyGoal_Format     => Get(nameof(Settings_WeeklyGoal_Format));
 
+    // ── BodyWeight ──────────────────────────────────────────────────────
+    public static string BodyWeight_Title              => Get(nameof(BodyWeight_Title));
+    public static string BodyWeight_NoData             => Get(nameof(BodyWeight_NoData));
+    public static string BodyWeight_ChartTitle         => Get(nameof(BodyWeight_ChartTitle));
+    public static string BodyWeight_LogButton          => Get(nameof(BodyWeight_LogButton));
+    public static string BodyWeight_RecentLogs         => Get(nameof(BodyWeight_RecentLogs));
+    public static string BodyWeight_ShowMore           => Get(nameof(BodyWeight_ShowMore));
+    public static string BodyWeight_Prompt_Title       => Get(nameof(BodyWeight_Prompt_Title));
+    public static string BodyWeight_Prompt_Body        => Get(nameof(BodyWeight_Prompt_Body));
+    public static string BodyWeight_EntryPlaceholder   => Get(nameof(BodyWeight_EntryPlaceholder));
+    public static string BodyWeight_DeleteBody_Format  => Get(nameof(BodyWeight_DeleteBody_Format));
+
     // ── CreateExercise ──────────────────────────────────────────────────
     public static string CreateExercise_Title              => Get(nameof(CreateExercise_Title));
     public static string CreateExercise_NameLabel          => Get(nameof(CreateExercise_NameLabel));
