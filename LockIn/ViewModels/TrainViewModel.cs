@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn.Data;
 using LockIn.Models;
+using LockIn.Resources.Strings;
 using LockIn.Services;
 using LockIn.Views;
 using System.Collections.ObjectModel;
@@ -68,9 +69,9 @@ public partial class TrainViewModel(DatabaseService db, ActiveWorkoutStateServic
             {
                 Preferences.Default.Set("last_restday_popup", DateTime.Now.Ticks);
                 await Shell.Current.DisplayAlert(
-                    "Kom ihåg att vila",
-                    $"Du har tränat {Streak} dagar i rad — det är viktigt att lyssna på kroppen. Vila är en del av träningen.",
-                    "Förstår");
+                    AppResources.Train_RestReminder_Title,
+                    string.Format(AppResources.Train_RestReminder_Body_Format, Streak),
+                    AppResources.Train_RestReminder_OK);
             }
         }
 
@@ -82,13 +83,13 @@ public partial class TrainViewModel(DatabaseService db, ActiveWorkoutStateServic
         MuscleScores.Clear();
         var muscles = new (MuscleGroup mg, string name)[]
         {
-            (MuscleGroup.Chest,    "BRÖST"),
-            (MuscleGroup.Back,     "RYGG"),
-            (MuscleGroup.Shoulders,"AXLAR"),
-            (MuscleGroup.Biceps,   "BICEPS"),
-            (MuscleGroup.Triceps,  "TRICEPS"),
-            (MuscleGroup.Legs,     "BEN"),
-            (MuscleGroup.Core,     "CORE"),
+            (MuscleGroup.Chest,    AppResources.Train_Muscle_Chest),
+            (MuscleGroup.Back,     AppResources.Train_Muscle_Back),
+            (MuscleGroup.Shoulders,AppResources.Train_Muscle_Shoulders),
+            (MuscleGroup.Biceps,   AppResources.Train_Muscle_Biceps),
+            (MuscleGroup.Triceps,  AppResources.Train_Muscle_Triceps),
+            (MuscleGroup.Legs,     AppResources.Train_Muscle_Legs),
+            (MuscleGroup.Core,     AppResources.Train_Muscle_Core),
         };
         foreach (var (mg, name) in muscles)
         {
@@ -134,9 +135,9 @@ public partial class TrainViewModel(DatabaseService db, ActiveWorkoutStateServic
         if (state.IsActive)
         {
             var go = await Shell.Current.DisplayAlert(
-                "Pågående pass",
-                "Du har redan ett aktivt pass. Vill du gå till det?",
-                "Gå till passet", "Avbryt");
+                AppResources.Train_ActiveSession_Title,
+                AppResources.Train_ActiveSession_Body,
+                AppResources.Train_ActiveSession_GoTo, AppResources.Common_Cancel);
             if (go) await Shell.Current.GoToAsync(nameof(ActiveWorkoutPage));
             return;
         }
@@ -152,9 +153,9 @@ public partial class TrainViewModel(DatabaseService db, ActiveWorkoutStateServic
         if (state.IsActive)
         {
             var go = await Shell.Current.DisplayAlert(
-                "Pågående pass",
-                "Du har redan ett aktivt pass. Vill du gå till det?",
-                "Gå till passet", "Avbryt");
+                AppResources.Train_ActiveSession_Title,
+                AppResources.Train_ActiveSession_Body,
+                AppResources.Train_ActiveSession_GoTo, AppResources.Common_Cancel);
             if (go) await Shell.Current.GoToAsync(nameof(ActiveWorkoutPage));
             return;
         }
@@ -168,7 +169,9 @@ public partial class TrainViewModel(DatabaseService db, ActiveWorkoutStateServic
     private async Task DeleteTemplateAsync(WorkoutTemplate template)
     {
         var confirmed = await Shell.Current.DisplayAlert(
-            "Ta bort mall", $"Ta bort \"{template.Name}\"?", "Ta bort", "Avbryt");
+            AppResources.Train_DeleteTemplate_Title,
+            string.Format(AppResources.Train_DeleteTemplate_Body_Format, template.Name),
+            AppResources.Common_Delete, AppResources.Common_Cancel);
         if (!confirmed) return;
         await db.DeleteTemplateAsync(template);
         FreeTemplates.Remove(template);

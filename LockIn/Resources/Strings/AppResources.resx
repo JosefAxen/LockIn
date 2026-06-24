@@ -236,6 +236,41 @@
   <data name="Hem_Rec_Body_PeakForm" xml:space="preserve"><value>Maximal återhämtning — perfekt dag för ett PR-försök.</value></data>
   <data name="Hem_Rec_DifferentMuscle" xml:space="preserve"><value> Träna annan muskelgrupp än senaste passet.</value></data>
 
+  <!-- Train — XAML labels -->
+  <data name="Train_PageTitle" xml:space="preserve"><value>TRÄNA</value></data>
+  <data name="Train_ThisWeek" xml:space="preserve"><value>DENNA VECKA</value></data>
+  <data name="Train_DaysStreak" xml:space="preserve"><value>DAGAR STREAK</value></data>
+  <data name="Train_TotalSessions" xml:space="preserve"><value>TOTALT PASS</value></data>
+  <data name="Train_Deload_Title" xml:space="preserve"><value>DAGS FÖR DELOAD?</value></data>
+  <data name="Train_Deload_Body" xml:space="preserve"><value>Din volym har minskat 3 veckor i rad. Minska vikterna med 40–50% i veckan.</value></data>
+  <data name="Train_Volume_Title" xml:space="preserve"><value>TRÄNINGSVOLYM · 7 DAGAR</value></data>
+  <data name="Train_Volume_Max" xml:space="preserve"><value>MAX 10</value></data>
+  <data name="Train_NoTemplates_Title" xml:space="preserve"><value>INGA MALLAR</value></data>
+  <data name="Train_NoTemplates_Body" xml:space="preserve"><value>Skapa mallar under Bibliotek → Mallar</value></data>
+  <data name="Train_Programs_Section" xml:space="preserve"><value>PROGRAM</value></data>
+  <data name="Train_SessionCount_Format" xml:space="preserve"><value>{0} PASS</value></data>
+  <data name="Train_MyTemplates" xml:space="preserve"><value>MINA MALLAR</value></data>
+  <data name="Train_FreeWorkout" xml:space="preserve"><value>FRITT PASS</value></data>
+
+  <!-- Train — VM strings -->
+  <data name="Train_RestReminder_Title" xml:space="preserve"><value>Kom ihåg att vila</value></data>
+  <data name="Train_RestReminder_Body_Format" xml:space="preserve"><value>Du har tränat {0} dagar i rad — det är viktigt att lyssna på kroppen. Vila är en del av träningen.</value></data>
+  <data name="Train_RestReminder_OK" xml:space="preserve"><value>Förstår</value></data>
+  <data name="Train_ActiveSession_Title" xml:space="preserve"><value>Pågående pass</value></data>
+  <data name="Train_ActiveSession_Body" xml:space="preserve"><value>Du har redan ett aktivt pass. Vill du gå till det?</value></data>
+  <data name="Train_ActiveSession_GoTo" xml:space="preserve"><value>Gå till passet</value></data>
+  <data name="Train_DeleteTemplate_Title" xml:space="preserve"><value>Ta bort mall</value></data>
+  <data name="Train_DeleteTemplate_Body_Format" xml:space="preserve"><value>Ta bort "{0}"?</value></data>
+
+  <!-- Train — Muscle names -->
+  <data name="Train_Muscle_Chest" xml:space="preserve"><value>BRÖST</value></data>
+  <data name="Train_Muscle_Back" xml:space="preserve"><value>RYGG</value></data>
+  <data name="Train_Muscle_Shoulders" xml:space="preserve"><value>AXLAR</value></data>
+  <data name="Train_Muscle_Biceps" xml:space="preserve"><value>BICEPS</value></data>
+  <data name="Train_Muscle_Triceps" xml:space="preserve"><value>TRICEPS</value></data>
+  <data name="Train_Muscle_Legs" xml:space="preserve"><value>BEN</value></data>
+  <data name="Train_Muscle_Core" xml:space="preserve"><value>CORE</value></data>
+
   <!-- Hem — Accessibility labels -->
   <data name="Hem_Accessibility_GaugeLoading" xml:space="preserve"><value>Träningsscore laddas</value></data>
   <data name="Hem_Accessibility_StrainLoading" xml:space="preserve"><value>Ansträngning laddas</value></data>

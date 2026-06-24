@@ -94,6 +94,37 @@ public static class AppResources
 
     public static string Onboarding_Continue            => Get(nameof(Onboarding_Continue));
 
+    // ── Train ────────────────────────────────────────────────────────
+    public static string Train_PageTitle                  => Get(nameof(Train_PageTitle));
+    public static string Train_ThisWeek                   => Get(nameof(Train_ThisWeek));
+    public static string Train_DaysStreak                 => Get(nameof(Train_DaysStreak));
+    public static string Train_TotalSessions              => Get(nameof(Train_TotalSessions));
+    public static string Train_Deload_Title               => Get(nameof(Train_Deload_Title));
+    public static string Train_Deload_Body                => Get(nameof(Train_Deload_Body));
+    public static string Train_Volume_Title               => Get(nameof(Train_Volume_Title));
+    public static string Train_Volume_Max                 => Get(nameof(Train_Volume_Max));
+    public static string Train_NoTemplates_Title          => Get(nameof(Train_NoTemplates_Title));
+    public static string Train_NoTemplates_Body           => Get(nameof(Train_NoTemplates_Body));
+    public static string Train_Programs_Section           => Get(nameof(Train_Programs_Section));
+    public static string Train_SessionCount_Format        => Get(nameof(Train_SessionCount_Format));
+    public static string Train_MyTemplates                => Get(nameof(Train_MyTemplates));
+    public static string Train_FreeWorkout                => Get(nameof(Train_FreeWorkout));
+    public static string Train_RestReminder_Title         => Get(nameof(Train_RestReminder_Title));
+    public static string Train_RestReminder_Body_Format   => Get(nameof(Train_RestReminder_Body_Format));
+    public static string Train_RestReminder_OK            => Get(nameof(Train_RestReminder_OK));
+    public static string Train_ActiveSession_Title        => Get(nameof(Train_ActiveSession_Title));
+    public static string Train_ActiveSession_Body         => Get(nameof(Train_ActiveSession_Body));
+    public static string Train_ActiveSession_GoTo         => Get(nameof(Train_ActiveSession_GoTo));
+    public static string Train_DeleteTemplate_Title       => Get(nameof(Train_DeleteTemplate_Title));
+    public static string Train_DeleteTemplate_Body_Format => Get(nameof(Train_DeleteTemplate_Body_Format));
+    public static string Train_Muscle_Chest               => Get(nameof(Train_Muscle_Chest));
+    public static string Train_Muscle_Back                => Get(nameof(Train_Muscle_Back));
+    public static string Train_Muscle_Shoulders           => Get(nameof(Train_Muscle_Shoulders));
+    public static string Train_Muscle_Biceps              => Get(nameof(Train_Muscle_Biceps));
+    public static string Train_Muscle_Triceps             => Get(nameof(Train_Muscle_Triceps));
+    public static string Train_Muscle_Legs                => Get(nameof(Train_Muscle_Legs));
+    public static string Train_Muscle_Core                => Get(nameof(Train_Muscle_Core));
+
     // ── Hem ─────────────────────────────────────────────────────────
     public static string Hem_ScoreCard_Title            => Get(nameof(Hem_ScoreCard_Title));
     public static string Hem_Recommendation_Label       => Get(nameof(Hem_Recommendation_Label));
