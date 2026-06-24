@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using LockIn.Resources.Strings;
 using LockIn.Services;
 using LockIn.Views;
 using System.Collections.ObjectModel;
@@ -19,12 +20,12 @@ public partial class HistoryViewModel(DatabaseService db) : ObservableObject
     [ObservableProperty] private string _calendarTitle = "";
 
     public string EmptyStateTitle => _allSessions.Count == 0
-        ? "INGA PASS"
-        : "INGA TRÄFFAR";
+        ? AppResources.History_Empty_Title_NoSessions
+        : AppResources.History_Empty_Title_NoResults;
 
     public string EmptyStateSubtitle => _allSessions.Count == 0
-        ? "Starta ditt första pass i Träna-fliken"
-        : "Prova ett annat filter eller en annan period";
+        ? AppResources.History_Empty_Body_NoSessions
+        : AppResources.History_Empty_Body_NoResults;
 
     partial void OnHasNoSessionsChanged(bool value)
     {

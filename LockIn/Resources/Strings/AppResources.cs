@@ -94,6 +94,28 @@ public static class AppResources
 
     public static string Onboarding_Continue            => Get(nameof(Onboarding_Continue));
 
+    // ── History ──────────────────────────────────────────────────────
+    public static string History_Title                    => Get(nameof(History_Title));
+    public static string History_Achievements             => Get(nameof(History_Achievements));
+    public static string History_Period_All               => Get(nameof(History_Period_All));
+    public static string History_Period_Week              => Get(nameof(History_Period_Week));
+    public static string History_Period_Month             => Get(nameof(History_Period_Month));
+    public static string History_Sort_Date                => Get(nameof(History_Sort_Date));
+    public static string History_Sort_Volume              => Get(nameof(History_Sort_Volume));
+    public static string History_Card_KgVolume            => Get(nameof(History_Card_KgVolume));
+    public static string History_Card_Sets                => Get(nameof(History_Card_Sets));
+    public static string History_Cal_Mon                  => Get(nameof(History_Cal_Mon));
+    public static string History_Cal_Tue                  => Get(nameof(History_Cal_Tue));
+    public static string History_Cal_Wed                  => Get(nameof(History_Cal_Wed));
+    public static string History_Cal_Thu                  => Get(nameof(History_Cal_Thu));
+    public static string History_Cal_Fri                  => Get(nameof(History_Cal_Fri));
+    public static string History_Cal_Sat                  => Get(nameof(History_Cal_Sat));
+    public static string History_Cal_Sun                  => Get(nameof(History_Cal_Sun));
+    public static string History_Empty_Title_NoSessions   => Get(nameof(History_Empty_Title_NoSessions));
+    public static string History_Empty_Title_NoResults    => Get(nameof(History_Empty_Title_NoResults));
+    public static string History_Empty_Body_NoSessions    => Get(nameof(History_Empty_Body_NoSessions));
+    public static string History_Empty_Body_NoResults     => Get(nameof(History_Empty_Body_NoResults));
+
     // ── Train ────────────────────────────────────────────────────────
     public static string Train_PageTitle                  => Get(nameof(Train_PageTitle));
     public static string Train_ThisWeek                   => Get(nameof(Train_ThisWeek));

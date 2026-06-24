@@ -262,6 +262,32 @@
   <data name="Train_DeleteTemplate_Title" xml:space="preserve"><value>Ta bort mall</value></data>
   <data name="Train_DeleteTemplate_Body_Format" xml:space="preserve"><value>Ta bort "{0}"?</value></data>
 
+  <!-- History — XAML labels -->
+  <data name="History_Title" xml:space="preserve"><value>HISTORIK</value></data>
+  <data name="History_Achievements" xml:space="preserve"><value>MERIT</value></data>
+  <data name="History_Period_All" xml:space="preserve"><value>ALLT</value></data>
+  <data name="History_Period_Week" xml:space="preserve"><value>VECKA</value></data>
+  <data name="History_Period_Month" xml:space="preserve"><value>MÅNAD</value></data>
+  <data name="History_Sort_Date" xml:space="preserve"><value>DATUM</value></data>
+  <data name="History_Sort_Volume" xml:space="preserve"><value>VOLYM</value></data>
+  <data name="History_Card_KgVolume" xml:space="preserve"><value>KG VOLYM</value></data>
+  <data name="History_Card_Sets" xml:space="preserve"><value>SETS</value></data>
+
+  <!-- History — Calendar weekday headers -->
+  <data name="History_Cal_Mon" xml:space="preserve"><value>M</value></data>
+  <data name="History_Cal_Tue" xml:space="preserve"><value>T</value></data>
+  <data name="History_Cal_Wed" xml:space="preserve"><value>O</value></data>
+  <data name="History_Cal_Thu" xml:space="preserve"><value>T</value></data>
+  <data name="History_Cal_Fri" xml:space="preserve"><value>F</value></data>
+  <data name="History_Cal_Sat" xml:space="preserve"><value>L</value></data>
+  <data name="History_Cal_Sun" xml:space="preserve"><value>S</value></data>
+
+  <!-- History — Empty states (VM) -->
+  <data name="History_Empty_Title_NoSessions" xml:space="preserve"><value>INGA PASS</value></data>
+  <data name="History_Empty_Title_NoResults" xml:space="preserve"><value>INGA TRÄFFAR</value></data>
+  <data name="History_Empty_Body_NoSessions" xml:space="preserve"><value>Starta ditt första pass i Träna-fliken</value></data>
+  <data name="History_Empty_Body_NoResults" xml:space="preserve"><value>Prova ett annat filter eller en annan period</value></data>
+
   <!-- Train — Muscle names -->
   <data name="Train_Muscle_Chest" xml:space="preserve"><value>BRÖST</value></data>
   <data name="Train_Muscle_Back" xml:space="preserve"><value>RYGG</value></data>
