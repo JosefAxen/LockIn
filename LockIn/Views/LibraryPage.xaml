@@ -10,7 +10,7 @@
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
              x:Class="LockIn.Views.LibraryPage"
              x:DataType="vm:LibraryViewModel"
-             Title="{loc:Localize Tab_Library}"
+             Title="{loc:Localize Library_Title}"
              Shell.NavBarIsVisible="False"
              BackgroundColor="Transparent"
              ios:Page.UseSafeArea="False">
