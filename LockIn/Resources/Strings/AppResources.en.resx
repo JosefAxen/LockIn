@@ -528,6 +528,39 @@
   <data name="ProgramDetail_Activate_Confirm" xml:space="preserve"><value>Activate</value></data>
   <data name="ProgramDetail_Toast_Created_Format" xml:space="preserve"><value>{0} templates created! Find them under Templates in Library.</value></data>
 
+  <!-- Settings — XAML labels -->
+  <data name="Settings_PageTitle" xml:space="preserve"><value>SETTINGS</value></data>
+  <data name="Settings_Section_Profile" xml:space="preserve"><value>PROFILE</value></data>
+  <data name="Settings_Profile_Name" xml:space="preserve"><value>Name</value></data>
+  <data name="Settings_Section_Training" xml:space="preserve"><value>TRAINING</value></data>
+  <data name="Settings_WeeklyGoal_Title" xml:space="preserve"><value>Weekly goal</value></data>
+  <data name="Settings_Section_Units" xml:space="preserve"><value>UNITS</value></data>
+  <data name="Settings_WeightUnit_Title" xml:space="preserve"><value>Weight unit</value></data>
+  <data name="Settings_Section_RestTimer" xml:space="preserve"><value>REST TIMER</value></data>
+  <data name="Settings_Vibration_Title" xml:space="preserve"><value>Vibration</value></data>
+  <data name="Settings_Vibration_Description" xml:space="preserve"><value>Vibrate when the rest timer ends</value></data>
+  <data name="Settings_Sound_Title" xml:space="preserve"><value>Sound</value></data>
+  <data name="Settings_Sound_Description" xml:space="preserve"><value>Rest timer + achievement sounds</value></data>
+  <data name="Settings_Section_Health" xml:space="preserve"><value>HEALTH</value></data>
+  <data name="Settings_HealthSync_Title" xml:space="preserve"><value>Sync to Apple Health</value></data>
+  <data name="Settings_HealthSync_Description" xml:space="preserve"><value>Saves workouts with calories to Health</value></data>
+  <data name="Settings_BodyWeight_Title" xml:space="preserve"><value>Body weight</value></data>
+  <data name="Settings_BodyWeight_Description" xml:space="preserve"><value>Log and track your body weight over time</value></data>
+  <data name="Settings_ProgressPhotos_Title" xml:space="preserve"><value>Progress photos</value></data>
+  <data name="Settings_ProgressPhotos_Description" xml:space="preserve"><value>View all saved workout photos</value></data>
+  <data name="Settings_Section_Data" xml:space="preserve"><value>DATA</value></data>
+  <data name="Settings_ClearData_Button" xml:space="preserve"><value>Clear all data</value></data>
+
+  <!-- Settings — VM strings -->
+  <data name="Settings_EditName_Title" xml:space="preserve"><value>Your name</value></data>
+  <data name="Settings_EditName_Body" xml:space="preserve"><value>What is your name?</value></data>
+  <data name="Settings_EditWeeklyGoal_Title" xml:space="preserve"><value>Weekly training goal</value></data>
+  <data name="Settings_EditWeeklyGoal_Body" xml:space="preserve"><value>How many workouts per week? (1–7)</value></data>
+  <data name="Settings_ClearData_Body" xml:space="preserve"><value>All workout data, templates and history will be permanently deleted. The exercise library will be reset.</value></data>
+  <data name="Settings_ClearData_Confirm" xml:space="preserve"><value>Clear</value></data>
+  <data name="Settings_ClearData_Toast" xml:space="preserve"><value>All data has been cleared.</value></data>
+  <data name="Settings_WeeklyGoal_Format" xml:space="preserve"><value>{0} sessions / week</value></data>
+
   <!-- CreateExercise — XAML labels -->
   <data name="CreateExercise_Title" xml:space="preserve"><value>NEW EXERCISE</value></data>
   <data name="CreateExercise_NameLabel" xml:space="preserve"><value>NAME</value></data>

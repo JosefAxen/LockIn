@@ -410,6 +410,37 @@ public static class AppResources
     public static string ProgramDetail_Activate_Confirm     => Get(nameof(ProgramDetail_Activate_Confirm));
     public static string ProgramDetail_Toast_Created_Format => Get(nameof(ProgramDetail_Toast_Created_Format));
 
+    // ── Settings ─────────────────────────────────────────────────────────
+    public static string Settings_PageTitle             => Get(nameof(Settings_PageTitle));
+    public static string Settings_Section_Profile       => Get(nameof(Settings_Section_Profile));
+    public static string Settings_Profile_Name          => Get(nameof(Settings_Profile_Name));
+    public static string Settings_Section_Training      => Get(nameof(Settings_Section_Training));
+    public static string Settings_WeeklyGoal_Title      => Get(nameof(Settings_WeeklyGoal_Title));
+    public static string Settings_Section_Units         => Get(nameof(Settings_Section_Units));
+    public static string Settings_WeightUnit_Title      => Get(nameof(Settings_WeightUnit_Title));
+    public static string Settings_Section_RestTimer     => Get(nameof(Settings_Section_RestTimer));
+    public static string Settings_Vibration_Title       => Get(nameof(Settings_Vibration_Title));
+    public static string Settings_Vibration_Description => Get(nameof(Settings_Vibration_Description));
+    public static string Settings_Sound_Title           => Get(nameof(Settings_Sound_Title));
+    public static string Settings_Sound_Description     => Get(nameof(Settings_Sound_Description));
+    public static string Settings_Section_Health        => Get(nameof(Settings_Section_Health));
+    public static string Settings_HealthSync_Title      => Get(nameof(Settings_HealthSync_Title));
+    public static string Settings_HealthSync_Description => Get(nameof(Settings_HealthSync_Description));
+    public static string Settings_BodyWeight_Title      => Get(nameof(Settings_BodyWeight_Title));
+    public static string Settings_BodyWeight_Description => Get(nameof(Settings_BodyWeight_Description));
+    public static string Settings_ProgressPhotos_Title  => Get(nameof(Settings_ProgressPhotos_Title));
+    public static string Settings_ProgressPhotos_Description => Get(nameof(Settings_ProgressPhotos_Description));
+    public static string Settings_Section_Data          => Get(nameof(Settings_Section_Data));
+    public static string Settings_ClearData_Button      => Get(nameof(Settings_ClearData_Button));
+    public static string Settings_EditName_Title        => Get(nameof(Settings_EditName_Title));
+    public static string Settings_EditName_Body         => Get(nameof(Settings_EditName_Body));
+    public static string Settings_EditWeeklyGoal_Title  => Get(nameof(Settings_EditWeeklyGoal_Title));
+    public static string Settings_EditWeeklyGoal_Body   => Get(nameof(Settings_EditWeeklyGoal_Body));
+    public static string Settings_ClearData_Body        => Get(nameof(Settings_ClearData_Body));
+    public static string Settings_ClearData_Confirm     => Get(nameof(Settings_ClearData_Confirm));
+    public static string Settings_ClearData_Toast       => Get(nameof(Settings_ClearData_Toast));
+    public static string Settings_WeeklyGoal_Format     => Get(nameof(Settings_WeeklyGoal_Format));
+
     // ── CreateExercise ──────────────────────────────────────────────────
     public static string CreateExercise_Title              => Get(nameof(CreateExercise_Title));
     public static string CreateExercise_NameLabel          => Get(nameof(CreateExercise_NameLabel));

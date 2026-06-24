@@ -528,6 +528,39 @@
   <data name="ProgramDetail_Activate_Confirm" xml:space="preserve"><value>Aktivera</value></data>
   <data name="ProgramDetail_Toast_Created_Format" xml:space="preserve"><value>{0} mallar skapade! Hitta dem under Mallar i Bibliotek.</value></data>
 
+  <!-- Settings — XAML labels -->
+  <data name="Settings_PageTitle" xml:space="preserve"><value>INSTÄLLNINGAR</value></data>
+  <data name="Settings_Section_Profile" xml:space="preserve"><value>PROFIL</value></data>
+  <data name="Settings_Profile_Name" xml:space="preserve"><value>Namn</value></data>
+  <data name="Settings_Section_Training" xml:space="preserve"><value>TRÄNING</value></data>
+  <data name="Settings_WeeklyGoal_Title" xml:space="preserve"><value>Veckans mål</value></data>
+  <data name="Settings_Section_Units" xml:space="preserve"><value>ENHETER</value></data>
+  <data name="Settings_WeightUnit_Title" xml:space="preserve"><value>Viktenhet</value></data>
+  <data name="Settings_Section_RestTimer" xml:space="preserve"><value>VILOTIMER</value></data>
+  <data name="Settings_Vibration_Title" xml:space="preserve"><value>Vibration</value></data>
+  <data name="Settings_Vibration_Description" xml:space="preserve"><value>Vibrera när vilotimern är klar</value></data>
+  <data name="Settings_Sound_Title" xml:space="preserve"><value>Ljud</value></data>
+  <data name="Settings_Sound_Description" xml:space="preserve"><value>Vilotimer + achievement-ljud</value></data>
+  <data name="Settings_Section_Health" xml:space="preserve"><value>HÄLSA</value></data>
+  <data name="Settings_HealthSync_Title" xml:space="preserve"><value>Synka till Apple Hälsa</value></data>
+  <data name="Settings_HealthSync_Description" xml:space="preserve"><value>Sparar träningspass med kalorier i Hälsa</value></data>
+  <data name="Settings_BodyWeight_Title" xml:space="preserve"><value>Kroppsvikt</value></data>
+  <data name="Settings_BodyWeight_Description" xml:space="preserve"><value>Logga och följ din kroppsvikt över tid</value></data>
+  <data name="Settings_ProgressPhotos_Title" xml:space="preserve"><value>Progressfoton</value></data>
+  <data name="Settings_ProgressPhotos_Description" xml:space="preserve"><value>Se alla sparade träningsfoton</value></data>
+  <data name="Settings_Section_Data" xml:space="preserve"><value>DATAHANTERING</value></data>
+  <data name="Settings_ClearData_Button" xml:space="preserve"><value>Rensa all data</value></data>
+
+  <!-- Settings — VM strings -->
+  <data name="Settings_EditName_Title" xml:space="preserve"><value>Ditt namn</value></data>
+  <data name="Settings_EditName_Body" xml:space="preserve"><value>Vad heter du?</value></data>
+  <data name="Settings_EditWeeklyGoal_Title" xml:space="preserve"><value>Veckans träningsmål</value></data>
+  <data name="Settings_EditWeeklyGoal_Body" xml:space="preserve"><value>Hur många pass per vecka vill du träna? (1–7)</value></data>
+  <data name="Settings_ClearData_Body" xml:space="preserve"><value>All träningsdata, mallar och historik tas bort permanent. Övningsbiblioteket återställs.</value></data>
+  <data name="Settings_ClearData_Confirm" xml:space="preserve"><value>Rensa</value></data>
+  <data name="Settings_ClearData_Toast" xml:space="preserve"><value>All data har rensats.</value></data>
+  <data name="Settings_WeeklyGoal_Format" xml:space="preserve"><value>{0} pass / vecka</value></data>
+
   <!-- CreateExercise — XAML labels -->
   <data name="CreateExercise_Title" xml:space="preserve"><value>NY ÖVNING</value></data>
   <data name="CreateExercise_NameLabel" xml:space="preserve"><value>NAMN</value></data>

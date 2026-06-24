@@ -4,9 +4,10 @@
              xmlns:vm="clr-namespace:LockIn.ViewModels"
              xmlns:views="clr-namespace:LockIn.Views"
              xmlns:controls="clr-namespace:LockIn.Controls"
+             xmlns:loc="clr-namespace:LockIn.Localization"
              x:Class="LockIn.Views.SettingsPage"
              x:DataType="vm:SettingsViewModel"
-             Title="Inställningar"
+             Title="{loc:Localize Settings_PageTitle}"
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
              Shell.NavBarIsVisible="False"
              BackgroundColor="Transparent"
@@ -58,7 +59,7 @@
                     </Border.GestureRecognizers>
                 </Border>
                 <Label Grid.Column="1"
-                       Text="INSTÄLLNINGAR"
+                       Text="{loc:Localize Settings_PageTitle}"
                        HorizontalOptions="Center" HorizontalTextAlignment="Center"
                        Style="{StaticResource DisplayLabel}" FontSize="18"
                        VerticalOptions="Center"/>
@@ -84,7 +85,7 @@
                         </Border.GestureRecognizers>
                     </Border>
                     <Label Grid.Column="1"
-                           Text="INSTÄLLNINGAR"
+                           Text="{loc:Localize Settings_PageTitle}"
                            Style="{StaticResource DisplayLabel}" FontSize="28"
                            VerticalOptions="End" Margin="4,0,0,0"/>
                 </Grid>
@@ -92,7 +93,7 @@
                 <StackLayout Padding="16,8,16,48" Spacing="16">
 
                 <!-- Profile -->
-                <Label Text="PROFIL" Style="{StaticResource SectionLabel}" Margin="4,0"/>
+                <Label Text="{loc:Localize Settings_Section_Profile}" Style="{StaticResource SectionLabel}" Margin="4,0"/>
                 <Border Style="{StaticResource CardFrame}" Padding="16,14">
                     <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
                         <Border Grid.Column="0" BackgroundColor="{StaticResource ForgeAccentBlueDim}"
@@ -102,7 +103,7 @@
                                    HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Border>
                         <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                            <Label Text="Namn" FontFamily="DMSansMedium" FontSize="15"/>
+                            <Label Text="{loc:Localize Settings_Profile_Name}" FontFamily="DMSansMedium" FontSize="15"/>
                             <Label Text="{Binding UserName}" Style="{StaticResource MutedLabel}"/>
                         </StackLayout>
                         <Path Grid.Column="2" Style="{StaticResource ForwardChevron}"/>
@@ -113,7 +114,7 @@
                 </Border>
 
                 <!-- Weekly goal -->
-                <Label Text="TRÄNING" Style="{StaticResource SectionLabel}" Margin="4,0"/>
+                <Label Text="{loc:Localize Settings_Section_Training}" Style="{StaticResource SectionLabel}" Margin="4,0"/>
                 <Border Style="{StaticResource CardFrame}" Padding="16,14">
                     <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
                         <Border Grid.Column="0" BackgroundColor="{StaticResource ForgeAccentOrangeDim}"
@@ -123,8 +124,8 @@
                                    HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Border>
                         <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                            <Label Text="Veckans mål" FontFamily="DMSansMedium" FontSize="15"/>
-                            <Label Text="{Binding WeeklyGoal, StringFormat='{0} pass / vecka'}"
+                            <Label Text="{loc:Localize Settings_WeeklyGoal_Title}" FontFamily="DMSansMedium" FontSize="15"/>
+                            <Label Text="{Binding WeeklyGoalDisplay}"
                                    Style="{StaticResource MutedLabel}"/>
                         </StackLayout>
                         <Path Grid.Column="2" Style="{StaticResource ForwardChevron}"/>
@@ -135,7 +136,7 @@
                 </Border>
 
                 <!-- Weight unit -->
-                <Label Text="ENHETER" Style="{StaticResource SectionLabel}" Margin="4,0"/>
+                <Label Text="{loc:Localize Settings_Section_Units}" Style="{StaticResource SectionLabel}" Margin="4,0"/>
                 <Border Style="{StaticResource CardFrame}" Padding="16,14">
                     <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
                         <Border Grid.Column="0" BackgroundColor="{StaticResource ForgeAccentPurpleDim}"
@@ -145,7 +146,7 @@
                                    HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Border>
                         <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                            <Label Text="Viktenhet" FontFamily="DMSansMedium" FontSize="15"/>
+                            <Label Text="{loc:Localize Settings_WeightUnit_Title}" FontFamily="DMSansMedium" FontSize="15"/>
                             <Label Text="{Binding UseKg, Converter={StaticResource WeightUnitConverter}}"
                                    Style="{StaticResource MutedLabel}"/>
                         </StackLayout>
@@ -154,7 +155,7 @@
                 </Border>
 
                 <!-- Haptic + Sound -->
-                <Label Text="VILOTIMER" Style="{StaticResource SectionLabel}" Margin="4,0"/>
+                <Label Text="{loc:Localize Settings_Section_RestTimer}" Style="{StaticResource SectionLabel}" Margin="4,0"/>
                 <Border Style="{StaticResource CardFrame}" Padding="16,14">
                     <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
                         <Border Grid.Column="0" BackgroundColor="{StaticResource ForgeAccentAmberDim}"
@@ -164,8 +165,8 @@
                                    HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Border>
                         <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                            <Label Text="Vibration" FontFamily="DMSansMedium" FontSize="15"/>
-                            <Label Text="Vibrera när vilotimern är klar"
+                            <Label Text="{loc:Localize Settings_Vibration_Title}" FontFamily="DMSansMedium" FontSize="15"/>
+                            <Label Text="{loc:Localize Settings_Vibration_Description}"
                                    Style="{StaticResource MutedLabel}"/>
                         </StackLayout>
                         <Switch Grid.Column="2" IsToggled="{Binding HapticEnabled}" VerticalOptions="Center"/>
@@ -180,8 +181,8 @@
                                    HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Border>
                         <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                            <Label Text="Ljud" FontFamily="DMSansMedium" FontSize="15"/>
-                            <Label Text="Vilotimer + achievement-ljud"
+                            <Label Text="{loc:Localize Settings_Sound_Title}" FontFamily="DMSansMedium" FontSize="15"/>
+                            <Label Text="{loc:Localize Settings_Sound_Description}"
                                    Style="{StaticResource MutedLabel}"/>
                         </StackLayout>
                         <Switch Grid.Column="2" IsToggled="{Binding SoundEnabled}" VerticalOptions="Center"/>
@@ -189,7 +190,7 @@
                 </Border>
 
                 <!-- Health -->
-                <Label Text="HÄLSA" Style="{StaticResource SectionLabel}" Margin="4,0"/>
+                <Label Text="{loc:Localize Settings_Section_Health}" Style="{StaticResource SectionLabel}" Margin="4,0"/>
                 <Border Style="{StaticResource CardFrame}" Padding="16,14">
                     <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
                         <Border Grid.Column="0" BackgroundColor="{StaticResource ForgeAccentCoralDim}"
@@ -199,8 +200,8 @@
                                    HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Border>
                         <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                            <Label Text="Synka till Apple Hälsa" FontFamily="DMSansMedium" FontSize="15"/>
-                            <Label Text="Sparar träningspass med kalorier i Hälsa"
+                            <Label Text="{loc:Localize Settings_HealthSync_Title}" FontFamily="DMSansMedium" FontSize="15"/>
+                            <Label Text="{loc:Localize Settings_HealthSync_Description}"
                                    Style="{StaticResource MutedLabel}"/>
                         </StackLayout>
                         <Switch Grid.Column="2" IsToggled="{Binding HealthKitSyncEnabled}" VerticalOptions="Center"/>
@@ -217,8 +218,8 @@
                                    HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Border>
                         <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                            <Label Text="Kroppsvikt" FontFamily="DMSansMedium" FontSize="15"/>
-                            <Label Text="Logga och följ din kroppsvikt över tid"
+                            <Label Text="{loc:Localize Settings_BodyWeight_Title}" FontFamily="DMSansMedium" FontSize="15"/>
+                            <Label Text="{loc:Localize Settings_BodyWeight_Description}"
                                    Style="{StaticResource MutedLabel}"/>
                         </StackLayout>
                         <Path Grid.Column="2" Style="{StaticResource ForwardChevron}"/>
@@ -238,8 +239,8 @@
                                    HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Border>
                         <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                            <Label Text="Progressfoton" FontFamily="DMSansMedium" FontSize="15"/>
-                            <Label Text="Se alla sparade träningsfoton"
+                            <Label Text="{loc:Localize Settings_ProgressPhotos_Title}" FontFamily="DMSansMedium" FontSize="15"/>
+                            <Label Text="{loc:Localize Settings_ProgressPhotos_Description}"
                                    Style="{StaticResource MutedLabel}"/>
                         </StackLayout>
                         <Path Grid.Column="2" Style="{StaticResource ForwardChevron}"/>
@@ -250,7 +251,7 @@
                 </Border>
 
                 <!-- Danger zone -->
-                <Label Text="DATAHANTERING" Style="{StaticResource SectionLabel}" Margin="4,8,4,0"/>
+                <Label Text="{loc:Localize Settings_Section_Data}" Style="{StaticResource SectionLabel}" Margin="4,8,4,0"/>
                 <Border Style="{StaticResource CardFrame}" Padding="16,14">
                     <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
                         <Border Grid.Column="0" BackgroundColor="{StaticResource ForgeDestructive}"
@@ -259,7 +260,7 @@
                             <views:AppIcon Source="ic_trash.png" WidthRequest="20" HeightRequest="20"
                                    HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Border>
-                        <Button Grid.Column="1" Text="Rensa all data"
+                        <Button Grid.Column="1" Text="{loc:Localize Settings_ClearData_Button}"
                                 Style="{StaticResource DestructiveButton}"
                                 HorizontalOptions="Start"
                                 Command="{Binding ClearAllDataCommand}"/>
@@ -304,7 +305,7 @@
                 <HorizontalStackLayout Spacing="11" VerticalOptions="Center">
                     <controls:ForgeLiveDotView x:Name="BannerPulseRing"
                                                VerticalOptions="Center"/>
-                    <Label Text="PASS PÅGÅR"
+                    <Label Text="{loc:Localize Hem_WorkoutBanner_Label}"
                            FontFamily="BebasNeue" FontSize="13" CharacterSpacing="3"
                            TextColor="{StaticResource ForgeText}"
                            VerticalOptions="Center"/>

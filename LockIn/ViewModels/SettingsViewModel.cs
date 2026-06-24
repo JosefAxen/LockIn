@@ -2,6 +2,7 @@ using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn.Models;
+using LockIn.Resources.Strings;
 using LockIn.Services;
 using LockIn.Views;
 
@@ -17,6 +18,9 @@ public partial class SettingsViewModel(DatabaseService db, IHealthService health
     [ObservableProperty] private string _userName = "";
     [ObservableProperty] private bool _healthKitSyncEnabled;
 
+    public string WeeklyGoalDisplay =>
+        string.Format(AppResources.Settings_WeeklyGoal_Format, WeeklyGoal);
+
     public async Task LoadAsync()
     {
         var settings = await db.GetAppSettingsAsync();
@@ -28,6 +32,9 @@ public partial class SettingsViewModel(DatabaseService db, IHealthService health
         AppVersion = AppInfo.VersionString;
         UserName   = settings.UserName ?? "";
     }
+
+    partial void OnWeeklyGoalChanged(int value) =>
+        OnPropertyChanged(nameof(WeeklyGoalDisplay));
 
     partial void OnUseKgChanged(bool value) => _ = SaveSettingsAsync();
 
@@ -54,8 +61,8 @@ public partial class SettingsViewModel(DatabaseService db, IHealthService health
     private async Task EditUserNameAsync()
     {
         var result = await Shell.Current.DisplayPromptAsync(
-            "Ditt namn",
-            "Vad heter du?",
+            AppResources.Settings_EditName_Title,
+            AppResources.Settings_EditName_Body,
             initialValue: UserName,
             maxLength: 30);
         if (result is null) return;
@@ -71,8 +78,8 @@ public partial class SettingsViewModel(DatabaseService db, IHealthService health
     private async Task EditWeeklyGoalAsync()
     {
         var result = await Shell.Current.DisplayPromptAsync(
-            "Veckans träningsmål",
-            "Hur många pass per vecka vill du träna? (1–7)",
+            AppResources.Settings_EditWeeklyGoal_Title,
+            AppResources.Settings_EditWeeklyGoal_Body,
             keyboard: Keyboard.Numeric,
             initialValue: WeeklyGoal.ToString(),
             maxLength: 1);
@@ -99,12 +106,13 @@ public partial class SettingsViewModel(DatabaseService db, IHealthService health
     private async Task ClearAllDataAsync()
     {
         var confirmed = await Shell.Current.DisplayAlert(
-            "Rensa all data",
-            "All träningsdata, mallar och historik tas bort permanent. Övningsbiblioteket återställs.",
-            "Rensa", "Avbryt");
+            AppResources.Settings_ClearData_Button,
+            AppResources.Settings_ClearData_Body,
+            AppResources.Settings_ClearData_Confirm,
+            AppResources.Common_Cancel);
         if (!confirmed) return;
 
         await db.DeleteAllDataAsync();
-        await Toast.Make("All data har rensats.").Show();
+        await Toast.Make(AppResources.Settings_ClearData_Toast).Show();
     }
 }
