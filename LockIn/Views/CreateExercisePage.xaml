@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:LockIn.ViewModels"
              xmlns:controls="clr-namespace:LockIn.Controls"
+             xmlns:loc="clr-namespace:LockIn.Resources.Strings"
              x:Class="LockIn.Views.CreateExercisePage"
              x:DataType="vm:CreateExerciseViewModel"
              Title="Ny övning"
@@ -33,11 +34,11 @@
                             <TapGestureRecognizer Command="{Binding CancelCommand}"/>
                         </Border.GestureRecognizers>
                     </Border>
-                    <Label Grid.Column="1" Text="NY ÖVNING"
+                    <Label Grid.Column="1" Text="{loc:Localize CreateExercise_Title}"
                            Style="{StaticResource DisplayLabel}"
                            FontSize="22" HorizontalOptions="Center" VerticalOptions="Center"/>
                     <Button Grid.Column="2"
-                            Text="SPARA"
+                            Text="{loc:Localize Common_Save}"
                             Style="{StaticResource SecondaryButton}"
                             Padding="12,8" HeightRequest="36"
                             IsEnabled="{Binding IsNameValid}"
@@ -48,9 +49,9 @@
                 <!-- Name -->
                 <Border Style="{StaticResource CardFrame}" Padding="16,14">
                     <VerticalStackLayout Spacing="8">
-                        <Label Text="NAMN" Style="{StaticResource SectionLabel}"/>
+                        <Label Text="{loc:Localize CreateExercise_NameLabel}" Style="{StaticResource SectionLabel}"/>
                         <Entry Text="{Binding Name}"
-                               Placeholder="T.ex. Kabelflyes"
+                               Placeholder="{loc:Localize CreateExercise_NamePlaceholder}"
                                PlaceholderColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"
                                TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
                                BackgroundColor="Transparent"
@@ -61,7 +62,7 @@
                 <!-- Muscle group -->
                 <Border Style="{StaticResource CardFrame}" Padding="16,14">
                     <VerticalStackLayout Spacing="10">
-                        <Label Text="MUSKELGRUPP" Style="{StaticResource SectionLabel}"/>
+                        <Label Text="{loc:Localize CreateExercise_MuscleGroupLabel}" Style="{StaticResource SectionLabel}"/>
                         <CollectionView ItemsSource="{Binding MuscleGroups}"
                                         SelectionMode="None"
                                         HeightRequest="112">
@@ -100,7 +101,7 @@
                 <!-- Equipment -->
                 <Border Style="{StaticResource CardFrame}" Padding="16,14">
                     <VerticalStackLayout Spacing="10">
-                        <Label Text="UTRUSTNING" Style="{StaticResource SectionLabel}"/>
+                        <Label Text="{loc:Localize CreateExercise_EquipmentLabel}" Style="{StaticResource SectionLabel}"/>
                         <CollectionView ItemsSource="{Binding EquipmentOptions}"
                                         SelectionMode="None"
                                         HeightRequest="40">
@@ -134,7 +135,7 @@
                 <!-- Rest time -->
                 <Border Style="{StaticResource CardFrame}" Padding="16,14">
                     <VerticalStackLayout Spacing="8">
-                        <Label Text="VILA" Style="{StaticResource SectionLabel}"/>
+                        <Label Text="{loc:Localize CreateExercise_RestLabel}" Style="{StaticResource SectionLabel}"/>
                         <Grid ColumnDefinitions="52,*,52" ColumnSpacing="0">
                             <Button Grid.Column="0" Text="−"
                                     Style="{StaticResource SecondaryButton}"
@@ -146,7 +147,7 @@
                                        FontFamily="BebasNeue" FontSize="38" CharacterSpacing="1"
                                        TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
                                        HorizontalOptions="Center"/>
-                                <Label Text="SEK"
+                                <Label Text="{loc:Localize CreateExercise_RestUnit}"
                                        Style="{StaticResource SectionLabel}"
                                        HorizontalOptions="Center"/>
                             </VerticalStackLayout>
@@ -161,9 +162,9 @@
                 <!-- Notes -->
                 <Border Style="{StaticResource CardFrame}" Padding="16,14">
                     <VerticalStackLayout Spacing="8">
-                        <Label Text="ANTECKNINGAR (VALFRITT)" Style="{StaticResource SectionLabel}"/>
+                        <Label Text="{loc:Localize CreateExercise_NotesLabel}" Style="{StaticResource SectionLabel}"/>
                         <Editor Text="{Binding Notes}"
-                                Placeholder="Tekniknoteringar, varianter..."
+                                Placeholder="{loc:Localize CreateExercise_NotesPlaceholder}"
                                 PlaceholderColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"
                                 TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
                                 BackgroundColor="Transparent"

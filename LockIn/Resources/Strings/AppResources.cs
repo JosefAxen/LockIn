@@ -399,4 +399,15 @@ public static class AppResources
     public static string Library_Equipment_FoamRoll         => Get(nameof(Library_Equipment_FoamRoll));
     public static string Library_Equipment_MedicineBall     => Get(nameof(Library_Equipment_MedicineBall));
     public static string Library_Equipment_Other            => Get(nameof(Library_Equipment_Other));
+
+    // ── CreateExercise ──────────────────────────────────────────────────
+    public static string CreateExercise_Title              => Get(nameof(CreateExercise_Title));
+    public static string CreateExercise_NameLabel          => Get(nameof(CreateExercise_NameLabel));
+    public static string CreateExercise_NamePlaceholder    => Get(nameof(CreateExercise_NamePlaceholder));
+    public static string CreateExercise_MuscleGroupLabel   => Get(nameof(CreateExercise_MuscleGroupLabel));
+    public static string CreateExercise_EquipmentLabel     => Get(nameof(CreateExercise_EquipmentLabel));
+    public static string CreateExercise_RestLabel          => Get(nameof(CreateExercise_RestLabel));
+    public static string CreateExercise_RestUnit           => Get(nameof(CreateExercise_RestUnit));
+    public static string CreateExercise_NotesLabel         => Get(nameof(CreateExercise_NotesLabel));
+    public static string CreateExercise_NotesPlaceholder   => Get(nameof(CreateExercise_NotesPlaceholder));
 }

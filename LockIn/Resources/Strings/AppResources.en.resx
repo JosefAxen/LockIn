@@ -515,4 +515,15 @@
   <data name="Library_Equipment_FoamRoll" xml:space="preserve"><value>FOAM ROLL</value></data>
   <data name="Library_Equipment_MedicineBall" xml:space="preserve"><value>MEDICINE BALL</value></data>
   <data name="Library_Equipment_Other" xml:space="preserve"><value>OTHER</value></data>
+
+  <!-- CreateExercise — XAML labels -->
+  <data name="CreateExercise_Title" xml:space="preserve"><value>NEW EXERCISE</value></data>
+  <data name="CreateExercise_NameLabel" xml:space="preserve"><value>NAME</value></data>
+  <data name="CreateExercise_NamePlaceholder" xml:space="preserve"><value>E.g. Cable Flyes</value></data>
+  <data name="CreateExercise_MuscleGroupLabel" xml:space="preserve"><value>MUSCLE GROUP</value></data>
+  <data name="CreateExercise_EquipmentLabel" xml:space="preserve"><value>EQUIPMENT</value></data>
+  <data name="CreateExercise_RestLabel" xml:space="preserve"><value>REST</value></data>
+  <data name="CreateExercise_RestUnit" xml:space="preserve"><value>SEC</value></data>
+  <data name="CreateExercise_NotesLabel" xml:space="preserve"><value>NOTES (OPTIONAL)</value></data>
+  <data name="CreateExercise_NotesPlaceholder" xml:space="preserve"><value>Technique notes, variations...</value></data>
 </root>

@@ -515,4 +515,15 @@
   <data name="Library_Equipment_FoamRoll" xml:space="preserve"><value>FOAM ROLL</value></data>
   <data name="Library_Equipment_MedicineBall" xml:space="preserve"><value>MEDICINBOLL</value></data>
   <data name="Library_Equipment_Other" xml:space="preserve"><value>ÖVRIGT</value></data>
+
+  <!-- CreateExercise — XAML labels -->
+  <data name="CreateExercise_Title" xml:space="preserve"><value>NY ÖVNING</value></data>
+  <data name="CreateExercise_NameLabel" xml:space="preserve"><value>NAMN</value></data>
+  <data name="CreateExercise_NamePlaceholder" xml:space="preserve"><value>T.ex. Kabelflyes</value></data>
+  <data name="CreateExercise_MuscleGroupLabel" xml:space="preserve"><value>MUSKELGRUPP</value></data>
+  <data name="CreateExercise_EquipmentLabel" xml:space="preserve"><value>UTRUSTNING</value></data>
+  <data name="CreateExercise_RestLabel" xml:space="preserve"><value>VILA</value></data>
+  <data name="CreateExercise_RestUnit" xml:space="preserve"><value>SEK</value></data>
+  <data name="CreateExercise_NotesLabel" xml:space="preserve"><value>ANTECKNINGAR (VALFRITT)</value></data>
+  <data name="CreateExercise_NotesPlaceholder" xml:space="preserve"><value>Tekniknoteringar, varianter...</value></data>
 </root>

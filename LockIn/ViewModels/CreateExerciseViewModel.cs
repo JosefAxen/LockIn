@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn.Models;
+using LockIn.Resources.Strings;
 using LockIn.Services;
 
 namespace LockIn.ViewModels;
@@ -83,30 +84,30 @@ public partial class CreateExerciseViewModel : ObservableObject
 
         _muscleGroups =
         [
-            new("BRÖST",      MuscleGroup.Chest,     Color.FromArgb("#FB7185")),
-            new("RYGG",       MuscleGroup.Back,      Color.FromArgb("#38BDF8")),
-            new("AXLAR",      MuscleGroup.Shoulders, Color.FromArgb("#A78BFA")),
-            new("BICEPS",     MuscleGroup.Biceps,    Color.FromArgb("#4ADE80")),
-            new("TRICEPS",    MuscleGroup.Triceps,   Color.FromArgb("#FBBF24")),
-            new("UNDERARMAR", MuscleGroup.Forearms,  Color.FromArgb("#34D399")),
-            new("BEN",        MuscleGroup.Legs,      Color.FromArgb("#F97316")),
-            new("CORE",       MuscleGroup.Core,      Color.FromArgb("#EC4899")),
-            new("HELKROPP",   MuscleGroup.FullBody,  Color.FromArgb("#EF4444")),
-            new("ÖVRIGT",     MuscleGroup.Other,     Color.FromArgb("#94A3B8")),
+            new(AppResources.Library_Muscle_Chest,     MuscleGroup.Chest,     Color.FromArgb("#FB7185")),
+            new(AppResources.Library_Muscle_Back,      MuscleGroup.Back,      Color.FromArgb("#38BDF8")),
+            new(AppResources.Library_Muscle_Shoulders, MuscleGroup.Shoulders, Color.FromArgb("#A78BFA")),
+            new(AppResources.Library_Muscle_Biceps,    MuscleGroup.Biceps,    Color.FromArgb("#4ADE80")),
+            new(AppResources.Library_Muscle_Triceps,   MuscleGroup.Triceps,   Color.FromArgb("#FBBF24")),
+            new(AppResources.Library_Muscle_Forearms,  MuscleGroup.Forearms,  Color.FromArgb("#34D399")),
+            new(AppResources.Library_Muscle_Legs,      MuscleGroup.Legs,      Color.FromArgb("#F97316")),
+            new(AppResources.Library_Muscle_Core,      MuscleGroup.Core,      Color.FromArgb("#EC4899")),
+            new(AppResources.Library_Muscle_FullBody,  MuscleGroup.FullBody,  Color.FromArgb("#EF4444")),
+            new(AppResources.Library_Muscle_Other,     MuscleGroup.Other,     Color.FromArgb("#94A3B8")),
         ];
         _muscleGroups[0].IsSelected = true;
 
         _equipmentOptions =
         [
-            new("SKIVSTÅNG",   EquipmentType.Barbell),
-            new("HANTLAR",     EquipmentType.Dumbbell),
-            new("KABEL",       EquipmentType.Cable),
-            new("MASKIN",      EquipmentType.Machine),
-            new("KROPPSVIKT",  EquipmentType.BodyOnly),
-            new("EZ-STÅNG",    EquipmentType.EZBar),
-            new("KETTLEBELL",  EquipmentType.Kettlebell),
-            new("BAND",        EquipmentType.Bands),
-            new("ÖVRIGT",      EquipmentType.Other),
+            new(AppResources.Library_Equipment_Barbell,    EquipmentType.Barbell),
+            new(AppResources.Library_Equipment_Dumbbell,   EquipmentType.Dumbbell),
+            new(AppResources.Library_Equipment_Cable,      EquipmentType.Cable),
+            new(AppResources.Library_Equipment_Machine,    EquipmentType.Machine),
+            new(AppResources.Library_Equipment_Bodyweight, EquipmentType.BodyOnly),
+            new(AppResources.Library_Equipment_EZBar,      EquipmentType.EZBar),
+            new(AppResources.Library_Equipment_Kettlebell, EquipmentType.Kettlebell),
+            new(AppResources.Library_Equipment_Bands,      EquipmentType.Bands),
+            new(AppResources.Library_Equipment_Other,      EquipmentType.Other),
         ];
         _equipmentOptions[0].IsSelected = true;
     }
