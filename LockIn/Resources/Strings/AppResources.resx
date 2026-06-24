@@ -426,6 +426,27 @@
   <data name="ExercisePicker_SearchPlaceholder" xml:space="preserve"><value>Sök övning...</value></data>
   <data name="ExercisePicker_CreateCustom" xml:space="preserve"><value>Lägg till custom övning</value></data>
 
+  <!-- TemplateEdit — XAML labels -->
+  <data name="TemplateEdit_PageTitle" xml:space="preserve"><value>MALL</value></data>
+  <data name="TemplateEdit_SectionName" xml:space="preserve"><value>MALLNAMN</value></data>
+  <data name="TemplateEdit_NamePlaceholder" xml:space="preserve"><value>T.ex. Push A</value></data>
+  <data name="TemplateEdit_SectionExercises" xml:space="preserve"><value>ÖVNINGAR</value></data>
+  <data name="TemplateEdit_AutoProgression" xml:space="preserve"><value>AUTO-PROGRESSION</value></data>
+  <data name="TemplateEdit_MinReps" xml:space="preserve"><value>MIN REPS</value></data>
+  <data name="TemplateEdit_MaxReps" xml:space="preserve"><value>MAX REPS</value></data>
+  <data name="TemplateEdit_WeightIncrement" xml:space="preserve"><value>+KG</value></data>
+  <data name="TemplateEdit_ColRest" xml:space="preserve"><value>VILA</value></data>
+  <data name="TemplateEdit_AddExercise" xml:space="preserve"><value>+ LÄGG TILL ÖVNING</value></data>
+
+  <!-- TemplateEdit — VM strings -->
+  <data name="TemplateEdit_UnknownExercise" xml:space="preserve"><value>Okänd övning</value></data>
+  <data name="TemplateEdit_RestTime_Title" xml:space="preserve"><value>Vilotid</value></data>
+  <data name="TemplateEdit_RestTime_Body_Format" xml:space="preserve"><value>Vila i sekunder för {0}:</value></data>
+  <data name="TemplateEdit_SupersetToast" xml:space="preserve"><value>Lägg till en övning efter den här för att skapa ett superset.</value></data>
+  <data name="TemplateEdit_Toast_EnterName" xml:space="preserve"><value>Ange ett namn för mallen.</value></data>
+  <data name="TemplateEdit_SupersetAdd" xml:space="preserve"><value>SUPERSET +</value></data>
+  <data name="TemplateEdit_SupersetRemove" xml:space="preserve"><value>KOPPLA BORT</value></data>
+
   <!-- Library — Equipment type labels -->
   <data name="Library_Equipment_Barbell" xml:space="preserve"><value>SKIVSTÅNG</value></data>
 

@@ -312,6 +312,25 @@ public static class AppResources
     public static string PostWorkout_SetsDisplay_Format       => Get(nameof(PostWorkout_SetsDisplay_Format));
     public static string PostWorkout_Epley1RM_Format          => Get(nameof(PostWorkout_Epley1RM_Format));
 
+    // ── TemplateEdit ─────────────────────────────────────────────────────
+    public static string TemplateEdit_PageTitle           => Get(nameof(TemplateEdit_PageTitle));
+    public static string TemplateEdit_SectionName         => Get(nameof(TemplateEdit_SectionName));
+    public static string TemplateEdit_NamePlaceholder     => Get(nameof(TemplateEdit_NamePlaceholder));
+    public static string TemplateEdit_SectionExercises    => Get(nameof(TemplateEdit_SectionExercises));
+    public static string TemplateEdit_AutoProgression     => Get(nameof(TemplateEdit_AutoProgression));
+    public static string TemplateEdit_MinReps             => Get(nameof(TemplateEdit_MinReps));
+    public static string TemplateEdit_MaxReps             => Get(nameof(TemplateEdit_MaxReps));
+    public static string TemplateEdit_WeightIncrement     => Get(nameof(TemplateEdit_WeightIncrement));
+    public static string TemplateEdit_ColRest             => Get(nameof(TemplateEdit_ColRest));
+    public static string TemplateEdit_AddExercise         => Get(nameof(TemplateEdit_AddExercise));
+    public static string TemplateEdit_UnknownExercise     => Get(nameof(TemplateEdit_UnknownExercise));
+    public static string TemplateEdit_RestTime_Title      => Get(nameof(TemplateEdit_RestTime_Title));
+    public static string TemplateEdit_RestTime_Body_Format => Get(nameof(TemplateEdit_RestTime_Body_Format));
+    public static string TemplateEdit_SupersetToast       => Get(nameof(TemplateEdit_SupersetToast));
+    public static string TemplateEdit_Toast_EnterName     => Get(nameof(TemplateEdit_Toast_EnterName));
+    public static string TemplateEdit_SupersetAdd         => Get(nameof(TemplateEdit_SupersetAdd));
+    public static string TemplateEdit_SupersetRemove      => Get(nameof(TemplateEdit_SupersetRemove));
+
     // ── ExercisePicker ───────────────────────────────────────────────────
     public static string ExercisePicker_Title             => Get(nameof(ExercisePicker_Title));
     public static string ExercisePicker_SearchPlaceholder => Get(nameof(ExercisePicker_SearchPlaceholder));

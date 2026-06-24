@@ -3,9 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:LockIn.ViewModels"
              xmlns:controls="clr-namespace:LockIn.Controls"
+             xmlns:loc="clr-namespace:LockIn.Resources.Strings"
              x:Class="LockIn.Views.TemplateEditPage"
              x:DataType="vm:TemplateEditViewModel"
-             Title="Mall"
+             Title="{loc:Localize TemplateEdit_PageTitle}"
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
              Shell.NavBarIsVisible="False"
              BackgroundColor="Transparent"
@@ -55,7 +56,7 @@
                     <TapGestureRecognizer Tapped="OnBackClicked"/>
                 </Border.GestureRecognizers>
             </Border>
-            <Label Grid.Column="1" Text="MALL"
+            <Label Grid.Column="1" Text="{loc:Localize TemplateEdit_PageTitle}"
                    Style="{StaticResource DisplayLabel}"
                    FontSize="24" HorizontalOptions="Center" VerticalOptions="Center"/>
             <!-- Spara-knapp — pill, premium gym-stil -->
@@ -69,7 +70,7 @@
                 <Border.Shadow>
                     <Shadow Brush="#B8B8BC" Offset="0,3" Radius="14" Opacity="0.4"/>
                 </Border.Shadow>
-                <Label Text="SPARA"
+                <Label Text="{loc:Localize Common_Save}"
                        FontFamily="BebasNeue" FontSize="14"
                        CharacterSpacing="2"
                        TextColor="#0E0E10"
@@ -87,15 +88,15 @@
                 <!-- Template name -->
                 <Border Style="{StaticResource CardFrame}" Padding="16">
                     <VerticalStackLayout Spacing="6">
-                        <Label Text="MALLNAMN" Style="{StaticResource SectionLabel}"/>
+                        <Label Text="{loc:Localize TemplateEdit_SectionName}" Style="{StaticResource SectionLabel}"/>
                         <Entry Text="{Binding TemplateName}"
                                Style="{StaticResource InputField}"
-                               Placeholder="T.ex. Push A"
+                               Placeholder="{loc:Localize TemplateEdit_NamePlaceholder}"
                                ReturnType="Done"/>
                     </VerticalStackLayout>
                 </Border>
 
-                <Label Text="ÖVNINGAR" Style="{StaticResource SectionLabel}" Margin="0,4,0,0"/>
+                <Label Text="{loc:Localize TemplateEdit_SectionExercises}" Style="{StaticResource SectionLabel}" Margin="0,4,0,0"/>
 
                 <!-- Exercise cards -->
                 <StackLayout BindableLayout.ItemsSource="{Binding Exercises}" Spacing="10">
@@ -130,7 +131,7 @@
                                     <Grid ColumnDefinitions="*,Auto"
                                           Padding="16,10,16,10">
                                         <Label Grid.Column="0"
-                                               Text="AUTO-PROGRESSION"
+                                               Text="{loc:Localize TemplateEdit_AutoProgression}"
                                                Style="{StaticResource SectionLabel}"
                                                VerticalOptions="Center"/>
                                         <Switch Grid.Column="1"
@@ -147,7 +148,7 @@
 
                                         <!-- MIN REPS -->
                                         <VerticalStackLayout Grid.Column="0" Spacing="4">
-                                            <Label Text="MIN REPS"
+                                            <Label Text="{loc:Localize TemplateEdit_MinReps}"
                                                    Style="{StaticResource SectionLabel}"
                                                    TextColor="{StaticResource ForgeAccent}"
                                                    HorizontalOptions="Center"/>
@@ -170,7 +171,7 @@
 
                                         <!-- MAX REPS -->
                                         <VerticalStackLayout Grid.Column="1" Spacing="4">
-                                            <Label Text="MAX REPS"
+                                            <Label Text="{loc:Localize TemplateEdit_MaxReps}"
                                                    Style="{StaticResource SectionLabel}"
                                                    TextColor="{StaticResource ForgeAccent}"
                                                    HorizontalOptions="Center"/>
@@ -193,7 +194,7 @@
 
                                         <!-- +KG PER STEG -->
                                         <VerticalStackLayout Grid.Column="2" Spacing="4">
-                                            <Label Text="+KG"
+                                            <Label Text="{loc:Localize TemplateEdit_WeightIncrement}"
                                                    Style="{StaticResource SectionLabel}"
                                                    TextColor="{StaticResource ForgeAccent}"
                                                    HorizontalOptions="Center"/>
@@ -227,7 +228,7 @@
                                                 IsVisible="{Binding IsInSuperset}"
                                                 HorizontalOptions="Start"
                                                 VerticalOptions="Center">
-                                            <Label Text="SUPERSET"
+                                            <Label Text="{loc:Localize ActiveWorkout_Superset}"
                                                    TextColor="{StaticResource ForgeAccent}"
                                                    FontFamily="BebasNeue" FontSize="11"
                                                    CharacterSpacing="1"/>
@@ -255,7 +256,7 @@
 
                                         <!-- SET -->
                                         <VerticalStackLayout Grid.Column="0" Spacing="4">
-                                            <Label Text="SET"
+                                            <Label Text="{loc:Localize ActiveWorkout_Col_Set}"
                                                    Style="{StaticResource SectionLabel}"
                                                    HorizontalOptions="Center"/>
                                             <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}"
@@ -277,7 +278,7 @@
 
                                         <!-- REPS -->
                                         <VerticalStackLayout Grid.Column="1" Spacing="4">
-                                            <Label Text="REPS"
+                                            <Label Text="{loc:Localize ActiveWorkout_Col_Reps}"
                                                    Style="{StaticResource SectionLabel}"
                                                    HorizontalOptions="Center"/>
                                             <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}"
@@ -299,7 +300,7 @@
 
                                         <!-- KG -->
                                         <VerticalStackLayout Grid.Column="2" Spacing="4">
-                                            <Label Text="KG"
+                                            <Label Text="{loc:Localize ActiveWorkout_Col_Weight}"
                                                    Style="{StaticResource SectionLabel}"
                                                    HorizontalOptions="Center"/>
                                             <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}"
@@ -323,7 +324,7 @@
 
                                         <!-- VILA (tappable, shows dialog) -->
                                         <VerticalStackLayout Grid.Column="3" Spacing="4">
-                                            <Label Text="VILA"
+                                            <Label Text="{loc:Localize TemplateEdit_ColRest}"
                                                    Style="{StaticResource SectionLabel}"
                                                    TextColor="{StaticResource ForgeAccentAmber}"
                                                    HorizontalOptions="Center"/>
@@ -354,7 +355,7 @@
                 </StackLayout>
 
                 <!-- Add exercise -->
-                <Button Text="+ LÄGG TILL ÖVNING"
+                <Button Text="{loc:Localize TemplateEdit_AddExercise}"
                         Style="{StaticResource SecondaryButton}"
                         Margin="0,4,0,0"
                         Command="{Binding AddExerciseCommand}"/>

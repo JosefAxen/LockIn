@@ -2,6 +2,7 @@ using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn.Models;
+using LockIn.Resources.Strings;
 using LockIn.Services;
 using LockIn.Views;
 using System.Collections.ObjectModel;
@@ -44,7 +45,7 @@ public partial class TemplateEditViewModel(DatabaseService db) : ObservableObjec
             foreach (var te in items)
             {
                 var exercise = await db.GetExerciseAsync(te.ExerciseId);
-                Exercises.Add(TemplateExerciseRow.FromTemplateExercise(te, exercise?.Name ?? "Okänd övning"));
+                Exercises.Add(TemplateExerciseRow.FromTemplateExercise(te, exercise?.Name ?? AppResources.TemplateEdit_UnknownExercise));
             }
         }
         IsLoading = false;
@@ -85,8 +86,8 @@ public partial class TemplateEditViewModel(DatabaseService db) : ObservableObjec
     private async Task ChangeRestAsync(TemplateExerciseRow row)
     {
         var result = await Shell.Current.DisplayPromptAsync(
-            "Vilotid",
-            $"Vila i sekunder för {row.ExerciseName}:",
+            AppResources.TemplateEdit_RestTime_Title,
+            string.Format(AppResources.TemplateEdit_RestTime_Body_Format, row.ExerciseName),
             initialValue: row.RestSeconds.ToString(),
             keyboard: Keyboard.Numeric);
 
@@ -110,7 +111,7 @@ public partial class TemplateEditViewModel(DatabaseService db) : ObservableObjec
         {
             if (index + 1 >= Exercises.Count)
             {
-                await Toast.Make("Lägg till en övning efter den här för att skapa ett superset.").Show();
+                await Toast.Make(AppResources.TemplateEdit_SupersetToast).Show();
                 return;
             }
             var next = Exercises[index + 1];
@@ -125,7 +126,7 @@ public partial class TemplateEditViewModel(DatabaseService db) : ObservableObjec
     {
         if (string.IsNullOrWhiteSpace(TemplateName))
         {
-            await Toast.Make("Ange ett namn för mallen.").Show();
+            await Toast.Make(AppResources.TemplateEdit_Toast_EnterName).Show();
             return;
         }
 
@@ -181,7 +182,9 @@ public partial class TemplateExerciseRow : ObservableObject
     // Superset
     [ObservableProperty] private int? _supersetGroupId;
     public bool IsInSuperset => SupersetGroupId.HasValue;
-    public string SupersetButtonText => SupersetGroupId.HasValue ? "KOPPLA BORT" : "SUPERSET +";
+    public string SupersetButtonText => SupersetGroupId.HasValue
+        ? AppResources.TemplateEdit_SupersetRemove
+        : AppResources.TemplateEdit_SupersetAdd;
 
     partial void OnSupersetGroupIdChanged(int? value)
     {
