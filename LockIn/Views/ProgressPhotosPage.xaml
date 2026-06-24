@@ -67,10 +67,10 @@
             <CollectionView.EmptyView>
                 <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center"
                                      Spacing="8" Margin="0,80,0,0">
-                    <Label Text="INGA FOTON" Style="{StaticResource DisplayLabel}"
+                    <Label Text="{loc:Localize ProgressPhotos_Empty_Title}" Style="{StaticResource DisplayLabel}"
                            FontSize="22" TextColor="{StaticResource ForgeMuted}"
                            HorizontalOptions="Center"/>
-                    <Label Text="Lägg till foton via ett avslutat pass"
+                    <Label Text="{loc:Localize ProgressPhotos_Empty_Body}"
                            Style="{StaticResource MutedLabel}"
                            HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
                 </VerticalStackLayout>

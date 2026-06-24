@@ -483,6 +483,29 @@ public static class AppResources
 
     // ── ProgressPhotos ──────────────────────────────────────────────────
     public static string ProgressPhotos_Title              => Get(nameof(ProgressPhotos_Title));
+    public static string ProgressPhotos_Empty_Title        => Get(nameof(ProgressPhotos_Empty_Title));
+    public static string ProgressPhotos_Empty_Body         => Get(nameof(ProgressPhotos_Empty_Body));
     public static string ProgressPhotos_DeletePhotoTitle   => Get(nameof(ProgressPhotos_DeletePhotoTitle));
     public static string ProgressPhotos_DeletePhotoBody    => Get(nameof(ProgressPhotos_DeletePhotoBody));
+
+    // ── Hem — Activity card labels ──────────────────────────────────────
+    public static string Hem_Steps_Label       => Get(nameof(Hem_Steps_Label));
+    public static string Hem_Calories_Label    => Get(nameof(Hem_Calories_Label));
+    public static string Hem_ActiveTime_Label  => Get(nameof(Hem_ActiveTime_Label));
+    public static string Hem_HeartRate_Label   => Get(nameof(Hem_HeartRate_Label));
+
+    // ── Hem — Sleep stage labels ────────────────────────────────────────
+    public static string Hem_Sleep_Core        => Get(nameof(Hem_Sleep_Core));
+    public static string Hem_Sleep_Deep        => Get(nameof(Hem_Sleep_Deep));
+    public static string Hem_Sleep_Rem         => Get(nameof(Hem_Sleep_Rem));
+
+    // ── History ─────────────────────────────────────────────────────────
+    public static string History_Card_PRs      => Get(nameof(History_Card_PRs));
+
+    // ── Library ─────────────────────────────────────────────────────────
+    public static string Library_LoadingIn     => Get(nameof(Library_LoadingIn));
+
+    // ── Navigation page titles ──────────────────────────────────────────
+    public static string CreateExercise_PageTitle  => Get(nameof(CreateExercise_PageTitle));
+    public static string ExercisePicker_PageTitle  => Get(nameof(ExercisePicker_PageTitle));
 }

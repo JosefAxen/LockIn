@@ -9,7 +9,7 @@
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
              x:Class="LockIn.Views.TrainPage"
              x:DataType="vm:TrainViewModel"
-             Title="Träna"
+             Title="{loc:Localize Train_PageTitle}"
              Shell.NavBarIsVisible="False"
              BackgroundColor="Transparent"
              ios:Page.UseSafeArea="False">

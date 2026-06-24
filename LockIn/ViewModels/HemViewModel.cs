@@ -311,13 +311,13 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
         var scores = await db.GetMuscleScoresAsync();
         var muscles = new (MuscleGroup mg, string name)[]
         {
-            (MuscleGroup.Chest,     "BRÖST"),
-            (MuscleGroup.Back,      "RYGG"),
-            (MuscleGroup.Shoulders, "AXLAR"),
-            (MuscleGroup.Biceps,    "BICEPS"),
-            (MuscleGroup.Triceps,   "TRICEPS"),
-            (MuscleGroup.Legs,      "BEN"),
-            (MuscleGroup.Core,      "CORE"),
+            (MuscleGroup.Chest,     AppResources.Train_Muscle_Chest),
+            (MuscleGroup.Back,      AppResources.Train_Muscle_Back),
+            (MuscleGroup.Shoulders, AppResources.Train_Muscle_Shoulders),
+            (MuscleGroup.Biceps,    AppResources.Train_Muscle_Biceps),
+            (MuscleGroup.Triceps,   AppResources.Train_Muscle_Triceps),
+            (MuscleGroup.Legs,      AppResources.Train_Muscle_Legs),
+            (MuscleGroup.Core,      AppResources.Train_Muscle_Core),
         };
         HeatmapItems = muscles.Select(m =>
         {

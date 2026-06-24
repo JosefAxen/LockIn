@@ -6,7 +6,7 @@
              xmlns:loc="clr-namespace:LockIn.Resources.Strings"
              x:Class="LockIn.Views.CreateExercisePage"
              x:DataType="vm:CreateExerciseViewModel"
-             Title="Ny övning"
+             Title="{loc:Localize CreateExercise_PageTitle}"
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
              Shell.NavBarIsVisible="False"
              BackgroundColor="Transparent"

@@ -609,6 +609,26 @@
 
   <!-- ProgressPhotos — XAML labels + VM strings -->
   <data name="ProgressPhotos_Title" xml:space="preserve"><value>PROGRESSBILDER</value></data>
+  <data name="ProgressPhotos_Empty_Title" xml:space="preserve"><value>INGA FOTON</value></data>
+  <data name="ProgressPhotos_Empty_Body" xml:space="preserve"><value>Lägg till foton via ett avslutat pass</value></data>
   <data name="ProgressPhotos_DeletePhotoTitle" xml:space="preserve"><value>Ta bort foto</value></data>
   <data name="ProgressPhotos_DeletePhotoBody" xml:space="preserve"><value>Ta bort det här fotot?</value></data>
+
+  <!-- Hem — Activity card labels -->
+  <data name="Hem_Steps_Label" xml:space="preserve"><value>STEG</value></data>
+  <data name="Hem_Calories_Label" xml:space="preserve"><value>KALORIER</value></data>
+  <data name="Hem_ActiveTime_Label" xml:space="preserve"><value>AKTIV TID</value></data>
+  <data name="Hem_HeartRate_Label" xml:space="preserve"><value>MAXPULS</value></data>
+
+  <!-- Hem — Sleep stage labels -->
+  <data name="Hem_Sleep_Core" xml:space="preserve"><value>CORE</value></data>
+  <data name="Hem_Sleep_Deep" xml:space="preserve"><value>DJUP</value></data>
+  <data name="Hem_Sleep_Rem" xml:space="preserve"><value>REM</value></data>
+
+  <!-- History — PR label -->
+  <data name="History_Card_PRs" xml:space="preserve"><value>PRs</value></data>
+
+  <!-- Library — loading animation label -->
+  <data name="Library_LoadingIn" xml:space="preserve"><value>LOCKING IN</value></data>
+
 </root>

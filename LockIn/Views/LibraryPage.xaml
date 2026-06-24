@@ -62,7 +62,7 @@
                 </Border>
             </Grid>
             <Label x:Name="LoaderLabel"
-                   Text="LOCKING IN"
+                   Text="{loc:Localize Library_LoadingIn}"
                    FontFamily="BebasNeue"
                    FontSize="12"
                    CharacterSpacing="4"

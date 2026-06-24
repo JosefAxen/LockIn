@@ -268,7 +268,7 @@
                                                     <Label Text="{Binding PRCount}"
                                                            FontSize="28" FontAttributes="Bold"
                                                            TextColor="{StaticResource ForgeAccentAmber}"/>
-                                                    <Label Text="PRs" Style="{StaticResource SectionLabel}"/>
+                                                    <Label Text="{loc:Localize History_Card_PRs}" Style="{StaticResource SectionLabel}"/>
                                                 </StackLayout>
                                                 <Path Grid.Column="3" Style="{StaticResource ForwardChevron}"/>
                                             </Grid>

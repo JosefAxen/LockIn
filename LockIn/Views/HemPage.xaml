@@ -197,21 +197,21 @@
                                    FontSize="22" FontAttributes="Bold"
                                    HorizontalTextAlignment="Center"
                                    TextColor="{StaticResource ForgeAccentBlue}"/>
-                            <Label Text="CORE" Style="{StaticResource SectionLabel}" FontSize="9" HorizontalTextAlignment="Center"/>
+                            <Label Text="{loc:Localize Hem_Sleep_Core}" Style="{StaticResource SectionLabel}" FontSize="9" HorizontalTextAlignment="Center"/>
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Column="1" Spacing="2" HorizontalOptions="Center">
                             <Label Text="{Binding DeepSleepText}"
                                    FontSize="22" FontAttributes="Bold"
                                    HorizontalTextAlignment="Center"
                                    TextColor="{StaticResource ForgeAccentPurple}"/>
-                            <Label Text="DEEP" Style="{StaticResource SectionLabel}" FontSize="9" HorizontalTextAlignment="Center"/>
+                            <Label Text="{loc:Localize Hem_Sleep_Deep}" Style="{StaticResource SectionLabel}" FontSize="9" HorizontalTextAlignment="Center"/>
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Column="2" Spacing="2" HorizontalOptions="Center">
                             <Label Text="{Binding RemSleepText}"
                                    FontSize="22" FontAttributes="Bold"
                                    HorizontalTextAlignment="Center"
                                    TextColor="{StaticResource ForgeAccent}"/>
-                            <Label Text="REM" Style="{StaticResource SectionLabel}" FontSize="9" HorizontalTextAlignment="Center"/>
+                            <Label Text="{loc:Localize Hem_Sleep_Rem}" Style="{StaticResource SectionLabel}" FontSize="9" HorizontalTextAlignment="Center"/>
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Column="3" Spacing="2" HorizontalOptions="Center">
                             <Label Text="{Binding AwakeSleepText}"
@@ -286,7 +286,7 @@
                             Stroke="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorder}}"
                             StrokeThickness="1" Padding="16,14,16,12">
                         <VerticalStackLayout Spacing="0">
-                            <Label Text="STEG" Style="{StaticResource SectionLabel}" Margin="0,0,0,4"/>
+                            <Label Text="{loc:Localize Hem_Steps_Label}" Style="{StaticResource SectionLabel}" Margin="0,0,0,4"/>
                             <Label Text="{Binding StepsText}"
                                    FontSize="36" CharacterSpacing="0" LineHeight="1"
                                    TextColor="{AppThemeBinding Light={StaticResource LightAccent}, Dark={StaticResource ForgeAccent}}"/>
@@ -302,7 +302,7 @@
                             Stroke="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorder}}"
                             StrokeThickness="1" Padding="16,14,16,12">
                         <VerticalStackLayout Spacing="0">
-                            <Label Text="KALORIER" Style="{StaticResource SectionLabel}" Margin="0,0,0,4"/>
+                            <Label Text="{loc:Localize Hem_Calories_Label}" Style="{StaticResource SectionLabel}" Margin="0,0,0,4"/>
                             <Label Text="{Binding CaloriesText}"
                                    FontSize="36" CharacterSpacing="0" LineHeight="1"
                                    TextColor="{AppThemeBinding Light={StaticResource LightAccentCoral}, Dark={StaticResource ForgeAccentCoral}}"/>
@@ -318,7 +318,7 @@
                             Stroke="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorder}}"
                             StrokeThickness="1" Padding="16,14,16,12">
                         <VerticalStackLayout Spacing="0">
-                            <Label Text="AKTIV TID" Style="{StaticResource SectionLabel}" Margin="0,0,0,4"/>
+                            <Label Text="{loc:Localize Hem_ActiveTime_Label}" Style="{StaticResource SectionLabel}" Margin="0,0,0,4"/>
                             <Label Text="{Binding ActiveText}"
                                    FontSize="36" CharacterSpacing="0" LineHeight="1"
                                    TextColor="{AppThemeBinding Light={StaticResource LightAccentBlue}, Dark={StaticResource ForgeAccentBlue}}"/>
@@ -334,7 +334,7 @@
                             Stroke="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorder}}"
                             StrokeThickness="1" Padding="16,14,16,12">
                         <VerticalStackLayout Spacing="0">
-                            <Label Text="MAXPULS" Style="{StaticResource SectionLabel}" Margin="0,0,0,4"/>
+                            <Label Text="{loc:Localize Hem_HeartRate_Label}" Style="{StaticResource SectionLabel}" Margin="0,0,0,4"/>
                             <Label Text="{Binding HeartRateText}"
                                    FontSize="36" CharacterSpacing="0" LineHeight="1"
                                    TextColor="{AppThemeBinding Light={StaticResource LightAccentPurple}, Dark={StaticResource ForgeAccentPurple}}"/>
