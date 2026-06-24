@@ -163,4 +163,99 @@
   <data name="Onboarding_Continue" xml:space="preserve">
     <value>CONTINUE →</value>
   </data>
+
+  <!-- Hem — XAML labels -->
+  <data name="Hem_ScoreCard_Title" xml:space="preserve"><value>TRAINING SCORE · TODAY</value></data>
+  <data name="Hem_Recommendation_Label" xml:space="preserve"><value>RECOMMENDATION</value></data>
+  <data name="Hem_Strain_Label" xml:space="preserve"><value>STRAIN</value></data>
+  <data name="Hem_Recovery_Label" xml:space="preserve"><value>RECOVERY</value></data>
+  <data name="Hem_Sleep_Label" xml:space="preserve"><value>SLEEP</value></data>
+  <data name="Hem_SleepStage_Awake" xml:space="preserve"><value>AWAKE</value></data>
+  <data name="Hem_Streak_Label" xml:space="preserve"><value>STREAK</value></data>
+  <data name="Hem_SeeAll" xml:space="preserve"><value>SEE ALL ›</value></data>
+  <data name="Hem_Activity_Label" xml:space="preserve"><value>ACTIVITY</value></data>
+  <data name="Hem_Steps_Sub" xml:space="preserve"><value>steps today</value></data>
+  <data name="Hem_Calories_Sub" xml:space="preserve"><value>kcal</value></data>
+  <data name="Hem_ActiveTime_Sub" xml:space="preserve"><value>minutes</value></data>
+  <data name="Hem_HeartRate_Sub" xml:space="preserve"><value>bpm</value></data>
+  <data name="Hem_Muscles_Title" xml:space="preserve"><value>MUSCLES · 7 DAYS</value></data>
+  <data name="Hem_WorkoutBanner_Label" xml:space="preserve"><value>SESSION ACTIVE</value></data>
+
+  <!-- Hem — Greetings -->
+  <data name="Hem_Greeting_Morning" xml:space="preserve"><value>GOOD MORNING</value></data>
+  <data name="Hem_Greeting_Forenoon" xml:space="preserve"><value>GOOD MORNING</value></data>
+  <data name="Hem_Greeting_Afternoon" xml:space="preserve"><value>GOOD AFTERNOON</value></data>
+  <data name="Hem_Greeting_Evening" xml:space="preserve"><value>GOOD EVENING</value></data>
+
+  <!-- Hem — Streak -->
+  <data name="Hem_StreakDays_One" xml:space="preserve"><value>{0} DAY STREAK</value></data>
+  <data name="Hem_StreakDays_Many" xml:space="preserve"><value>{0} DAY STREAK</value></data>
+  <data name="Hem_NoStreak" xml:space="preserve"><value>NO STREAK</value></data>
+
+  <!-- Hem — Motivation (score-tiers) -->
+  <data name="Hem_Motivation_Complete" xml:space="preserve"><value>Week complete — 100% of training goal.</value></data>
+  <data name="Hem_Motivation_Strong" xml:space="preserve"><value>Strong week — you've hit {0}% of your weekly training goal.</value></data>
+  <data name="Hem_Motivation_Halfway" xml:space="preserve"><value>Halfway there — you've hit {0}% of your weekly training goal.</value></data>
+  <data name="Hem_Motivation_Going" xml:space="preserve"><value>Building — you've hit {0}% of your weekly training goal.</value></data>
+  <data name="Hem_Motivation_Started" xml:space="preserve"><value>Started — {0}% of your weekly training goal.</value></data>
+  <data name="Hem_Motivation_New" xml:space="preserve"><value>New week — time to train.</value></data>
+
+  <!-- Hem — Recovery status -->
+  <data name="Hem_Recovery_Optimal" xml:space="preserve"><value>OPTIMAL</value></data>
+  <data name="Hem_Recovery_Good" xml:space="preserve"><value>GOOD</value></data>
+  <data name="Hem_Recovery_Medium" xml:space="preserve"><value>AVERAGE</value></data>
+  <data name="Hem_Recovery_Low" xml:space="preserve"><value>LOW</value></data>
+
+  <!-- Hem — Sleep status -->
+  <data name="Hem_Sleep_Sufficient" xml:space="preserve"><value>SUFFICIENT</value></data>
+  <data name="Hem_Sleep_OK" xml:space="preserve"><value>OK</value></data>
+  <data name="Hem_Sleep_TooLittle" xml:space="preserve"><value>TOO LITTLE</value></data>
+
+  <!-- Hem — Misc VM strings -->
+  <data name="Hem_Loading_Data" xml:space="preserve"><value>Fetching data…</value></data>
+  <data name="Hem_Recovery_NoWatch" xml:space="preserve"><value>Connect Apple Watch for real recovery data</value></data>
+  <data name="Hem_Recovery_Components" xml:space="preserve"><value>HRV {0}ms · RESTING HR {1}bpm · SLEEP {2}h</value></data>
+  <data name="Hem_StrainTarget_Format" xml:space="preserve"><value>TARGET {0}</value></data>
+
+  <!-- Hem — Recommendation headlines -->
+  <data name="Hem_Rec_JustTrained_Head" xml:space="preserve"><value>GREAT WORK!</value></data>
+  <data name="Hem_Rec_JustTrained_Body" xml:space="preserve"><value>Nice session! Prioritize food and rest for the next few hours.</value></data>
+  <data name="Hem_Rec_LongBreak_Head" xml:space="preserve"><value>TIME TO TRAIN</value></data>
+  <data name="Hem_Rec_LongBreak_Body" xml:space="preserve"><value>You've taken a break — time to get back at it. Start easy.</value></data>
+  <data name="Hem_Rec_PlanRest_Head" xml:space="preserve"><value>PLAN A REST DAY</value></data>
+  <data name="Hem_Rec_PlanRest_Body" xml:space="preserve"><value>You've trained {0} days in a row and your body is signaling fatigue. A rest day will yield better results now.</value></data>
+  <data name="Hem_Rec_Head_RestPriority" xml:space="preserve"><value>PRIORITIZE REST</value></data>
+  <data name="Hem_Rec_Head_LightMove" xml:space="preserve"><value>LIGHT MOVEMENT</value></data>
+  <data name="Hem_Rec_Head_NormalSession" xml:space="preserve"><value>NORMAL SESSION</value></data>
+  <data name="Hem_Rec_Head_GoHard" xml:space="preserve"><value>GO HARD</value></data>
+  <data name="Hem_Rec_Head_PeakForm" xml:space="preserve"><value>PEAK FORM</value></data>
+  <data name="Hem_Rec_Body_RestPriority" xml:space="preserve"><value>Your body needs recovery. Walk, stretch, or full rest.</value></data>
+  <data name="Hem_Rec_Body_LightMove" xml:space="preserve"><value>Light cardio or mobility — save heavier lifts for tomorrow.</value></data>
+  <data name="Hem_Rec_Body_NormalSession" xml:space="preserve"><value>Moderate volume today — avoid heavy PR attempts.</value></data>
+  <data name="Hem_Rec_Body_GoHard" xml:space="preserve"><value>You're ready for heavy lifts and PR attempts.</value></data>
+  <data name="Hem_Rec_Body_PeakForm" xml:space="preserve"><value>Maximum recovery — perfect day for a PR attempt.</value></data>
+  <data name="Hem_Rec_DifferentMuscle" xml:space="preserve"><value> Train a different muscle group than your last session.</value></data>
+
+  <!-- Hem — Accessibility labels -->
+  <data name="Hem_Accessibility_GaugeLoading" xml:space="preserve"><value>Training score loading</value></data>
+  <data name="Hem_Accessibility_StrainLoading" xml:space="preserve"><value>Strain loading</value></data>
+  <data name="Hem_Accessibility_RecoveryLoading" xml:space="preserve"><value>Recovery loading</value></data>
+  <data name="Hem_Accessibility_SleepLoading" xml:space="preserve"><value>Sleep loading</value></data>
+  <data name="Hem_Accessibility_Gauge" xml:space="preserve"><value>Training score: {0} out of 100</value></data>
+  <data name="Hem_Accessibility_Strain" xml:space="preserve"><value>Strain: {0} out of 100</value></data>
+  <data name="Hem_Accessibility_StrainNoData" xml:space="preserve"><value>Strain: no data</value></data>
+  <data name="Hem_Accessibility_Recovery" xml:space="preserve"><value>Recovery: {0} out of 100</value></data>
+  <data name="Hem_Accessibility_Sleep" xml:space="preserve"><value>Sleep: {0} hours</value></data>
+  <data name="Hem_Accessibility_SleepNoData" xml:space="preserve"><value>Sleep: no data</value></data>
+
+  <!-- Hem — Coach prompts -->
+  <data name="Hem_Coach_WeeklySummary" xml:space="preserve"><value>Show my weekly summary</value></data>
+  <data name="Hem_Coach_RecoveryTips" xml:space="preserve"><value>Recovery tips</value></data>
+  <data name="Hem_Coach_NextSession" xml:space="preserve"><value>Suggest next session</value></data>
+
+  <!-- Hem — Sparkline accessibility -->
+  <data name="Hem_Sparkline_Steps" xml:space="preserve"><value>Step trend last 7 days</value></data>
+  <data name="Hem_Sparkline_Calories" xml:space="preserve"><value>Calorie trend last 7 days</value></data>
+  <data name="Hem_Sparkline_ActiveTime" xml:space="preserve"><value>Active time last 7 days</value></data>
+  <data name="Hem_Sparkline_HeartRate" xml:space="preserve"><value>Max heart rate last 7 days</value></data>
 </root>

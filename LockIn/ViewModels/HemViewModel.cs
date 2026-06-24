@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using LockIn;
 using LockIn.Models;
+using LockIn.Resources.Strings;
 using LockIn.Services;
 
 namespace LockIn.ViewModels;
@@ -36,7 +37,7 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
     [ObservableProperty] private string _deepSleepText  = "–";
     [ObservableProperty] private string _remSleepText   = "–";
     [ObservableProperty] private string _awakeSleepText = "–";
-    [ObservableProperty] private string _todayRecommendation       = "Hämtar data…";
+    [ObservableProperty] private string _todayRecommendation       = AppResources.Hem_Loading_Data;
     [ObservableProperty] private string _todayRecommendationDetail = "";
     [ObservableProperty] private float  _strainTarget;
     [ObservableProperty] private string _strainTargetText = "–";
@@ -48,10 +49,10 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
     [ObservableProperty] private string _sleepStatusText    = "";
 
     // Accessibility-labels för SkiaSharp-kontroller (VoiceOver)
-    [ObservableProperty] private string _gaugeAccessibilityLabel    = "Träningsscore laddas";
-    [ObservableProperty] private string _strainAccessibilityLabel   = "Ansträngning laddas";
-    [ObservableProperty] private string _recoveryAccessibilityLabel = "Återhämtning laddas";
-    [ObservableProperty] private string _sleepAccessibilityLabel    = "Sömn laddas";
+    [ObservableProperty] private string _gaugeAccessibilityLabel    = AppResources.Hem_Accessibility_GaugeLoading;
+    [ObservableProperty] private string _strainAccessibilityLabel   = AppResources.Hem_Accessibility_StrainLoading;
+    [ObservableProperty] private string _recoveryAccessibilityLabel = AppResources.Hem_Accessibility_RecoveryLoading;
+    [ObservableProperty] private string _sleepAccessibilityLabel    = AppResources.Hem_Accessibility_SleepLoading;
 
     public float GaugeProgress => (float)(TrainingScore / 100.0);
 
@@ -63,10 +64,10 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
         get
         {
             int h = DateTime.Now.Hour;
-            if (h < 10) return "GOD MORGON";
-            if (h < 13) return "GOD FÖRMIDDAG";
-            if (h < 18) return "GOD EFTERMIDDAG";
-            return "GOD KVÄLL";
+            if (h < 10) return AppResources.Hem_Greeting_Morning;
+            if (h < 13) return AppResources.Hem_Greeting_Forenoon;
+            if (h < 18) return AppResources.Hem_Greeting_Afternoon;
+            return AppResources.Hem_Greeting_Evening;
         }
     }
 
@@ -74,9 +75,9 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
 
     public IReadOnlyList<string> CoachPrompts { get; } = new[]
     {
-        "Visa min veckosammanfattning",
-        "Tips för återhämtning",
-        "Föreslå nästa pass"
+        AppResources.Hem_Coach_WeeklySummary,
+        AppResources.Hem_Coach_RecoveryTips,
+        AppResources.Hem_Coach_NextSession
     };
 
     public async Task LoadAsync()
@@ -147,7 +148,9 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
             // Streak and calendar
             Days       = BuildStreakDays(streakSessions);
             int streak = CalculateStreak(streakSessions);
-            StreakLabel = streak > 0 ? $"{streak} DAGARS STREAK" : "INGEN STREAK";
+            StreakLabel = streak > 0
+                ? string.Format(streak == 1 ? AppResources.Hem_StreakDays_One : AppResources.Hem_StreakDays_Many, streak)
+                : AppResources.Hem_NoStreak;
 
             // Heatmap
             await LoadHeatmapAsync();
@@ -234,8 +237,8 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
             RecoveryProgress = (float)(recoveryPct / 100.0);
             RecoveryText     = ((int)recoveryPct).ToString();
             RecoveryComponentsText = hrv.TodayMs > 0
-                ? $"HRV {hrv.TodayMs:F0}ms · VILOPULS {rhr.TodayBpm:F0}bpm · SÖMN {sleepH:F1}h"
-                : "Anslut Apple Watch för riktig återhämtningsdata";
+                ? string.Format(AppResources.Hem_Recovery_Components, $"{hrv.TodayMs:F0}", $"{rhr.TodayBpm:F0}", $"{sleepH:F1}")
+                : AppResources.Hem_Recovery_NoWatch;
 
             SleepStages    = stages;
             CoreSleepText  = FormatSleepDuration(stages.CoreMinutes);
@@ -258,29 +261,33 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
                 await db.SaveAppSettingsAsync(settings);
             }
             StrainTarget     = (float)(target / 100.0);
-            StrainTargetText = $"MÅL {(int)target}";
+            StrainTargetText = string.Format(AppResources.Hem_StrainTarget_Format, (int)target);
 
             // Statusindikatorer
             RecoveryStatusText = recoveryPct switch
             {
-                >= 80 => "OPTIMAL",
-                >= 60 => "BRA",
-                >= 40 => "MEDEL",
-                _     => "LÅGT"
+                >= 80 => AppResources.Hem_Recovery_Optimal,
+                >= 60 => AppResources.Hem_Recovery_Good,
+                >= 40 => AppResources.Hem_Recovery_Medium,
+                _     => AppResources.Hem_Recovery_Low
             };
             SleepStatusText = sleepH switch
             {
-                >= 7.5 => "TILLRÄCKLIG",
-                >= 6.0 => "OK",
-                >= 1.0 => "FÖR LITE",
+                >= 7.5 => AppResources.Hem_Sleep_Sufficient,
+                >= 6.0 => AppResources.Hem_Sleep_OK,
+                >= 1.0 => AppResources.Hem_Sleep_TooLittle,
                 _      => "–"
             };
 
             // Accessibility-labels
-            GaugeAccessibilityLabel    = $"Träningsscore: {(int)score} av 100";
-            StrainAccessibilityLabel   = hasStrainData ? $"Ansträngning: {(int)strainPct} av 100" : "Ansträngning: ingen data";
-            RecoveryAccessibilityLabel = $"Återhämtning: {(int)recoveryPct} av 100";
-            SleepAccessibilityLabel    = sleepH > 0 ? $"Sömn: {sleepH:F1} timmar" : "Sömn: ingen data";
+            GaugeAccessibilityLabel    = string.Format(AppResources.Hem_Accessibility_Gauge, (int)score);
+            StrainAccessibilityLabel   = hasStrainData
+                ? string.Format(AppResources.Hem_Accessibility_Strain, (int)strainPct)
+                : AppResources.Hem_Accessibility_StrainNoData;
+            RecoveryAccessibilityLabel = string.Format(AppResources.Hem_Accessibility_Recovery, (int)recoveryPct);
+            SleepAccessibilityLabel    = sleepH > 0
+                ? string.Format(AppResources.Hem_Accessibility_Sleep, $"{sleepH:F1}")
+                : AppResources.Hem_Accessibility_SleepNoData;
 
             var (recHead, recDetail) = BuildRecommendation(recoveryPct, recentSessions);
             TodayRecommendation       = recHead;
@@ -330,12 +337,12 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
 
     private static string BuildMotivationText(int score) => score switch
     {
-        >= 100 => "Vecka klar — 100% av träningsmålet.",
-        >= 75  => $"Stark vecka — du har klarat {score}% av veckans träningsmål.",
-        >= 50  => $"Halvvägs — du har klarat {score}% av veckans träningsmål.",
-        >= 25  => $"Igång — du har klarat {score}% av veckans träningsmål.",
-        > 0    => $"Påbörjad — {score}% av veckans träningsmål.",
-        _      => "Ny vecka — dags att börja.",
+        >= 100 => AppResources.Hem_Motivation_Complete,
+        >= 75  => string.Format(AppResources.Hem_Motivation_Strong,  score),
+        >= 50  => string.Format(AppResources.Hem_Motivation_Halfway, score),
+        >= 25  => string.Format(AppResources.Hem_Motivation_Going,   score),
+        > 0    => string.Format(AppResources.Hem_Motivation_Started, score),
+        _      => AppResources.Hem_Motivation_New,
     };
 
     private IReadOnlyList<DayStreakItem> BuildStreakDays(List<WorkoutSession> sessions)
@@ -460,39 +467,39 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
 
         // Nyss tränat (< 3 timmar)
         if (hoursSinceLast < 3)
-            return ("VÄLKÖRT!", "Bra pass! Prioritera mat och vila de kommande timmarna.");
+            return (AppResources.Hem_Rec_JustTrained_Head, AppResources.Hem_Rec_JustTrained_Body);
 
         // Långt uppehåll (5+ dagar sedan senaste pass)
         if (hoursSinceLast > 120)
-            return ("DAGS ATT TRÄNA", "Du har tagit ett uppehåll — dags att komma igång. Börja lugnt.");
+            return (AppResources.Hem_Rec_LongBreak_Head, AppResources.Hem_Rec_LongBreak_Body);
 
         // Konsekutiva dagar med låg återhämtning
         int streak = CountConsecutiveTrainingDays(completed);
         if (streak >= 3 && recoveryPct < 50)
-            return ("PLANERA VILA",
-                $"Du har kört {streak} dagar i rad och kroppen signalerar trötthet. En vilodag ger bättre resultat nu.");
+            return (AppResources.Hem_Rec_PlanRest_Head,
+                string.Format(AppResources.Hem_Rec_PlanRest_Body, streak));
 
         // Basscenario på återhämtning
         string headline = recoveryPct switch
         {
-            < 33 => "PRIORITERA VILA",
-            < 50 => "LÄTT RÖRELSE",
-            < 66 => "NORMALT PASS",
-            < 85 => "KÖR HÅRT",
-            _    => "TOPPFORM",
+            < 33 => AppResources.Hem_Rec_Head_RestPriority,
+            < 50 => AppResources.Hem_Rec_Head_LightMove,
+            < 66 => AppResources.Hem_Rec_Head_NormalSession,
+            < 85 => AppResources.Hem_Rec_Head_GoHard,
+            _    => AppResources.Hem_Rec_Head_PeakForm,
         };
 
         string body = recoveryPct switch
         {
-            < 33 => "Kroppen behöver återhämtning. Promenad, stretch eller komplett vila.",
-            < 50 => "Lätt cardio eller mobilitet — spara tyngre lyft till imorgon.",
-            < 66 => "Måttlig volym idag — undvik tunga PR-försök.",
-            < 85 => "Du är redo för tunga lyft och PR-försök.",
-            _    => "Maximal återhämtning — perfekt dag för ett PR-försök.",
+            < 33 => AppResources.Hem_Rec_Body_RestPriority,
+            < 50 => AppResources.Hem_Rec_Body_LightMove,
+            < 66 => AppResources.Hem_Rec_Body_NormalSession,
+            < 85 => AppResources.Hem_Rec_Body_GoHard,
+            _    => AppResources.Hem_Rec_Body_PeakForm,
         };
 
         if (lastSession is not null && hoursSinceLast < 48 && recoveryPct >= 50)
-            body += " Träna annan muskelgrupp än senaste passet.";
+            body += AppResources.Hem_Rec_DifferentMuscle;
 
         return (headline, body);
     }

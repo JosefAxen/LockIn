@@ -163,4 +163,99 @@
   <data name="Onboarding_Continue" xml:space="preserve">
     <value>FORTSÄTT →</value>
   </data>
+
+  <!-- Hem — XAML-labels -->
+  <data name="Hem_ScoreCard_Title" xml:space="preserve"><value>TRÄNINGSSCORE · IDAG</value></data>
+  <data name="Hem_Recommendation_Label" xml:space="preserve"><value>REKOMMENDATION</value></data>
+  <data name="Hem_Strain_Label" xml:space="preserve"><value>ANSTRÄNGNING</value></data>
+  <data name="Hem_Recovery_Label" xml:space="preserve"><value>ÅTERHÄMTNING</value></data>
+  <data name="Hem_Sleep_Label" xml:space="preserve"><value>SÖMN</value></data>
+  <data name="Hem_SleepStage_Awake" xml:space="preserve"><value>VAKEN</value></data>
+  <data name="Hem_Streak_Label" xml:space="preserve"><value>STREAK</value></data>
+  <data name="Hem_SeeAll" xml:space="preserve"><value>SE ALLA ›</value></data>
+  <data name="Hem_Activity_Label" xml:space="preserve"><value>AKTIVITET</value></data>
+  <data name="Hem_Steps_Sub" xml:space="preserve"><value>steg idag</value></data>
+  <data name="Hem_Calories_Sub" xml:space="preserve"><value>kcal</value></data>
+  <data name="Hem_ActiveTime_Sub" xml:space="preserve"><value>minuter</value></data>
+  <data name="Hem_HeartRate_Sub" xml:space="preserve"><value>slag/min</value></data>
+  <data name="Hem_Muscles_Title" xml:space="preserve"><value>MUSKLER · 7 DAGAR</value></data>
+  <data name="Hem_WorkoutBanner_Label" xml:space="preserve"><value>PASS PÅGÅR</value></data>
+
+  <!-- Hem — Greetings -->
+  <data name="Hem_Greeting_Morning" xml:space="preserve"><value>GOD MORGON</value></data>
+  <data name="Hem_Greeting_Forenoon" xml:space="preserve"><value>GOD FÖRMIDDAG</value></data>
+  <data name="Hem_Greeting_Afternoon" xml:space="preserve"><value>GOD EFTERMIDDAG</value></data>
+  <data name="Hem_Greeting_Evening" xml:space="preserve"><value>GOD KVÄLL</value></data>
+
+  <!-- Hem — Streak -->
+  <data name="Hem_StreakDays_One" xml:space="preserve"><value>{0} DAGS STREAK</value></data>
+  <data name="Hem_StreakDays_Many" xml:space="preserve"><value>{0} DAGARS STREAK</value></data>
+  <data name="Hem_NoStreak" xml:space="preserve"><value>INGEN STREAK</value></data>
+
+  <!-- Hem — Motivation (score-tiers) -->
+  <data name="Hem_Motivation_Complete" xml:space="preserve"><value>Vecka klar — 100% av träningsmålet.</value></data>
+  <data name="Hem_Motivation_Strong" xml:space="preserve"><value>Stark vecka — du har klarat {0}% av veckans träningsmål.</value></data>
+  <data name="Hem_Motivation_Halfway" xml:space="preserve"><value>Halvvägs — du har klarat {0}% av veckans träningsmål.</value></data>
+  <data name="Hem_Motivation_Going" xml:space="preserve"><value>Igång — du har klarat {0}% av veckans träningsmål.</value></data>
+  <data name="Hem_Motivation_Started" xml:space="preserve"><value>Påbörjad — {0}% av veckans träningsmål.</value></data>
+  <data name="Hem_Motivation_New" xml:space="preserve"><value>Ny vecka — dags att börja.</value></data>
+
+  <!-- Hem — Recovery status -->
+  <data name="Hem_Recovery_Optimal" xml:space="preserve"><value>OPTIMAL</value></data>
+  <data name="Hem_Recovery_Good" xml:space="preserve"><value>BRA</value></data>
+  <data name="Hem_Recovery_Medium" xml:space="preserve"><value>MEDEL</value></data>
+  <data name="Hem_Recovery_Low" xml:space="preserve"><value>LÅGT</value></data>
+
+  <!-- Hem — Sleep status -->
+  <data name="Hem_Sleep_Sufficient" xml:space="preserve"><value>TILLRÄCKLIG</value></data>
+  <data name="Hem_Sleep_OK" xml:space="preserve"><value>OK</value></data>
+  <data name="Hem_Sleep_TooLittle" xml:space="preserve"><value>FÖR LITE</value></data>
+
+  <!-- Hem — Misc VM strings -->
+  <data name="Hem_Loading_Data" xml:space="preserve"><value>Hämtar data…</value></data>
+  <data name="Hem_Recovery_NoWatch" xml:space="preserve"><value>Anslut Apple Watch för riktig återhämtningsdata</value></data>
+  <data name="Hem_Recovery_Components" xml:space="preserve"><value>HRV {0}ms · VILOPULS {1}bpm · SÖMN {2}h</value></data>
+  <data name="Hem_StrainTarget_Format" xml:space="preserve"><value>MÅL {0}</value></data>
+
+  <!-- Hem — Recommendation headlines -->
+  <data name="Hem_Rec_JustTrained_Head" xml:space="preserve"><value>VÄLKÖRT!</value></data>
+  <data name="Hem_Rec_JustTrained_Body" xml:space="preserve"><value>Bra pass! Prioritera mat och vila de kommande timmarna.</value></data>
+  <data name="Hem_Rec_LongBreak_Head" xml:space="preserve"><value>DAGS ATT TRÄNA</value></data>
+  <data name="Hem_Rec_LongBreak_Body" xml:space="preserve"><value>Du har tagit ett uppehåll — dags att komma igång. Börja lugnt.</value></data>
+  <data name="Hem_Rec_PlanRest_Head" xml:space="preserve"><value>PLANERA VILA</value></data>
+  <data name="Hem_Rec_PlanRest_Body" xml:space="preserve"><value>Du har kört {0} dagar i rad och kroppen signalerar trötthet. En vilodag ger bättre resultat nu.</value></data>
+  <data name="Hem_Rec_Head_RestPriority" xml:space="preserve"><value>PRIORITERA VILA</value></data>
+  <data name="Hem_Rec_Head_LightMove" xml:space="preserve"><value>LÄTT RÖRELSE</value></data>
+  <data name="Hem_Rec_Head_NormalSession" xml:space="preserve"><value>NORMALT PASS</value></data>
+  <data name="Hem_Rec_Head_GoHard" xml:space="preserve"><value>KÖR HÅRT</value></data>
+  <data name="Hem_Rec_Head_PeakForm" xml:space="preserve"><value>TOPPFORM</value></data>
+  <data name="Hem_Rec_Body_RestPriority" xml:space="preserve"><value>Kroppen behöver återhämtning. Promenad, stretch eller komplett vila.</value></data>
+  <data name="Hem_Rec_Body_LightMove" xml:space="preserve"><value>Lätt cardio eller mobilitet — spara tyngre lyft till imorgon.</value></data>
+  <data name="Hem_Rec_Body_NormalSession" xml:space="preserve"><value>Måttlig volym idag — undvik tunga PR-försök.</value></data>
+  <data name="Hem_Rec_Body_GoHard" xml:space="preserve"><value>Du är redo för tunga lyft och PR-försök.</value></data>
+  <data name="Hem_Rec_Body_PeakForm" xml:space="preserve"><value>Maximal återhämtning — perfekt dag för ett PR-försök.</value></data>
+  <data name="Hem_Rec_DifferentMuscle" xml:space="preserve"><value> Träna annan muskelgrupp än senaste passet.</value></data>
+
+  <!-- Hem — Accessibility labels -->
+  <data name="Hem_Accessibility_GaugeLoading" xml:space="preserve"><value>Träningsscore laddas</value></data>
+  <data name="Hem_Accessibility_StrainLoading" xml:space="preserve"><value>Ansträngning laddas</value></data>
+  <data name="Hem_Accessibility_RecoveryLoading" xml:space="preserve"><value>Återhämtning laddas</value></data>
+  <data name="Hem_Accessibility_SleepLoading" xml:space="preserve"><value>Sömn laddas</value></data>
+  <data name="Hem_Accessibility_Gauge" xml:space="preserve"><value>Träningsscore: {0} av 100</value></data>
+  <data name="Hem_Accessibility_Strain" xml:space="preserve"><value>Ansträngning: {0} av 100</value></data>
+  <data name="Hem_Accessibility_StrainNoData" xml:space="preserve"><value>Ansträngning: ingen data</value></data>
+  <data name="Hem_Accessibility_Recovery" xml:space="preserve"><value>Återhämtning: {0} av 100</value></data>
+  <data name="Hem_Accessibility_Sleep" xml:space="preserve"><value>Sömn: {0} timmar</value></data>
+  <data name="Hem_Accessibility_SleepNoData" xml:space="preserve"><value>Sömn: ingen data</value></data>
+
+  <!-- Hem — Coach prompts -->
+  <data name="Hem_Coach_WeeklySummary" xml:space="preserve"><value>Visa min veckosammanfattning</value></data>
+  <data name="Hem_Coach_RecoveryTips" xml:space="preserve"><value>Tips för återhämtning</value></data>
+  <data name="Hem_Coach_NextSession" xml:space="preserve"><value>Föreslå nästa pass</value></data>
+
+  <!-- Hem — Sparkline accessibility -->
+  <data name="Hem_Sparkline_Steps" xml:space="preserve"><value>Stegtrend senaste 7 dagar</value></data>
+  <data name="Hem_Sparkline_Calories" xml:space="preserve"><value>Kalorietrend senaste 7 dagar</value></data>
+  <data name="Hem_Sparkline_ActiveTime" xml:space="preserve"><value>Aktiv tid senaste 7 dagar</value></data>
+  <data name="Hem_Sparkline_HeartRate" xml:space="preserve"><value>Maxpuls senaste 7 dagar</value></data>
 </root>

@@ -4,10 +4,11 @@
              xmlns:vm="clr-namespace:LockIn.ViewModels"
              xmlns:views="clr-namespace:LockIn.Views"
              xmlns:controls="clr-namespace:LockIn.Controls"
+             xmlns:loc="clr-namespace:LockIn.Resources.Strings"
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
              x:Class="LockIn.Views.HemPage"
              x:DataType="vm:HemViewModel"
-             Title="Hem"
+             Title="{loc:Localize Tab_Home}"
              Shell.NavBarIsVisible="False"
              BackgroundColor="Transparent"
              ios:Page.UseSafeArea="False">
@@ -89,7 +90,7 @@
                         <Shadow Brush="Black" Offset="0,2" Radius="20" Opacity="0.10"/>
                     </Border.Shadow>
                     <VerticalStackLayout Padding="24,20,24,16" Spacing="0">
-                        <Label Text="TRÄNINGSSCORE · IDAG"
+                        <Label Text="{loc:Localize Hem_ScoreCard_Title}"
                                Style="{StaticResource SectionLabel}" Margin="0,0,0,8"/>
                         <Label Text="{Binding MotivationText}"
                                Style="{StaticResource MutedLabel}"
@@ -113,7 +114,7 @@
                         <Shadow Brush="Black" Offset="0,2" Radius="10" Opacity="0.18"/>
                     </Border.Shadow>
                     <VerticalStackLayout Spacing="6">
-                        <Label Text="REKOMMENDATION"
+                        <Label Text="{loc:Localize Hem_Recommendation_Label}"
                                Style="{StaticResource SectionLabel}"
                                TextColor="{StaticResource ForgeAccent}"/>
                         <Label Text="{Binding TodayRecommendation}"
@@ -137,7 +138,7 @@
                                                  WidthRequest="90" HeightRequest="90"
                                                  HorizontalOptions="Center"
                                                  SemanticProperties.Description="{Binding StrainAccessibilityLabel}"/>
-                        <Label Text="ANSTRÄNGNING" Style="{StaticResource SectionLabel}" HorizontalTextAlignment="Center"/>
+                        <Label Text="{loc:Localize Hem_Strain_Label}" Style="{StaticResource SectionLabel}" HorizontalTextAlignment="Center"/>
                         <Label Text="{Binding StrainTargetText}"
                                FontFamily="BebasNeue" FontSize="10" CharacterSpacing="1.5"
                                TextColor="{StaticResource ForgeAccentAmber}"
@@ -151,7 +152,7 @@
                                                  WidthRequest="90" HeightRequest="90"
                                                  HorizontalOptions="Center"
                                                  SemanticProperties.Description="{Binding RecoveryAccessibilityLabel}"/>
-                        <Label Text="ÅTERHÄMTNING" Style="{StaticResource SectionLabel}" HorizontalTextAlignment="Center"/>
+                        <Label Text="{loc:Localize Hem_Recovery_Label}" Style="{StaticResource SectionLabel}" HorizontalTextAlignment="Center"/>
                         <Label Text="{Binding RecoveryStatusText}"
                                FontFamily="BebasNeue" FontSize="9" CharacterSpacing="1.5"
                                TextColor="{StaticResource ForgeAccent}"
@@ -165,7 +166,7 @@
                                                  WidthRequest="90" HeightRequest="90"
                                                  HorizontalOptions="Center"
                                                  SemanticProperties.Description="{Binding SleepAccessibilityLabel}"/>
-                        <Label Text="SÖMN" Style="{StaticResource SectionLabel}" HorizontalTextAlignment="Center"/>
+                        <Label Text="{loc:Localize Hem_Sleep_Label}" Style="{StaticResource SectionLabel}" HorizontalTextAlignment="Center"/>
                         <Label Text="{Binding SleepStatusText}"
                                FontFamily="BebasNeue" FontSize="9" CharacterSpacing="1.5"
                                TextColor="{StaticResource ForgeAccentBlue}"
@@ -181,7 +182,7 @@
                        Margin="16,6,16,0"/>
 
                 <!-- ═══ SÖMN-DETALJER ═══ -->
-                <Label Text="SÖMN" Style="{StaticResource SectionLabel}" Margin="22,18,0,10"/>
+                <Label Text="{loc:Localize Hem_Sleep_Label}" Style="{StaticResource SectionLabel}" Margin="22,18,0,10"/>
                 <Border Margin="16,0,16,0"
                         BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
                         StrokeShape="RoundRectangle 18"
@@ -217,7 +218,7 @@
                                    FontSize="22" FontAttributes="Bold"
                                    HorizontalTextAlignment="Center"
                                    TextColor="{StaticResource ForgeAccentAmber}"/>
-                            <Label Text="VAKEN" Style="{StaticResource SectionLabel}" FontSize="9" HorizontalTextAlignment="Center"/>
+                            <Label Text="{loc:Localize Hem_SleepStage_Awake}" Style="{StaticResource SectionLabel}" FontSize="9" HorizontalTextAlignment="Center"/>
                         </VerticalStackLayout>
                     </Grid>
                 </Border>
@@ -225,13 +226,13 @@
                 <!-- ═══ STREAK HEADER ═══ -->
                 <Grid Padding="22,22,22,10" ColumnDefinitions="*,Auto">
                     <VerticalStackLayout Grid.Column="0" Spacing="2">
-                        <Label Text="STREAK" Style="{StaticResource SectionLabel}"/>
+                        <Label Text="{loc:Localize Hem_Streak_Label}" Style="{StaticResource SectionLabel}"/>
                         <Label Text="{Binding StreakLabel}"
                                FontFamily="DMSansMedium" FontSize="13"
                                TextColor="{AppThemeBinding Light={StaticResource LightAccent}, Dark={StaticResource ForgeAccentAmber}}"/>
                     </VerticalStackLayout>
                     <Label Grid.Column="1"
-                           Text="SE ALLA ›"
+                           Text="{loc:Localize Hem_SeeAll}"
                            Style="{StaticResource SectionLabel}"
                            VerticalOptions="End"
                            TextColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}">
@@ -273,7 +274,7 @@
                 </CollectionView>
 
                 <!-- ═══ STATS HEADER ═══ -->
-                <Label Text="AKTIVITET" Style="{StaticResource SectionLabel}" Margin="22,18,0,10"/>
+                <Label Text="{loc:Localize Hem_Activity_Label}" Style="{StaticResource SectionLabel}" Margin="22,18,0,10"/>
 
                 <!-- ═══ DATA CARDS 2×2 ═══ -->
                 <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto"
@@ -289,9 +290,9 @@
                             <Label Text="{Binding StepsText}"
                                    FontSize="36" CharacterSpacing="0" LineHeight="1"
                                    TextColor="{AppThemeBinding Light={StaticResource LightAccent}, Dark={StaticResource ForgeAccent}}"/>
-                            <Label Text="steg idag" Style="{StaticResource MutedLabel}" Margin="0,2,0,6"/>
+                            <Label Text="{loc:Localize Hem_Steps_Sub}" Style="{StaticResource MutedLabel}" Margin="0,2,0,6"/>
                             <controls:SparklineView Values="{Binding StepsValues}" StrokeColor="{StaticResource ForgeAccent}" HeightRequest="38" BackgroundColor="Transparent"
-                                                   SemanticProperties.Description="Stegtrend senaste 7 dagar"/>
+                                                   SemanticProperties.Description="{loc:Localize Hem_Sparkline_Steps}"/>
                         </VerticalStackLayout>
                     </Border>
 
@@ -305,9 +306,9 @@
                             <Label Text="{Binding CaloriesText}"
                                    FontSize="36" CharacterSpacing="0" LineHeight="1"
                                    TextColor="{AppThemeBinding Light={StaticResource LightAccentCoral}, Dark={StaticResource ForgeAccentCoral}}"/>
-                            <Label Text="kcal" Style="{StaticResource MutedLabel}" Margin="0,2,0,6"/>
+                            <Label Text="{loc:Localize Hem_Calories_Sub}" Style="{StaticResource MutedLabel}" Margin="0,2,0,6"/>
                             <controls:SparklineView Values="{Binding CaloriesValues}" StrokeColor="{StaticResource ForgeAccentCoral}" HeightRequest="38" BackgroundColor="Transparent"
-                                                   SemanticProperties.Description="Kalorietrend senaste 7 dagar"/>
+                                                   SemanticProperties.Description="{loc:Localize Hem_Sparkline_Calories}"/>
                         </VerticalStackLayout>
                     </Border>
 
@@ -321,9 +322,9 @@
                             <Label Text="{Binding ActiveText}"
                                    FontSize="36" CharacterSpacing="0" LineHeight="1"
                                    TextColor="{AppThemeBinding Light={StaticResource LightAccentBlue}, Dark={StaticResource ForgeAccentBlue}}"/>
-                            <Label Text="minuter" Style="{StaticResource MutedLabel}" Margin="0,2,0,6"/>
+                            <Label Text="{loc:Localize Hem_ActiveTime_Sub}" Style="{StaticResource MutedLabel}" Margin="0,2,0,6"/>
                             <controls:SparklineView Values="{Binding ActiveValues}" StrokeColor="{StaticResource ForgeAccentBlue}" HeightRequest="38" BackgroundColor="Transparent"
-                                                   SemanticProperties.Description="Aktiv tid senaste 7 dagar"/>
+                                                   SemanticProperties.Description="{loc:Localize Hem_Sparkline_ActiveTime}"/>
                         </VerticalStackLayout>
                     </Border>
 
@@ -337,15 +338,15 @@
                             <Label Text="{Binding HeartRateText}"
                                    FontSize="36" CharacterSpacing="0" LineHeight="1"
                                    TextColor="{AppThemeBinding Light={StaticResource LightAccentPurple}, Dark={StaticResource ForgeAccentPurple}}"/>
-                            <Label Text="slag/min" Style="{StaticResource MutedLabel}" Margin="0,2,0,6"/>
+                            <Label Text="{loc:Localize Hem_HeartRate_Sub}" Style="{StaticResource MutedLabel}" Margin="0,2,0,6"/>
                             <controls:SparklineView Values="{Binding HeartRateValues}" StrokeColor="{StaticResource ForgeAccentPurple}" HeightRequest="38" BackgroundColor="Transparent"
-                                                   SemanticProperties.Description="Maxpuls senaste 7 dagar"/>
+                                                   SemanticProperties.Description="{loc:Localize Hem_Sparkline_HeartRate}"/>
                         </VerticalStackLayout>
                     </Border>
                 </Grid>
 
                 <!-- ═══ MUSKELHEATMAP ═══ -->
-                <Label Text="MUSKLER · 7 DAGAR" Style="{StaticResource SectionLabel}" Margin="22,18,0,10"/>
+                <Label Text="{loc:Localize Hem_Muscles_Title}" Style="{StaticResource SectionLabel}" Margin="22,18,0,10"/>
                 <Grid x:Name="HemHeatmapGrid"
                       ColumnDefinitions="*,*,*,*"
                       ColumnSpacing="8" RowSpacing="8"
@@ -390,7 +391,7 @@
                     <controls:ForgeLiveDotView x:Name="BannerPulseRing"
                                                VerticalOptions="Center"/>
 
-                    <Label Text="PASS PÅGÅR"
+                    <Label Text="{loc:Localize Hem_WorkoutBanner_Label}"
                            FontFamily="BebasNeue"
                            FontSize="13"
                            CharacterSpacing="3"
