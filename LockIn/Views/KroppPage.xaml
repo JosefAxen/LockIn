@@ -6,9 +6,10 @@
              xmlns:views="clr-namespace:LockIn.Views"
              xmlns:controls="clr-namespace:LockIn.Controls"
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+             xmlns:loc="clr-namespace:LockIn.Resources.Strings"
              x:Class="LockIn.Views.KroppPage"
              x:DataType="vm:KroppViewModel"
-             Title="Kropp"
+             Title="{loc:Localize Tab_Body}"
              Shell.NavBarIsVisible="False"
              BackgroundColor="Transparent"
              ios:Page.UseSafeArea="False">
@@ -42,7 +43,7 @@
                 </BoxView.Background>
             </BoxView>
             <Grid Padding="20,14,16,12" VerticalOptions="Start">
-                <Label Text="KROPP"
+                <Label Text="{loc:Localize Kropp_Title}"
                        HorizontalOptions="Center" HorizontalTextAlignment="Center"
                        Style="{StaticResource DisplayLabel}" FontSize="18"
                        VerticalOptions="Center"/>
@@ -72,7 +73,7 @@
 
                     <!-- Page title -->
                     <Grid ColumnDefinitions="*,Auto" Margin="4,0,0,4">
-                        <Label Grid.Column="0" Text="KROPP"
+                        <Label Grid.Column="0" Text="{loc:Localize Kropp_Title}"
                                FontFamily="BebasNeue" FontSize="34" CharacterSpacing="1"
                                TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
                                VerticalOptions="Center"/>
@@ -104,7 +105,7 @@
                                     HorizontalOptions="Start" VerticalOptions="Fill"/>
                             <Border Grid.Column="0" BackgroundColor="Transparent"
                                     StrokeThickness="0" Padding="0,9">
-                                <Label Text="VIKT"
+                                <Label Text="{loc:Localize Kropp_Tab_Weight}"
                                        FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1.5"
                                        TextColor="{Binding Tab0Fg}"
                                        HorizontalOptions="Center" VerticalOptions="Center"/>
@@ -114,7 +115,7 @@
                             </Border>
                             <Border Grid.Column="1" BackgroundColor="Transparent"
                                     StrokeThickness="0" Padding="0,9">
-                                <Label Text="KROPP"
+                                <Label Text="{loc:Localize Kropp_Tab_Body}"
                                        FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1.5"
                                        TextColor="{Binding Tab1Fg}"
                                        HorizontalOptions="Center" VerticalOptions="Center"/>
@@ -124,7 +125,7 @@
                             </Border>
                             <Border Grid.Column="2" BackgroundColor="Transparent"
                                     StrokeThickness="0" Padding="0,9">
-                                <Label Text="HEATMAP"
+                                <Label Text="{loc:Localize Kropp_Tab_Heatmap}"
                                        FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1.5"
                                        TextColor="{Binding Tab2Fg}"
                                        HorizontalOptions="Center" VerticalOptions="Center"/>
@@ -149,7 +150,7 @@
                                 <Label Text="{Binding LatestWeightDate}"
                                        Style="{StaticResource MutedLabel}"
                                        HorizontalOptions="Center"/>
-                                <Label Text="Ingen data ännu – logga din vikt nedan"
+                                <Label Text="{loc:Localize Kropp_NoWeightData}"
                                        Style="{StaticResource MutedLabel}"
                                        HorizontalOptions="Center"
                                        HorizontalTextAlignment="Center"
@@ -161,7 +162,7 @@
                         <Border Style="{StaticResource CardFrame}" Padding="12,14,12,10"
                                 IsVisible="{Binding HasWeightData}">
                             <VerticalStackLayout Spacing="6">
-                                <Label Text="VIKTUTVECKLING"
+                                <Label Text="{loc:Localize Kropp_WeightProgress}"
                                        Style="{StaticResource SectionLabel}"
                                        Margin="4,0,0,0"/>
                                 <controls:LineChartView Points="{Binding WeightChartPoints}" StrokeColor="{StaticResource ForgeAccentBlue}" HeightRequest="180" BackgroundColor="Transparent"/>
@@ -169,7 +170,7 @@
                         </Border>
 
                         <!-- Recent entries -->
-                        <Label Text="SENASTE LOGGNINGAR"
+                        <Label Text="{loc:Localize Kropp_RecentLogs}"
                                Style="{StaticResource SectionLabel}"
                                IsVisible="{Binding HasWeightData}"/>
                         <Border Style="{StaticResource CardFrame}" Padding="0,4"
@@ -216,7 +217,7 @@
                                 <views:AppIcon Source="ic_plus.png"
                                                WidthRequest="18" HeightRequest="18"
                                                ForceTint="#38BDF8" VerticalOptions="Center"/>
-                                <Label Text="LOGGA VIKT"
+                                <Label Text="{loc:Localize Kropp_LogWeight}"
                                        FontFamily="BebasNeue" FontSize="20" CharacterSpacing="3"
                                        TextColor="{StaticResource ForgeAccentBlue}" VerticalOptions="Center"/>
                             </HorizontalStackLayout>
@@ -233,45 +234,45 @@
                         <!-- Latest measurements -->
                         <Border Style="{StaticResource CardFrame}" Padding="16,14">
                             <VerticalStackLayout Spacing="12">
-                                <Label Text="SENASTE MÄTNING" Style="{StaticResource SectionLabel}"/>
+                                <Label Text="{loc:Localize Kropp_LatestMeasurement}" Style="{StaticResource SectionLabel}"/>
                                 <Grid ColumnDefinitions="*,*,*,*,*" ColumnSpacing="8">
                                     <VerticalStackLayout Grid.Column="0" Spacing="3" HorizontalOptions="Center">
                                         <Label Text="{Binding LatestWaist}"
                                                FontFamily="BebasNeue" FontSize="22"
                                                TextColor="{StaticResource ForgeAccentPurple}"
                                                HorizontalOptions="Center"/>
-                                        <Label Text="MIDJA" Style="{StaticResource SectionLabel}" FontSize="11" HorizontalOptions="Center"/>
+                                        <Label Text="{loc:Localize Kropp_Measurement_Waist}" Style="{StaticResource SectionLabel}" FontSize="11" HorizontalOptions="Center"/>
                                     </VerticalStackLayout>
                                     <VerticalStackLayout Grid.Column="1" Spacing="3" HorizontalOptions="Center">
                                         <Label Text="{Binding LatestChest}"
                                                FontFamily="BebasNeue" FontSize="22"
                                                TextColor="{StaticResource ForgeAccentPurple}"
                                                HorizontalOptions="Center"/>
-                                        <Label Text="BRÖST" Style="{StaticResource SectionLabel}" FontSize="11" HorizontalOptions="Center"/>
+                                        <Label Text="{loc:Localize Kropp_Measurement_Chest}" Style="{StaticResource SectionLabel}" FontSize="11" HorizontalOptions="Center"/>
                                     </VerticalStackLayout>
                                     <VerticalStackLayout Grid.Column="2" Spacing="3" HorizontalOptions="Center">
                                         <Label Text="{Binding LatestHip}"
                                                FontFamily="BebasNeue" FontSize="22"
                                                TextColor="{StaticResource ForgeAccentPurple}"
                                                HorizontalOptions="Center"/>
-                                        <Label Text="HÖFT" Style="{StaticResource SectionLabel}" FontSize="11" HorizontalOptions="Center"/>
+                                        <Label Text="{loc:Localize Kropp_Measurement_Hips}" Style="{StaticResource SectionLabel}" FontSize="11" HorizontalOptions="Center"/>
                                     </VerticalStackLayout>
                                     <VerticalStackLayout Grid.Column="3" Spacing="3" HorizontalOptions="Center">
                                         <Label Text="{Binding LatestArm}"
                                                FontFamily="BebasNeue" FontSize="22"
                                                TextColor="{StaticResource ForgeAccentPurple}"
                                                HorizontalOptions="Center"/>
-                                        <Label Text="ARMAR" Style="{StaticResource SectionLabel}" FontSize="11" HorizontalOptions="Center"/>
+                                        <Label Text="{loc:Localize Kropp_Measurement_Arms}" Style="{StaticResource SectionLabel}" FontSize="11" HorizontalOptions="Center"/>
                                     </VerticalStackLayout>
                                     <VerticalStackLayout Grid.Column="4" Spacing="3" HorizontalOptions="Center">
                                         <Label Text="{Binding LatestThigh}"
                                                FontFamily="BebasNeue" FontSize="22"
                                                TextColor="{StaticResource ForgeAccentPurple}"
                                                HorizontalOptions="Center"/>
-                                        <Label Text="LÅR" Style="{StaticResource SectionLabel}" FontSize="11" HorizontalOptions="Center"/>
+                                        <Label Text="{loc:Localize Kropp_Measurement_Thighs}" Style="{StaticResource SectionLabel}" FontSize="11" HorizontalOptions="Center"/>
                                     </VerticalStackLayout>
                                 </Grid>
-                                <Label Text="Ingen data ännu – logga dina mått nedan"
+                                <Label Text="{loc:Localize Kropp_NoMeasurementData}"
                                        Style="{StaticResource MutedLabel}"
                                        HorizontalOptions="Center"
                                        HorizontalTextAlignment="Center"
@@ -280,7 +281,7 @@
                         </Border>
 
                         <!-- History list -->
-                        <Label Text="HISTORIK" Style="{StaticResource SectionLabel}"
+                        <Label Text="{loc:Localize Kropp_MeasurementHistory}" Style="{StaticResource SectionLabel}"
                                IsVisible="{Binding HasCompositionData}"/>
                         <Border Style="{StaticResource CardFrame}" Padding="0,4"
                                 IsVisible="{Binding HasCompositionData}">
@@ -323,7 +324,7 @@
                                 <views:AppIcon Source="ic_plus.png"
                                                WidthRequest="18" HeightRequest="18"
                                                ForceTint="#A78BFA" VerticalOptions="Center"/>
-                                <Label Text="LOGGA MÅTT"
+                                <Label Text="{loc:Localize Kropp_LogMeasurement}"
                                        FontFamily="BebasNeue" FontSize="20" CharacterSpacing="3"
                                        TextColor="{StaticResource ForgeAccentPurple}" VerticalOptions="Center"/>
                             </HorizontalStackLayout>
@@ -337,7 +338,7 @@
                     <!-- ═══ HEATMAP TAB ═══ -->
                     <VerticalStackLayout IsVisible="{Binding IsHeatmapTab}" Spacing="14">
 
-                        <Label Text="MUSKELGRUPPER · 7 DAGAR"
+                        <Label Text="{loc:Localize Kropp_MuscleGroups_Title}"
                                Style="{StaticResource SectionLabel}"/>
 
                         <!-- Heatmap grid (byggs i code-behind) -->
@@ -378,7 +379,7 @@
                     <HorizontalStackLayout Spacing="11" VerticalOptions="Center">
                         <controls:ForgeLiveDotView x:Name="BannerPulseRing"
                                                    VerticalOptions="Center"/>
-                        <Label Text="PASS PÅGÅR"
+                        <Label Text="{loc:Localize Hem_WorkoutBanner_Label}"
                                FontFamily="BebasNeue" FontSize="13" CharacterSpacing="3"
                                TextColor="{StaticResource ForgeText}"
                                VerticalOptions="Center"/>

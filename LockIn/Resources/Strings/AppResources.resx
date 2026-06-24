@@ -350,6 +350,38 @@
   <data name="Library_Muscle_FullBody" xml:space="preserve"><value>Helkropp</value></data>
   <data name="Library_Muscle_Other" xml:space="preserve"><value>Övrigt</value></data>
 
+  <!-- Kropp — XAML labels -->
+  <data name="Kropp_Title" xml:space="preserve"><value>KROPP</value></data>
+  <data name="Kropp_Tab_Weight" xml:space="preserve"><value>VIKT</value></data>
+  <data name="Kropp_Tab_Body" xml:space="preserve"><value>KROPP</value></data>
+  <data name="Kropp_Tab_Heatmap" xml:space="preserve"><value>HEATMAP</value></data>
+  <data name="Kropp_NoWeightData" xml:space="preserve"><value>Ingen data ännu – logga din vikt nedan</value></data>
+  <data name="Kropp_WeightProgress" xml:space="preserve"><value>VIKTUTVECKLING</value></data>
+  <data name="Kropp_RecentLogs" xml:space="preserve"><value>SENASTE LOGGNINGAR</value></data>
+  <data name="Kropp_LogWeight" xml:space="preserve"><value>LOGGA VIKT</value></data>
+  <data name="Kropp_LatestMeasurement" xml:space="preserve"><value>SENASTE MÄTNING</value></data>
+  <data name="Kropp_Measurement_Waist" xml:space="preserve"><value>MIDJA</value></data>
+  <data name="Kropp_Measurement_Chest" xml:space="preserve"><value>BRÖST</value></data>
+  <data name="Kropp_Measurement_Hips" xml:space="preserve"><value>HÖFT</value></data>
+  <data name="Kropp_Measurement_Arms" xml:space="preserve"><value>ARMAR</value></data>
+  <data name="Kropp_Measurement_Thighs" xml:space="preserve"><value>LÅR</value></data>
+  <data name="Kropp_NoMeasurementData" xml:space="preserve"><value>Ingen data ännu – logga dina mått nedan</value></data>
+  <data name="Kropp_MeasurementHistory" xml:space="preserve"><value>HISTORIK</value></data>
+  <data name="Kropp_LogMeasurement" xml:space="preserve"><value>LOGGA MÅTT</value></data>
+  <data name="Kropp_MuscleGroups_Title" xml:space="preserve"><value>MUSKELGRUPPER · 7 DAGAR</value></data>
+
+  <!-- Kropp — VM strings -->
+  <data name="Kropp_LogWeight_Title" xml:space="preserve"><value>Logga vikt</value></data>
+  <data name="Kropp_LogWeight_Body" xml:space="preserve"><value>Ange din kroppsvikt i kg:</value></data>
+  <data name="Kropp_LogWeight_Placeholder" xml:space="preserve"><value>t.ex. 80.5</value></data>
+  <data name="Kropp_DeleteWeight_Body_Format" xml:space="preserve"><value>Ta bort {0} kg ({1})?</value></data>
+  <data name="Kropp_Prompt_Waist_Body" xml:space="preserve"><value>Midjemått i cm (valfritt):</value></data>
+  <data name="Kropp_Prompt_Chest_Body" xml:space="preserve"><value>Bröstkorgsmått i cm (valfritt):</value></data>
+  <data name="Kropp_Prompt_Hips_Body" xml:space="preserve"><value>Höftmått i cm (valfritt):</value></data>
+  <data name="Kropp_Prompt_Arms_Body" xml:space="preserve"><value>Armmått i cm (valfritt):</value></data>
+  <data name="Kropp_Prompt_Thighs_Body" xml:space="preserve"><value>Lårmått i cm (valfritt):</value></data>
+  <data name="Kropp_DeleteMeasurement_Body_Format" xml:space="preserve"><value>Ta bort mätning ({0})?</value></data>
+
   <!-- Library — Equipment type labels -->
   <data name="Library_Equipment_Barbell" xml:space="preserve"><value>SKIVSTÅNG</value></data>
   <data name="Library_Equipment_Dumbbell" xml:space="preserve"><value>HANTEL</value></data>

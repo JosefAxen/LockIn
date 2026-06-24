@@ -350,6 +350,38 @@
   <data name="Library_Muscle_FullBody" xml:space="preserve"><value>Full Body</value></data>
   <data name="Library_Muscle_Other" xml:space="preserve"><value>Other</value></data>
 
+  <!-- Kropp — XAML labels -->
+  <data name="Kropp_Title" xml:space="preserve"><value>BODY</value></data>
+  <data name="Kropp_Tab_Weight" xml:space="preserve"><value>WEIGHT</value></data>
+  <data name="Kropp_Tab_Body" xml:space="preserve"><value>BODY</value></data>
+  <data name="Kropp_Tab_Heatmap" xml:space="preserve"><value>HEATMAP</value></data>
+  <data name="Kropp_NoWeightData" xml:space="preserve"><value>No data yet — log your weight below</value></data>
+  <data name="Kropp_WeightProgress" xml:space="preserve"><value>WEIGHT PROGRESS</value></data>
+  <data name="Kropp_RecentLogs" xml:space="preserve"><value>RECENT LOGS</value></data>
+  <data name="Kropp_LogWeight" xml:space="preserve"><value>LOG WEIGHT</value></data>
+  <data name="Kropp_LatestMeasurement" xml:space="preserve"><value>LATEST MEASUREMENT</value></data>
+  <data name="Kropp_Measurement_Waist" xml:space="preserve"><value>WAIST</value></data>
+  <data name="Kropp_Measurement_Chest" xml:space="preserve"><value>CHEST</value></data>
+  <data name="Kropp_Measurement_Hips" xml:space="preserve"><value>HIPS</value></data>
+  <data name="Kropp_Measurement_Arms" xml:space="preserve"><value>ARMS</value></data>
+  <data name="Kropp_Measurement_Thighs" xml:space="preserve"><value>THIGHS</value></data>
+  <data name="Kropp_NoMeasurementData" xml:space="preserve"><value>No data yet — log your measurements below</value></data>
+  <data name="Kropp_MeasurementHistory" xml:space="preserve"><value>HISTORY</value></data>
+  <data name="Kropp_LogMeasurement" xml:space="preserve"><value>LOG MEASUREMENT</value></data>
+  <data name="Kropp_MuscleGroups_Title" xml:space="preserve"><value>MUSCLE GROUPS · 7 DAYS</value></data>
+
+  <!-- Kropp — VM strings -->
+  <data name="Kropp_LogWeight_Title" xml:space="preserve"><value>Log weight</value></data>
+  <data name="Kropp_LogWeight_Body" xml:space="preserve"><value>Enter your body weight in kg:</value></data>
+  <data name="Kropp_LogWeight_Placeholder" xml:space="preserve"><value>e.g. 80.5</value></data>
+  <data name="Kropp_DeleteWeight_Body_Format" xml:space="preserve"><value>Delete {0} kg ({1})?</value></data>
+  <data name="Kropp_Prompt_Waist_Body" xml:space="preserve"><value>Waist measurement in cm (optional):</value></data>
+  <data name="Kropp_Prompt_Chest_Body" xml:space="preserve"><value>Chest measurement in cm (optional):</value></data>
+  <data name="Kropp_Prompt_Hips_Body" xml:space="preserve"><value>Hip measurement in cm (optional):</value></data>
+  <data name="Kropp_Prompt_Arms_Body" xml:space="preserve"><value>Arm measurement in cm (optional):</value></data>
+  <data name="Kropp_Prompt_Thighs_Body" xml:space="preserve"><value>Thigh measurement in cm (optional):</value></data>
+  <data name="Kropp_DeleteMeasurement_Body_Format" xml:space="preserve"><value>Delete measurement ({0})?</value></data>
+
   <!-- Library — Equipment type labels -->
   <data name="Library_Equipment_Barbell" xml:space="preserve"><value>BARBELL</value></data>
   <data name="Library_Equipment_Dumbbell" xml:space="preserve"><value>DUMBBELL</value></data>

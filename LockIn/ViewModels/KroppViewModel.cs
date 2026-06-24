@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn;
 using LockIn.Models;
+using LockIn.Resources.Strings;
 using LockIn.Services;
 using LockIn.Views;
 using System.Collections.ObjectModel;
@@ -125,13 +126,13 @@ public partial class KroppViewModel(DatabaseService db) : ObservableObject
 
         var muscles = new (MuscleGroup mg, string name)[]
         {
-            (MuscleGroup.Chest,    "BRÖST"),
-            (MuscleGroup.Back,     "RYGG"),
-            (MuscleGroup.Shoulders,"AXLAR"),
-            (MuscleGroup.Biceps,   "BICEPS"),
-            (MuscleGroup.Triceps,  "TRICEPS"),
-            (MuscleGroup.Legs,     "BEN"),
-            (MuscleGroup.Core,     "CORE"),
+            (MuscleGroup.Chest,    AppResources.Train_Muscle_Chest),
+            (MuscleGroup.Back,     AppResources.Train_Muscle_Back),
+            (MuscleGroup.Shoulders,AppResources.Train_Muscle_Shoulders),
+            (MuscleGroup.Biceps,   AppResources.Train_Muscle_Biceps),
+            (MuscleGroup.Triceps,  AppResources.Train_Muscle_Triceps),
+            (MuscleGroup.Legs,     AppResources.Train_Muscle_Legs),
+            (MuscleGroup.Core,     AppResources.Train_Muscle_Core),
         };
 
         foreach (var (mg, name) in muscles)
@@ -153,8 +154,8 @@ public partial class KroppViewModel(DatabaseService db) : ObservableObject
     private async Task LogWeightAsync()
     {
         var result = await Shell.Current.DisplayPromptAsync(
-            "Logga vikt", "Ange din kroppsvikt i kg:",
-            keyboard: Keyboard.Numeric, placeholder: "t.ex. 80.5");
+            AppResources.Kropp_LogWeight_Title, AppResources.Kropp_LogWeight_Body,
+            keyboard: Keyboard.Numeric, placeholder: AppResources.Kropp_LogWeight_Placeholder);
         if (string.IsNullOrWhiteSpace(result)) return;
         if (!decimal.TryParse(result.Replace(',', '.'),
             System.Globalization.NumberStyles.Any,
@@ -168,7 +169,9 @@ public partial class KroppViewModel(DatabaseService db) : ObservableObject
     private async Task DeleteWeightEntryAsync(BodyWeightEntry entry)
     {
         var confirmed = await Shell.Current.DisplayAlert(
-            "Ta bort", $"Ta bort {entry.WeightKg} kg ({entry.LoggedAt:d MMM})?", "Ta bort", "Avbryt");
+            AppResources.Common_Delete,
+            string.Format(AppResources.Kropp_DeleteWeight_Body_Format, $"{entry.WeightKg} kg", entry.LoggedAt.ToString("d MMM")),
+            AppResources.Common_Delete, AppResources.Common_Cancel);
         if (!confirmed) return;
         await db.DeleteBodyWeightEntryAsync(entry);
         await LoadWeightDataAsync();
@@ -179,23 +182,23 @@ public partial class KroppViewModel(DatabaseService db) : ObservableObject
     {
         var entry = new BodyCompositionEntry { LoggedAt = DateTime.Now };
 
-        var w = await Shell.Current.DisplayPromptAsync("Midja", "Midjemått i cm (valfritt):", keyboard: Keyboard.Numeric, placeholder: "cm");
+        var w = await Shell.Current.DisplayPromptAsync(AppResources.Kropp_Measurement_Waist, AppResources.Kropp_Prompt_Waist_Body, keyboard: Keyboard.Numeric, placeholder: "cm");
         if (w != null && decimal.TryParse(w.Replace(',', '.'), System.Globalization.NumberStyles.Any,
             System.Globalization.CultureInfo.InvariantCulture, out var wv) && wv > 0) entry.WaistCm = wv;
 
-        var c = await Shell.Current.DisplayPromptAsync("Bröst", "Bröstkorgsmått i cm (valfritt):", keyboard: Keyboard.Numeric, placeholder: "cm");
+        var c = await Shell.Current.DisplayPromptAsync(AppResources.Kropp_Measurement_Chest, AppResources.Kropp_Prompt_Chest_Body, keyboard: Keyboard.Numeric, placeholder: "cm");
         if (c != null && decimal.TryParse(c.Replace(',', '.'), System.Globalization.NumberStyles.Any,
             System.Globalization.CultureInfo.InvariantCulture, out var cv) && cv > 0) entry.ChestCm = cv;
 
-        var h = await Shell.Current.DisplayPromptAsync("Höft", "Höftmått i cm (valfritt):", keyboard: Keyboard.Numeric, placeholder: "cm");
+        var h = await Shell.Current.DisplayPromptAsync(AppResources.Kropp_Measurement_Hips, AppResources.Kropp_Prompt_Hips_Body, keyboard: Keyboard.Numeric, placeholder: "cm");
         if (h != null && decimal.TryParse(h.Replace(',', '.'), System.Globalization.NumberStyles.Any,
             System.Globalization.CultureInfo.InvariantCulture, out var hv) && hv > 0) entry.HipCm = hv;
 
-        var a = await Shell.Current.DisplayPromptAsync("Armar", "Armmått i cm (valfritt):", keyboard: Keyboard.Numeric, placeholder: "cm");
+        var a = await Shell.Current.DisplayPromptAsync(AppResources.Kropp_Measurement_Arms, AppResources.Kropp_Prompt_Arms_Body, keyboard: Keyboard.Numeric, placeholder: "cm");
         if (a != null && decimal.TryParse(a.Replace(',', '.'), System.Globalization.NumberStyles.Any,
             System.Globalization.CultureInfo.InvariantCulture, out var av) && av > 0) entry.ArmCm = av;
 
-        var th = await Shell.Current.DisplayPromptAsync("Lår", "Lårmått i cm (valfritt):", keyboard: Keyboard.Numeric, placeholder: "cm");
+        var th = await Shell.Current.DisplayPromptAsync(AppResources.Kropp_Measurement_Thighs, AppResources.Kropp_Prompt_Thighs_Body, keyboard: Keyboard.Numeric, placeholder: "cm");
         if (th != null && decimal.TryParse(th.Replace(',', '.'), System.Globalization.NumberStyles.Any,
             System.Globalization.CultureInfo.InvariantCulture, out var tv) && tv > 0) entry.ThighCm = tv;
 
@@ -211,7 +214,9 @@ public partial class KroppViewModel(DatabaseService db) : ObservableObject
     private async Task DeleteCompositionEntryAsync(BodyCompositionEntry entry)
     {
         var confirmed = await Shell.Current.DisplayAlert(
-            "Ta bort", $"Ta bort mätning ({entry.LoggedAt:d MMM yyyy})?", "Ta bort", "Avbryt");
+            AppResources.Common_Delete,
+            string.Format(AppResources.Kropp_DeleteMeasurement_Body_Format, entry.LoggedAt.ToString("d MMM yyyy")),
+            AppResources.Common_Delete, AppResources.Common_Cancel);
         if (!confirmed) return;
         await db.DeleteBodyCompositionEntryAsync(entry);
         await LoadCompositionDataAsync();

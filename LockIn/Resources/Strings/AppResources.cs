@@ -222,6 +222,36 @@ public static class AppResources
     public static string Hem_Sparkline_ActiveTime       => Get(nameof(Hem_Sparkline_ActiveTime));
     public static string Hem_Sparkline_HeartRate        => Get(nameof(Hem_Sparkline_HeartRate));
 
+    // ── Kropp ───────────────────────────────────────────────────────────
+    public static string Kropp_Title                        => Get(nameof(Kropp_Title));
+    public static string Kropp_Tab_Weight                   => Get(nameof(Kropp_Tab_Weight));
+    public static string Kropp_Tab_Body                     => Get(nameof(Kropp_Tab_Body));
+    public static string Kropp_Tab_Heatmap                  => Get(nameof(Kropp_Tab_Heatmap));
+    public static string Kropp_NoWeightData                 => Get(nameof(Kropp_NoWeightData));
+    public static string Kropp_WeightProgress               => Get(nameof(Kropp_WeightProgress));
+    public static string Kropp_RecentLogs                   => Get(nameof(Kropp_RecentLogs));
+    public static string Kropp_LogWeight                    => Get(nameof(Kropp_LogWeight));
+    public static string Kropp_LatestMeasurement            => Get(nameof(Kropp_LatestMeasurement));
+    public static string Kropp_Measurement_Waist            => Get(nameof(Kropp_Measurement_Waist));
+    public static string Kropp_Measurement_Chest            => Get(nameof(Kropp_Measurement_Chest));
+    public static string Kropp_Measurement_Hips             => Get(nameof(Kropp_Measurement_Hips));
+    public static string Kropp_Measurement_Arms             => Get(nameof(Kropp_Measurement_Arms));
+    public static string Kropp_Measurement_Thighs           => Get(nameof(Kropp_Measurement_Thighs));
+    public static string Kropp_NoMeasurementData            => Get(nameof(Kropp_NoMeasurementData));
+    public static string Kropp_MeasurementHistory           => Get(nameof(Kropp_MeasurementHistory));
+    public static string Kropp_LogMeasurement               => Get(nameof(Kropp_LogMeasurement));
+    public static string Kropp_MuscleGroups_Title           => Get(nameof(Kropp_MuscleGroups_Title));
+    public static string Kropp_LogWeight_Title              => Get(nameof(Kropp_LogWeight_Title));
+    public static string Kropp_LogWeight_Body               => Get(nameof(Kropp_LogWeight_Body));
+    public static string Kropp_LogWeight_Placeholder        => Get(nameof(Kropp_LogWeight_Placeholder));
+    public static string Kropp_DeleteWeight_Body_Format     => Get(nameof(Kropp_DeleteWeight_Body_Format));
+    public static string Kropp_Prompt_Waist_Body            => Get(nameof(Kropp_Prompt_Waist_Body));
+    public static string Kropp_Prompt_Chest_Body            => Get(nameof(Kropp_Prompt_Chest_Body));
+    public static string Kropp_Prompt_Hips_Body             => Get(nameof(Kropp_Prompt_Hips_Body));
+    public static string Kropp_Prompt_Arms_Body             => Get(nameof(Kropp_Prompt_Arms_Body));
+    public static string Kropp_Prompt_Thighs_Body           => Get(nameof(Kropp_Prompt_Thighs_Body));
+    public static string Kropp_DeleteMeasurement_Body_Format => Get(nameof(Kropp_DeleteMeasurement_Body_Format));
+
     // ── Library ─────────────────────────────────────────────────────────
     public static string Library_Title                      => Get(nameof(Library_Title));
     public static string Library_AddButton                  => Get(nameof(Library_AddButton));
