@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn.Models;
+using LockIn.Resources.Strings;
 using LockIn.Services;
 using System.Collections.ObjectModel;
 
@@ -43,7 +44,11 @@ public partial class ProgressPhotosViewModel(DatabaseService db) : ObservableObj
     [RelayCommand]
     private async Task DeletePhotoAsync(PhotoRow row)
     {
-        var confirmed = await Shell.Current.DisplayAlert("Ta bort foto", "Ta bort det här fotot?", "Ta bort", "Avbryt");
+        var confirmed = await Shell.Current.DisplayAlert(
+            AppResources.ProgressPhotos_DeletePhotoTitle,
+            AppResources.ProgressPhotos_DeletePhotoBody,
+            AppResources.Common_Delete,
+            AppResources.Common_Cancel);
         if (!confirmed) return;
         await db.DeletePhotoAsync(row.Photo);
         Photos.Remove(row);

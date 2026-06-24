@@ -606,4 +606,9 @@
   <data name="BodyWeight_Prompt_Body" xml:space="preserve"><value>Ange din kroppsvikt i kg:</value></data>
   <data name="BodyWeight_EntryPlaceholder" xml:space="preserve"><value>t.ex. 80.5</value></data>
   <data name="BodyWeight_DeleteBody_Format" xml:space="preserve"><value>Ta bort {0} kg ({1})?</value></data>
+
+  <!-- ProgressPhotos — XAML labels + VM strings -->
+  <data name="ProgressPhotos_Title" xml:space="preserve"><value>PROGRESSBILDER</value></data>
+  <data name="ProgressPhotos_DeletePhotoTitle" xml:space="preserve"><value>Ta bort foto</value></data>
+  <data name="ProgressPhotos_DeletePhotoBody" xml:space="preserve"><value>Ta bort det här fotot?</value></data>
 </root>

@@ -606,4 +606,9 @@
   <data name="BodyWeight_Prompt_Body" xml:space="preserve"><value>Enter your body weight in kg:</value></data>
   <data name="BodyWeight_EntryPlaceholder" xml:space="preserve"><value>e.g. 80.5</value></data>
   <data name="BodyWeight_DeleteBody_Format" xml:space="preserve"><value>Delete {0} kg ({1})?</value></data>
+
+  <!-- ProgressPhotos — XAML labels + VM strings -->
+  <data name="ProgressPhotos_Title" xml:space="preserve"><value>PROGRESS PHOTOS</value></data>
+  <data name="ProgressPhotos_DeletePhotoTitle" xml:space="preserve"><value>Delete photo</value></data>
+  <data name="ProgressPhotos_DeletePhotoBody" xml:space="preserve"><value>Delete this photo?</value></data>
 </root>

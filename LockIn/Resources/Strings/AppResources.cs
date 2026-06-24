@@ -480,4 +480,9 @@ public static class AppResources
     public static string CreateExercise_RestUnit           => Get(nameof(CreateExercise_RestUnit));
     public static string CreateExercise_NotesLabel         => Get(nameof(CreateExercise_NotesLabel));
     public static string CreateExercise_NotesPlaceholder   => Get(nameof(CreateExercise_NotesPlaceholder));
+
+    // ── ProgressPhotos ──────────────────────────────────────────────────
+    public static string ProgressPhotos_Title              => Get(nameof(ProgressPhotos_Title));
+    public static string ProgressPhotos_DeletePhotoTitle   => Get(nameof(ProgressPhotos_DeletePhotoTitle));
+    public static string ProgressPhotos_DeletePhotoBody    => Get(nameof(ProgressPhotos_DeletePhotoBody));
 }
