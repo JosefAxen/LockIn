@@ -277,6 +277,28 @@ public static class AppResources
     public static string ActiveWorkout_FinishConfirm_Body            => Get(nameof(ActiveWorkout_FinishConfirm_Body));
     public static string ActiveWorkout_FinishConfirm_Yes             => Get(nameof(ActiveWorkout_FinishConfirm_Yes));
 
+    // ── PostWorkout ──────────────────────────────────────────────────────
+    public static string PostWorkout_GreatJob                 => Get(nameof(PostWorkout_GreatJob));
+    public static string PostWorkout_Stats_Volume             => Get(nameof(PostWorkout_Stats_Volume));
+    public static string PostWorkout_Stats_Sets               => Get(nameof(PostWorkout_Stats_Sets));
+    public static string PostWorkout_Stats_PR                 => Get(nameof(PostWorkout_Stats_PR));
+    public static string PostWorkout_MuscleGroups             => Get(nameof(PostWorkout_MuscleGroups));
+    public static string PostWorkout_Notes                    => Get(nameof(PostWorkout_Notes));
+    public static string PostWorkout_Notes_Placeholder        => Get(nameof(PostWorkout_Notes_Placeholder));
+    public static string PostWorkout_NewAchievements          => Get(nameof(PostWorkout_NewAchievements));
+    public static string PostWorkout_Achievement_Unlocked     => Get(nameof(PostWorkout_Achievement_Unlocked));
+    public static string PostWorkout_Photos                   => Get(nameof(PostWorkout_Photos));
+    public static string PostWorkout_AddPhoto                 => Get(nameof(PostWorkout_AddPhoto));
+    public static string PostWorkout_PersonalRecords          => Get(nameof(PostWorkout_PersonalRecords));
+    public static string PostWorkout_AddPhoto_Title           => Get(nameof(PostWorkout_AddPhoto_Title));
+    public static string PostWorkout_Photo_TakePhoto          => Get(nameof(PostWorkout_Photo_TakePhoto));
+    public static string PostWorkout_Photo_PickLibrary        => Get(nameof(PostWorkout_Photo_PickLibrary));
+    public static string PostWorkout_DeletePhoto_Title        => Get(nameof(PostWorkout_DeletePhoto_Title));
+    public static string PostWorkout_DeletePhoto_Body         => Get(nameof(PostWorkout_DeletePhoto_Body));
+    public static string PostWorkout_VolumeDisplay_Format     => Get(nameof(PostWorkout_VolumeDisplay_Format));
+    public static string PostWorkout_SetsDisplay_Format       => Get(nameof(PostWorkout_SetsDisplay_Format));
+    public static string PostWorkout_Epley1RM_Format          => Get(nameof(PostWorkout_Epley1RM_Format));
+
     // ── Library ─────────────────────────────────────────────────────────
     public static string Library_Title                      => Get(nameof(Library_Title));
     public static string Library_AddButton                  => Get(nameof(Library_AddButton));

@@ -382,6 +382,30 @@
   <data name="Kropp_Prompt_Thighs_Body" xml:space="preserve"><value>Thigh measurement in cm (optional):</value></data>
   <data name="Kropp_DeleteMeasurement_Body_Format" xml:space="preserve"><value>Delete measurement ({0})?</value></data>
 
+  <!-- PostWorkout — XAML labels -->
+  <data name="PostWorkout_GreatJob" xml:space="preserve"><value>GREAT WORK</value></data>
+  <data name="PostWorkout_Stats_Volume" xml:space="preserve"><value>KG VOLUME</value></data>
+  <data name="PostWorkout_Stats_Sets" xml:space="preserve"><value>SETS</value></data>
+  <data name="PostWorkout_Stats_PR" xml:space="preserve"><value>PR</value></data>
+  <data name="PostWorkout_MuscleGroups" xml:space="preserve"><value>MUSCLE GROUPS</value></data>
+  <data name="PostWorkout_Notes" xml:space="preserve"><value>NOTES</value></data>
+  <data name="PostWorkout_Notes_Placeholder" xml:space="preserve"><value>How did it go? Note fatigue, soreness, thoughts...</value></data>
+  <data name="PostWorkout_NewAchievements" xml:space="preserve"><value>NEW ACHIEVEMENTS</value></data>
+  <data name="PostWorkout_Achievement_Unlocked" xml:space="preserve"><value>ACHIEVEMENT UNLOCKED</value></data>
+  <data name="PostWorkout_Photos" xml:space="preserve"><value>PHOTOS</value></data>
+  <data name="PostWorkout_AddPhoto" xml:space="preserve"><value>+ PHOTO</value></data>
+  <data name="PostWorkout_PersonalRecords" xml:space="preserve"><value>PERSONAL RECORDS</value></data>
+
+  <!-- PostWorkout — VM strings -->
+  <data name="PostWorkout_AddPhoto_Title" xml:space="preserve"><value>Add photo</value></data>
+  <data name="PostWorkout_Photo_TakePhoto" xml:space="preserve"><value>Take photo</value></data>
+  <data name="PostWorkout_Photo_PickLibrary" xml:space="preserve"><value>Choose from library</value></data>
+  <data name="PostWorkout_DeletePhoto_Title" xml:space="preserve"><value>Delete photo</value></data>
+  <data name="PostWorkout_DeletePhoto_Body" xml:space="preserve"><value>Delete this photo?</value></data>
+  <data name="PostWorkout_VolumeDisplay_Format" xml:space="preserve"><value>{0} kg</value></data>
+  <data name="PostWorkout_SetsDisplay_Format" xml:space="preserve"><value>{0} sets</value></data>
+  <data name="PostWorkout_Epley1RM_Format" xml:space="preserve"><value>Est. 1RM {0} kg</value></data>
+
   <!-- Library — Equipment type labels -->
   <data name="Library_Equipment_Barbell" xml:space="preserve"><value>BARBELL</value></data>
 

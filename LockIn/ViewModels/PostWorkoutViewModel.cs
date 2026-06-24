@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn.Models;
+using LockIn.Resources.Strings;
 using LockIn.Services;
 using System.Collections.ObjectModel;
 
@@ -92,7 +93,7 @@ public partial class PostWorkoutViewModel(DatabaseService db, IHealthService hea
                 {
                     ExerciseName = exercise?.Name ?? "",
                     Display = $"{ps.WeightKg} kg × {ps.Reps}",
-                    Epley1RM = $"Est. 1RM {PRService.CalculateEpley1RM(ps.WeightKg, ps.Reps):F0} kg"
+                    Epley1RM = string.Format(AppResources.PostWorkout_Epley1RM_Format, $"{PRService.CalculateEpley1RM(ps.WeightKg, ps.Reps):F0}")
                 });
             }
         }
@@ -188,19 +189,23 @@ public partial class PostWorkoutViewModel(DatabaseService db, IHealthService hea
     {
         if (_loadedSession is null) return;
 
-        var action = await Shell.Current.DisplayActionSheetAsync("Lägg till foto", "Avbryt", null, "Ta foto", "Välj från bibliotek");
+        var action = await Shell.Current.DisplayActionSheetAsync(
+            AppResources.PostWorkout_AddPhoto_Title,
+            AppResources.Common_Cancel, null,
+            AppResources.PostWorkout_Photo_TakePhoto,
+            AppResources.PostWorkout_Photo_PickLibrary);
         var dir = Path.Combine(FileSystem.AppDataDirectory, "photos");
         Directory.CreateDirectory(dir);
 
         try
         {
-            if (action == "Ta foto")
+            if (action == AppResources.PostWorkout_Photo_TakePhoto)
             {
                 var file = await MediaPicker.Default.CapturePhotoAsync();
                 if (file is not null)
                     await photos.SaveAsync(file, _loadedSession.Id, dir);
             }
-            else if (action == "Välj från bibliotek")
+            else if (action == AppResources.PostWorkout_Photo_PickLibrary)
             {
                 var files = await MediaPicker.Default.PickPhotosAsync();
                 if (files is not null)
@@ -217,7 +222,11 @@ public partial class PostWorkoutViewModel(DatabaseService db, IHealthService hea
     [RelayCommand]
     private async Task DeletePhotoAsync(PhotoRow row)
     {
-        var confirmed = await Shell.Current.DisplayAlertAsync("Ta bort foto", "Ta bort det här fotot?", "Ta bort", "Avbryt");
+        var confirmed = await Shell.Current.DisplayAlertAsync(
+            AppResources.PostWorkout_DeletePhoto_Title,
+            AppResources.PostWorkout_DeletePhoto_Body,
+            AppResources.Common_Delete,
+            AppResources.Common_Cancel);
         if (!confirmed) return;
         await db.DeletePhotoAsync(row.Photo);
         Photos.Remove(row);
@@ -237,15 +246,15 @@ public partial class PostWorkoutViewModel(DatabaseService db, IHealthService hea
 
     private static string MuscleGroupName(MuscleGroup mg) => mg switch
     {
-        MuscleGroup.Chest => "Bröst",
-        MuscleGroup.Back => "Rygg",
-        MuscleGroup.Shoulders => "Axlar",
-        MuscleGroup.Biceps => "Biceps",
-        MuscleGroup.Triceps => "Triceps",
-        MuscleGroup.Legs => "Ben",
-        MuscleGroup.Core => "Core",
-        MuscleGroup.FullBody => "Helkropp",
-        _ => "Övrigt"
+        MuscleGroup.Chest     => AppResources.Library_Muscle_Chest,
+        MuscleGroup.Back      => AppResources.Library_Muscle_Back,
+        MuscleGroup.Shoulders => AppResources.Library_Muscle_Shoulders,
+        MuscleGroup.Biceps    => AppResources.Library_Muscle_Biceps,
+        MuscleGroup.Triceps   => AppResources.Library_Muscle_Triceps,
+        MuscleGroup.Legs      => AppResources.Library_Muscle_Legs,
+        MuscleGroup.Core      => AppResources.Library_Muscle_Core,
+        MuscleGroup.FullBody  => AppResources.Library_Muscle_FullBody,
+        _                     => AppResources.Library_Muscle_Other
     };
 }
 
@@ -255,8 +264,8 @@ public class MuscleGroupRow
     public decimal Volume { get; set; }
     public int Sets { get; set; }
     public double ProgressFraction { get; set; }
-    public string VolumeDisplay => $"{Volume:F0} kg";
-    public string SetsDisplay => $"{Sets} set";
+    public string VolumeDisplay => string.Format(AppResources.PostWorkout_VolumeDisplay_Format, $"{Volume:F0}");
+    public string SetsDisplay   => string.Format(AppResources.PostWorkout_SetsDisplay_Format, Sets);
 }
 
 public class PRRow

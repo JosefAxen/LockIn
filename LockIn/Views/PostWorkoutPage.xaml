@@ -4,6 +4,7 @@
              xmlns:vm="clr-namespace:LockIn.ViewModels"
              xmlns:views="clr-namespace:LockIn.Views"
              xmlns:controls="clr-namespace:LockIn.Controls"
+             xmlns:loc="clr-namespace:LockIn.Resources.Strings"
              x:Class="LockIn.Views.PostWorkoutPage"
              x:DataType="vm:PostWorkoutViewModel"
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
@@ -55,7 +56,7 @@
                 </BoxView.Background>
             </BoxView>
             <VerticalStackLayout Padding="22,56,22,12" Spacing="2" VerticalOptions="Start">
-                <Label Text="BRA JOBBAT"
+                <Label Text="{loc:Localize PostWorkout_GreatJob}"
                        Style="{StaticResource SectionLabel}"
                        TextColor="{StaticResource ForgeAccent}"/>
                 <Label Text="{Binding TemplateName}"
@@ -71,7 +72,7 @@
 
                 <!-- Header — scrollar med innehållet -->
                 <VerticalStackLayout Padding="4,56,4,4" Spacing="4">
-                    <Label Text="BRA JOBBAT"
+                    <Label Text="{loc:Localize PostWorkout_GreatJob}"
                            Style="{StaticResource SectionLabel}"
                            TextColor="{StaticResource ForgeAccent}"/>
                     <Grid ColumnDefinitions="*,Auto">
@@ -96,7 +97,7 @@
                             <Label Text="{Binding TotalVolume}"
                                    FontSize="40" FontAttributes="Bold" LineHeight="1" CharacterSpacing="-1"
                                    TextColor="{StaticResource ForgeAccentBlue}"/>
-                            <Label Text="KG VOLYM" Style="{StaticResource SectionLabel}"/>
+                            <Label Text="{loc:Localize PostWorkout_Stats_Volume}" Style="{StaticResource SectionLabel}"/>
                         </StackLayout>
                     </Border>
                     <Border Grid.Column="1" Style="{StaticResource CardFrame}" Padding="14,16">
@@ -104,7 +105,7 @@
                             <Label Text="{Binding TotalSets}"
                                    FontSize="40" FontAttributes="Bold" LineHeight="1" CharacterSpacing="-1"
                                    TextColor="{StaticResource ForgeAccentPurple}"/>
-                            <Label Text="SET" Style="{StaticResource SectionLabel}"/>
+                            <Label Text="{loc:Localize PostWorkout_Stats_Sets}" Style="{StaticResource SectionLabel}"/>
                         </StackLayout>
                     </Border>
                     <Border Grid.Column="2" Style="{StaticResource CardFrame}" Padding="14,16">
@@ -112,13 +113,13 @@
                             <Label Text="{Binding PrCount}"
                                    FontSize="40" FontAttributes="Bold" LineHeight="1" CharacterSpacing="-1"
                                    TextColor="{StaticResource ForgeAccentAmber}"/>
-                            <Label Text="PR" Style="{StaticResource SectionLabel}"/>
+                            <Label Text="{loc:Localize PostWorkout_Stats_PR}" Style="{StaticResource SectionLabel}"/>
                         </StackLayout>
                     </Border>
                 </Grid>
 
                 <!-- Muscle groups -->
-                <Label Text="MUSKELGRUPPER" Style="{StaticResource SectionLabel}"/>
+                <Label Text="{loc:Localize PostWorkout_MuscleGroups}" Style="{StaticResource SectionLabel}"/>
                 <Border Style="{StaticResource CardFrame}" Padding="16,12">
                     <StackLayout BindableLayout.ItemsSource="{Binding MuscleGroups}" Spacing="10">
                         <BindableLayout.ItemTemplate>
@@ -150,10 +151,10 @@
                 </Border>
 
                 <!-- Session notes -->
-                <Label Text="ANTECKNINGAR" Style="{StaticResource SectionLabel}"/>
+                <Label Text="{loc:Localize PostWorkout_Notes}" Style="{StaticResource SectionLabel}"/>
                 <Border Style="{StaticResource CardFrame}" Padding="4,2">
                     <Editor Text="{Binding Notes}"
-                            Placeholder="Hur gick passet? Anteckna trötthet, skador, tankar..."
+                            Placeholder="{loc:Localize PostWorkout_Notes_Placeholder}"
                             PlaceholderColor="{StaticResource ForgeMuted}"
                             BackgroundColor="Transparent"
                             TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
@@ -164,7 +165,7 @@
                 </Border>
 
                 <!-- New achievements -->
-                <Label Text="NYA ACHIEVEMENTS" Style="{StaticResource SectionLabel}"
+                <Label Text="{loc:Localize PostWorkout_NewAchievements}" Style="{StaticResource SectionLabel}"
                        IsVisible="{Binding NewAchievements.Count, Converter={StaticResource GtzConverter}}"/>
                 <StackLayout BindableLayout.ItemsSource="{Binding NewAchievements}" Spacing="8"
                              IsVisible="{Binding NewAchievements.Count, Converter={StaticResource GtzConverter}}">
@@ -179,7 +180,7 @@
                                     <Label Grid.Column="0" Text="{Binding Emoji}"
                                            FontSize="26" VerticalOptions="Center"/>
                                     <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                                        <Label Text="ACHIEVEMENT UPPLÅST"
+                                        <Label Text="{loc:Localize PostWorkout_Achievement_Unlocked}"
                                                Style="{StaticResource SectionLabel}"
                                                TextColor="{StaticResource ForgeAccentAmber}"
                                                FontSize="10"/>
@@ -196,9 +197,9 @@
 
                 <!-- Photos -->
                 <Grid ColumnDefinitions="*,Auto" Margin="0,4,0,0">
-                    <Label Grid.Column="0" Text="FOTON" Style="{StaticResource SectionLabel}"/>
+                    <Label Grid.Column="0" Text="{loc:Localize PostWorkout_Photos}" Style="{StaticResource SectionLabel}"/>
                     <Button Grid.Column="1"
-                            Text="+ FOTO"
+                            Text="{loc:Localize PostWorkout_AddPhoto}"
                             Style="{StaticResource SecondaryButton}"
                             FontFamily="BebasNeue" FontSize="13"
                             Padding="12,4"
@@ -243,7 +244,7 @@
                 </CollectionView>
 
                 <!-- PRs -->
-                <Label Text="PERSONLIGA REKORD" Style="{StaticResource SectionLabel}"
+                <Label Text="{loc:Localize PostWorkout_PersonalRecords}" Style="{StaticResource SectionLabel}"
                        IsVisible="{Binding PRs.Count, Converter={StaticResource GtzConverter}}"/>
                 <Border Style="{StaticResource CardFrame}" Padding="16,12"
                         IsVisible="{Binding PRs.Count, Converter={StaticResource GtzConverter}}">
@@ -285,7 +286,7 @@
             VerticalOptions="End"
             Margin="16,0,16,40"
             ZIndex="23">
-        <Label Text="KLAR"
+        <Label Text="{loc:Localize Common_Done}"
                TextColor="{StaticResource ForgePrimaryForeground}"
                FontFamily="BebasNeue"
                FontSize="20"
