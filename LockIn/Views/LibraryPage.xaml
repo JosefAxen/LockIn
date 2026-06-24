@@ -481,7 +481,7 @@
                                                 BackgroundColor="{StaticResource ForgeAccentPurpleDim}"
                                                 StrokeShape="RoundRectangle 10"
                                                 StrokeThickness="0" Padding="10,5">
-                                            <Label Text="{Binding DaysPerWeek, StringFormat={loc:Localize Library_DaysPerWeek_Format}}"
+                                            <Label Text="{Binding DaysPerWeekText}"
                                                    TextColor="{StaticResource ForgeAccentPurple}"
                                                    FontFamily="DMSansMedium" FontSize="12"/>
                                         </Border>

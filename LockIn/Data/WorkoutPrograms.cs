@@ -1,8 +1,13 @@
+using LockIn.Resources.Strings;
+
 namespace LockIn.Data;
 
 public record ProgramExercise(string ExerciseName, int Sets, int Reps, int RestSeconds);
 public record ProgramDay(string Label, List<ProgramExercise> Exercises);
-public record WorkoutProgram(string Id, string Name, string Description, int DaysPerWeek, List<ProgramDay> Days);
+public record WorkoutProgram(string Id, string Name, string Description, int DaysPerWeek, List<ProgramDay> Days)
+{
+    public string DaysPerWeekText => string.Format(AppResources.Library_DaysPerWeek_Format, DaysPerWeek);
+}
 
 public static class WorkoutPrograms
 {
