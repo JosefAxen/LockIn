@@ -2,7 +2,10 @@ using LockIn.Resources.Strings;
 
 namespace LockIn.Data;
 
-public record ProgramExercise(string ExerciseName, int Sets, int Reps, int RestSeconds);
+public record ProgramExercise(string ExerciseName, int Sets, int Reps, int RestSeconds)
+{
+    public string RestLabel => string.Format(AppResources.ProgramDetail_RestSeconds_Format, RestSeconds);
+}
 public record ProgramDay(string Label, List<ProgramExercise> Exercises);
 public record WorkoutProgram(string Id, string Name, string Description, int DaysPerWeek, List<ProgramDay> Days)
 {

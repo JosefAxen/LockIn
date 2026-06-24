@@ -3,6 +3,7 @@ using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn.Data;
+using LockIn.Resources.Strings;
 using LockIn.Services;
 
 namespace LockIn.ViewModels;
@@ -27,7 +28,7 @@ public partial class ProgramDetailViewModel(DatabaseService db) : ObservableObje
             {
                 ProgramName = _program.Name;
                 Description = _program.Description;
-                DaysLabel = $"{_program.DaysPerWeek} dagar/vecka · {_program.Days.Count} pass";
+                DaysLabel = string.Format(AppResources.ProgramDetail_DaysLabel_Format, _program.DaysPerWeek, _program.Days.Count);
                 Days = _program.Days;
                 OnPropertyChanged(nameof(Days));
             }
@@ -40,16 +41,17 @@ public partial class ProgramDetailViewModel(DatabaseService db) : ObservableObje
         if (_program is null) return;
 
         var confirmed = await Shell.Current.DisplayAlert(
-            "Aktivera program",
-            $"Skapar {_program.Days.Count} mallar från \"{_program.Name}\". Dessa läggs till i dina mallar.",
-            "Aktivera", "Avbryt");
+            AppResources.ProgramDetail_Activate_Title,
+            string.Format(AppResources.ProgramDetail_Activate_Body_Format, _program.Days.Count, _program.Name),
+            AppResources.ProgramDetail_Activate_Confirm,
+            AppResources.Common_Cancel);
         if (!confirmed) return;
 
         IsActivating = true;
         await db.ActivateProgramAsync(_program);
         IsActivating = false;
 
-        await Toast.Make($"{_program.Days.Count} mallar skapade! Hitta dem under Mallar i Bibliotek.", ToastDuration.Long).Show();
+        await Toast.Make(string.Format(AppResources.ProgramDetail_Toast_Created_Format, _program.Days.Count), ToastDuration.Long).Show();
 
         await Shell.Current.GoToAsync("..");
     }

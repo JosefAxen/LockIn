@@ -516,6 +516,18 @@
   <data name="Library_Equipment_MedicineBall" xml:space="preserve"><value>MEDICINBOLL</value></data>
   <data name="Library_Equipment_Other" xml:space="preserve"><value>ÖVRIGT</value></data>
 
+  <!-- ProgramDetail — XAML labels -->
+  <data name="ProgramDetail_SectionDays" xml:space="preserve"><value>PASS I PROGRAMMET</value></data>
+  <data name="ProgramDetail_ActivateButton" xml:space="preserve"><value>AKTIVERA PROGRAM</value></data>
+
+  <!-- ProgramDetail — VM strings -->
+  <data name="ProgramDetail_DaysLabel_Format" xml:space="preserve"><value>{0} dagar/vecka · {1} pass</value></data>
+  <data name="ProgramDetail_RestSeconds_Format" xml:space="preserve"><value>{0}s vila</value></data>
+  <data name="ProgramDetail_Activate_Title" xml:space="preserve"><value>Aktivera program</value></data>
+  <data name="ProgramDetail_Activate_Body_Format" xml:space="preserve"><value>Skapar {0} mallar från "{1}". Dessa läggs till i dina mallar.</value></data>
+  <data name="ProgramDetail_Activate_Confirm" xml:space="preserve"><value>Aktivera</value></data>
+  <data name="ProgramDetail_Toast_Created_Format" xml:space="preserve"><value>{0} mallar skapade! Hitta dem under Mallar i Bibliotek.</value></data>
+
   <!-- CreateExercise — XAML labels -->
   <data name="CreateExercise_Title" xml:space="preserve"><value>NY ÖVNING</value></data>
   <data name="CreateExercise_NameLabel" xml:space="preserve"><value>NAMN</value></data>

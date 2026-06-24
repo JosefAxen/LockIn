@@ -400,6 +400,16 @@ public static class AppResources
     public static string Library_Equipment_MedicineBall     => Get(nameof(Library_Equipment_MedicineBall));
     public static string Library_Equipment_Other            => Get(nameof(Library_Equipment_Other));
 
+    // ── ProgramDetail ────────────────────────────────────────────────────
+    public static string ProgramDetail_SectionDays          => Get(nameof(ProgramDetail_SectionDays));
+    public static string ProgramDetail_ActivateButton       => Get(nameof(ProgramDetail_ActivateButton));
+    public static string ProgramDetail_DaysLabel_Format     => Get(nameof(ProgramDetail_DaysLabel_Format));
+    public static string ProgramDetail_RestSeconds_Format   => Get(nameof(ProgramDetail_RestSeconds_Format));
+    public static string ProgramDetail_Activate_Title       => Get(nameof(ProgramDetail_Activate_Title));
+    public static string ProgramDetail_Activate_Body_Format => Get(nameof(ProgramDetail_Activate_Body_Format));
+    public static string ProgramDetail_Activate_Confirm     => Get(nameof(ProgramDetail_Activate_Confirm));
+    public static string ProgramDetail_Toast_Created_Format => Get(nameof(ProgramDetail_Toast_Created_Format));
+
     // ── CreateExercise ──────────────────────────────────────────────────
     public static string CreateExercise_Title              => Get(nameof(CreateExercise_Title));
     public static string CreateExercise_NameLabel          => Get(nameof(CreateExercise_NameLabel));

@@ -516,6 +516,18 @@
   <data name="Library_Equipment_MedicineBall" xml:space="preserve"><value>MEDICINE BALL</value></data>
   <data name="Library_Equipment_Other" xml:space="preserve"><value>OTHER</value></data>
 
+  <!-- ProgramDetail — XAML labels -->
+  <data name="ProgramDetail_SectionDays" xml:space="preserve"><value>PROGRAM SESSIONS</value></data>
+  <data name="ProgramDetail_ActivateButton" xml:space="preserve"><value>ACTIVATE PROGRAM</value></data>
+
+  <!-- ProgramDetail — VM strings -->
+  <data name="ProgramDetail_DaysLabel_Format" xml:space="preserve"><value>{0} days/week · {1} sessions</value></data>
+  <data name="ProgramDetail_RestSeconds_Format" xml:space="preserve"><value>{0}s rest</value></data>
+  <data name="ProgramDetail_Activate_Title" xml:space="preserve"><value>Activate program</value></data>
+  <data name="ProgramDetail_Activate_Body_Format" xml:space="preserve"><value>Creates {0} templates from "{1}". These will be added to your templates.</value></data>
+  <data name="ProgramDetail_Activate_Confirm" xml:space="preserve"><value>Activate</value></data>
+  <data name="ProgramDetail_Toast_Created_Format" xml:space="preserve"><value>{0} templates created! Find them under Templates in Library.</value></data>
+
   <!-- CreateExercise — XAML labels -->
   <data name="CreateExercise_Title" xml:space="preserve"><value>NEW EXERCISE</value></data>
   <data name="CreateExercise_NameLabel" xml:space="preserve"><value>NAME</value></data>
