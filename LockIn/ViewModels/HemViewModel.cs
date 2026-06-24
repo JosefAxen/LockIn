@@ -141,7 +141,7 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
             double score = Math.Min(100.0, weekSessions.Count / (double)goal * 100.0);
             TrainingScore     = score;
             TrainingScoreText = ((int)score).ToString();
-            MotivationText    = $"Stark vecka — du är {(int)score}% av veckans träningmål.";
+            MotivationText    = BuildMotivationText((int)score);
             OnPropertyChanged(nameof(GaugeProgress));
 
             // Streak and calendar
@@ -327,6 +327,16 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
     }
 
     public int TodayIndex { get; private set; } = 45;
+
+    private static string BuildMotivationText(int score) => score switch
+    {
+        >= 100 => "Vecka klar — 100% av träningsmålet.",
+        >= 75  => $"Stark vecka — du har klarat {score}% av veckans träningsmål.",
+        >= 50  => $"Halvvägs — du har klarat {score}% av veckans träningsmål.",
+        >= 25  => $"Igång — du har klarat {score}% av veckans träningsmål.",
+        > 0    => $"Påbörjad — {score}% av veckans träningsmål.",
+        _      => "Ny vecka — dags att börja.",
+    };
 
     private IReadOnlyList<DayStreakItem> BuildStreakDays(List<WorkoutSession> sessions)
     {
