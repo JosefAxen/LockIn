@@ -6,6 +6,7 @@
              xmlns:controls="clr-namespace:LockIn.Controls"
              x:Class="LockIn.Views.ActiveWorkoutPage"
              x:DataType="vm:ActiveWorkoutViewModel"
+             xmlns:loc="clr-namespace:LockIn.Resources.Strings"
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
              Shell.NavBarIsVisible="False"
              Shell.TabBarIsVisible="False"
@@ -181,7 +182,7 @@
                                                 StrokeThickness="0"
                                                 Padding="8,3"
                                                 HorizontalOptions="Start">
-                                            <Label Text="SUPERSET"
+                                            <Label Text="{loc:Localize ActiveWorkout_Superset}"
                                                    TextColor="{StaticResource ForgeAccent}"
                                                    FontFamily="BebasNeue" FontSize="11"
                                                    CharacterSpacing="1"/>
@@ -269,15 +270,15 @@
                                     <!-- Column headers -->
                                     <Grid ColumnDefinitions="36,*,14,*,44,44"
                                           Padding="16,0,16,6" ColumnSpacing="6">
-                                        <Label Grid.Column="0" Text="SET"
+                                        <Label Grid.Column="0" Text="{loc:Localize ActiveWorkout_Col_Set}"
                                                Style="{StaticResource SectionLabel}" FontSize="10"/>
-                                        <Label Grid.Column="1" Text="KG"
+                                        <Label Grid.Column="1" Text="{loc:Localize ActiveWorkout_Col_Weight}"
                                                Style="{StaticResource SectionLabel}" FontSize="10"
                                                HorizontalTextAlignment="Center"/>
-                                        <Label Grid.Column="3" Text="REPS"
+                                        <Label Grid.Column="3" Text="{loc:Localize ActiveWorkout_Col_Reps}"
                                                Style="{StaticResource SectionLabel}" FontSize="10"
                                                HorizontalTextAlignment="Center"/>
-                                        <Label Grid.Column="4" Text="RIR"
+                                        <Label Grid.Column="4" Text="{loc:Localize ActiveWorkout_Col_Rir}"
                                                Style="{StaticResource SectionLabel}" FontSize="10"
                                                HorizontalTextAlignment="Center"/>
                                     </Grid>
@@ -413,7 +414,7 @@
                                     <Grid ColumnDefinitions="*,*"
                                           Padding="12,6,12,10" ColumnSpacing="8">
                                         <Button Grid.Column="0"
-                                                Text="+ SET"
+                                                Text="{loc:Localize ActiveWorkout_AddSet}"
                                                 Style="{StaticResource SecondaryButton}"
                                                 BackgroundColor="{StaticResource ForgeSurface2}"
                                                 TextColor="{StaticResource ForgeMuted}"
@@ -427,7 +428,7 @@
                                             </Button.Behaviors>
                                         </Button>
                                         <Button Grid.Column="1"
-                                                Text="− SET"
+                                                Text="{loc:Localize ActiveWorkout_RemoveSet}"
                                                 Style="{StaticResource SecondaryButton}"
                                                 BackgroundColor="{StaticResource ForgeSurface2}"
                                                 TextColor="{StaticResource ForgeMuted}"
@@ -472,7 +473,7 @@
                         StrokeShape="RoundRectangle 12"
                         Stroke="{StaticResource ForgeBorderLight}"
                         StrokeThickness="1">
-                    <Label Text="+ LÄGG TILL ÖVNING"
+                    <Label Text="{loc:Localize ActiveWorkout_AddExercise}"
                            FontFamily="BebasNeue" FontSize="16" CharacterSpacing="1"
                            TextColor="{StaticResource ForgeText}"
                            HorizontalOptions="Center" VerticalOptions="Center"/>
@@ -528,7 +529,7 @@
                                WidthRequest="18" HeightRequest="18"
                                ForceTint="{StaticResource ForgeFabForeground}"
                                VerticalOptions="Center"/>
-                <Label Text="AVSLUTA PASS"
+                <Label Text="{loc:Localize ActiveWorkout_FinishWorkout}"
                        FontFamily="BebasNeue" FontSize="17" CharacterSpacing="2"
                        TextColor="{StaticResource ForgeFabForeground}" VerticalOptions="Center"/>
             </HorizontalStackLayout>

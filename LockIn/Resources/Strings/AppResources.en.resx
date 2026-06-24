@@ -384,6 +384,33 @@
 
   <!-- Library — Equipment type labels -->
   <data name="Library_Equipment_Barbell" xml:space="preserve"><value>BARBELL</value></data>
+
+  <!-- ActiveWorkout — XAML labels -->
+  <data name="ActiveWorkout_FreeWorkout" xml:space="preserve"><value>FREE WORKOUT</value></data>
+  <data name="ActiveWorkout_Superset" xml:space="preserve"><value>SUPERSET</value></data>
+  <data name="ActiveWorkout_Col_Set" xml:space="preserve"><value>SET</value></data>
+  <data name="ActiveWorkout_Col_Weight" xml:space="preserve"><value>KG</value></data>
+  <data name="ActiveWorkout_Col_Reps" xml:space="preserve"><value>REPS</value></data>
+  <data name="ActiveWorkout_Col_Rir" xml:space="preserve"><value>RIR</value></data>
+  <data name="ActiveWorkout_AddSet" xml:space="preserve"><value>+ SET</value></data>
+  <data name="ActiveWorkout_RemoveSet" xml:space="preserve"><value>− SET</value></data>
+  <data name="ActiveWorkout_AddExercise" xml:space="preserve"><value>+ ADD EXERCISE</value></data>
+  <data name="ActiveWorkout_FinishWorkout" xml:space="preserve"><value>FINISH WORKOUT</value></data>
+
+  <!-- ActiveWorkout — VM strings -->
+  <data name="ActiveWorkout_RemoveExercise_Title" xml:space="preserve"><value>Remove exercise</value></data>
+  <data name="ActiveWorkout_RemoveExercise_Body_Logs" xml:space="preserve"><value>Remove {0}? {1} logged sets will be deleted.</value></data>
+  <data name="ActiveWorkout_RemoveExercise_Body_Empty" xml:space="preserve"><value>Remove {0} from the workout?</value></data>
+  <data name="ActiveWorkout_RestTime_Title" xml:space="preserve"><value>Rest time</value></data>
+  <data name="ActiveWorkout_RestTime_Body_Format" xml:space="preserve"><value>Enter rest time in seconds for {0}:</value></data>
+  <data name="ActiveWorkout_Toast_EnterDuration" xml:space="preserve"><value>Enter duration in seconds.</value></data>
+  <data name="ActiveWorkout_Toast_EnterReps" xml:space="preserve"><value>Enter number of reps.</value></data>
+  <data name="ActiveWorkout_PR_Message_Format" xml:space="preserve"><value>New PR — {0}&#10;{1} kg × {2} reps · Est. 1RM {3} kg</value></data>
+  <data name="ActiveWorkout_AutoProgress_WeightUp_Format" xml:space="preserve"><value>Next {0} session: {1} kg × {2} reps</value></data>
+  <data name="ActiveWorkout_AutoProgress_RepsUp_Format" xml:space="preserve"><value>Great work! Next goal: {0} reps @ {1} kg</value></data>
+  <data name="ActiveWorkout_FinishConfirm_Title" xml:space="preserve"><value>Finish workout</value></data>
+  <data name="ActiveWorkout_FinishConfirm_Body" xml:space="preserve"><value>Are you done with the workout?</value></data>
+  <data name="ActiveWorkout_FinishConfirm_Yes" xml:space="preserve"><value>Yes, finish</value></data>
   <data name="Library_Equipment_Dumbbell" xml:space="preserve"><value>DUMBBELL</value></data>
   <data name="Library_Equipment_Cable" xml:space="preserve"><value>CABLE</value></data>
   <data name="Library_Equipment_Machine" xml:space="preserve"><value>MACHINE</value></data>

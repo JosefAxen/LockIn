@@ -2,6 +2,7 @@ using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn.Models;
+using LockIn.Resources.Strings;
 using LockIn.Services;
 using LockIn.Views;
 using System.Collections.ObjectModel;
@@ -20,7 +21,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
     private readonly Dictionary<int, HashSet<int>> _supersetRound = new();
     private readonly object _supersetLock = new();
 
-    [ObservableProperty] private string _templateName = "FRITT PASS";
+    [ObservableProperty] private string _templateName = AppResources.ActiveWorkout_FreeWorkout;
     [ObservableProperty] private string _elapsedTime = "0:00";
     [ObservableProperty] private bool _isLoading;
     [ObservableProperty] private bool _hasPR;
@@ -62,7 +63,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             {
                 var templates = await db.GetTemplatesAsync();
                 var template = templates.FirstOrDefault(t => t.Id == templateId);
-                TemplateName = template?.Name ?? "PASS";
+                TemplateName = template?.Name ?? AppResources.ActiveWorkout_FreeWorkout;
             }
 
             // Skapa sessionen EFTER att övningar laddats, för att undvika orphan sessions
@@ -192,12 +193,12 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
     {
         var loggedCount = section.Sets.Count(s => s.IsCompleted);
         var detail = loggedCount > 0
-            ? $"Ta bort {section.ExerciseName}? {loggedCount} loggade set försvinner."
-            : $"Ta bort {section.ExerciseName} från passet?";
+            ? string.Format(AppResources.ActiveWorkout_RemoveExercise_Body_Logs, section.ExerciseName, loggedCount)
+            : string.Format(AppResources.ActiveWorkout_RemoveExercise_Body_Empty, section.ExerciseName);
         var ok = await Shell.Current.DisplayAlert(
-            "Ta bort övning",
+            AppResources.ActiveWorkout_RemoveExercise_Title,
             detail,
-            "Ta bort", "Avbryt");
+            AppResources.Common_Delete, AppResources.Common_Cancel);
         if (!ok) return;
         await db.DeleteSessionExerciseWithSetsAsync(section.SessionExerciseId);
         Exercises.Remove(section);
@@ -207,8 +208,8 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
     private async Task ChangeRestTimeAsync(WorkoutExerciseSection section)
     {
         var result = await Shell.Current.DisplayPromptAsync(
-            "Vilotid",
-            $"Ange vilotid i sekunder för {section.ExerciseName}:",
+            AppResources.ActiveWorkout_RestTime_Title,
+            string.Format(AppResources.ActiveWorkout_RestTime_Body_Format, section.ExerciseName),
             initialValue: section.RestSeconds.ToString(),
             keyboard: Keyboard.Numeric);
 
@@ -283,7 +284,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
 
             if (!int.TryParse(set.RepsText, out durationSeconds) || durationSeconds <= 0)
             {
-                await Toast.Make("Ange duration i sekunder.").Show();
+                await Toast.Make(AppResources.ActiveWorkout_Toast_EnterDuration).Show();
                 return;
             }
         }
@@ -293,7 +294,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
                 NumberStyles.Number, CultureInfo.InvariantCulture, out weight);
             if (!int.TryParse(set.RepsText, out reps) || reps <= 0)
             {
-                await Toast.Make("Ange antal reps.").Show();
+                await Toast.Make(AppResources.ActiveWorkout_Toast_EnterReps).Show();
                 return;
             }
         }
@@ -325,7 +326,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             HasPR = true;
             var name = GetExerciseName(set.SessionExerciseId);
             var est = PRService.CalculateEpley1RM(weight, reps);
-            PrMessage = $"Nytt PR — {name}\n{weight} kg × {reps} reps · Est. 1RM {est:F0} kg";
+            PrMessage = string.Format(AppResources.ActiveWorkout_PR_Message_Format, name, weight, reps, est.ToString("F0"));
             PRScored?.Invoke(this, EventArgs.Empty);
         }
 
@@ -406,11 +407,11 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         {
             var increment = section.WeightIncrementKg > 0 ? section.WeightIncrementKg : 2.5m;
             var resetReps = section.TargetRepsMin > 0 ? section.TargetRepsMin : currentTarget;
-            AutoProgressMessage = $"Nästa {section.ExerciseName}-pass: {maxWeight + increment:G} kg × {resetReps} reps";
+            AutoProgressMessage = string.Format(AppResources.ActiveWorkout_AutoProgress_WeightUp_Format, section.ExerciseName, (maxWeight + increment).ToString("G"), resetReps);
         }
         else
         {
-            AutoProgressMessage = $"Bra jobbat! Nästa mål: {currentTarget + 1} reps @ {maxWeight:G} kg";
+            AutoProgressMessage = string.Format(AppResources.ActiveWorkout_AutoProgress_RepsUp_Format, currentTarget + 1, maxWeight.ToString("G"));
         }
         HasAutoProgress = true;
     }
@@ -508,7 +509,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         state.Deactivate();
         Exercises.Clear();
         _supersetRound.Clear();
-        TemplateName = "FRITT PASS";
+        TemplateName = AppResources.ActiveWorkout_FreeWorkout;
         ElapsedTime = "0:00";
         HasPR = false;
         PrMessage = "";
@@ -554,7 +555,10 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
     private async Task FinishWorkoutAsync()
     {
         var confirmed = await Shell.Current.DisplayAlert(
-            "Avsluta pass", "Är du klar med passet?", "Ja, avsluta", "Fortsätt");
+            AppResources.ActiveWorkout_FinishConfirm_Title,
+            AppResources.ActiveWorkout_FinishConfirm_Body,
+            AppResources.ActiveWorkout_FinishConfirm_Yes,
+            AppResources.Common_Continue);
         if (!confirmed) return;
 
         _clockCts?.Cancel();

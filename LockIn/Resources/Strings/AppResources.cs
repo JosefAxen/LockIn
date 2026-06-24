@@ -252,6 +252,31 @@ public static class AppResources
     public static string Kropp_Prompt_Thighs_Body           => Get(nameof(Kropp_Prompt_Thighs_Body));
     public static string Kropp_DeleteMeasurement_Body_Format => Get(nameof(Kropp_DeleteMeasurement_Body_Format));
 
+    // ── ActiveWorkout ────────────────────────────────────────────────────
+    public static string ActiveWorkout_FreeWorkout                   => Get(nameof(ActiveWorkout_FreeWorkout));
+    public static string ActiveWorkout_Superset                      => Get(nameof(ActiveWorkout_Superset));
+    public static string ActiveWorkout_Col_Set                       => Get(nameof(ActiveWorkout_Col_Set));
+    public static string ActiveWorkout_Col_Weight                    => Get(nameof(ActiveWorkout_Col_Weight));
+    public static string ActiveWorkout_Col_Reps                      => Get(nameof(ActiveWorkout_Col_Reps));
+    public static string ActiveWorkout_Col_Rir                       => Get(nameof(ActiveWorkout_Col_Rir));
+    public static string ActiveWorkout_AddSet                        => Get(nameof(ActiveWorkout_AddSet));
+    public static string ActiveWorkout_RemoveSet                     => Get(nameof(ActiveWorkout_RemoveSet));
+    public static string ActiveWorkout_AddExercise                   => Get(nameof(ActiveWorkout_AddExercise));
+    public static string ActiveWorkout_FinishWorkout                 => Get(nameof(ActiveWorkout_FinishWorkout));
+    public static string ActiveWorkout_RemoveExercise_Title          => Get(nameof(ActiveWorkout_RemoveExercise_Title));
+    public static string ActiveWorkout_RemoveExercise_Body_Logs      => Get(nameof(ActiveWorkout_RemoveExercise_Body_Logs));
+    public static string ActiveWorkout_RemoveExercise_Body_Empty     => Get(nameof(ActiveWorkout_RemoveExercise_Body_Empty));
+    public static string ActiveWorkout_RestTime_Title                => Get(nameof(ActiveWorkout_RestTime_Title));
+    public static string ActiveWorkout_RestTime_Body_Format          => Get(nameof(ActiveWorkout_RestTime_Body_Format));
+    public static string ActiveWorkout_Toast_EnterDuration           => Get(nameof(ActiveWorkout_Toast_EnterDuration));
+    public static string ActiveWorkout_Toast_EnterReps               => Get(nameof(ActiveWorkout_Toast_EnterReps));
+    public static string ActiveWorkout_PR_Message_Format             => Get(nameof(ActiveWorkout_PR_Message_Format));
+    public static string ActiveWorkout_AutoProgress_WeightUp_Format  => Get(nameof(ActiveWorkout_AutoProgress_WeightUp_Format));
+    public static string ActiveWorkout_AutoProgress_RepsUp_Format    => Get(nameof(ActiveWorkout_AutoProgress_RepsUp_Format));
+    public static string ActiveWorkout_FinishConfirm_Title           => Get(nameof(ActiveWorkout_FinishConfirm_Title));
+    public static string ActiveWorkout_FinishConfirm_Body            => Get(nameof(ActiveWorkout_FinishConfirm_Body));
+    public static string ActiveWorkout_FinishConfirm_Yes             => Get(nameof(ActiveWorkout_FinishConfirm_Yes));
+
     // ── Library ─────────────────────────────────────────────────────────
     public static string Library_Title                      => Get(nameof(Library_Title));
     public static string Library_AddButton                  => Get(nameof(Library_AddButton));

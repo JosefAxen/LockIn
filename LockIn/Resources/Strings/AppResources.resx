@@ -384,6 +384,33 @@
 
   <!-- Library — Equipment type labels -->
   <data name="Library_Equipment_Barbell" xml:space="preserve"><value>SKIVSTÅNG</value></data>
+
+  <!-- ActiveWorkout — XAML labels -->
+  <data name="ActiveWorkout_FreeWorkout" xml:space="preserve"><value>FRITT PASS</value></data>
+  <data name="ActiveWorkout_Superset" xml:space="preserve"><value>SUPERSET</value></data>
+  <data name="ActiveWorkout_Col_Set" xml:space="preserve"><value>SET</value></data>
+  <data name="ActiveWorkout_Col_Weight" xml:space="preserve"><value>KG</value></data>
+  <data name="ActiveWorkout_Col_Reps" xml:space="preserve"><value>REPS</value></data>
+  <data name="ActiveWorkout_Col_Rir" xml:space="preserve"><value>RIR</value></data>
+  <data name="ActiveWorkout_AddSet" xml:space="preserve"><value>+ SET</value></data>
+  <data name="ActiveWorkout_RemoveSet" xml:space="preserve"><value>− SET</value></data>
+  <data name="ActiveWorkout_AddExercise" xml:space="preserve"><value>+ LÄGG TILL ÖVNING</value></data>
+  <data name="ActiveWorkout_FinishWorkout" xml:space="preserve"><value>AVSLUTA PASS</value></data>
+
+  <!-- ActiveWorkout — VM strings -->
+  <data name="ActiveWorkout_RemoveExercise_Title" xml:space="preserve"><value>Ta bort övning</value></data>
+  <data name="ActiveWorkout_RemoveExercise_Body_Logs" xml:space="preserve"><value>Ta bort {0}? {1} loggade set försvinner.</value></data>
+  <data name="ActiveWorkout_RemoveExercise_Body_Empty" xml:space="preserve"><value>Ta bort {0} från passet?</value></data>
+  <data name="ActiveWorkout_RestTime_Title" xml:space="preserve"><value>Vilotid</value></data>
+  <data name="ActiveWorkout_RestTime_Body_Format" xml:space="preserve"><value>Ange vilotid i sekunder för {0}:</value></data>
+  <data name="ActiveWorkout_Toast_EnterDuration" xml:space="preserve"><value>Ange duration i sekunder.</value></data>
+  <data name="ActiveWorkout_Toast_EnterReps" xml:space="preserve"><value>Ange antal reps.</value></data>
+  <data name="ActiveWorkout_PR_Message_Format" xml:space="preserve"><value>Nytt PR — {0}&#10;{1} kg × {2} reps · Est. 1RM {3} kg</value></data>
+  <data name="ActiveWorkout_AutoProgress_WeightUp_Format" xml:space="preserve"><value>Nästa {0}-pass: {1} kg × {2} reps</value></data>
+  <data name="ActiveWorkout_AutoProgress_RepsUp_Format" xml:space="preserve"><value>Bra jobbat! Nästa mål: {0} reps @ {1} kg</value></data>
+  <data name="ActiveWorkout_FinishConfirm_Title" xml:space="preserve"><value>Avsluta pass</value></data>
+  <data name="ActiveWorkout_FinishConfirm_Body" xml:space="preserve"><value>Är du klar med passet?</value></data>
+  <data name="ActiveWorkout_FinishConfirm_Yes" xml:space="preserve"><value>Ja, avsluta</value></data>
   <data name="Library_Equipment_Dumbbell" xml:space="preserve"><value>HANTEL</value></data>
   <data name="Library_Equipment_Cable" xml:space="preserve"><value>KABEL</value></data>
   <data name="Library_Equipment_Machine" xml:space="preserve"><value>MASKIN</value></data>
