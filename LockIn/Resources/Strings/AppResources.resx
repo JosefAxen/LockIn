@@ -447,6 +447,35 @@
   <data name="TemplateEdit_SupersetAdd" xml:space="preserve"><value>SUPERSET +</value></data>
   <data name="TemplateEdit_SupersetRemove" xml:space="preserve"><value>KOPPLA BORT</value></data>
 
+  <!-- ExerciseProgress — XAML labels -->
+  <data name="ExerciseProgress_Chart_1RM" xml:space="preserve"><value>EST. 1RM PROGRESSION</value></data>
+  <data name="ExerciseProgress_BestLift" xml:space="preserve"><value>BÄSTA LYFT</value></data>
+  <data name="ExerciseProgress_Est1RM_Prefix" xml:space="preserve"><value>Est. 1RM: </value></data>
+  <data name="ExerciseProgress_TotalVolume" xml:space="preserve"><value>TOTAL VOLYM</value></data>
+  <data name="ExerciseProgress_LoggedSessions" xml:space="preserve"><value>loggade träningar</value></data>
+  <data name="ExerciseProgress_Empty_Title" xml:space="preserve"><value>Ingen historik ännu</value></data>
+  <data name="ExerciseProgress_Empty_Body" xml:space="preserve"><value>Logga ett pass med denna övning för att se din progression.</value></data>
+  <data name="ExerciseProgress_ExerciseInfo" xml:space="preserve"><value>ÖVNINGSINFO</value></data>
+  <data name="ExerciseProgress_Equipment" xml:space="preserve"><value>UTRUSTNING</value></data>
+  <data name="ExerciseProgress_Level" xml:space="preserve"><value>NIVÅ</value></data>
+  <data name="ExerciseProgress_Type" xml:space="preserve"><value>TYP</value></data>
+  <data name="ExerciseProgress_Force" xml:space="preserve"><value>RÖRELSE</value></data>
+  <data name="ExerciseProgress_SecondaryMuscles" xml:space="preserve"><value>SEKUNDÄRA MUSKLER</value></data>
+  <data name="ExerciseProgress_Instructions" xml:space="preserve"><value>INSTRUKTIONER</value></data>
+  <data name="ExerciseProgress_Notes" xml:space="preserve"><value>ANTECKNINGAR</value></data>
+  <data name="ExerciseProgress_Notes_Placeholder" xml:space="preserve"><value>Anteckningar om övningen, tips, form-cues...</value></data>
+
+  <!-- ExerciseProgress — VM strings -->
+  <data name="ExerciseProgress_Sessions_Format" xml:space="preserve"><value>{0} pass</value></data>
+  <data name="ExerciseProgress_Level_Beginner" xml:space="preserve"><value>Nybörjare</value></data>
+  <data name="ExerciseProgress_Level_Intermediate" xml:space="preserve"><value>Medel</value></data>
+  <data name="ExerciseProgress_Level_Expert" xml:space="preserve"><value>Avancerad</value></data>
+  <data name="ExerciseProgress_Mechanic_Compound" xml:space="preserve"><value>Compound</value></data>
+  <data name="ExerciseProgress_Mechanic_Isolation" xml:space="preserve"><value>Isolering</value></data>
+  <data name="ExerciseProgress_ForceType_Push" xml:space="preserve"><value>Push</value></data>
+  <data name="ExerciseProgress_ForceType_Pull" xml:space="preserve"><value>Pull</value></data>
+  <data name="ExerciseProgress_ForceType_Static" xml:space="preserve"><value>Statisk</value></data>
+
   <!-- Library — Equipment type labels -->
   <data name="Library_Equipment_Barbell" xml:space="preserve"><value>SKIVSTÅNG</value></data>
 

@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn.Models;
+using LockIn.Resources.Strings;
 using LockIn.Services;
 
 namespace LockIn.ViewModels;
@@ -10,8 +11,8 @@ public partial class ExerciseProgressViewModel(DatabaseService db) : ObservableO
     [ObservableProperty] private string _exerciseName = "";
     [ObservableProperty] private string _muscleGroupName = "";
     [ObservableProperty] private string _bestSet = "–";
-    [ObservableProperty] private string _estimatedOneRm = "–";
-    [ObservableProperty] private string _totalSessions = "0 pass";
+    [ObservableProperty] private string _estimatedOneRmFormatted = "–";
+    [ObservableProperty] private string _totalSessions = "";
     [ObservableProperty] private string _exerciseNotes = "";
     [ObservableProperty] private string _exerciseDescription = "";
     [ObservableProperty] private bool _hasDescription;
@@ -63,9 +64,9 @@ public partial class ExerciseProgressViewModel(DatabaseService db) : ObservableO
         if (HasData)
         {
             var best = history.OrderByDescending(h => h.Epley1RM).First();
-            BestSet        = $"{best.WeightKg} kg × {best.Reps} reps";
-            EstimatedOneRm = $"{best.Epley1RM:F0} kg";
-            TotalSessions  = $"{history.Count} pass";
+            BestSet                 = $"{best.WeightKg} kg × {best.Reps} reps";
+            EstimatedOneRmFormatted = $"{AppResources.ExerciseProgress_Est1RM_Prefix}{best.Epley1RM:F0} kg";
+            TotalSessions           = string.Format(AppResources.ExerciseProgress_Sessions_Format, history.Count);
 
             ChartPoints = history
                 .TakeLast(12)
@@ -86,52 +87,52 @@ public partial class ExerciseProgressViewModel(DatabaseService db) : ObservableO
 
     private static string EquipmentLabel(EquipmentType e) => e switch
     {
-        EquipmentType.Barbell      => "Skivstång",
-        EquipmentType.Dumbbell     => "Hantel",
-        EquipmentType.Cable        => "Kabel",
-        EquipmentType.Machine      => "Maskin",
-        EquipmentType.BodyOnly     => "Kroppsvikt",
-        EquipmentType.EZBar        => "EZ-stång",
-        EquipmentType.Kettlebell   => "Kettlebell",
-        EquipmentType.Bands        => "Band",
-        EquipmentType.FoamRoll     => "Foam roll",
-        EquipmentType.MedicineBall => "Medicinboll",
+        EquipmentType.Barbell      => AppResources.Library_Equipment_Barbell,
+        EquipmentType.Dumbbell     => AppResources.Library_Equipment_Dumbbell,
+        EquipmentType.Cable        => AppResources.Library_Equipment_Cable,
+        EquipmentType.Machine      => AppResources.Library_Equipment_Machine,
+        EquipmentType.BodyOnly     => AppResources.Library_Equipment_Bodyweight,
+        EquipmentType.EZBar        => AppResources.Library_Equipment_EZBar,
+        EquipmentType.Kettlebell   => AppResources.Library_Equipment_Kettlebell,
+        EquipmentType.Bands        => AppResources.Library_Equipment_Bands,
+        EquipmentType.FoamRoll     => AppResources.Library_Equipment_FoamRoll,
+        EquipmentType.MedicineBall => AppResources.Library_Equipment_MedicineBall,
         _                          => ""
     };
 
     private static string LevelLabel(ExerciseLevel l) => l switch
     {
-        ExerciseLevel.Beginner     => "Nybörjare",
-        ExerciseLevel.Intermediate => "Medel",
-        ExerciseLevel.Expert       => "Avancerad",
+        ExerciseLevel.Beginner     => AppResources.ExerciseProgress_Level_Beginner,
+        ExerciseLevel.Intermediate => AppResources.ExerciseProgress_Level_Intermediate,
+        ExerciseLevel.Expert       => AppResources.ExerciseProgress_Level_Expert,
         _                          => ""
     };
 
     private static string MechanicLabel(ExerciseMechanic m) => m switch
     {
-        ExerciseMechanic.Compound  => "Compound",
-        ExerciseMechanic.Isolation => "Isolering",
+        ExerciseMechanic.Compound  => AppResources.ExerciseProgress_Mechanic_Compound,
+        ExerciseMechanic.Isolation => AppResources.ExerciseProgress_Mechanic_Isolation,
         _                          => ""
     };
 
     private static string ForceLabel(ExerciseForce f) => f switch
     {
-        ExerciseForce.Push   => "Push",
-        ExerciseForce.Pull   => "Pull",
-        ExerciseForce.Static => "Statisk",
+        ExerciseForce.Push   => AppResources.ExerciseProgress_ForceType_Push,
+        ExerciseForce.Pull   => AppResources.ExerciseProgress_ForceType_Pull,
+        ExerciseForce.Static => AppResources.ExerciseProgress_ForceType_Static,
         _                    => ""
     };
 
     private static string MuscleGroupLabel(MuscleGroup mg) => mg switch
     {
-        MuscleGroup.Chest    => "Bröst",
-        MuscleGroup.Back     => "Rygg",
-        MuscleGroup.Shoulders => "Axlar",
-        MuscleGroup.Biceps   => "Biceps",
-        MuscleGroup.Triceps  => "Triceps",
-        MuscleGroup.Legs     => "Ben",
-        MuscleGroup.Core     => "Core",
-        MuscleGroup.FullBody => "Helkropp",
-        _                    => "Övrigt"
+        MuscleGroup.Chest     => AppResources.Library_Muscle_Chest,
+        MuscleGroup.Back      => AppResources.Library_Muscle_Back,
+        MuscleGroup.Shoulders => AppResources.Library_Muscle_Shoulders,
+        MuscleGroup.Biceps    => AppResources.Library_Muscle_Biceps,
+        MuscleGroup.Triceps   => AppResources.Library_Muscle_Triceps,
+        MuscleGroup.Legs      => AppResources.Library_Muscle_Legs,
+        MuscleGroup.Core      => AppResources.Library_Muscle_Core,
+        MuscleGroup.FullBody  => AppResources.Library_Muscle_FullBody,
+        _                     => AppResources.Library_Muscle_Other
     };
 }

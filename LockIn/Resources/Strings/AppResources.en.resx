@@ -447,6 +447,35 @@
   <data name="TemplateEdit_SupersetAdd" xml:space="preserve"><value>SUPERSET +</value></data>
   <data name="TemplateEdit_SupersetRemove" xml:space="preserve"><value>UNLINK</value></data>
 
+  <!-- ExerciseProgress — XAML labels -->
+  <data name="ExerciseProgress_Chart_1RM" xml:space="preserve"><value>EST. 1RM PROGRESSION</value></data>
+  <data name="ExerciseProgress_BestLift" xml:space="preserve"><value>BEST LIFT</value></data>
+  <data name="ExerciseProgress_Est1RM_Prefix" xml:space="preserve"><value>Est. 1RM: </value></data>
+  <data name="ExerciseProgress_TotalVolume" xml:space="preserve"><value>TOTAL VOLUME</value></data>
+  <data name="ExerciseProgress_LoggedSessions" xml:space="preserve"><value>logged sessions</value></data>
+  <data name="ExerciseProgress_Empty_Title" xml:space="preserve"><value>No history yet</value></data>
+  <data name="ExerciseProgress_Empty_Body" xml:space="preserve"><value>Log a session with this exercise to see your progression.</value></data>
+  <data name="ExerciseProgress_ExerciseInfo" xml:space="preserve"><value>EXERCISE INFO</value></data>
+  <data name="ExerciseProgress_Equipment" xml:space="preserve"><value>EQUIPMENT</value></data>
+  <data name="ExerciseProgress_Level" xml:space="preserve"><value>LEVEL</value></data>
+  <data name="ExerciseProgress_Type" xml:space="preserve"><value>TYPE</value></data>
+  <data name="ExerciseProgress_Force" xml:space="preserve"><value>FORCE</value></data>
+  <data name="ExerciseProgress_SecondaryMuscles" xml:space="preserve"><value>SECONDARY MUSCLES</value></data>
+  <data name="ExerciseProgress_Instructions" xml:space="preserve"><value>INSTRUCTIONS</value></data>
+  <data name="ExerciseProgress_Notes" xml:space="preserve"><value>NOTES</value></data>
+  <data name="ExerciseProgress_Notes_Placeholder" xml:space="preserve"><value>Notes about the exercise, tips, form cues...</value></data>
+
+  <!-- ExerciseProgress — VM strings -->
+  <data name="ExerciseProgress_Sessions_Format" xml:space="preserve"><value>{0} sessions</value></data>
+  <data name="ExerciseProgress_Level_Beginner" xml:space="preserve"><value>Beginner</value></data>
+  <data name="ExerciseProgress_Level_Intermediate" xml:space="preserve"><value>Intermediate</value></data>
+  <data name="ExerciseProgress_Level_Expert" xml:space="preserve"><value>Advanced</value></data>
+  <data name="ExerciseProgress_Mechanic_Compound" xml:space="preserve"><value>Compound</value></data>
+  <data name="ExerciseProgress_Mechanic_Isolation" xml:space="preserve"><value>Isolation</value></data>
+  <data name="ExerciseProgress_ForceType_Push" xml:space="preserve"><value>Push</value></data>
+  <data name="ExerciseProgress_ForceType_Pull" xml:space="preserve"><value>Pull</value></data>
+  <data name="ExerciseProgress_ForceType_Static" xml:space="preserve"><value>Static</value></data>
+
   <!-- Library — Equipment type labels -->
   <data name="Library_Equipment_Barbell" xml:space="preserve"><value>BARBELL</value></data>
 

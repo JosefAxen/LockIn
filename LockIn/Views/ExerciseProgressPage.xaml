@@ -4,6 +4,7 @@
              xmlns:vm="clr-namespace:LockIn.ViewModels"
              xmlns:views="clr-namespace:LockIn.Views"
              xmlns:controls="clr-namespace:LockIn.Controls"
+             xmlns:loc="clr-namespace:LockIn.Resources.Strings"
              x:Class="LockIn.Views.ExerciseProgressPage"
              x:DataType="vm:ExerciseProgressViewModel"
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
@@ -50,7 +51,7 @@
                 <!-- Chart card -->
                 <Border Style="{StaticResource CardFrame}" Padding="12,14,12,10">
                     <VerticalStackLayout Spacing="6">
-                        <Label Text="EST. 1RM PROGRESSION"
+                        <Label Text="{loc:Localize ExerciseProgress_Chart_1RM}"
                                Style="{StaticResource SectionLabel}"
                                Margin="4,0,0,0"/>
                         <controls:LineChartView Points="{Binding ChartPoints}" StrokeColor="#B8B8BC" HeightRequest="200" BackgroundColor="Transparent"/>
@@ -62,11 +63,11 @@
 
                     <Border Grid.Column="0" Style="{StaticResource CardFrame}" Padding="16,14">
                         <VerticalStackLayout Spacing="4">
-                            <Label Text="BÄSTA LYFT"
+                            <Label Text="{loc:Localize ExerciseProgress_BestLift}"
                                    Style="{StaticResource SectionLabel}"/>
                             <Label Text="{Binding BestSet}"
                                    FontFamily="DMSansMedium" FontSize="15"/>
-                            <Label Text="{Binding EstimatedOneRm, StringFormat='Est. 1RM: {0}'}"
+                            <Label Text="{Binding EstimatedOneRmFormatted}"
                                    Style="{StaticResource MutedLabel}"
                                    TextColor="{StaticResource ForgeAccentBlue}"/>
                         </VerticalStackLayout>
@@ -74,13 +75,13 @@
 
                     <Border Grid.Column="1" Style="{StaticResource CardFrame}" Padding="16,14">
                         <VerticalStackLayout Spacing="4">
-                            <Label Text="TOTAL VOLYM"
+                            <Label Text="{loc:Localize ExerciseProgress_TotalVolume}"
                                    Style="{StaticResource SectionLabel}"/>
                             <Label Text="{Binding TotalSessions}"
                                    FontSize="32" FontAttributes="Bold"
                                    CharacterSpacing="-1"
                                    TextColor="{StaticResource ForgeAccentAmber}"/>
-                            <Label Text="loggade träningar"
+                            <Label Text="{loc:Localize ExerciseProgress_LoggedSessions}"
                                    Style="{StaticResource MutedLabel}"/>
                         </VerticalStackLayout>
                     </Border>
@@ -91,10 +92,10 @@
                 <Border IsVisible="{Binding HasData, Converter={x:StaticResource InvertedBoolConverter}}"
                         Style="{StaticResource CardFrame}" Padding="24,20">
                     <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
-                        <Label Text="Ingen historik ännu"
+                        <Label Text="{loc:Localize ExerciseProgress_Empty_Title}"
                                FontFamily="DMSansMedium" FontSize="15"
                                HorizontalOptions="Center"/>
-                        <Label Text="Logga ett pass med denna övning för att se din progression."
+                        <Label Text="{loc:Localize ExerciseProgress_Empty_Body}"
                                Style="{StaticResource MutedLabel}"
                                HorizontalTextAlignment="Center"
                                LineBreakMode="WordWrap"/>
@@ -105,12 +106,12 @@
                 <Border Style="{StaticResource CardFrame}" Padding="16,14"
                         IsVisible="{Binding HasMetadata}">
                     <VerticalStackLayout Spacing="10">
-                        <Label Text="ÖVNINGSINFO" Style="{StaticResource SectionLabel}"/>
+                        <Label Text="{loc:Localize ExerciseProgress_ExerciseInfo}" Style="{StaticResource SectionLabel}"/>
                         <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="12" RowSpacing="8">
 
                             <VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="2"
                                                  IsVisible="{Binding EquipmentName, Converter={StaticResource StringNotEmptyConverter}}">
-                                <Label Text="UTRUSTNING" Style="{StaticResource SectionLabel}" FontSize="10"/>
+                                <Label Text="{loc:Localize ExerciseProgress_Equipment}" Style="{StaticResource SectionLabel}" FontSize="10"/>
                                 <Label Text="{Binding EquipmentName}"
                                        FontFamily="DMSansMedium" FontSize="13"
                                        TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
@@ -118,7 +119,7 @@
 
                             <VerticalStackLayout Grid.Row="0" Grid.Column="1" Spacing="2"
                                                  IsVisible="{Binding LevelName, Converter={StaticResource StringNotEmptyConverter}}">
-                                <Label Text="NIVÅ" Style="{StaticResource SectionLabel}" FontSize="10"/>
+                                <Label Text="{loc:Localize ExerciseProgress_Level}" Style="{StaticResource SectionLabel}" FontSize="10"/>
                                 <Label Text="{Binding LevelName}"
                                        FontFamily="DMSansMedium" FontSize="13"
                                        TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
@@ -126,7 +127,7 @@
 
                             <VerticalStackLayout Grid.Row="1" Grid.Column="0" Spacing="2"
                                                  IsVisible="{Binding MechanicName, Converter={StaticResource StringNotEmptyConverter}}">
-                                <Label Text="TYP" Style="{StaticResource SectionLabel}" FontSize="10"/>
+                                <Label Text="{loc:Localize ExerciseProgress_Type}" Style="{StaticResource SectionLabel}" FontSize="10"/>
                                 <Label Text="{Binding MechanicName}"
                                        FontFamily="DMSansMedium" FontSize="13"
                                        TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
@@ -134,7 +135,7 @@
 
                             <VerticalStackLayout Grid.Row="1" Grid.Column="1" Spacing="2"
                                                  IsVisible="{Binding ForceName, Converter={StaticResource StringNotEmptyConverter}}">
-                                <Label Text="RÖRELSE" Style="{StaticResource SectionLabel}" FontSize="10"/>
+                                <Label Text="{loc:Localize ExerciseProgress_Force}" Style="{StaticResource SectionLabel}" FontSize="10"/>
                                 <Label Text="{Binding ForceName}"
                                        FontFamily="DMSansMedium" FontSize="13"
                                        TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
@@ -142,7 +143,7 @@
 
                             <VerticalStackLayout Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Spacing="2"
                                                  IsVisible="{Binding SecondaryMusclesText, Converter={StaticResource StringNotEmptyConverter}}">
-                                <Label Text="SEKUNDÄRA MUSKLER" Style="{StaticResource SectionLabel}" FontSize="10"/>
+                                <Label Text="{loc:Localize ExerciseProgress_SecondaryMuscles}" Style="{StaticResource SectionLabel}" FontSize="10"/>
                                 <Label Text="{Binding SecondaryMusclesText}"
                                        FontFamily="DMSansRegular" FontSize="13"
                                        TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
@@ -157,7 +158,7 @@
                 <Border Style="{StaticResource CardFrame}" Padding="16,14"
                         IsVisible="{Binding HasDescription}">
                     <VerticalStackLayout Spacing="8">
-                        <Label Text="INSTRUKTIONER" Style="{StaticResource SectionLabel}"/>
+                        <Label Text="{loc:Localize ExerciseProgress_Instructions}" Style="{StaticResource SectionLabel}"/>
                         <Label Text="{Binding ExerciseDescription}"
                                FontFamily="DMSansRegular" FontSize="14"
                                TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
@@ -169,11 +170,11 @@
                 <!-- Notes -->
                 <Border Style="{StaticResource CardFrame}" Padding="16,14">
                     <VerticalStackLayout Spacing="8">
-                        <Label Text="ANTECKNINGAR" Style="{StaticResource SectionLabel}"/>
+                        <Label Text="{loc:Localize ExerciseProgress_Notes}" Style="{StaticResource SectionLabel}"/>
                         <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}" Stroke="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorder}}" StrokeThickness="1"
                                 StrokeShape="RoundRectangle 8">
                             <Editor Text="{Binding ExerciseNotes}"
-                                    Placeholder="Anteckningar om övningen, tips, form-cues..."
+                                    Placeholder="{loc:Localize ExerciseProgress_Notes_Placeholder}"
                                     PlaceholderColor="{StaticResource ForgeMuted}"
                                     BackgroundColor="Transparent"
                                     TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
@@ -182,7 +183,7 @@
                                     MinimumHeightRequest="80"
                                     Margin="12,8"/>
                         </Border>
-                        <Button Text="SPARA"
+                        <Button Text="{loc:Localize Common_Save}"
                                 Style="{StaticResource SecondaryButton}"
                                 Command="{Binding SaveNotesCommand}"
                                 HorizontalOptions="End"

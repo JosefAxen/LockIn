@@ -331,6 +331,33 @@ public static class AppResources
     public static string TemplateEdit_SupersetAdd         => Get(nameof(TemplateEdit_SupersetAdd));
     public static string TemplateEdit_SupersetRemove      => Get(nameof(TemplateEdit_SupersetRemove));
 
+    // ── ExerciseProgress ─────────────────────────────────────────────────
+    public static string ExerciseProgress_Chart_1RM            => Get(nameof(ExerciseProgress_Chart_1RM));
+    public static string ExerciseProgress_BestLift             => Get(nameof(ExerciseProgress_BestLift));
+    public static string ExerciseProgress_Est1RM_Prefix        => Get(nameof(ExerciseProgress_Est1RM_Prefix));
+    public static string ExerciseProgress_TotalVolume          => Get(nameof(ExerciseProgress_TotalVolume));
+    public static string ExerciseProgress_LoggedSessions       => Get(nameof(ExerciseProgress_LoggedSessions));
+    public static string ExerciseProgress_Empty_Title          => Get(nameof(ExerciseProgress_Empty_Title));
+    public static string ExerciseProgress_Empty_Body           => Get(nameof(ExerciseProgress_Empty_Body));
+    public static string ExerciseProgress_ExerciseInfo         => Get(nameof(ExerciseProgress_ExerciseInfo));
+    public static string ExerciseProgress_Equipment            => Get(nameof(ExerciseProgress_Equipment));
+    public static string ExerciseProgress_Level                => Get(nameof(ExerciseProgress_Level));
+    public static string ExerciseProgress_Type                 => Get(nameof(ExerciseProgress_Type));
+    public static string ExerciseProgress_Force                => Get(nameof(ExerciseProgress_Force));
+    public static string ExerciseProgress_SecondaryMuscles     => Get(nameof(ExerciseProgress_SecondaryMuscles));
+    public static string ExerciseProgress_Instructions         => Get(nameof(ExerciseProgress_Instructions));
+    public static string ExerciseProgress_Notes                => Get(nameof(ExerciseProgress_Notes));
+    public static string ExerciseProgress_Notes_Placeholder    => Get(nameof(ExerciseProgress_Notes_Placeholder));
+    public static string ExerciseProgress_Sessions_Format      => Get(nameof(ExerciseProgress_Sessions_Format));
+    public static string ExerciseProgress_Level_Beginner       => Get(nameof(ExerciseProgress_Level_Beginner));
+    public static string ExerciseProgress_Level_Intermediate   => Get(nameof(ExerciseProgress_Level_Intermediate));
+    public static string ExerciseProgress_Level_Expert         => Get(nameof(ExerciseProgress_Level_Expert));
+    public static string ExerciseProgress_Mechanic_Compound    => Get(nameof(ExerciseProgress_Mechanic_Compound));
+    public static string ExerciseProgress_Mechanic_Isolation   => Get(nameof(ExerciseProgress_Mechanic_Isolation));
+    public static string ExerciseProgress_ForceType_Push       => Get(nameof(ExerciseProgress_ForceType_Push));
+    public static string ExerciseProgress_ForceType_Pull       => Get(nameof(ExerciseProgress_ForceType_Pull));
+    public static string ExerciseProgress_ForceType_Static     => Get(nameof(ExerciseProgress_ForceType_Static));
+
     // ── ExercisePicker ───────────────────────────────────────────────────
     public static string ExercisePicker_Title             => Get(nameof(ExercisePicker_Title));
     public static string ExercisePicker_SearchPlaceholder => Get(nameof(ExercisePicker_SearchPlaceholder));
