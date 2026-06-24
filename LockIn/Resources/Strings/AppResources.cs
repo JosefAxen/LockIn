@@ -445,6 +445,19 @@ public static class AppResources
     public static string Settings_ClearData_Toast       => Get(nameof(Settings_ClearData_Toast));
     public static string Settings_WeeklyGoal_Format     => Get(nameof(Settings_WeeklyGoal_Format));
 
+    // ── PlateCalculator ──────────────────────────────────────────────────
+    public static string PlateCalculator_Title                  => Get(nameof(PlateCalculator_Title));
+    public static string PlateCalculator_TargetWeight           => Get(nameof(PlateCalculator_TargetWeight));
+    public static string PlateCalculator_BarWeight              => Get(nameof(PlateCalculator_BarWeight));
+    public static string PlateCalculator_Calculate              => Get(nameof(PlateCalculator_Calculate));
+    public static string PlateCalculator_PerSide                => Get(nameof(PlateCalculator_PerSide));
+    public static string PlateCalculator_AvailablePlates        => Get(nameof(PlateCalculator_AvailablePlates));
+    public static string PlateCalculator_InvalidTarget          => Get(nameof(PlateCalculator_InvalidTarget));
+    public static string PlateCalculator_TargetBelowBar_Format  => Get(nameof(PlateCalculator_TargetBelowBar_Format));
+    public static string PlateCalculator_NotExact_Format        => Get(nameof(PlateCalculator_NotExact_Format));
+    public static string PlateCalculator_BarOnly_Format         => Get(nameof(PlateCalculator_BarOnly_Format));
+    public static string PlateCalculator_PerSideSuffix          => Get(nameof(PlateCalculator_PerSideSuffix));
+
     // ── BodyWeight ──────────────────────────────────────────────────────
     public static string BodyWeight_Title              => Get(nameof(BodyWeight_Title));
     public static string BodyWeight_NoData             => Get(nameof(BodyWeight_NoData));

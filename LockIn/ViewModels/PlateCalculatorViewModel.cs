@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using LockIn.Resources.Strings;
 using System.Globalization;
 
 namespace LockIn.ViewModels;
@@ -22,7 +23,7 @@ public partial class PlateCalculatorViewModel : ObservableObject
         if (!decimal.TryParse(TargetWeightText.Replace(',', '.'),
                 NumberStyles.Number, CultureInfo.InvariantCulture, out var target) || target <= 0)
         {
-            ResultText = "Ange en giltig målvikt.";
+            ResultText = AppResources.PlateCalculator_InvalidTarget;
             PlateData = new();
             PlatesChanged?.Invoke();
             HasResult = true;
@@ -36,7 +37,7 @@ public partial class PlateCalculatorViewModel : ObservableObject
 
         if (target < barWeight)
         {
-            ResultText = $"Målvikt måste vara ≥ stångvikt ({barWeight} kg).";
+            ResultText = string.Format(AppResources.PlateCalculator_TargetBelowBar_Format, barWeight);
             PlateData = new();
             PlatesChanged?.Invoke();
             HasResult = true;
@@ -60,7 +61,7 @@ public partial class PlateCalculatorViewModel : ObservableObject
         if (remaining > 0.01m)
         {
             var achievable = target - remaining * 2;
-            ResultText = $"Exakt {target} kg går ej.\nNärmaste: {achievable:G} kg";
+            ResultText = string.Format(AppResources.PlateCalculator_NotExact_Format, target, $"{achievable:G}");
             PlateData = new();
             PlatesChanged?.Invoke();
             HasResult = true;
@@ -69,7 +70,7 @@ public partial class PlateCalculatorViewModel : ObservableObject
 
         if (pairs.Count == 0)
         {
-            ResultText = $"Bara stången: {barWeight} kg";
+            ResultText = string.Format(AppResources.PlateCalculator_BarOnly_Format, barWeight);
             PlateData = new();
             PlatesChanged?.Invoke();
             HasResult = true;
@@ -77,7 +78,7 @@ public partial class PlateCalculatorViewModel : ObservableObject
         }
 
         var parts = pairs.Select(p => $"{p.Count}× {p.Plate:G}");
-        ResultText = string.Join(" + ", parts) + " kg per sida";
+        ResultText = string.Join(" + ", parts) + " " + AppResources.PlateCalculator_PerSideSuffix;
         PlateData = pairs;
         PlatesChanged?.Invoke();
         HasResult = true;

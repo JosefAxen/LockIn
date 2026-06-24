@@ -578,6 +578,21 @@
   <data name="CreateExercise_NotesLabel" xml:space="preserve"><value>NOTES (OPTIONAL)</value></data>
   <data name="CreateExercise_NotesPlaceholder" xml:space="preserve"><value>Technique notes, variations...</value></data>
 
+  <!-- PlateCalculator — XAML labels -->
+  <data name="PlateCalculator_Title" xml:space="preserve"><value>PLATE CALCULATOR</value></data>
+  <data name="PlateCalculator_TargetWeight" xml:space="preserve"><value>TARGET WEIGHT</value></data>
+  <data name="PlateCalculator_BarWeight" xml:space="preserve"><value>BAR WEIGHT</value></data>
+  <data name="PlateCalculator_Calculate" xml:space="preserve"><value>CALCULATE</value></data>
+  <data name="PlateCalculator_PerSide" xml:space="preserve"><value>PER SIDE</value></data>
+  <data name="PlateCalculator_AvailablePlates" xml:space="preserve"><value>AVAILABLE PLATES</value></data>
+
+  <!-- PlateCalculator — VM strings -->
+  <data name="PlateCalculator_InvalidTarget" xml:space="preserve"><value>Enter a valid target weight.</value></data>
+  <data name="PlateCalculator_TargetBelowBar_Format" xml:space="preserve"><value>Target weight must be ≥ bar weight ({0} kg).</value></data>
+  <data name="PlateCalculator_NotExact_Format" xml:space="preserve"><value>Exact {0} kg not possible.&#10;Nearest: {1} kg</value></data>
+  <data name="PlateCalculator_BarOnly_Format" xml:space="preserve"><value>Bar only: {0} kg</value></data>
+  <data name="PlateCalculator_PerSideSuffix" xml:space="preserve"><value>kg per side</value></data>
+
   <!-- BodyWeight — XAML labels -->
   <data name="BodyWeight_Title" xml:space="preserve"><value>BODY WEIGHT</value></data>
   <data name="BodyWeight_NoData" xml:space="preserve"><value>No data yet – log your first weight below</value></data>

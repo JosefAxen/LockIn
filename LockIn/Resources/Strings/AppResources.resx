@@ -578,6 +578,21 @@
   <data name="CreateExercise_NotesLabel" xml:space="preserve"><value>ANTECKNINGAR (VALFRITT)</value></data>
   <data name="CreateExercise_NotesPlaceholder" xml:space="preserve"><value>Tekniknoteringar, varianter...</value></data>
 
+  <!-- PlateCalculator — XAML labels -->
+  <data name="PlateCalculator_Title" xml:space="preserve"><value>VIKTRÄKNARE</value></data>
+  <data name="PlateCalculator_TargetWeight" xml:space="preserve"><value>MÅLVIKT</value></data>
+  <data name="PlateCalculator_BarWeight" xml:space="preserve"><value>STÅNGVIKT</value></data>
+  <data name="PlateCalculator_Calculate" xml:space="preserve"><value>BERÄKNA</value></data>
+  <data name="PlateCalculator_PerSide" xml:space="preserve"><value>PER SIDA</value></data>
+  <data name="PlateCalculator_AvailablePlates" xml:space="preserve"><value>TILLGÄNGLIGA PLATTOR</value></data>
+
+  <!-- PlateCalculator — VM strings -->
+  <data name="PlateCalculator_InvalidTarget" xml:space="preserve"><value>Ange en giltig målvikt.</value></data>
+  <data name="PlateCalculator_TargetBelowBar_Format" xml:space="preserve"><value>Målvikt måste vara ≥ stångvikt ({0} kg).</value></data>
+  <data name="PlateCalculator_NotExact_Format" xml:space="preserve"><value>Exakt {0} kg går ej.&#10;Närmaste: {1} kg</value></data>
+  <data name="PlateCalculator_BarOnly_Format" xml:space="preserve"><value>Bara stången: {0} kg</value></data>
+  <data name="PlateCalculator_PerSideSuffix" xml:space="preserve"><value>kg per sida</value></data>
+
   <!-- BodyWeight — XAML labels -->
   <data name="BodyWeight_Title" xml:space="preserve"><value>KROPPSVIKT</value></data>
   <data name="BodyWeight_NoData" xml:space="preserve"><value>Ingen data ännu – logga din första vikt nedan</value></data>

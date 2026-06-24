@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:LockIn.ViewModels"
              xmlns:controls="clr-namespace:LockIn.Controls"
+             xmlns:loc="clr-namespace:LockIn.Resources.Strings"
              x:Class="LockIn.Views.PlateCalculatorPage"
              x:DataType="vm:PlateCalculatorViewModel"
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
@@ -30,7 +31,7 @@
                     <TapGestureRecognizer Command="{Binding GoBackCommand}"/>
                 </Border.GestureRecognizers>
             </Border>
-            <Label Grid.Column="1" Text="PLATTKALKYLATOR"
+            <Label Grid.Column="1" Text="{loc:Localize PlateCalculator_Title}"
                    Style="{StaticResource DisplayLabel}"
                    FontSize="22"
                    HorizontalOptions="Center" VerticalOptions="Center"/>
@@ -46,7 +47,7 @@
 
                         <!-- Målvikt -->
                         <VerticalStackLayout Spacing="6">
-                            <Label Text="MÅLVIKT" Style="{StaticResource SectionLabel}"/>
+                            <Label Text="{loc:Localize PlateCalculator_TargetWeight}" Style="{StaticResource SectionLabel}"/>
                             <Border BackgroundColor="{StaticResource ForgeSurface2}"
                                     StrokeShape="RoundRectangle 10"
                                     StrokeThickness="0">
@@ -74,7 +75,7 @@
 
                         <!-- Stångvikt -->
                         <VerticalStackLayout Spacing="6">
-                            <Label Text="STÅNGVIKT" Style="{StaticResource SectionLabel}"/>
+                            <Label Text="{loc:Localize PlateCalculator_BarWeight}" Style="{StaticResource SectionLabel}"/>
                             <Border BackgroundColor="{StaticResource ForgeSurface2}"
                                     StrokeShape="RoundRectangle 10"
                                     StrokeThickness="0">
@@ -98,7 +99,7 @@
                 </Border>
 
                 <!-- Calculate button -->
-                <Button Text="BERÄKNA"
+                <Button Text="{loc:Localize PlateCalculator_Calculate}"
                         Style="{StaticResource PrimaryButton}"
                         HeightRequest="52"
                         Command="{Binding CalculateCommand}"/>
@@ -110,7 +111,7 @@
                         StrokeThickness="0"
                         Padding="0,16">
                     <VerticalStackLayout Spacing="8">
-                        <Label Text="PER SIDA"
+                        <Label Text="{loc:Localize PlateCalculator_PerSide}"
                                Style="{StaticResource SectionLabel}"
                                TextColor="{StaticResource ForgeAccent}"
                                Margin="20,0"/>
@@ -128,7 +129,7 @@
                 <!-- Plate reference chips -->
                 <Border Style="{StaticResource CardFrame}" Padding="16,14">
                     <VerticalStackLayout Spacing="10">
-                        <Label Text="TILLGÄNGLIGA PLATTOR" Style="{StaticResource SectionLabel}"/>
+                        <Label Text="{loc:Localize PlateCalculator_AvailablePlates}" Style="{StaticResource SectionLabel}"/>
                         <Grid ColumnDefinitions="*,*,*,*" RowDefinitions="Auto,Auto"
                               ColumnSpacing="8" RowSpacing="8">
                             <Border Grid.Row="0" Grid.Column="0"
