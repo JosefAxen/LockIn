@@ -633,4 +633,13 @@
   <!-- Library — loading animation label -->
   <data name="Library_LoadingIn" xml:space="preserve"><value>LOCKING IN</value></data>
 
+  <!-- Hem — weekday abbreviations -->
+  <data name="Hem_Weekday_Mon" xml:space="preserve"><value>MON</value></data>
+  <data name="Hem_Weekday_Tue" xml:space="preserve"><value>TUE</value></data>
+  <data name="Hem_Weekday_Wed" xml:space="preserve"><value>WED</value></data>
+  <data name="Hem_Weekday_Thu" xml:space="preserve"><value>THU</value></data>
+  <data name="Hem_Weekday_Fri" xml:space="preserve"><value>FRI</value></data>
+  <data name="Hem_Weekday_Sat" xml:space="preserve"><value>SAT</value></data>
+  <data name="Hem_Weekday_Sun" xml:space="preserve"><value>SUN</value></data>
+
 </root>

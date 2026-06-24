@@ -502,6 +502,15 @@ public static class AppResources
     // ── History ─────────────────────────────────────────────────────────
     public static string History_Card_PRs      => Get(nameof(History_Card_PRs));
 
+    // ── Hem — weekday abbreviations ─────────────────────────────────────
+    public static string Hem_Weekday_Mon       => Get(nameof(Hem_Weekday_Mon));
+    public static string Hem_Weekday_Tue       => Get(nameof(Hem_Weekday_Tue));
+    public static string Hem_Weekday_Wed       => Get(nameof(Hem_Weekday_Wed));
+    public static string Hem_Weekday_Thu       => Get(nameof(Hem_Weekday_Thu));
+    public static string Hem_Weekday_Fri       => Get(nameof(Hem_Weekday_Fri));
+    public static string Hem_Weekday_Sat       => Get(nameof(Hem_Weekday_Sat));
+    public static string Hem_Weekday_Sun       => Get(nameof(Hem_Weekday_Sun));
+
     // ── Library ─────────────────────────────────────────────────────────
     public static string Library_LoadingIn     => Get(nameof(Library_LoadingIn));
 

@@ -1,4 +1,5 @@
 using LockIn.Models;
+using LockIn.Resources.Strings;
 using System.Globalization;
 
 namespace LockIn.ViewModels;
@@ -34,17 +35,18 @@ public class MuscleGroupLabelConverter : IValueConverter
         if (value is MuscleGroup mg)
             return mg switch
             {
-                MuscleGroup.Chest     => "Bröst",
-                MuscleGroup.Back      => "Rygg",
-                MuscleGroup.Shoulders => "Axlar",
-                MuscleGroup.Biceps    => "Biceps",
-                MuscleGroup.Triceps   => "Triceps",
-                MuscleGroup.Legs      => "Ben",
-                MuscleGroup.Core      => "Core",
-                MuscleGroup.FullBody  => "Helkropp",
-                _                     => "Övrigt",
+                MuscleGroup.Chest     => AppResources.Library_Muscle_Chest,
+                MuscleGroup.Back      => AppResources.Library_Muscle_Back,
+                MuscleGroup.Shoulders => AppResources.Library_Muscle_Shoulders,
+                MuscleGroup.Biceps    => AppResources.Library_Muscle_Biceps,
+                MuscleGroup.Triceps   => AppResources.Library_Muscle_Triceps,
+                MuscleGroup.Legs      => AppResources.Library_Muscle_Legs,
+                MuscleGroup.Core      => AppResources.Library_Muscle_Core,
+                MuscleGroup.FullBody  => AppResources.Library_Muscle_FullBody,
+                MuscleGroup.Forearms  => AppResources.Library_Muscle_Forearms,
+                _                     => AppResources.Library_Muscle_Other,
             };
-        return "Övrigt";
+        return AppResources.Library_Muscle_Other;
     }
 
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

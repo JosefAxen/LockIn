@@ -356,7 +356,16 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
             .Select(s => s.CompletedAt!.Value.Date)
             .ToHashSet();
 
-        var abbrs = new[] { "MÅN", "TIS", "ONS", "TOR", "FRE", "LÖR", "SÖN" };
+        var abbrs = new[]
+        {
+            AppResources.Hem_Weekday_Mon,
+            AppResources.Hem_Weekday_Tue,
+            AppResources.Hem_Weekday_Wed,
+            AppResources.Hem_Weekday_Thu,
+            AppResources.Hem_Weekday_Fri,
+            AppResources.Hem_Weekday_Sat,
+            AppResources.Hem_Weekday_Sun
+        };
         var items = new List<DayStreakItem>(daysBack + 1 + daysForward);
 
         for (int i = -daysBack; i <= daysForward; i++)
