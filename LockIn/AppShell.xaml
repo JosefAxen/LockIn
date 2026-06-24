@@ -4,6 +4,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:views="clr-namespace:LockIn.Views"
+    xmlns:loc="clr-namespace:LockIn.Resources.Strings"
     Title="LockIn"
     Shell.NavBarIsVisible="False"
     BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource ForgeBackground}}"
@@ -13,26 +14,11 @@
     Shell.TabBarBackgroundColor="Transparent">
 
     <TabBar>
-        <ShellContent Title="Hem"
-                      Icon="tab_home.png"
-                      Route="HemPage"
-                      ContentTemplate="{DataTemplate views:HemPage}" />
-        <ShellContent Title="Träna"
-                      Icon="tab_train.png"
-                      Route="TrainPage"
-                      ContentTemplate="{DataTemplate views:TrainPage}" />
-        <ShellContent Title="Historik"
-                      Icon="tab_history.png"
-                      Route="HistoryPage"
-                      ContentTemplate="{DataTemplate views:HistoryPage}" />
-        <ShellContent Title="Bibliotek"
-                      Icon="tab_library.png"
-                      Route="LibraryPage"
-                      ContentTemplate="{DataTemplate views:LibraryPage}" />
-        <ShellContent Title="Kropp"
-                      Icon="ic_ruler.png"
-                      Route="KroppPage"
-                      ContentTemplate="{DataTemplate views:KroppPage}" />
+        <ShellContent Title="{loc:Localize Tab_Home}"    Icon="tab_home.png"    Route="HemPage"     ContentTemplate="{DataTemplate views:HemPage}" />
+        <ShellContent Title="{loc:Localize Tab_Train}"   Icon="tab_train.png"   Route="TrainPage"   ContentTemplate="{DataTemplate views:TrainPage}" />
+        <ShellContent Title="{loc:Localize Tab_History}" Icon="tab_history.png" Route="HistoryPage" ContentTemplate="{DataTemplate views:HistoryPage}" />
+        <ShellContent Title="{loc:Localize Tab_Library}" Icon="tab_library.png" Route="LibraryPage" ContentTemplate="{DataTemplate views:LibraryPage}" />
+        <ShellContent Title="{loc:Localize Tab_Body}"    Icon="ic_ruler.png"    Route="KroppPage"   ContentTemplate="{DataTemplate views:KroppPage}" />
     </TabBar>
 
 </Shell>

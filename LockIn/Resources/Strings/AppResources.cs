@@ -22,8 +22,30 @@ public static class AppResources
         ResourceManager.GetString(key, Culture) ?? key;
 
     // ── Common ─────────────────────────────────────────────────────────
-    public static string Common_Cancel => Get(nameof(Common_Cancel));
-    public static string Common_Skip   => Get(nameof(Common_Skip));
+    public static string Common_Cancel   => Get(nameof(Common_Cancel));
+    public static string Common_Skip     => Get(nameof(Common_Skip));
+    public static string Common_OK       => Get(nameof(Common_OK));
+    public static string Common_Save     => Get(nameof(Common_Save));
+    public static string Common_Delete   => Get(nameof(Common_Delete));
+    public static string Common_Add      => Get(nameof(Common_Add));
+    public static string Common_Edit     => Get(nameof(Common_Edit));
+    public static string Common_Done     => Get(nameof(Common_Done));
+    public static string Common_Close    => Get(nameof(Common_Close));
+    public static string Common_Back     => Get(nameof(Common_Back));
+    public static string Common_Yes      => Get(nameof(Common_Yes));
+    public static string Common_No       => Get(nameof(Common_No));
+    public static string Common_Continue => Get(nameof(Common_Continue));
+    public static string Common_Undo     => Get(nameof(Common_Undo));
+    public static string Common_Loading  => Get(nameof(Common_Loading));
+    public static string Common_Error    => Get(nameof(Common_Error));
+    public static string Common_Confirm  => Get(nameof(Common_Confirm));
+
+    // ── Tab titles ─────────────────────────────────────────────────────
+    public static string Tab_Home    => Get(nameof(Tab_Home));
+    public static string Tab_Train   => Get(nameof(Tab_Train));
+    public static string Tab_History => Get(nameof(Tab_History));
+    public static string Tab_Library => Get(nameof(Tab_Library));
+    public static string Tab_Body    => Get(nameof(Tab_Body));
 
     // ── Onboarding ─────────────────────────────────────────────────────
     public static string Onboarding_SkipLink           => Get(nameof(Onboarding_SkipLink));
