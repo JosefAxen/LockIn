@@ -528,6 +528,12 @@
   <data name="ProgramDetail_Activate_Confirm" xml:space="preserve"><value>Aktivera</value></data>
   <data name="ProgramDetail_Toast_Created_Format" xml:space="preserve"><value>{0} mallar skapade! Hitta dem under Mallar i Bibliotek.</value></data>
 
+  <!-- Achievements — XAML labels -->
+  <data name="Achievements_Title" xml:space="preserve"><value>ACHIEVEMENTS</value></data>
+
+  <!-- Achievements — VM strings -->
+  <data name="Achievements_Unlocked" xml:space="preserve"><value>UPPLÅSTA</value></data>
+
   <!-- Settings — XAML labels -->
   <data name="Settings_PageTitle" xml:space="preserve"><value>INSTÄLLNINGAR</value></data>
   <data name="Settings_Section_Profile" xml:space="preserve"><value>PROFIL</value></data>

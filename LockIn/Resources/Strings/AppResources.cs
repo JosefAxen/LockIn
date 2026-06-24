@@ -410,6 +410,10 @@ public static class AppResources
     public static string ProgramDetail_Activate_Confirm     => Get(nameof(ProgramDetail_Activate_Confirm));
     public static string ProgramDetail_Toast_Created_Format => Get(nameof(ProgramDetail_Toast_Created_Format));
 
+    // ── Achievements ────────────────────────────────────────────────────
+    public static string Achievements_Title                 => Get(nameof(Achievements_Title));
+    public static string Achievements_Unlocked              => Get(nameof(Achievements_Unlocked));
+
     // ── Settings ─────────────────────────────────────────────────────────
     public static string Settings_PageTitle             => Get(nameof(Settings_PageTitle));
     public static string Settings_Section_Profile       => Get(nameof(Settings_Section_Profile));

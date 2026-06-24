@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:LockIn.ViewModels"
              xmlns:controls="clr-namespace:LockIn.Controls"
+             xmlns:loc="clr-namespace:LockIn.Resources.Strings"
              x:Class="LockIn.Views.AchievementsPage"
              x:DataType="vm:AchievementsViewModel"
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
@@ -55,7 +56,7 @@
                 </Border.GestureRecognizers>
             </Border>
             <Label Grid.Column="1"
-                   Text="ACHIEVEMENTS"
+                   Text="{loc:Localize Achievements_Title}"
                    Style="{StaticResource DisplayLabel}"
                    FontSize="28"
                    HorizontalOptions="Center" VerticalOptions="Center"/>

@@ -404,3 +404,9 @@ C:\Users\JosefAxen\Gym\LockIn\obj\Debug\net10.0-ios\iossimulator-x64\resizetizer
 C:\Users\JosefAxen\Gym\LockIn\obj\Debug\net10.0-ios\iossimulator-x64\resizetizer\sp\splash_843B827595037342DEAEC6D410F9AC2239AFABEA097C6112C862A91660742871.png
 C:\Users\JosefAxen\Gym\LockIn\obj\Debug\net10.0-ios\iossimulator-x64\resizetizer\sp\splash_843B827595037342DEAEC6D410F9AC2239AFABEA097C6112C862A91660742871@2x.png
 C:\Users\JosefAxen\Gym\LockIn\obj\Debug\net10.0-ios\iossimulator-x64\resizetizer\sp\splash_843B827595037342DEAEC6D410F9AC2239AFABEA097C6112C862A91660742871@3x.png
+C:\Users\JosefAxen\Gym\LockIn\bin\Debug\net10.0-ios\iossimulator-x64\en\LockIn.resources.dll
+C:\Users\JosefAxen\Gym\LockIn\obj\Debug\net10.0-ios\iossimulator-x64\LockIn.Resources.Strings.AppResources.resources
+C:\Users\JosefAxen\Gym\LockIn\obj\Debug\net10.0-ios\iossimulator-x64\LockIn.Resources.Strings.AppResources.en.resources
+C:\Users\JosefAxen\Gym\LockIn\obj\Debug\net10.0-ios\iossimulator-x64\LockIn.csproj.GenerateResource.cache
+C:\Users\JosefAxen\Gym\LockIn\obj\Debug\net10.0-ios\iossimulator-x64\en\LockIn.resources.cs
+C:\Users\JosefAxen\Gym\LockIn\obj\Debug\net10.0-ios\iossimulator-x64\en\LockIn.resources.dll

@@ -528,6 +528,12 @@
   <data name="ProgramDetail_Activate_Confirm" xml:space="preserve"><value>Activate</value></data>
   <data name="ProgramDetail_Toast_Created_Format" xml:space="preserve"><value>{0} templates created! Find them under Templates in Library.</value></data>
 
+  <!-- Achievements — XAML labels -->
+  <data name="Achievements_Title" xml:space="preserve"><value>ACHIEVEMENTS</value></data>
+
+  <!-- Achievements — VM strings -->
+  <data name="Achievements_Unlocked" xml:space="preserve"><value>UNLOCKED</value></data>
+
   <!-- Settings — XAML labels -->
   <data name="Settings_PageTitle" xml:space="preserve"><value>SETTINGS</value></data>
   <data name="Settings_Section_Profile" xml:space="preserve"><value>PROFILE</value></data>

@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn.Models;
+using LockIn.Resources.Strings;
 using LockIn.Services;
 using System.Collections.ObjectModel;
 
@@ -34,7 +35,7 @@ public partial class AchievementsViewModel(DatabaseService db) : ObservableObjec
             });
         }
 
-        UnlockedCount = $"{unlockedIds.Count}/{AchievementService.All.Count} UPPLÅSTA";
+        UnlockedCount = $"{unlockedIds.Count}/{AchievementService.All.Count} {AppResources.Achievements_Unlocked}";
         IsLoading = false;
     }
 
