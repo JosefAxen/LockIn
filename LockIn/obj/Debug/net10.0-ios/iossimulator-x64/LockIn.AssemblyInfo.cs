@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LockIn")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+4e45b8edf1a97a2343cfbafac2e9578b58519958")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+2248d98fd809629096751ae586a21dee3faa271b")]
 [assembly: System.Reflection.AssemblyProductAttribute("LockIn")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LockIn")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

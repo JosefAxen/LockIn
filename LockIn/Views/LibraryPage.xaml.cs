@@ -101,7 +101,9 @@ public partial class LibraryPage : ContentPage
         var newWidth = ve.Width / 3.0;
         if (Math.Abs(newWidth - _tabColumnWidth) < 0.5) return;
         _tabColumnWidth = newWidth;
-        TabIndicator.WidthRequest = _tabColumnWidth;
+        TabIndicatorExercises.WidthRequest = _tabColumnWidth;
+        TabIndicatorTemplates.WidthRequest = _tabColumnWidth;
+        TabIndicatorPrograms.WidthRequest  = _tabColumnWidth;
         UpdateAllTabIndicators(animated: false);
     }
 
@@ -110,9 +112,17 @@ public partial class LibraryPage : ContentPage
         if (_tabColumnWidth <= 0) return;
         var targetX = _vm.SelectedTab * _tabColumnWidth;
         if (animated)
-            TabIndicator.TranslateTo(targetX, 0, 280, Easing.SpringOut);
+        {
+            TabIndicatorExercises.TranslateTo(targetX, 0, 280, Easing.SpringOut);
+            TabIndicatorTemplates.TranslateTo(targetX, 0, 280, Easing.SpringOut);
+            TabIndicatorPrograms.TranslateTo(targetX, 0, 280, Easing.SpringOut);
+        }
         else
-            TabIndicator.TranslationX = targetX;
+        {
+            TabIndicatorExercises.TranslationX = targetX;
+            TabIndicatorTemplates.TranslationX = targetX;
+            TabIndicatorPrograms.TranslationX  = targetX;
+        }
     }
 
     private void OnWorkoutStateChanged()
