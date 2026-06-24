@@ -6,10 +6,11 @@
              xmlns:data="clr-namespace:LockIn.Data"
              xmlns:views="clr-namespace:LockIn.Views"
              xmlns:controls="clr-namespace:LockIn.Controls"
+             xmlns:loc="clr-namespace:LockIn.Resources.Strings"
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
              x:Class="LockIn.Views.LibraryPage"
              x:DataType="vm:LibraryViewModel"
-             Title="Bibliotek"
+             Title="{loc:Localize Tab_Library}"
              Shell.NavBarIsVisible="False"
              BackgroundColor="Transparent"
              ios:Page.UseSafeArea="False">
@@ -83,13 +84,13 @@
                 <VerticalStackLayout Spacing="0">
                     <!-- Sidrubrik — scrollar bort med innehållet -->
                     <Grid ColumnDefinitions="*,Auto" Padding="16,56,16,8">
-                        <Label Grid.Column="0" Text="BIBLIOTEK"
+                        <Label Grid.Column="0" Text="{loc:Localize Library_Title}"
                                FontFamily="BebasNeue" FontSize="34" CharacterSpacing="1"
                                TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
                                VerticalOptions="Center"/>
                         <Button Grid.Column="1"
                                 IsVisible="{Binding ShowActionButton}"
-                                Text="+ Lägg till"
+                                Text="{loc:Localize Library_AddButton}"
                                 Style="{StaticResource SecondaryButton}"
                                 Padding="12,8" HeightRequest="36"
                                 Command="{Binding ActionButtonCommand}"
@@ -111,7 +112,7 @@
                                     HorizontalOptions="Start"
                                     VerticalOptions="Fill"/>
                             <Border Grid.Column="0" BackgroundColor="Transparent" StrokeThickness="0" Padding="0,9">
-                                <Label Text="ÖVNINGAR" TextColor="{Binding Tab0Fg}"
+                                <Label Text="{loc:Localize Library_Tab_Exercises}" TextColor="{Binding Tab0Fg}"
                                        FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
                                        HorizontalOptions="Center" VerticalOptions="Center"/>
                                 <Border.GestureRecognizers>
@@ -119,7 +120,7 @@
                                 </Border.GestureRecognizers>
                             </Border>
                             <Border Grid.Column="1" BackgroundColor="Transparent" StrokeThickness="0" Padding="0,9">
-                                <Label Text="MALLAR" TextColor="{Binding Tab1Fg}"
+                                <Label Text="{loc:Localize Library_Tab_Templates}" TextColor="{Binding Tab1Fg}"
                                        FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
                                        HorizontalOptions="Center" VerticalOptions="Center"/>
                                 <Border.GestureRecognizers>
@@ -127,7 +128,7 @@
                                 </Border.GestureRecognizers>
                             </Border>
                             <Border Grid.Column="2" BackgroundColor="Transparent" StrokeThickness="0" Padding="0,9">
-                                <Label Text="PROGRAM" TextColor="{Binding Tab2Fg}"
+                                <Label Text="{loc:Localize Library_Tab_Programs}" TextColor="{Binding Tab2Fg}"
                                        FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
                                        HorizontalOptions="Center" VerticalOptions="Center"/>
                                 <Border.GestureRecognizers>
@@ -151,7 +152,7 @@
                                    VerticalOptions="Center"/>
                             <Entry Grid.Column="1"
                                    Text="{Binding Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}}, Path=SearchText}"
-                                   Placeholder="Sök övning..."
+                                   Placeholder="{loc:Localize Library_SearchPlaceholder}"
                                    PlaceholderColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"
                                    BackgroundColor="Transparent"
                                    TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
@@ -253,7 +254,7 @@
                                         BackgroundColor="{StaticResource ForgeAccentOrangeDim}"
                                         StrokeShape="RoundRectangle 8"
                                         StrokeThickness="0" Padding="8,4">
-                                    <Label Text="EGNA" TextColor="{StaticResource ForgeAccentOrange}"
+                                    <Label Text="{loc:Localize Library_Badge_Custom}" TextColor="{StaticResource ForgeAccentOrange}"
                                            FontSize="10" FontFamily="BebasNeue" CharacterSpacing="1"/>
                                 </Border>
                                 <Border IsVisible="{Binding Equipment, Converter={StaticResource EquipmentNotOtherConverter}}"
@@ -277,13 +278,13 @@
             <VerticalStackLayout Spacing="0">
                 <!-- Sidrubrik — scrollar bort med innehållet -->
                 <Grid ColumnDefinitions="*,Auto" Padding="16,56,16,8">
-                    <Label Grid.Column="0" Text="BIBLIOTEK"
+                    <Label Grid.Column="0" Text="{loc:Localize Library_Title}"
                            FontFamily="BebasNeue" FontSize="34" CharacterSpacing="1"
                            TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
                            VerticalOptions="Center"/>
                     <Button Grid.Column="1"
                             IsVisible="{Binding ShowActionButton}"
-                            Text="+ Lägg till"
+                            Text="{loc:Localize Library_AddButton}"
                             Style="{StaticResource SecondaryButton}"
                             Padding="12,8" HeightRequest="36"
                             Command="{Binding ActionButtonCommand}"
@@ -305,7 +306,7 @@
                                 HorizontalOptions="Start"
                                 VerticalOptions="Fill"/>
                         <Border Grid.Column="0" BackgroundColor="Transparent" StrokeThickness="0" Padding="0,9">
-                            <Label Text="ÖVNINGAR" TextColor="{Binding Tab0Fg}"
+                            <Label Text="{loc:Localize Library_Tab_Exercises}" TextColor="{Binding Tab0Fg}"
                                    FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
                                    HorizontalOptions="Center" VerticalOptions="Center"/>
                             <Border.GestureRecognizers>
@@ -313,7 +314,7 @@
                             </Border.GestureRecognizers>
                         </Border>
                         <Border Grid.Column="1" BackgroundColor="Transparent" StrokeThickness="0" Padding="0,9">
-                            <Label Text="MALLAR" TextColor="{Binding Tab1Fg}"
+                            <Label Text="{loc:Localize Library_Tab_Templates}" TextColor="{Binding Tab1Fg}"
                                    FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
                                    HorizontalOptions="Center" VerticalOptions="Center"/>
                             <Border.GestureRecognizers>
@@ -321,7 +322,7 @@
                             </Border.GestureRecognizers>
                         </Border>
                         <Border Grid.Column="2" BackgroundColor="Transparent" StrokeThickness="0" Padding="0,9">
-                            <Label Text="PROGRAM" TextColor="{Binding Tab2Fg}"
+                            <Label Text="{loc:Localize Library_Tab_Programs}" TextColor="{Binding Tab2Fg}"
                                    FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
                                    HorizontalOptions="Center" VerticalOptions="Center"/>
                             <Border.GestureRecognizers>
@@ -387,12 +388,12 @@
                     </BindableLayout.ItemTemplate>
                     <BindableLayout.EmptyView>
                         <StackLayout Padding="24,40" Spacing="8">
-                            <Label Text="INGA MALLAR"
+                            <Label Text="{loc:Localize Library_NoTemplates_Title}"
                                    Style="{StaticResource DisplayLabel}"
                                    FontSize="22"
                                    HorizontalOptions="Center"
                                    TextColor="{StaticResource ForgeMuted}"/>
-                            <Label Text="Tryck '+ Lägg till' för att skapa din första mall."
+                            <Label Text="{loc:Localize Library_NoTemplates_Body}"
                                    Style="{StaticResource MutedLabel}"
                                    HorizontalTextAlignment="Center"/>
                         </StackLayout>
@@ -407,7 +408,7 @@
             <VerticalStackLayout Spacing="0">
                 <!-- Sidrubrik — scrollar bort med innehållet -->
                 <Grid ColumnDefinitions="*,Auto" Padding="16,56,16,8">
-                    <Label Grid.Column="0" Text="BIBLIOTEK"
+                    <Label Grid.Column="0" Text="{loc:Localize Library_Title}"
                            FontFamily="BebasNeue" FontSize="34" CharacterSpacing="1"
                            TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
                            VerticalOptions="Center"/>
@@ -428,7 +429,7 @@
                                 HorizontalOptions="Start"
                                 VerticalOptions="Fill"/>
                         <Border Grid.Column="0" BackgroundColor="Transparent" StrokeThickness="0" Padding="0,9">
-                            <Label Text="ÖVNINGAR" TextColor="{Binding Tab0Fg}"
+                            <Label Text="{loc:Localize Library_Tab_Exercises}" TextColor="{Binding Tab0Fg}"
                                    FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
                                    HorizontalOptions="Center" VerticalOptions="Center"/>
                             <Border.GestureRecognizers>
@@ -436,7 +437,7 @@
                             </Border.GestureRecognizers>
                         </Border>
                         <Border Grid.Column="1" BackgroundColor="Transparent" StrokeThickness="0" Padding="0,9">
-                            <Label Text="MALLAR" TextColor="{Binding Tab1Fg}"
+                            <Label Text="{loc:Localize Library_Tab_Templates}" TextColor="{Binding Tab1Fg}"
                                    FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
                                    HorizontalOptions="Center" VerticalOptions="Center"/>
                             <Border.GestureRecognizers>
@@ -444,7 +445,7 @@
                             </Border.GestureRecognizers>
                         </Border>
                         <Border Grid.Column="2" BackgroundColor="Transparent" StrokeThickness="0" Padding="0,9">
-                            <Label Text="PROGRAM" TextColor="{Binding Tab2Fg}"
+                            <Label Text="{loc:Localize Library_Tab_Programs}" TextColor="{Binding Tab2Fg}"
                                    FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
                                    HorizontalOptions="Center" VerticalOptions="Center"/>
                             <Border.GestureRecognizers>
@@ -480,7 +481,7 @@
                                                 BackgroundColor="{StaticResource ForgeAccentPurpleDim}"
                                                 StrokeShape="RoundRectangle 10"
                                                 StrokeThickness="0" Padding="10,5">
-                                            <Label Text="{Binding DaysPerWeek, StringFormat='{0} dgr/v'}"
+                                            <Label Text="{Binding DaysPerWeek, StringFormat={loc:Localize Library_DaysPerWeek_Format}}"
                                                    TextColor="{StaticResource ForgeAccentPurple}"
                                                    FontFamily="DMSansMedium" FontSize="12"/>
                                         </Border>
@@ -488,7 +489,7 @@
                                     <Label Text="{Binding Description}"
                                            Style="{StaticResource MutedLabel}"
                                            LineBreakMode="WordWrap"/>
-                                    <Label Text="SE PROGRAM →"
+                                    <Label Text="{loc:Localize Library_ViewProgram}"
                                            TextColor="{StaticResource ForgeAccentPurple}"
                                            FontFamily="BebasNeue" FontSize="13"
                                            CharacterSpacing="2"/>
@@ -514,13 +515,13 @@
                 </BoxView.Background>
             </BoxView>
             <Grid Padding="20,14,16,12" VerticalOptions="Start">
-                <Label Text="BIBLIOTEK"
+                <Label Text="{loc:Localize Library_Title}"
                        HorizontalOptions="Center" HorizontalTextAlignment="Center"
                        Style="{StaticResource DisplayLabel}" FontSize="18"
                        VerticalOptions="Center"/>
                 <Button HorizontalOptions="End" VerticalOptions="Center"
                         IsVisible="{Binding ShowActionButton}"
-                        Text="+ Lägg till"
+                        Text="{loc:Localize Library_AddButton}"
                         Style="{StaticResource SecondaryButton}"
                         Padding="12,8" HeightRequest="36"
                         Command="{Binding ActionButtonCommand}"/>
@@ -555,7 +556,7 @@
                 <HorizontalStackLayout Spacing="11" VerticalOptions="Center">
                     <controls:ForgeLiveDotView x:Name="BannerPulseRing"
                                                VerticalOptions="Center"/>
-                    <Label Text="PASS PÅGÅR"
+                    <Label Text="{loc:Localize Hem_WorkoutBanner_Label}"
                            FontFamily="BebasNeue" FontSize="13" CharacterSpacing="3"
                            TextColor="{StaticResource ForgeText}"
                            VerticalOptions="Center"/>

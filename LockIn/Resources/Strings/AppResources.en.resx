@@ -319,4 +319,47 @@
   <data name="Hem_Sparkline_Calories" xml:space="preserve"><value>Calorie trend last 7 days</value></data>
   <data name="Hem_Sparkline_ActiveTime" xml:space="preserve"><value>Active time last 7 days</value></data>
   <data name="Hem_Sparkline_HeartRate" xml:space="preserve"><value>Max heart rate last 7 days</value></data>
+
+  <!-- Library — XAML labels -->
+  <data name="Library_Title" xml:space="preserve"><value>LIBRARY</value></data>
+  <data name="Library_AddButton" xml:space="preserve"><value>+ Add</value></data>
+  <data name="Library_Tab_Exercises" xml:space="preserve"><value>EXERCISES</value></data>
+  <data name="Library_Tab_Templates" xml:space="preserve"><value>TEMPLATES</value></data>
+  <data name="Library_Tab_Programs" xml:space="preserve"><value>PROGRAMS</value></data>
+  <data name="Library_SearchPlaceholder" xml:space="preserve"><value>Search exercise...</value></data>
+  <data name="Library_NoTemplates_Title" xml:space="preserve"><value>NO TEMPLATES</value></data>
+  <data name="Library_NoTemplates_Body" xml:space="preserve"><value>Tap '+ Add' to create your first template.</value></data>
+  <data name="Library_Badge_Custom" xml:space="preserve"><value>CUSTOM</value></data>
+  <data name="Library_ViewProgram" xml:space="preserve"><value>VIEW PROGRAM →</value></data>
+  <data name="Library_DaysPerWeek_Format" xml:space="preserve"><value>{0} d/wk</value></data>
+
+  <!-- Library — VM strings -->
+  <data name="Library_Chip_All" xml:space="preserve"><value>ALL</value></data>
+  <data name="Library_DeleteTemplate_Title" xml:space="preserve"><value>Delete template</value></data>
+  <data name="Library_DeleteTemplate_Body_Format" xml:space="preserve"><value>Delete "{0}"?</value></data>
+
+  <!-- Library — Muscle group labels -->
+  <data name="Library_Muscle_Chest" xml:space="preserve"><value>Chest</value></data>
+  <data name="Library_Muscle_Back" xml:space="preserve"><value>Back</value></data>
+  <data name="Library_Muscle_Shoulders" xml:space="preserve"><value>Shoulders</value></data>
+  <data name="Library_Muscle_Biceps" xml:space="preserve"><value>Biceps</value></data>
+  <data name="Library_Muscle_Triceps" xml:space="preserve"><value>Triceps</value></data>
+  <data name="Library_Muscle_Forearms" xml:space="preserve"><value>Forearms</value></data>
+  <data name="Library_Muscle_Legs" xml:space="preserve"><value>Legs</value></data>
+  <data name="Library_Muscle_Core" xml:space="preserve"><value>Core</value></data>
+  <data name="Library_Muscle_FullBody" xml:space="preserve"><value>Full Body</value></data>
+  <data name="Library_Muscle_Other" xml:space="preserve"><value>Other</value></data>
+
+  <!-- Library — Equipment type labels -->
+  <data name="Library_Equipment_Barbell" xml:space="preserve"><value>BARBELL</value></data>
+  <data name="Library_Equipment_Dumbbell" xml:space="preserve"><value>DUMBBELL</value></data>
+  <data name="Library_Equipment_Cable" xml:space="preserve"><value>CABLE</value></data>
+  <data name="Library_Equipment_Machine" xml:space="preserve"><value>MACHINE</value></data>
+  <data name="Library_Equipment_Bodyweight" xml:space="preserve"><value>BODYWEIGHT</value></data>
+  <data name="Library_Equipment_EZBar" xml:space="preserve"><value>EZ BAR</value></data>
+  <data name="Library_Equipment_Kettlebell" xml:space="preserve"><value>KETTLEBELL</value></data>
+  <data name="Library_Equipment_Bands" xml:space="preserve"><value>BANDS</value></data>
+  <data name="Library_Equipment_FoamRoll" xml:space="preserve"><value>FOAM ROLL</value></data>
+  <data name="Library_Equipment_MedicineBall" xml:space="preserve"><value>MEDICINE BALL</value></data>
+  <data name="Library_Equipment_Other" xml:space="preserve"><value>OTHER</value></data>
 </root>

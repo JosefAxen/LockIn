@@ -221,4 +221,41 @@ public static class AppResources
     public static string Hem_Sparkline_Calories         => Get(nameof(Hem_Sparkline_Calories));
     public static string Hem_Sparkline_ActiveTime       => Get(nameof(Hem_Sparkline_ActiveTime));
     public static string Hem_Sparkline_HeartRate        => Get(nameof(Hem_Sparkline_HeartRate));
+
+    // ── Library ─────────────────────────────────────────────────────────
+    public static string Library_Title                      => Get(nameof(Library_Title));
+    public static string Library_AddButton                  => Get(nameof(Library_AddButton));
+    public static string Library_Tab_Exercises              => Get(nameof(Library_Tab_Exercises));
+    public static string Library_Tab_Templates              => Get(nameof(Library_Tab_Templates));
+    public static string Library_Tab_Programs               => Get(nameof(Library_Tab_Programs));
+    public static string Library_SearchPlaceholder          => Get(nameof(Library_SearchPlaceholder));
+    public static string Library_NoTemplates_Title          => Get(nameof(Library_NoTemplates_Title));
+    public static string Library_NoTemplates_Body           => Get(nameof(Library_NoTemplates_Body));
+    public static string Library_Badge_Custom               => Get(nameof(Library_Badge_Custom));
+    public static string Library_ViewProgram                => Get(nameof(Library_ViewProgram));
+    public static string Library_DaysPerWeek_Format         => Get(nameof(Library_DaysPerWeek_Format));
+    public static string Library_Chip_All                   => Get(nameof(Library_Chip_All));
+    public static string Library_DeleteTemplate_Title       => Get(nameof(Library_DeleteTemplate_Title));
+    public static string Library_DeleteTemplate_Body_Format => Get(nameof(Library_DeleteTemplate_Body_Format));
+    public static string Library_Muscle_Chest               => Get(nameof(Library_Muscle_Chest));
+    public static string Library_Muscle_Back                => Get(nameof(Library_Muscle_Back));
+    public static string Library_Muscle_Shoulders           => Get(nameof(Library_Muscle_Shoulders));
+    public static string Library_Muscle_Biceps              => Get(nameof(Library_Muscle_Biceps));
+    public static string Library_Muscle_Triceps             => Get(nameof(Library_Muscle_Triceps));
+    public static string Library_Muscle_Forearms            => Get(nameof(Library_Muscle_Forearms));
+    public static string Library_Muscle_Legs                => Get(nameof(Library_Muscle_Legs));
+    public static string Library_Muscle_Core                => Get(nameof(Library_Muscle_Core));
+    public static string Library_Muscle_FullBody            => Get(nameof(Library_Muscle_FullBody));
+    public static string Library_Muscle_Other               => Get(nameof(Library_Muscle_Other));
+    public static string Library_Equipment_Barbell          => Get(nameof(Library_Equipment_Barbell));
+    public static string Library_Equipment_Dumbbell         => Get(nameof(Library_Equipment_Dumbbell));
+    public static string Library_Equipment_Cable            => Get(nameof(Library_Equipment_Cable));
+    public static string Library_Equipment_Machine          => Get(nameof(Library_Equipment_Machine));
+    public static string Library_Equipment_Bodyweight       => Get(nameof(Library_Equipment_Bodyweight));
+    public static string Library_Equipment_EZBar            => Get(nameof(Library_Equipment_EZBar));
+    public static string Library_Equipment_Kettlebell       => Get(nameof(Library_Equipment_Kettlebell));
+    public static string Library_Equipment_Bands            => Get(nameof(Library_Equipment_Bands));
+    public static string Library_Equipment_FoamRoll         => Get(nameof(Library_Equipment_FoamRoll));
+    public static string Library_Equipment_MedicineBall     => Get(nameof(Library_Equipment_MedicineBall));
+    public static string Library_Equipment_Other            => Get(nameof(Library_Equipment_Other));
 }

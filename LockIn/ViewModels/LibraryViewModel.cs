@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using LockIn;
 using LockIn.Data;
 using LockIn.Models;
+using LockIn.Resources.Strings;
 using LockIn.Services;
 using LockIn.Views;
 using System.Collections.ObjectModel;
@@ -97,12 +98,12 @@ public partial class LibraryViewModel(DatabaseService db) : ObservableObject
         _allExercises = await db.GetExercisesAsync();
 
         MuscleChips.Clear();
-        MuscleChips.Add(new MuscleGroupChip { Label = "ALLA", MuscleGroup = null, IsSelected = true });
+        MuscleChips.Add(new MuscleGroupChip { Label = AppResources.Library_Chip_All, MuscleGroup = null, IsSelected = true });
         foreach (var g in _allExercises.Select(e => e.MuscleGroup).Distinct().OrderBy(g => g.ToString()))
             MuscleChips.Add(new MuscleGroupChip { Label = MuscleGroupLabel(g), MuscleGroup = g });
 
         EquipmentChips.Clear();
-        EquipmentChips.Add(new EquipmentChip { Label = "ALLA", Equipment = null, IsSelected = true });
+        EquipmentChips.Add(new EquipmentChip { Label = AppResources.Library_Chip_All, Equipment = null, IsSelected = true });
         foreach (var eq in _allExercises
             .Select(e => e.Equipment)
             .Where(e => e != EquipmentType.Other)
@@ -292,7 +293,9 @@ public partial class LibraryViewModel(DatabaseService db) : ObservableObject
     private async Task DeleteTemplateAsync(WorkoutTemplate template)
     {
         var confirmed = await Shell.Current.DisplayAlert(
-            "Ta bort mall", $"Ta bort \"{template.Name}\"?", "Ta bort", "Avbryt");
+            AppResources.Library_DeleteTemplate_Title,
+            string.Format(AppResources.Library_DeleteTemplate_Body_Format, template.Name),
+            AppResources.Common_Delete, AppResources.Common_Cancel);
         if (!confirmed) return;
         await db.DeleteTemplateAsync(template);
         Templates.Remove(template);
@@ -315,31 +318,31 @@ public partial class LibraryViewModel(DatabaseService db) : ObservableObject
 
     private static string MuscleGroupLabel(MuscleGroup mg) => mg switch
     {
-        MuscleGroup.Chest     => "Bröst",
-        MuscleGroup.Back      => "Rygg",
-        MuscleGroup.Shoulders => "Axlar",
-        MuscleGroup.Biceps    => "Biceps",
-        MuscleGroup.Triceps   => "Triceps",
-        MuscleGroup.Forearms  => "Underarmar",
-        MuscleGroup.Legs      => "Ben",
-        MuscleGroup.Core      => "Core",
-        MuscleGroup.FullBody  => "Helkropp",
-        _                     => "Övrigt"
+        MuscleGroup.Chest     => AppResources.Library_Muscle_Chest,
+        MuscleGroup.Back      => AppResources.Library_Muscle_Back,
+        MuscleGroup.Shoulders => AppResources.Library_Muscle_Shoulders,
+        MuscleGroup.Biceps    => AppResources.Library_Muscle_Biceps,
+        MuscleGroup.Triceps   => AppResources.Library_Muscle_Triceps,
+        MuscleGroup.Forearms  => AppResources.Library_Muscle_Forearms,
+        MuscleGroup.Legs      => AppResources.Library_Muscle_Legs,
+        MuscleGroup.Core      => AppResources.Library_Muscle_Core,
+        MuscleGroup.FullBody  => AppResources.Library_Muscle_FullBody,
+        _                     => AppResources.Library_Muscle_Other
     };
 
     private static string EquipmentTypeLabel(EquipmentType e) => e switch
     {
-        EquipmentType.Barbell      => "SKIVSTÅNG",
-        EquipmentType.Dumbbell     => "HANTEL",
-        EquipmentType.Cable        => "KABEL",
-        EquipmentType.Machine      => "MASKIN",
-        EquipmentType.BodyOnly     => "KROPPSVIKT",
-        EquipmentType.EZBar        => "EZ-STÅNG",
-        EquipmentType.Kettlebell   => "KETTLEBELL",
-        EquipmentType.Bands        => "BAND",
-        EquipmentType.FoamRoll     => "FOAM ROLL",
-        EquipmentType.MedicineBall => "MEDICINBOLL",
-        _                          => "ÖVRIGT"
+        EquipmentType.Barbell      => AppResources.Library_Equipment_Barbell,
+        EquipmentType.Dumbbell     => AppResources.Library_Equipment_Dumbbell,
+        EquipmentType.Cable        => AppResources.Library_Equipment_Cable,
+        EquipmentType.Machine      => AppResources.Library_Equipment_Machine,
+        EquipmentType.BodyOnly     => AppResources.Library_Equipment_Bodyweight,
+        EquipmentType.EZBar        => AppResources.Library_Equipment_EZBar,
+        EquipmentType.Kettlebell   => AppResources.Library_Equipment_Kettlebell,
+        EquipmentType.Bands        => AppResources.Library_Equipment_Bands,
+        EquipmentType.FoamRoll     => AppResources.Library_Equipment_FoamRoll,
+        EquipmentType.MedicineBall => AppResources.Library_Equipment_MedicineBall,
+        _                          => AppResources.Library_Equipment_Other
     };
 }
 
