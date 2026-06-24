@@ -312,6 +312,11 @@ public static class AppResources
     public static string PostWorkout_SetsDisplay_Format       => Get(nameof(PostWorkout_SetsDisplay_Format));
     public static string PostWorkout_Epley1RM_Format          => Get(nameof(PostWorkout_Epley1RM_Format));
 
+    // ── ExercisePicker ───────────────────────────────────────────────────
+    public static string ExercisePicker_Title             => Get(nameof(ExercisePicker_Title));
+    public static string ExercisePicker_SearchPlaceholder => Get(nameof(ExercisePicker_SearchPlaceholder));
+    public static string ExercisePicker_CreateCustom      => Get(nameof(ExercisePicker_CreateCustom));
+
     // ── Library ─────────────────────────────────────────────────────────
     public static string Library_Title                      => Get(nameof(Library_Title));
     public static string Library_AddButton                  => Get(nameof(Library_AddButton));

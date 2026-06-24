@@ -4,6 +4,7 @@
              xmlns:vm="clr-namespace:LockIn.ViewModels"
              xmlns:views="clr-namespace:LockIn.Views"
              xmlns:controls="clr-namespace:LockIn.Controls"
+             xmlns:loc="clr-namespace:LockIn.Resources.Strings"
              x:Class="LockIn.Views.ExercisePickerPage"
              x:DataType="vm:ExercisePickerViewModel"
              Title="Välj övning"
@@ -37,7 +38,7 @@
                     <TapGestureRecognizer Tapped="OnBackClicked"/>
                 </Border.GestureRecognizers>
             </Border>
-            <Label Grid.Column="1" Text="VÄLJ ÖVNING"
+            <Label Grid.Column="1" Text="{loc:Localize ExercisePicker_Title}"
                    Style="{StaticResource DisplayLabel}"
                    FontSize="22" HorizontalOptions="Center" VerticalOptions="Center"/>
         </Grid>
@@ -64,7 +65,7 @@
                                    VerticalOptions="Center"/>
                             <Entry Grid.Column="1"
                                    Text="{Binding Source={RelativeSource AncestorType={x:Type vm:ExercisePickerViewModel}}, Path=SearchText}"
-                                   Placeholder="Sök övning..."
+                                   Placeholder="{loc:Localize ExercisePicker_SearchPlaceholder}"
                                    PlaceholderColor="{StaticResource ForgeMuted}"
                                    BackgroundColor="Transparent"
                                    TextColor="{StaticResource ForgeText}"
@@ -140,7 +141,7 @@
                                    TextColor="{StaticResource ForgeAccentOrange}"
                                    VerticalOptions="Center" HorizontalOptions="Center"/>
                             <Label Grid.Column="1"
-                                   Text="Lägg till custom övning"
+                                   Text="{loc:Localize ExercisePicker_CreateCustom}"
                                    FontFamily="DMSansMedium" FontSize="15"
                                    TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
                                    VerticalOptions="Center"/>
@@ -193,7 +194,7 @@
                                     StrokeShape="RoundRectangle 8"
                                     StrokeThickness="0" Padding="8,4"
                                     VerticalOptions="Center">
-                                <Label Text="CUSTOM" TextColor="{StaticResource ForgeAccentOrange}"
+                                <Label Text="{loc:Localize Library_Badge_Custom}" TextColor="{StaticResource ForgeAccentOrange}"
                                        FontSize="10" FontFamily="BebasNeue" CharacterSpacing="1"/>
                             </Border>
                         </Grid>

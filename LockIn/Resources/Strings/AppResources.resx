@@ -421,6 +421,11 @@
   <data name="SessionDetail_DeletePhoto_Title" xml:space="preserve"><value>Ta bort foto</value></data>
   <data name="SessionDetail_DeletePhoto_Body" xml:space="preserve"><value>Ta bort det här fotot?</value></data>
 
+  <!-- ExercisePicker -->
+  <data name="ExercisePicker_Title" xml:space="preserve"><value>VÄLJ ÖVNING</value></data>
+  <data name="ExercisePicker_SearchPlaceholder" xml:space="preserve"><value>Sök övning...</value></data>
+  <data name="ExercisePicker_CreateCustom" xml:space="preserve"><value>Lägg till custom övning</value></data>
+
   <!-- Library — Equipment type labels -->
   <data name="Library_Equipment_Barbell" xml:space="preserve"><value>SKIVSTÅNG</value></data>
 

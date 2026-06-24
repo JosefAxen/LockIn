@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn;
 using LockIn.Models;
+using LockIn.Resources.Strings;
 using LockIn.Services;
 using System.Collections.ObjectModel;
 
@@ -42,13 +43,13 @@ public partial class ExercisePickerViewModel(DatabaseService db) : ObservableObj
         _allExercises = await db.GetExercisesAsync();
 
         MuscleChips.Clear();
-        MuscleChips.Add(new MuscleGroupChip { Label = "ALLA", MuscleGroup = null, IsSelected = true });
+        MuscleChips.Add(new MuscleGroupChip { Label = AppResources.Library_Chip_All, MuscleGroup = null, IsSelected = true });
         var groups = _allExercises.Select(e => e.MuscleGroup).Distinct().OrderBy(g => g.ToString());
         foreach (var g in groups)
             MuscleChips.Add(new MuscleGroupChip { Label = MuscleGroupLabel(g), MuscleGroup = g });
 
         EquipmentChips.Clear();
-        EquipmentChips.Add(new EquipmentChip { Label = "ALLA", Equipment = null, IsSelected = true });
+        EquipmentChips.Add(new EquipmentChip { Label = AppResources.Library_Chip_All, Equipment = null, IsSelected = true });
         foreach (var eq in _allExercises
             .Select(e => e.Equipment)
             .Where(e => e != EquipmentType.Other)
@@ -125,15 +126,15 @@ public partial class ExercisePickerViewModel(DatabaseService db) : ObservableObj
 
     private static string MuscleGroupLabel(MuscleGroup mg) => mg switch
     {
-        MuscleGroup.Chest     => "Bröst",
-        MuscleGroup.Back      => "Rygg",
-        MuscleGroup.Shoulders => "Axlar",
-        MuscleGroup.Biceps    => "Biceps",
-        MuscleGroup.Triceps   => "Triceps",
-        MuscleGroup.Legs      => "Ben",
-        MuscleGroup.Core      => "Core",
-        MuscleGroup.FullBody  => "Helkropp",
-        _                     => "Övrigt"
+        MuscleGroup.Chest     => AppResources.Library_Muscle_Chest,
+        MuscleGroup.Back      => AppResources.Library_Muscle_Back,
+        MuscleGroup.Shoulders => AppResources.Library_Muscle_Shoulders,
+        MuscleGroup.Biceps    => AppResources.Library_Muscle_Biceps,
+        MuscleGroup.Triceps   => AppResources.Library_Muscle_Triceps,
+        MuscleGroup.Legs      => AppResources.Library_Muscle_Legs,
+        MuscleGroup.Core      => AppResources.Library_Muscle_Core,
+        MuscleGroup.FullBody  => AppResources.Library_Muscle_FullBody,
+        _                     => AppResources.Library_Muscle_Other
     };
 
     private static Color GetMuscleColor(MuscleGroup mg) => mg switch
@@ -151,17 +152,17 @@ public partial class ExercisePickerViewModel(DatabaseService db) : ObservableObj
 
     private static string EquipmentTypeLabel(EquipmentType e) => e switch
     {
-        EquipmentType.Barbell      => "SKIVSTÅNG",
-        EquipmentType.Dumbbell     => "HANTEL",
-        EquipmentType.Cable        => "KABEL",
-        EquipmentType.Machine      => "MASKIN",
-        EquipmentType.BodyOnly     => "KROPPSVIKT",
-        EquipmentType.EZBar        => "EZ-STÅNG",
-        EquipmentType.Kettlebell   => "KETTLEBELL",
-        EquipmentType.Bands        => "BAND",
-        EquipmentType.FoamRoll     => "FOAM ROLL",
-        EquipmentType.MedicineBall => "MEDICINBOLL",
-        _                          => "ÖVRIGT"
+        EquipmentType.Barbell      => AppResources.Library_Equipment_Barbell,
+        EquipmentType.Dumbbell     => AppResources.Library_Equipment_Dumbbell,
+        EquipmentType.Cable        => AppResources.Library_Equipment_Cable,
+        EquipmentType.Machine      => AppResources.Library_Equipment_Machine,
+        EquipmentType.BodyOnly     => AppResources.Library_Equipment_Bodyweight,
+        EquipmentType.EZBar        => AppResources.Library_Equipment_EZBar,
+        EquipmentType.Kettlebell   => AppResources.Library_Equipment_Kettlebell,
+        EquipmentType.Bands        => AppResources.Library_Equipment_Bands,
+        EquipmentType.FoamRoll     => AppResources.Library_Equipment_FoamRoll,
+        EquipmentType.MedicineBall => AppResources.Library_Equipment_MedicineBall,
+        _                          => AppResources.Library_Equipment_Other
     };
 }
 
@@ -184,16 +185,16 @@ public class ExercisePickerRow
 
     private static string EquipmentTypeLabel(EquipmentType e) => e switch
     {
-        EquipmentType.Barbell      => "SKIVSTÅNG",
-        EquipmentType.Dumbbell     => "HANTEL",
-        EquipmentType.Cable        => "KABEL",
-        EquipmentType.Machine      => "MASKIN",
-        EquipmentType.BodyOnly     => "KROPPSVIKT",
-        EquipmentType.EZBar        => "EZ-STÅNG",
-        EquipmentType.Kettlebell   => "KETTLEBELL",
-        EquipmentType.Bands        => "BAND",
-        EquipmentType.FoamRoll     => "FOAM ROLL",
-        EquipmentType.MedicineBall => "MEDICINBOLL",
+        EquipmentType.Barbell      => AppResources.Library_Equipment_Barbell,
+        EquipmentType.Dumbbell     => AppResources.Library_Equipment_Dumbbell,
+        EquipmentType.Cable        => AppResources.Library_Equipment_Cable,
+        EquipmentType.Machine      => AppResources.Library_Equipment_Machine,
+        EquipmentType.BodyOnly     => AppResources.Library_Equipment_Bodyweight,
+        EquipmentType.EZBar        => AppResources.Library_Equipment_EZBar,
+        EquipmentType.Kettlebell   => AppResources.Library_Equipment_Kettlebell,
+        EquipmentType.Bands        => AppResources.Library_Equipment_Bands,
+        EquipmentType.FoamRoll     => AppResources.Library_Equipment_FoamRoll,
+        EquipmentType.MedicineBall => AppResources.Library_Equipment_MedicineBall,
         _                          => ""
     };
 }
