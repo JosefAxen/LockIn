@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn.Data;
+using LockIn.Resources.Strings;
 using LockIn.Services;
 using Microsoft.Extensions.DependencyInjection;
 using LockIn;
@@ -119,9 +120,10 @@ public partial class OnboardingViewModel(DatabaseService db) : ObservableObject
     private async Task SkipOnboardingAsync()
     {
         var ok = await Shell.Current.DisplayAlert(
-            "Hoppa över?",
-            "Du kan välja program senare i Bibliotek.",
-            "Hoppa över", "Avbryt");
+            AppResources.Onboarding_SkipDialogTitle,
+            AppResources.Onboarding_SkipDialogBody,
+            AppResources.Onboarding_SkipLink,
+            AppResources.Common_Cancel);
         if (!ok) return;
         await FinishOnboardingAsync(activateProgram: false);
     }
@@ -148,7 +150,9 @@ public partial class OnboardingViewModel(DatabaseService db) : ObservableObject
     }
 
     public string RecommendedDescription =>
-        RecommendedProgram is { } p ? $"{p.DaysPerWeek} dagar/vecka · {p.Days.Count} pass" : "";
+        RecommendedProgram is { } p
+            ? string.Format(AppResources.Onboarding_RecommendedFormat, p.DaysPerWeek, p.Days.Count)
+            : "";
 
     // ── Completion ─────────────────────────────────────────────────────────
 
