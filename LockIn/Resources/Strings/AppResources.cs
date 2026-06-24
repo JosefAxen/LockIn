@@ -252,6 +252,19 @@ public static class AppResources
     public static string Kropp_Prompt_Thighs_Body           => Get(nameof(Kropp_Prompt_Thighs_Body));
     public static string Kropp_DeleteMeasurement_Body_Format => Get(nameof(Kropp_DeleteMeasurement_Body_Format));
 
+    // ── SessionDetail ────────────────────────────────────────────────────
+    public static string SessionDetail_Col_Volume        => Get(nameof(SessionDetail_Col_Volume));
+    public static string SessionDetail_Col_Duration      => Get(nameof(SessionDetail_Col_Duration));
+    public static string SessionDetail_Col_PRs           => Get(nameof(SessionDetail_Col_PRs));
+    public static string SessionDetail_Notes             => Get(nameof(SessionDetail_Notes));
+    public static string SessionDetail_Photos            => Get(nameof(SessionDetail_Photos));
+    public static string SessionDetail_AddPhoto          => Get(nameof(SessionDetail_AddPhoto));
+    public static string SessionDetail_AddPhoto_Title    => Get(nameof(SessionDetail_AddPhoto_Title));
+    public static string SessionDetail_Photo_TakePhoto   => Get(nameof(SessionDetail_Photo_TakePhoto));
+    public static string SessionDetail_Photo_PickLibrary => Get(nameof(SessionDetail_Photo_PickLibrary));
+    public static string SessionDetail_DeletePhoto_Title => Get(nameof(SessionDetail_DeletePhoto_Title));
+    public static string SessionDetail_DeletePhoto_Body  => Get(nameof(SessionDetail_DeletePhoto_Body));
+
     // ── ActiveWorkout ────────────────────────────────────────────────────
     public static string ActiveWorkout_FreeWorkout                   => Get(nameof(ActiveWorkout_FreeWorkout));
     public static string ActiveWorkout_Superset                      => Get(nameof(ActiveWorkout_Superset));

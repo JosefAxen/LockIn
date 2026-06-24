@@ -406,6 +406,21 @@
   <data name="PostWorkout_SetsDisplay_Format" xml:space="preserve"><value>{0} set</value></data>
   <data name="PostWorkout_Epley1RM_Format" xml:space="preserve"><value>Est. 1RM {0} kg</value></data>
 
+  <!-- SessionDetail — XAML labels -->
+  <data name="SessionDetail_Col_Volume" xml:space="preserve"><value>VOLYM</value></data>
+  <data name="SessionDetail_Col_Duration" xml:space="preserve"><value>TID</value></data>
+  <data name="SessionDetail_Col_PRs" xml:space="preserve"><value>PRs</value></data>
+  <data name="SessionDetail_Notes" xml:space="preserve"><value>ANTECKNINGAR</value></data>
+  <data name="SessionDetail_Photos" xml:space="preserve"><value>FOTON</value></data>
+  <data name="SessionDetail_AddPhoto" xml:space="preserve"><value>+ FOTO</value></data>
+
+  <!-- SessionDetail — VM strings -->
+  <data name="SessionDetail_AddPhoto_Title" xml:space="preserve"><value>Lägg till foto</value></data>
+  <data name="SessionDetail_Photo_TakePhoto" xml:space="preserve"><value>Ta foto</value></data>
+  <data name="SessionDetail_Photo_PickLibrary" xml:space="preserve"><value>Välj från bibliotek</value></data>
+  <data name="SessionDetail_DeletePhoto_Title" xml:space="preserve"><value>Ta bort foto</value></data>
+  <data name="SessionDetail_DeletePhoto_Body" xml:space="preserve"><value>Ta bort det här fotot?</value></data>
+
   <!-- Library — Equipment type labels -->
   <data name="Library_Equipment_Barbell" xml:space="preserve"><value>SKIVSTÅNG</value></data>
 

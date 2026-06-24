@@ -5,6 +5,7 @@
              xmlns:svc="clr-namespace:LockIn.Services"
              xmlns:views="clr-namespace:LockIn.Views"
              xmlns:controls="clr-namespace:LockIn.Controls"
+             xmlns:res="clr-namespace:LockIn.Resources.Strings"
              x:Class="LockIn.Views.SessionDetailPage"
              x:DataType="vm:SessionDetailViewModel"
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
@@ -76,19 +77,19 @@
                                 <Label Text="{Binding VolumeDisplay}"
                                        FontFamily="BebasNeue" FontSize="24"
                                        TextColor="{StaticResource ForgeAccentBlue}"/>
-                                <Label Text="VOLYM" Style="{StaticResource SectionLabel}" FontSize="10"/>
+                                <Label Text="{x:Static res:AppResources.SessionDetail_Col_Volume}" Style="{StaticResource SectionLabel}" FontSize="10"/>
                             </StackLayout>
                             <StackLayout Grid.Column="1" Spacing="2">
                                 <Label Text="{Binding DurationDisplay}"
                                        FontFamily="BebasNeue" FontSize="24"
                                        TextColor="{StaticResource ForgeAccentAmber}"/>
-                                <Label Text="TID" Style="{StaticResource SectionLabel}" FontSize="10"/>
+                                <Label Text="{x:Static res:AppResources.SessionDetail_Col_Duration}" Style="{StaticResource SectionLabel}" FontSize="10"/>
                             </StackLayout>
                             <StackLayout Grid.Column="2" Spacing="2">
                                 <Label Text="{Binding PrCountValue}"
                                        FontFamily="BebasNeue" FontSize="24"
                                        TextColor="{StaticResource ForgeAccentAmber}"/>
-                                <Label Text="PRs" Style="{StaticResource SectionLabel}" FontSize="10"/>
+                                <Label Text="{x:Static res:AppResources.SessionDetail_Col_PRs}" Style="{StaticResource SectionLabel}" FontSize="10"/>
                             </StackLayout>
                         </Grid>
                     </StackLayout>
@@ -98,7 +99,7 @@
                 <Border Style="{StaticResource CardFrame}" Padding="16,14"
                         IsVisible="{Binding HasNotes}">
                     <VerticalStackLayout Spacing="6">
-                        <Label Text="ANTECKNINGAR" Style="{StaticResource SectionLabel}"/>
+                        <Label Text="{x:Static res:AppResources.SessionDetail_Notes}" Style="{StaticResource SectionLabel}"/>
                         <Label Text="{Binding SessionNotes}"
                                FontFamily="DMSansRegular" FontSize="14"
                                TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
@@ -108,9 +109,9 @@
 
                 <!-- Photos -->
                 <Grid ColumnDefinitions="*,Auto">
-                    <Label Grid.Column="0" Text="FOTON" Style="{StaticResource SectionLabel}"/>
+                    <Label Grid.Column="0" Text="{x:Static res:AppResources.SessionDetail_Photos}" Style="{StaticResource SectionLabel}"/>
                     <Button Grid.Column="1"
-                            Text="+ FOTO"
+                            Text="{x:Static res:AppResources.SessionDetail_AddPhoto}"
                             Style="{StaticResource SecondaryButton}"
                             FontFamily="BebasNeue" FontSize="13"
                             Padding="12,4" HeightRequest="32"
@@ -163,15 +164,15 @@
                                     <!-- Column headers -->
                                     <Grid ColumnDefinitions="24,*,*,*"
                                           Padding="16,0,16,6" ColumnSpacing="8">
-                                        <Label Grid.Column="0" Text="SET"
+                                        <Label Grid.Column="0" Text="{x:Static res:AppResources.ActiveWorkout_Col_Set}"
                                                Style="{StaticResource SectionLabel}" FontSize="10"/>
-                                        <Label Grid.Column="1" Text="KG"
+                                        <Label Grid.Column="1" Text="{x:Static res:AppResources.ActiveWorkout_Col_Weight}"
                                                Style="{StaticResource SectionLabel}" FontSize="10"
                                                HorizontalTextAlignment="Center"/>
-                                        <Label Grid.Column="2" Text="REPS"
+                                        <Label Grid.Column="2" Text="{x:Static res:AppResources.ActiveWorkout_Col_Reps}"
                                                Style="{StaticResource SectionLabel}" FontSize="10"
                                                HorizontalTextAlignment="Center"/>
-                                        <Label Grid.Column="3" Text="RIR"
+                                        <Label Grid.Column="3" Text="{x:Static res:AppResources.ActiveWorkout_Col_Rir}"
                                                Style="{StaticResource SectionLabel}" FontSize="10"
                                                HorizontalTextAlignment="Center"/>
                                     </Grid>

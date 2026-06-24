@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn.Models;
+using LockIn.Resources.Strings;
 using LockIn.Services;
 using System.Collections.ObjectModel;
 using static LockIn.Services.DatabaseService;
@@ -75,19 +76,19 @@ public partial class SessionDetailViewModel(DatabaseService db, PhotoService pho
     {
         if (_sessionId == 0) return;
 
-        var action = await Shell.Current.DisplayActionSheetAsync("Lägg till foto", "Avbryt", null, "Ta foto", "Välj från bibliotek");
+        var action = await Shell.Current.DisplayActionSheetAsync(AppResources.SessionDetail_AddPhoto_Title, AppResources.Common_Cancel, null, AppResources.SessionDetail_Photo_TakePhoto, AppResources.SessionDetail_Photo_PickLibrary);
         var dir = Path.Combine(FileSystem.AppDataDirectory, "photos");
         Directory.CreateDirectory(dir);
 
         try
         {
-            if (action == "Ta foto")
+            if (action == AppResources.SessionDetail_Photo_TakePhoto)
             {
                 var file = await MediaPicker.Default.CapturePhotoAsync();
                 if (file is not null)
                     await photos.SaveAsync(file, _sessionId, dir);
             }
-            else if (action == "Välj från bibliotek")
+            else if (action == AppResources.SessionDetail_Photo_PickLibrary)
             {
                 var files = await MediaPicker.Default.PickPhotosAsync();
                 if (files is not null)
@@ -104,7 +105,7 @@ public partial class SessionDetailViewModel(DatabaseService db, PhotoService pho
     [RelayCommand]
     private async Task DeletePhotoAsync(PhotoRow row)
     {
-        var confirmed = await Shell.Current.DisplayAlertAsync("Ta bort foto", "Ta bort det här fotot?", "Ta bort", "Avbryt");
+        var confirmed = await Shell.Current.DisplayAlertAsync(AppResources.SessionDetail_DeletePhoto_Title, AppResources.SessionDetail_DeletePhoto_Body, AppResources.Common_Delete, AppResources.Common_Cancel);
         if (!confirmed) return;
         await db.DeletePhotoAsync(row.Photo);
         Photos.Remove(row);
