@@ -18,7 +18,7 @@ public static class AppResources
     /// </summary>
     public static CultureInfo? Culture { get; set; }
 
-    public static string Get(string key) =>
+    internal static string Get(string key) =>
         ResourceManager.GetString(key, Culture) ?? key;
 
     // ── Common ─────────────────────────────────────────────────────────
