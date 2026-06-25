@@ -7,6 +7,7 @@ namespace LockIn.Resources.Strings;
 /// Saknad nyckel returnerar nyckelnamnet bokstavligt så missar syns utan att krascha.
 /// </summary>
 [ContentProperty(nameof(Key))]
+[AcceptEmptyServiceProvider]
 public class LocalizeExtension : IMarkupExtension<string>
 {
     public string Key { get; set; } = "";
