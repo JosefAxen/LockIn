@@ -75,7 +75,7 @@
 
                 <!-- Description -->
                 <Border Style="{StaticResource CardFrame}" Padding="16,14">
-                    <Label Text="{Binding Description}"
+                    <Label Text="{Binding LocalizedDescription}"
                            Style="{StaticResource MutedLabel}"
                            LineBreakMode="WordWrap"/>
                 </Border>
