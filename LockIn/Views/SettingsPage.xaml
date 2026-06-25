@@ -4,7 +4,7 @@
              xmlns:vm="clr-namespace:LockIn.ViewModels"
              xmlns:views="clr-namespace:LockIn.Views"
              xmlns:controls="clr-namespace:LockIn.Controls"
-             xmlns:loc="clr-namespace:LockIn.Localization"
+             xmlns:loc="clr-namespace:LockIn.Resources.Strings"
              x:Class="LockIn.Views.SettingsPage"
              x:DataType="vm:SettingsViewModel"
              Title="{loc:Localize Settings_PageTitle}"

@@ -18,6 +18,7 @@ public partial class ProgramDetailViewModel(DatabaseService db) : ObservableObje
     [ObservableProperty] private bool _isActivating;
 
     public List<ProgramDay> Days { get; private set; } = [];
+    public string LocalizedDescription => _program?.LocalizedDescription ?? "";
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)
     {
@@ -31,6 +32,7 @@ public partial class ProgramDetailViewModel(DatabaseService db) : ObservableObje
                 DaysLabel = string.Format(AppResources.ProgramDetail_DaysLabel_Format, _program.DaysPerWeek, _program.Days.Count);
                 Days = _program.Days;
                 OnPropertyChanged(nameof(Days));
+                OnPropertyChanged(nameof(LocalizedDescription));
             }
         }
     }
