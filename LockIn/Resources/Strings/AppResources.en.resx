@@ -713,4 +713,8 @@
   <data name="Program_531bbb_Day2_Label" xml:space="preserve"><value>Session B — Deadlift &amp; Press</value></data>
   <data name="Program_531bbb_Day3_Label" xml:space="preserve"><value>Session C — Strength &amp; Accessories</value></data>
 
+  <!-- Notifications -->
+  <data name="Notification_RestTimer_Title" xml:space="preserve"><value>Rest timer done!</value></data>
+  <data name="Notification_RestTimer_Body_Format" xml:space="preserve"><value>Time for your next set – {0}</value></data>
+
 </root>

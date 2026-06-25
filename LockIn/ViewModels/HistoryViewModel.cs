@@ -115,7 +115,7 @@ public partial class HistoryViewModel(DatabaseService db) : ObservableObject
     private async Task RefreshCalendarAsync()
     {
         TrainedDays = await db.GetTrainedDaysInMonthAsync(CalendarYear, CalendarMonth);
-        var culture = new System.Globalization.CultureInfo("sv-SE");
+        var culture = System.Globalization.CultureInfo.CurrentUICulture;
         CalendarTitle = new DateTime(CalendarYear, CalendarMonth, 1)
             .ToString("MMMM yyyy", culture).ToUpper();
         CalendarChanged?.Invoke();

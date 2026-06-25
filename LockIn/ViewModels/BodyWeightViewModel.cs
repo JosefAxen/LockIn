@@ -4,6 +4,7 @@ using LockIn.Models;
 using LockIn.Resources.Strings;
 using LockIn.Services;
 using System.Collections.ObjectModel;
+using System.Globalization;
 
 namespace LockIn.ViewModels;
 
@@ -32,7 +33,7 @@ public partial class BodyWeightViewModel(DatabaseService db) : ObservableObject
         {
             var latest = _allEntries[0];
             LatestWeight = $"{latest.WeightKg:F1} kg";
-            LatestDate   = latest.LoggedAt.ToString("d MMM yyyy");
+            LatestDate   = latest.LoggedAt.ToString("d MMM yyyy", CultureInfo.CurrentUICulture);
 
             ChartPoints = _allEntries
                 .OrderBy(e => e.LoggedAt)
@@ -80,7 +81,7 @@ public partial class BodyWeightViewModel(DatabaseService db) : ObservableObject
     private async Task DeleteEntryAsync(BodyWeightEntry entry)
     {
         var body = string.Format(AppResources.BodyWeight_DeleteBody_Format,
-            $"{entry.WeightKg:F1}", entry.LoggedAt.ToString("d MMM"));
+            $"{entry.WeightKg:F1}", entry.LoggedAt.ToString("d MMM", CultureInfo.CurrentUICulture));
         var confirmed = await Shell.Current.DisplayAlert(
             AppResources.Common_Delete, body,
             AppResources.Common_Delete, AppResources.Common_Cancel);

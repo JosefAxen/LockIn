@@ -713,4 +713,8 @@
   <data name="Program_531bbb_Day2_Label" xml:space="preserve"><value>Pass B — Marklyft &amp; Militärpress</value></data>
   <data name="Program_531bbb_Day3_Label" xml:space="preserve"><value>Pass C — Styrka &amp; Accessoarer</value></data>
 
+  <!-- Notifications -->
+  <data name="Notification_RestTimer_Title" xml:space="preserve"><value>Vilotimer klar!</value></data>
+  <data name="Notification_RestTimer_Body_Format" xml:space="preserve"><value>Dags för nästa set – {0}</value></data>
+
 </root>

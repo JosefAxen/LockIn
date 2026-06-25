@@ -2,6 +2,8 @@
 using UserNotifications;
 #endif
 
+using LockIn.Resources.Strings;
+
 namespace LockIn.Services;
 
 public class NotificationService
@@ -24,8 +26,8 @@ public class NotificationService
 #if IOS
         var content = new UNMutableNotificationContent
         {
-            Title = "Vilotimer klar!",
-            Body = $"Dags för nästa set – {exerciseName}",
+            Title = AppResources.Notification_RestTimer_Title,
+            Body  = string.Format(AppResources.Notification_RestTimer_Body_Format, exerciseName),
             Sound = UNNotificationSound.Default
         };
         var trigger = UNTimeIntervalNotificationTrigger.CreateTrigger(seconds, repeats: false);

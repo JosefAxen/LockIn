@@ -40,6 +40,10 @@ public static class AppResources
     public static string Common_Error    => Get(nameof(Common_Error));
     public static string Common_Confirm  => Get(nameof(Common_Confirm));
 
+    // ── Notifications ──────────────────────────────────────────────────
+    public static string Notification_RestTimer_Title       => Get(nameof(Notification_RestTimer_Title));
+    public static string Notification_RestTimer_Body_Format => Get(nameof(Notification_RestTimer_Body_Format));
+
     // ── Tab titles ─────────────────────────────────────────────────────
     public static string Tab_Home    => Get(nameof(Tab_Home));
     public static string Tab_Train   => Get(nameof(Tab_Train));
