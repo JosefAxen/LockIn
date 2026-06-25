@@ -642,4 +642,46 @@
   <data name="Hem_Weekday_Sat" xml:space="preserve"><value>SAT</value></data>
   <data name="Hem_Weekday_Sun" xml:space="preserve"><value>SUN</value></data>
 
+  <!-- Achievements -->
+  <data name="Achievement_FirstWorkout_Title" xml:space="preserve"><value>First Step</value></data>
+  <data name="Achievement_FirstWorkout_Description" xml:space="preserve"><value>You completed your very first workout!</value></data>
+  <data name="Achievement_Sessions5_Title" xml:space="preserve"><value>Warming Up</value></data>
+  <data name="Achievement_Sessions5_Description" xml:space="preserve"><value>5 workouts completed.</value></data>
+  <data name="Achievement_Sessions10_Title" xml:space="preserve"><value>In the Zone</value></data>
+  <data name="Achievement_Sessions10_Description" xml:space="preserve"><value>10 workouts completed.</value></data>
+  <data name="Achievement_Sessions25_Title" xml:space="preserve"><value>Habitual</value></data>
+  <data name="Achievement_Sessions25_Description" xml:space="preserve"><value>25 workouts completed — it's a habit now!</value></data>
+  <data name="Achievement_Sessions50_Title" xml:space="preserve"><value>Dedicated</value></data>
+  <data name="Achievement_Sessions50_Description" xml:space="preserve"><value>50 workouts completed.</value></data>
+  <data name="Achievement_Sessions100_Title" xml:space="preserve"><value>LockIn Legend</value></data>
+  <data name="Achievement_Sessions100_Description" xml:space="preserve"><value>100 workouts completed. Legendary.</value></data>
+  <data name="Achievement_WeekStreak1_Title" xml:space="preserve"><value>Active Week</value></data>
+  <data name="Achievement_WeekStreak1_Description" xml:space="preserve"><value>Trained at least once two weeks in a row.</value></data>
+  <data name="Achievement_WeekStreak4_Title" xml:space="preserve"><value>One Month Strong</value></data>
+  <data name="Achievement_WeekStreak4_Description" xml:space="preserve"><value>4 consecutive weeks of training.</value></data>
+  <data name="Achievement_WeekStreak12_Title" xml:space="preserve"><value>Iron Will</value></data>
+  <data name="Achievement_WeekStreak12_Description" xml:space="preserve"><value>12 consecutive weeks — three months!</value></data>
+  <data name="Achievement_FirstPR_Title" xml:space="preserve"><value>New Record</value></data>
+  <data name="Achievement_FirstPR_Description" xml:space="preserve"><value>You set your first personal record!</value></data>
+  <data name="Achievement_PR10_Title" xml:space="preserve"><value>PR Machine</value></data>
+  <data name="Achievement_PR10_Description" xml:space="preserve"><value>10 personal records total.</value></data>
+  <data name="Achievement_PR50_Title" xml:space="preserve"><value>Record Hunter</value></data>
+  <data name="Achievement_PR50_Description" xml:space="preserve"><value>50 personal records total.</value></data>
+  <data name="Achievement_TotalVolume100k_Title" xml:space="preserve"><value>100-Ton Club</value></data>
+  <data name="Achievement_TotalVolume100k_Description" xml:space="preserve"><value>You have lifted a total of 100,000 kg.</value></data>
+  <data name="Achievement_TotalVolume500k_Title" xml:space="preserve"><value>Half-Million Club</value></data>
+  <data name="Achievement_TotalVolume500k_Description" xml:space="preserve"><value>You have lifted a total of 500,000 kg.</value></data>
+  <data name="Achievement_TotalVolume1M_Title" xml:space="preserve"><value>Million Lifter</value></data>
+  <data name="Achievement_TotalVolume1M_Description" xml:space="preserve"><value>One million kg lifted in total.</value></data>
+  <data name="Achievement_AllMuscleGroups_Title" xml:space="preserve"><value>Complete</value></data>
+  <data name="Achievement_AllMuscleGroups_Description" xml:space="preserve"><value>All muscle groups trained within seven days.</value></data>
+  <data name="Achievement_LongSession_Title" xml:space="preserve"><value>Marathon Session</value></data>
+  <data name="Achievement_LongSession_Description" xml:space="preserve"><value>You completed a workout longer than 90 minutes.</value></data>
+  <data name="Achievement_EarlyBird_Title" xml:space="preserve"><value>Early Bird</value></data>
+  <data name="Achievement_EarlyBird_Description" xml:space="preserve"><value>Workout started before 07:00.</value></data>
+  <data name="Achievement_NightOwl_Title" xml:space="preserve"><value>Night Owl</value></data>
+  <data name="Achievement_NightOwl_Description" xml:space="preserve"><value>Workout started after 21:00.</value></data>
+  <data name="Achievement_FirstCustomExercise_Title" xml:space="preserve"><value>Inventor</value></data>
+  <data name="Achievement_FirstCustomExercise_Description" xml:space="preserve"><value>You created a custom exercise.</value></data>
+
 </root>

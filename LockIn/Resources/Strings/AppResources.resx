@@ -642,4 +642,46 @@
   <data name="Hem_Weekday_Sat" xml:space="preserve"><value>LÖR</value></data>
   <data name="Hem_Weekday_Sun" xml:space="preserve"><value>SÖN</value></data>
 
+  <!-- Achievements -->
+  <data name="Achievement_FirstWorkout_Title" xml:space="preserve"><value>Första steget</value></data>
+  <data name="Achievement_FirstWorkout_Description" xml:space="preserve"><value>Du klarade ditt allra första pass!</value></data>
+  <data name="Achievement_Sessions5_Title" xml:space="preserve"><value>Varm i kläderna</value></data>
+  <data name="Achievement_Sessions5_Description" xml:space="preserve"><value>5 pass avklarade.</value></data>
+  <data name="Achievement_Sessions10_Title" xml:space="preserve"><value>I rullning</value></data>
+  <data name="Achievement_Sessions10_Description" xml:space="preserve"><value>10 pass avklarade.</value></data>
+  <data name="Achievement_Sessions25_Title" xml:space="preserve"><value>Vana</value></data>
+  <data name="Achievement_Sessions25_Description" xml:space="preserve"><value>25 pass avklarade — nu sitter det!</value></data>
+  <data name="Achievement_Sessions50_Title" xml:space="preserve"><value>Dedikerad</value></data>
+  <data name="Achievement_Sessions50_Description" xml:space="preserve"><value>50 pass avklarade.</value></data>
+  <data name="Achievement_Sessions100_Title" xml:space="preserve"><value>LockIn Legend</value></data>
+  <data name="Achievement_Sessions100_Description" xml:space="preserve"><value>100 pass avklarade. Legendarisk.</value></data>
+  <data name="Achievement_WeekStreak1_Title" xml:space="preserve"><value>Aktiv vecka</value></data>
+  <data name="Achievement_WeekStreak1_Description" xml:space="preserve"><value>Tränat minst en gång två veckor i rad.</value></data>
+  <data name="Achievement_WeekStreak4_Title" xml:space="preserve"><value>En månad stark</value></data>
+  <data name="Achievement_WeekStreak4_Description" xml:space="preserve"><value>4 veckor i rad med träning.</value></data>
+  <data name="Achievement_WeekStreak12_Title" xml:space="preserve"><value>Järnvilja</value></data>
+  <data name="Achievement_WeekStreak12_Description" xml:space="preserve"><value>12 veckor i rad — tre månader!</value></data>
+  <data name="Achievement_FirstPR_Title" xml:space="preserve"><value>Nytt rekord</value></data>
+  <data name="Achievement_FirstPR_Description" xml:space="preserve"><value>Du slog ditt första personliga rekord!</value></data>
+  <data name="Achievement_PR10_Title" xml:space="preserve"><value>PR-maskin</value></data>
+  <data name="Achievement_PR10_Description" xml:space="preserve"><value>10 personliga rekord totalt.</value></data>
+  <data name="Achievement_PR50_Title" xml:space="preserve"><value>Rekordjägare</value></data>
+  <data name="Achievement_PR50_Description" xml:space="preserve"><value>50 personliga rekord totalt.</value></data>
+  <data name="Achievement_TotalVolume100k_Title" xml:space="preserve"><value>100-tonslyftet</value></data>
+  <data name="Achievement_TotalVolume100k_Description" xml:space="preserve"><value>Du har totalt lyft 100 000 kg.</value></data>
+  <data name="Achievement_TotalVolume500k_Title" xml:space="preserve"><value>Halvmiljonär</value></data>
+  <data name="Achievement_TotalVolume500k_Description" xml:space="preserve"><value>Du har totalt lyft 500 000 kg.</value></data>
+  <data name="Achievement_TotalVolume1M_Title" xml:space="preserve"><value>Miljonlyftare</value></data>
+  <data name="Achievement_TotalVolume1M_Description" xml:space="preserve"><value>En miljon kg totalt lyft.</value></data>
+  <data name="Achievement_AllMuscleGroups_Title" xml:space="preserve"><value>Komplett</value></data>
+  <data name="Achievement_AllMuscleGroups_Description" xml:space="preserve"><value>Alla muskelgrupper tränade under sju dagar.</value></data>
+  <data name="Achievement_LongSession_Title" xml:space="preserve"><value>Maratonpass</value></data>
+  <data name="Achievement_LongSession_Description" xml:space="preserve"><value>Du genomförde ett pass längre än 90 minuter.</value></data>
+  <data name="Achievement_EarlyBird_Title" xml:space="preserve"><value>Morgonfågeln</value></data>
+  <data name="Achievement_EarlyBird_Description" xml:space="preserve"><value>Pass startat före klockan 07:00.</value></data>
+  <data name="Achievement_NightOwl_Title" xml:space="preserve"><value>Nattuglan</value></data>
+  <data name="Achievement_NightOwl_Description" xml:space="preserve"><value>Pass startat efter klockan 21:00.</value></data>
+  <data name="Achievement_FirstCustomExercise_Title" xml:space="preserve"><value>Uppfinnaren</value></data>
+  <data name="Achievement_FirstCustomExercise_Description" xml:space="preserve"><value>Du skapade en egen övning.</value></data>
+
 </root>

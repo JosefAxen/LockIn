@@ -517,4 +517,46 @@ public static class AppResources
     // ── Navigation page titles ──────────────────────────────────────────
     public static string CreateExercise_PageTitle  => Get(nameof(CreateExercise_PageTitle));
     public static string ExercisePicker_PageTitle  => Get(nameof(ExercisePicker_PageTitle));
+
+    // ── Achievements ──────────────────────────────────────────────────────
+    public static string Achievement_FirstWorkout_Title            => Get(nameof(Achievement_FirstWorkout_Title));
+    public static string Achievement_FirstWorkout_Description      => Get(nameof(Achievement_FirstWorkout_Description));
+    public static string Achievement_Sessions5_Title               => Get(nameof(Achievement_Sessions5_Title));
+    public static string Achievement_Sessions5_Description         => Get(nameof(Achievement_Sessions5_Description));
+    public static string Achievement_Sessions10_Title              => Get(nameof(Achievement_Sessions10_Title));
+    public static string Achievement_Sessions10_Description        => Get(nameof(Achievement_Sessions10_Description));
+    public static string Achievement_Sessions25_Title              => Get(nameof(Achievement_Sessions25_Title));
+    public static string Achievement_Sessions25_Description        => Get(nameof(Achievement_Sessions25_Description));
+    public static string Achievement_Sessions50_Title              => Get(nameof(Achievement_Sessions50_Title));
+    public static string Achievement_Sessions50_Description        => Get(nameof(Achievement_Sessions50_Description));
+    public static string Achievement_Sessions100_Title             => Get(nameof(Achievement_Sessions100_Title));
+    public static string Achievement_Sessions100_Description       => Get(nameof(Achievement_Sessions100_Description));
+    public static string Achievement_WeekStreak1_Title             => Get(nameof(Achievement_WeekStreak1_Title));
+    public static string Achievement_WeekStreak1_Description       => Get(nameof(Achievement_WeekStreak1_Description));
+    public static string Achievement_WeekStreak4_Title             => Get(nameof(Achievement_WeekStreak4_Title));
+    public static string Achievement_WeekStreak4_Description       => Get(nameof(Achievement_WeekStreak4_Description));
+    public static string Achievement_WeekStreak12_Title            => Get(nameof(Achievement_WeekStreak12_Title));
+    public static string Achievement_WeekStreak12_Description      => Get(nameof(Achievement_WeekStreak12_Description));
+    public static string Achievement_FirstPR_Title                 => Get(nameof(Achievement_FirstPR_Title));
+    public static string Achievement_FirstPR_Description           => Get(nameof(Achievement_FirstPR_Description));
+    public static string Achievement_PR10_Title                    => Get(nameof(Achievement_PR10_Title));
+    public static string Achievement_PR10_Description              => Get(nameof(Achievement_PR10_Description));
+    public static string Achievement_PR50_Title                    => Get(nameof(Achievement_PR50_Title));
+    public static string Achievement_PR50_Description              => Get(nameof(Achievement_PR50_Description));
+    public static string Achievement_TotalVolume100k_Title         => Get(nameof(Achievement_TotalVolume100k_Title));
+    public static string Achievement_TotalVolume100k_Description   => Get(nameof(Achievement_TotalVolume100k_Description));
+    public static string Achievement_TotalVolume500k_Title         => Get(nameof(Achievement_TotalVolume500k_Title));
+    public static string Achievement_TotalVolume500k_Description   => Get(nameof(Achievement_TotalVolume500k_Description));
+    public static string Achievement_TotalVolume1M_Title           => Get(nameof(Achievement_TotalVolume1M_Title));
+    public static string Achievement_TotalVolume1M_Description     => Get(nameof(Achievement_TotalVolume1M_Description));
+    public static string Achievement_AllMuscleGroups_Title         => Get(nameof(Achievement_AllMuscleGroups_Title));
+    public static string Achievement_AllMuscleGroups_Description   => Get(nameof(Achievement_AllMuscleGroups_Description));
+    public static string Achievement_LongSession_Title             => Get(nameof(Achievement_LongSession_Title));
+    public static string Achievement_LongSession_Description       => Get(nameof(Achievement_LongSession_Description));
+    public static string Achievement_EarlyBird_Title               => Get(nameof(Achievement_EarlyBird_Title));
+    public static string Achievement_EarlyBird_Description         => Get(nameof(Achievement_EarlyBird_Description));
+    public static string Achievement_NightOwl_Title                => Get(nameof(Achievement_NightOwl_Title));
+    public static string Achievement_NightOwl_Description          => Get(nameof(Achievement_NightOwl_Description));
+    public static string Achievement_FirstCustomExercise_Title     => Get(nameof(Achievement_FirstCustomExercise_Title));
+    public static string Achievement_FirstCustomExercise_Description => Get(nameof(Achievement_FirstCustomExercise_Description));
 }
