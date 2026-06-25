@@ -684,4 +684,33 @@
   <data name="Achievement_FirstCustomExercise_Title" xml:space="preserve"><value>Inventor</value></data>
   <data name="Achievement_FirstCustomExercise_Description" xml:space="preserve"><value>You created a custom exercise.</value></data>
 
+  <!-- Programs — descriptions and day labels -->
+  <data name="Program_ppl_Description" xml:space="preserve"><value>Classic 6-day program. Three muscle groups rotated for maximum frequency and volume.</value></data>
+  <data name="Program_ppl_Day1_Label" xml:space="preserve"><value>Push A</value></data>
+  <data name="Program_ppl_Day2_Label" xml:space="preserve"><value>Pull A</value></data>
+  <data name="Program_ppl_Day3_Label" xml:space="preserve"><value>Legs A</value></data>
+  <data name="Program_ppl_Day4_Label" xml:space="preserve"><value>Push B</value></data>
+  <data name="Program_ppl_Day5_Label" xml:space="preserve"><value>Pull B</value></data>
+  <data name="Program_ppl_Day6_Label" xml:space="preserve"><value>Legs B</value></data>
+  <data name="Program_upperlower_Description" xml:space="preserve"><value>Efficient 4-day program splitting the body into upper and lower halves.</value></data>
+  <data name="Program_upperlower_Day1_Label" xml:space="preserve"><value>Upper A — Strength</value></data>
+  <data name="Program_upperlower_Day2_Label" xml:space="preserve"><value>Lower A — Strength</value></data>
+  <data name="Program_upperlower_Day3_Label" xml:space="preserve"><value>Upper B — Hypertrophy</value></data>
+  <data name="Program_upperlower_Day4_Label" xml:space="preserve"><value>Lower B — Hypertrophy</value></data>
+  <data name="Program_fullbody_Description" xml:space="preserve"><value>Train your whole body three times a week. Great for beginners and those with limited training time.</value></data>
+  <data name="Program_fullbody_Day1_Label" xml:space="preserve"><value>Monday</value></data>
+  <data name="Program_fullbody_Day2_Label" xml:space="preserve"><value>Wednesday</value></data>
+  <data name="Program_fullbody_Day3_Label" xml:space="preserve"><value>Friday</value></data>
+  <data name="Program_startingstrength_Description" xml:space="preserve"><value>Mark Rippetoe's classic beginner program. Focus on the 5 core lifts with linear progression.</value></data>
+  <data name="Program_startingstrength_Day1_Label" xml:space="preserve"><value>Session A</value></data>
+  <data name="Program_startingstrength_Day2_Label" xml:space="preserve"><value>Session B</value></data>
+  <data name="Program_texasmethod_Description" xml:space="preserve"><value>Classic intermediate program with a volume day, recovery day, and intensity day. Linear progression week by week.</value></data>
+  <data name="Program_texasmethod_Day1_Label" xml:space="preserve"><value>Monday — Volume</value></data>
+  <data name="Program_texasmethod_Day2_Label" xml:space="preserve"><value>Wednesday — Recovery</value></data>
+  <data name="Program_texasmethod_Day3_Label" xml:space="preserve"><value>Friday — Intensity</value></data>
+  <data name="Program_531bbb_Description" xml:space="preserve"><value>Jim Wendler's 5/3/1 with the Boring But Big supplement. Build strength with heavy sets and mass with 5×10 volume work.</value></data>
+  <data name="Program_531bbb_Day1_Label" xml:space="preserve"><value>Session A — Squat &amp; Bench</value></data>
+  <data name="Program_531bbb_Day2_Label" xml:space="preserve"><value>Session B — Deadlift &amp; Press</value></data>
+  <data name="Program_531bbb_Day3_Label" xml:space="preserve"><value>Session C — Strength &amp; Accessories</value></data>
+
 </root>

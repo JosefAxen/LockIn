@@ -684,4 +684,33 @@
   <data name="Achievement_FirstCustomExercise_Title" xml:space="preserve"><value>Uppfinnaren</value></data>
   <data name="Achievement_FirstCustomExercise_Description" xml:space="preserve"><value>Du skapade en egen övning.</value></data>
 
+  <!-- Programs — descriptions and day labels -->
+  <data name="Program_ppl_Description" xml:space="preserve"><value>Klassiskt 6-dagarsprogram. Tre muskelgrupper roteras för maximal frekvens och volym.</value></data>
+  <data name="Program_ppl_Day1_Label" xml:space="preserve"><value>Push A</value></data>
+  <data name="Program_ppl_Day2_Label" xml:space="preserve"><value>Pull A</value></data>
+  <data name="Program_ppl_Day3_Label" xml:space="preserve"><value>Legs A</value></data>
+  <data name="Program_ppl_Day4_Label" xml:space="preserve"><value>Push B</value></data>
+  <data name="Program_ppl_Day5_Label" xml:space="preserve"><value>Pull B</value></data>
+  <data name="Program_ppl_Day6_Label" xml:space="preserve"><value>Legs B</value></data>
+  <data name="Program_upperlower_Description" xml:space="preserve"><value>Effektivt 4-dagarsprogram som delar kroppen i övre och undre halvan.</value></data>
+  <data name="Program_upperlower_Day1_Label" xml:space="preserve"><value>Upper A — Styrka</value></data>
+  <data name="Program_upperlower_Day2_Label" xml:space="preserve"><value>Lower A — Styrka</value></data>
+  <data name="Program_upperlower_Day3_Label" xml:space="preserve"><value>Upper B — Hypertrofi</value></data>
+  <data name="Program_upperlower_Day4_Label" xml:space="preserve"><value>Lower B — Hypertrofi</value></data>
+  <data name="Program_fullbody_Description" xml:space="preserve"><value>Träna hela kroppen tre gånger i veckan. Bra för nybörjare och de med lite träningstid.</value></data>
+  <data name="Program_fullbody_Day1_Label" xml:space="preserve"><value>Måndag</value></data>
+  <data name="Program_fullbody_Day2_Label" xml:space="preserve"><value>Onsdag</value></data>
+  <data name="Program_fullbody_Day3_Label" xml:space="preserve"><value>Fredag</value></data>
+  <data name="Program_startingstrength_Description" xml:space="preserve"><value>Mark Rippetoes klassiska nybörjarprogram. Fokus på de 5 grundlyften med linjär progression.</value></data>
+  <data name="Program_startingstrength_Day1_Label" xml:space="preserve"><value>Pass A</value></data>
+  <data name="Program_startingstrength_Day2_Label" xml:space="preserve"><value>Pass B</value></data>
+  <data name="Program_texasmethod_Description" xml:space="preserve"><value>Klassiskt mellannivåprogram med volymdag, återhämtningsdag och intensitetsdag. Linjär progression vecka för vecka.</value></data>
+  <data name="Program_texasmethod_Day1_Label" xml:space="preserve"><value>Måndag — Volym</value></data>
+  <data name="Program_texasmethod_Day2_Label" xml:space="preserve"><value>Onsdag — Återhämtning</value></data>
+  <data name="Program_texasmethod_Day3_Label" xml:space="preserve"><value>Fredag — Intensitet</value></data>
+  <data name="Program_531bbb_Description" xml:space="preserve"><value>Jim Wendlers 5/3/1 med Boring But Big-tillägget. Bygg styrka med de tunga seten och massa med 5×10-volymarbetet.</value></data>
+  <data name="Program_531bbb_Day1_Label" xml:space="preserve"><value>Pass A — Knäböj &amp; Bänkpress</value></data>
+  <data name="Program_531bbb_Day2_Label" xml:space="preserve"><value>Pass B — Marklyft &amp; Militärpress</value></data>
+  <data name="Program_531bbb_Day3_Label" xml:space="preserve"><value>Pass C — Styrka &amp; Accessoarer</value></data>
+
 </root>

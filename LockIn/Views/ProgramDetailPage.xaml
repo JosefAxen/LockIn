@@ -91,7 +91,7 @@
                                 <VerticalStackLayout Spacing="0">
 
                                     <!-- Day header -->
-                                    <Label Text="{Binding Label}"
+                                    <Label Text="{Binding LocalizedLabel}"
                                            FontFamily="DMSansMedium" FontSize="15"
                                            Padding="16,12,16,8"/>
 

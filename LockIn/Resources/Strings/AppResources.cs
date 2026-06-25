@@ -18,7 +18,7 @@ public static class AppResources
     /// </summary>
     public static CultureInfo? Culture { get; set; }
 
-    private static string Get(string key) =>
+    public static string Get(string key) =>
         ResourceManager.GetString(key, Culture) ?? key;
 
     // ── Common ─────────────────────────────────────────────────────────
@@ -559,4 +559,33 @@ public static class AppResources
     public static string Achievement_NightOwl_Description          => Get(nameof(Achievement_NightOwl_Description));
     public static string Achievement_FirstCustomExercise_Title     => Get(nameof(Achievement_FirstCustomExercise_Title));
     public static string Achievement_FirstCustomExercise_Description => Get(nameof(Achievement_FirstCustomExercise_Description));
+
+    // ── Programs ──────────────────────────────────────────────────────────
+    public static string Program_ppl_Description            => Get(nameof(Program_ppl_Description));
+    public static string Program_ppl_Day1_Label             => Get(nameof(Program_ppl_Day1_Label));
+    public static string Program_ppl_Day2_Label             => Get(nameof(Program_ppl_Day2_Label));
+    public static string Program_ppl_Day3_Label             => Get(nameof(Program_ppl_Day3_Label));
+    public static string Program_ppl_Day4_Label             => Get(nameof(Program_ppl_Day4_Label));
+    public static string Program_ppl_Day5_Label             => Get(nameof(Program_ppl_Day5_Label));
+    public static string Program_ppl_Day6_Label             => Get(nameof(Program_ppl_Day6_Label));
+    public static string Program_upperlower_Description     => Get(nameof(Program_upperlower_Description));
+    public static string Program_upperlower_Day1_Label      => Get(nameof(Program_upperlower_Day1_Label));
+    public static string Program_upperlower_Day2_Label      => Get(nameof(Program_upperlower_Day2_Label));
+    public static string Program_upperlower_Day3_Label      => Get(nameof(Program_upperlower_Day3_Label));
+    public static string Program_upperlower_Day4_Label      => Get(nameof(Program_upperlower_Day4_Label));
+    public static string Program_fullbody_Description       => Get(nameof(Program_fullbody_Description));
+    public static string Program_fullbody_Day1_Label        => Get(nameof(Program_fullbody_Day1_Label));
+    public static string Program_fullbody_Day2_Label        => Get(nameof(Program_fullbody_Day2_Label));
+    public static string Program_fullbody_Day3_Label        => Get(nameof(Program_fullbody_Day3_Label));
+    public static string Program_startingstrength_Description => Get(nameof(Program_startingstrength_Description));
+    public static string Program_startingstrength_Day1_Label  => Get(nameof(Program_startingstrength_Day1_Label));
+    public static string Program_startingstrength_Day2_Label  => Get(nameof(Program_startingstrength_Day2_Label));
+    public static string Program_texasmethod_Description    => Get(nameof(Program_texasmethod_Description));
+    public static string Program_texasmethod_Day1_Label     => Get(nameof(Program_texasmethod_Day1_Label));
+    public static string Program_texasmethod_Day2_Label     => Get(nameof(Program_texasmethod_Day2_Label));
+    public static string Program_texasmethod_Day3_Label     => Get(nameof(Program_texasmethod_Day3_Label));
+    public static string Program_531bbb_Description         => Get(nameof(Program_531bbb_Description));
+    public static string Program_531bbb_Day1_Label          => Get(nameof(Program_531bbb_Day1_Label));
+    public static string Program_531bbb_Day2_Label          => Get(nameof(Program_531bbb_Day2_Label));
+    public static string Program_531bbb_Day3_Label          => Get(nameof(Program_531bbb_Day3_Label));
 }
