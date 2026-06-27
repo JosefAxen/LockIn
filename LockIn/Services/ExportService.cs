@@ -15,6 +15,7 @@ public class ExportService(DatabaseService db)
         var zipPath = Path.Combine(exportsDir,
             $"lockin_export_{DateTime.Now:yyyy-MM-dd}.zip");
 
+        if (File.Exists(zipPath)) File.Delete(zipPath);
         using var zip = ZipFile.Open(zipPath, ZipArchiveMode.Create);
 
         // sessions.csv
