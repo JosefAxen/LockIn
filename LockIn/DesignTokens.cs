@@ -1,3 +1,4 @@
+using LockIn.Models;
 using SkiaSharp;
 
 namespace LockIn;
@@ -123,15 +124,15 @@ public static class DesignTokens
     public static Color HeatmapText(double normalizedScore) => Colors.White;
 
     // ─── Per-muscle-group sparkline colors ───────────────────────────────────
-    public static Color MuscleColor(Models.MuscleGroup mg) => mg switch
+    public static Color MuscleColor(MuscleGroup mg) => mg switch
     {
-        Models.MuscleGroup.Chest     => AccentCoral,
-        Models.MuscleGroup.Back      => AccentBlue,
-        Models.MuscleGroup.Shoulders => AccentAmber,
-        Models.MuscleGroup.Biceps    => AccentPurple,
-        Models.MuscleGroup.Triceps   => AccentOrange,
-        Models.MuscleGroup.Legs      => AccentGreen,
-        Models.MuscleGroup.Core      => AccentTeal,
-        _                            => Accent,
+        MuscleGroup.Chest     => AccentCoral,
+        MuscleGroup.Back      => AccentBlue,
+        MuscleGroup.Shoulders => AccentAmber,
+        MuscleGroup.Biceps    => AccentPurple,
+        MuscleGroup.Triceps   => AccentOrange,
+        MuscleGroup.Legs      => AccentGreen,
+        MuscleGroup.Core      => AccentTeal,
+        _                     => Accent,
     };
 }
