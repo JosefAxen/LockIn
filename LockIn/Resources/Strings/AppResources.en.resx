@@ -617,6 +617,12 @@
   <data name="Settings_ClearData_Body" xml:space="preserve"><value>All workout data, templates and history will be permanently deleted. The exercise library will be reset.</value></data>
   <data name="Settings_ClearData_Confirm" xml:space="preserve"><value>Clear</value></data>
   <data name="Settings_ClearData_Toast" xml:space="preserve"><value>All data has been cleared.</value></data>
+
+  <!-- Export -->
+  <data name="Settings_ExportData_Title" xml:space="preserve"><value>Export Training Data</value></data>
+  <data name="Settings_ExportData_Subtitle" xml:space="preserve"><value>Download your full history as CSV</value></data>
+  <data name="Settings_ExportData_Error" xml:space="preserve"><value>Export failed</value></data>
+
   <data name="Settings_WeeklyGoal_Format" xml:space="preserve"><value>{0} sessions / week</value></data>
 
   <!-- CreateExercise — XAML labels -->

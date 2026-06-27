@@ -8,7 +8,7 @@ using LockIn.Views;
 
 namespace LockIn.ViewModels;
 
-public partial class SettingsViewModel(DatabaseService db, IHealthService health) : ObservableObject
+public partial class SettingsViewModel(DatabaseService db, IHealthService health, ExportService export) : ObservableObject
 {
     [ObservableProperty] private bool _useKg = true;
     [ObservableProperty] private string _appVersion = "";
@@ -114,5 +114,23 @@ public partial class SettingsViewModel(DatabaseService db, IHealthService health
 
         await db.DeleteAllDataAsync();
         await Toast.Make(AppResources.Settings_ClearData_Toast).Show();
+    }
+
+    [RelayCommand]
+    private async Task ExportDataAsync()
+    {
+        try
+        {
+            var path = await export.ExportAsync();
+            await Share.Default.RequestAsync(new ShareFileRequest
+            {
+                Title = AppResources.Settings_ExportData_Title,
+                File  = new ShareFile(path, "application/zip")
+            });
+        }
+        catch
+        {
+            await Toast.Make(AppResources.Settings_ExportData_Error).Show();
+        }
     }
 }

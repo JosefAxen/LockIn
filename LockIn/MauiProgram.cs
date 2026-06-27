@@ -33,6 +33,7 @@ public static class MauiProgram
         // Services
         builder.Services.AddSingleton<DatabaseService>();
         builder.Services.AddTransient<PhotoService>();
+        builder.Services.AddSingleton<ExportService>();
         builder.Services.AddSingleton<PRService>();
         builder.Services.AddSingleton<RestTimerService>();
         builder.Services.AddSingleton<ActiveWorkoutStateService>();

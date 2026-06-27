@@ -467,6 +467,9 @@ public static class AppResources
     public static string Settings_ClearData_Body        => Get(nameof(Settings_ClearData_Body));
     public static string Settings_ClearData_Confirm     => Get(nameof(Settings_ClearData_Confirm));
     public static string Settings_ClearData_Toast       => Get(nameof(Settings_ClearData_Toast));
+    public static string Settings_ExportData_Title    => Get(nameof(Settings_ExportData_Title));
+    public static string Settings_ExportData_Subtitle => Get(nameof(Settings_ExportData_Subtitle));
+    public static string Settings_ExportData_Error    => Get(nameof(Settings_ExportData_Error));
     public static string Settings_WeeklyGoal_Format     => Get(nameof(Settings_WeeklyGoal_Format));
 
     // ── PlateCalculator ──────────────────────────────────────────────────
