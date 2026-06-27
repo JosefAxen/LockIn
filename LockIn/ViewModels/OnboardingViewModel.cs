@@ -8,7 +8,7 @@ using LockIn;
 
 namespace LockIn.ViewModels;
 
-public partial class OnboardingViewModel(DatabaseService db) : ObservableObject
+public partial class OnboardingViewModel(DatabaseService db, IHealthService health) : ObservableObject
 {
     [ObservableProperty] private int    _currentStep        = 0;
     [ObservableProperty] private string _userNameInput      = "";
@@ -178,6 +178,10 @@ public partial class OnboardingViewModel(DatabaseService db) : ObservableObject
 
         if (activateProgram && RecommendedProgram is { } program)
             await db.ActivateProgramAsync(program);
+
+        var granted = await health.RequestPermissionsAsync();
+        if (granted)
+            Preferences.Default.Set("healthkit_sync_enabled", true);
 
         MainThread.BeginInvokeOnMainThread(() =>
         {
