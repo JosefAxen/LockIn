@@ -1162,7 +1162,7 @@ public class DatabaseService
 
     // ── Export ─────────────────────────────────────────────────────────────────
 
-    public class ExportSessionRow
+    internal class ExportSessionRow
     {
         public int SessionId { get; set; }
         public DateTime StartedAt { get; set; }
@@ -1174,7 +1174,7 @@ public class DatabaseService
         public int PRCount { get; set; }
     }
 
-    public class ExportSetRow
+    internal class ExportSetRow
     {
         public int SessionId { get; set; }
         public DateTime SessionDate { get; set; }
@@ -1190,7 +1190,7 @@ public class DatabaseService
         public int DurationSeconds { get; set; }
     }
 
-    public async Task<(List<ExportSessionRow> Sessions, List<ExportSetRow> Sets)> GetExportDataAsync()
+    internal async Task<(List<ExportSessionRow> Sessions, List<ExportSetRow> Sets)> GetExportDataAsync()
     {
         await InitAsync();
 
