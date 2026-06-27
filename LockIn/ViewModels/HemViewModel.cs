@@ -73,12 +73,8 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
 
     public string GreetingText => UserName.Length > 0 ? $"{Greeting}, {UserName.Split(' ')[0].ToUpper()}!" : $"{Greeting}!";
 
-    public IReadOnlyList<string> CoachPrompts { get; } = new[]
-    {
-        AppResources.Hem_Coach_WeeklySummary,
-        AppResources.Hem_Coach_RecoveryTips,
-        AppResources.Hem_Coach_NextSession
-    };
+    [ObservableProperty] private System.Collections.ObjectModel.ObservableCollection<CoachChip> _coachChips = new();
+    [ObservableProperty] private bool _hasCoachChips;
 
     public async Task LoadAsync()
     {
@@ -292,10 +288,73 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
             var (recHead, recDetail) = BuildRecommendation(recoveryPct, recentSessions);
             TodayRecommendation       = recHead;
             TodayRecommendationDetail = recDetail;
+
+            await LoadCoachChipsAsync(weekSessions, recentSessions, recoveryPct);
         }
         finally
         {
             IsLoading = false;
+        }
+    }
+
+    private async Task LoadCoachChipsAsync(
+        IReadOnlyList<WorkoutSession> weekSessions,
+        IReadOnlyList<WorkoutSession> recentSessions,
+        double recoveryPct)
+    {
+        try
+        {
+            var weekStart     = GetMondayThisWeek();
+            var prevWeekStart = weekStart.AddDays(-7);
+            var prevWeekEnd   = weekStart.AddSeconds(-1);
+            var tomorrow      = DateTime.Today.AddDays(1);
+            var recentCutoff  = DateTime.Now.AddDays(-30);
+
+            var prevWeekSessionsTask = db.GetCompletedSessionsInRangeAsync(prevWeekStart, prevWeekEnd);
+            var thisWeekVolumeTask   = db.GetRawVolumeForRangeAsync(weekStart, tomorrow);
+            var prevWeekVolumeTask   = db.GetRawVolumeForRangeAsync(prevWeekStart, weekStart);
+            var nearestPRTask        = db.GetNearestPRGapAsync(recentCutoff);
+            var weekStreakTask        = db.GetCurrentWeekStreakAsync();
+            var muscleScoresTask     = db.GetMuscleScoresAsync();
+
+            await Task.WhenAll(prevWeekSessionsTask, thisWeekVolumeTask,
+                               prevWeekVolumeTask, nearestPRTask, weekStreakTask, muscleScoresTask);
+
+            var prResult = nearestPRTask.Result;
+            var lastSession = recentSessions
+                .Where(s => s.CompletedAt.HasValue)
+                .OrderByDescending(s => s.CompletedAt!.Value)
+                .FirstOrDefault();
+            int daysSinceLast = lastSession is not null
+                ? (int)(DateTime.Now - lastSession.CompletedAt!.Value).TotalDays
+                : 999;
+
+            var ctx = new CoachContext(
+                RecentSessions:        recentSessions,
+                WeekSessions:          weekSessions,
+                PrevWeekSessions:      prevWeekSessionsTask.Result,
+                MuscleScores:          muscleScoresTask.Result,
+                RecoveryPct:           recoveryPct,
+                NearestPRGapKg:        prResult.HasValue ? prResult.Value.GapKg : null,
+                NearestPRExerciseName: prResult.HasValue ? prResult.Value.ExerciseName : null,
+                NearestPRRecentMaxKg:  prResult.HasValue ? prResult.Value.RecentMaxKg : 0,
+                NearestPRAllTimeMaxKg: prResult.HasValue ? prResult.Value.AllTimeMaxKg : 0,
+                DaysSinceLastWorkout:  daysSinceLast,
+                ThisWeekVolumeKg:      thisWeekVolumeTask.Result,
+                PrevWeekVolumeKg:      prevWeekVolumeTask.Result,
+                WeekStreak:            weekStreakTask.Result
+            );
+
+            var chips = CoachPromptEngine.Evaluate(ctx);
+            CoachChips.Clear();
+            foreach (var chip in chips)
+                CoachChips.Add(chip);
+            HasCoachChips = CoachChips.Count > 0;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[CoachChips] LoadCoachChipsAsync failed: {ex.Message}");
+            HasCoachChips = false;
         }
     }
 
