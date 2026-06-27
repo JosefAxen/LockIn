@@ -989,6 +989,25 @@ public class DatabaseService
         public string SetDisplay => SetType == Models.SetType.Time
             ? $"⏱ {DurationSeconds}s"
             : $"{WeightKg:G} kg × {Reps}";
+
+        public string SetLabel => SetType switch
+        {
+            Models.SetType.Warmup  => "W",
+            Models.SetType.Dropset => "↓",
+            Models.SetType.Time    => "⏱",
+            _                      => SetNumber.ToString()
+        };
+
+        public Color SetLabelColor => SetType switch
+        {
+            Models.SetType.Warmup  => Color.FromArgb("#FBBF24"),
+            Models.SetType.Dropset => Color.FromArgb("#FB7185"),
+            Models.SetType.Time    => Color.FromArgb("#38BDF8"),
+            _                      => Color.FromArgb("#52525E")
+        };
+
+        public string WeightDisplay => SetType == Models.SetType.Time ? $"{DurationSeconds}s" : $"{WeightKg:G}";
+        public string RepsDisplay   => SetType == Models.SetType.Time ? "–" : Reps.ToString();
     }
 
     private class BestSetRow
