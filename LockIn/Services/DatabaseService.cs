@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using LockIn;
 using LockIn.Models;
 using SQLite;
 
@@ -1000,10 +1001,10 @@ public class DatabaseService
 
         public Color SetLabelColor => SetType switch
         {
-            Models.SetType.Warmup  => Color.FromArgb("#FBBF24"),
-            Models.SetType.Dropset => Color.FromArgb("#FB7185"),
-            Models.SetType.Time    => Color.FromArgb("#38BDF8"),
-            _                      => Color.FromArgb("#52525E")
+            Models.SetType.Warmup  => DesignTokens.SetWarmup,
+            Models.SetType.Dropset => DesignTokens.SetDropset,
+            Models.SetType.Time    => DesignTokens.SetTime,
+            _                      => DesignTokens.SetNormal
         };
 
         public string WeightDisplay => SetType == Models.SetType.Time ? $"{DurationSeconds}s" : $"{WeightKg:G}";
