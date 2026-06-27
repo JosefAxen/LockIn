@@ -428,6 +428,9 @@
   <data name="Library_DuplicateTemplate" xml:space="preserve">
     <value>Kopiera</value>
   </data>
+  <data name="Library_DuplicateTemplate_NamePrefix" xml:space="preserve">
+    <value>Kopia av</value>
+  </data>
 
   <!-- Library — VM strings -->
   <data name="Library_Chip_All" xml:space="preserve"><value>ALLA</value></data>

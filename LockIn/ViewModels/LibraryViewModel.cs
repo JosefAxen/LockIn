@@ -283,7 +283,7 @@ public partial class LibraryViewModel(DatabaseService db) : ObservableObject
     [RelayCommand]
     private async Task DuplicateTemplateAsync(WorkoutTemplate template)
     {
-        var newName = $"Kopia av {template.Name}";
+        var newName = $"{AppResources.Library_DuplicateTemplate_NamePrefix} {template.Name}";
         var newId = await db.DuplicateTemplateAsync(template, newName);
         await LoadTemplatesAsync();
         await Shell.Current.GoToAsync(nameof(TemplateEditPage), new Dictionary<string, object>

@@ -438,6 +438,7 @@ public static class AppResources
     public static string Library_ViewProgram                => Get(nameof(Library_ViewProgram));
     public static string Library_DaysPerWeek_Format         => Get(nameof(Library_DaysPerWeek_Format));
     public static string Library_DuplicateTemplate          => Get(nameof(Library_DuplicateTemplate));
+    public static string Library_DuplicateTemplate_NamePrefix => Get(nameof(Library_DuplicateTemplate_NamePrefix));
     public static string Library_Chip_All                   => Get(nameof(Library_Chip_All));
     public static string Library_DeleteTemplate_Title       => Get(nameof(Library_DeleteTemplate_Title));
     public static string Library_DeleteTemplate_Body_Format => Get(nameof(Library_DeleteTemplate_Body_Format));
