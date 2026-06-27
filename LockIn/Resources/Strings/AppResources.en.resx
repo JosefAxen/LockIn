@@ -770,7 +770,7 @@
   <data name="Achievement_Sessions25_Description" xml:space="preserve"><value>25 workouts completed — it's a habit now!</value></data>
   <data name="Achievement_Sessions50_Title" xml:space="preserve"><value>Dedicated</value></data>
   <data name="Achievement_Sessions50_Description" xml:space="preserve"><value>50 workouts completed.</value></data>
-  <data name="Achievement_Sessions100_Title" xml:space="preserve"><value>LockIn Legend</value></data>
+  <data name="Achievement_Sessions100_Title" xml:space="preserve"><value>Vana Legend</value></data>
   <data name="Achievement_Sessions100_Description" xml:space="preserve"><value>100 workouts completed. Legendary.</value></data>
   <data name="Achievement_WeekStreak1_Title" xml:space="preserve"><value>Active Week</value></data>
   <data name="Achievement_WeekStreak1_Description" xml:space="preserve"><value>Trained at least once two weeks in a row.</value></data>
@@ -847,7 +847,7 @@
 
   <!-- Notifications -->
   <data name="Notification_Reminder_Body" xml:space="preserve"><value>Time to train! Open the app and get going 💪</value></data>
-  <data name="Notification_Reminder_Title" xml:space="preserve"><value>LockIn · Reminder</value></data>
+  <data name="Notification_Reminder_Title" xml:space="preserve"><value>Vana Strength · Reminder</value></data>
   <data name="Notification_RestTimer_Title" xml:space="preserve"><value>Rest timer done!</value></data>
   <data name="Notification_RestTimer_Body_Format" xml:space="preserve"><value>Time for your next set – {0}</value></data>
 

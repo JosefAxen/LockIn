@@ -24,7 +24,7 @@
 		<Nullable>enable</Nullable>
 
 		<!-- Display name -->
-		<ApplicationTitle>LockIn</ApplicationTitle>
+		<ApplicationTitle>Vana Strength</ApplicationTitle>
 
 		<!-- App Identifier -->
 		<ApplicationId>com.josefaxen.lockin</ApplicationId>

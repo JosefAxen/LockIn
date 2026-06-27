@@ -770,7 +770,7 @@
   <data name="Achievement_Sessions25_Description" xml:space="preserve"><value>25 pass avklarade — nu sitter det!</value></data>
   <data name="Achievement_Sessions50_Title" xml:space="preserve"><value>Dedikerad</value></data>
   <data name="Achievement_Sessions50_Description" xml:space="preserve"><value>50 pass avklarade.</value></data>
-  <data name="Achievement_Sessions100_Title" xml:space="preserve"><value>LockIn Legend</value></data>
+  <data name="Achievement_Sessions100_Title" xml:space="preserve"><value>Vana Legend</value></data>
   <data name="Achievement_Sessions100_Description" xml:space="preserve"><value>100 pass avklarade. Legendarisk.</value></data>
   <data name="Achievement_WeekStreak1_Title" xml:space="preserve"><value>Aktiv vecka</value></data>
   <data name="Achievement_WeekStreak1_Description" xml:space="preserve"><value>Tränat minst en gång två veckor i rad.</value></data>
@@ -847,7 +847,7 @@
 
   <!-- Notifications -->
   <data name="Notification_Reminder_Body" xml:space="preserve"><value>Dags att träna! Öppna appen och sätt igång 💪</value></data>
-  <data name="Notification_Reminder_Title" xml:space="preserve"><value>LockIn · Påminnelse</value></data>
+  <data name="Notification_Reminder_Title" xml:space="preserve"><value>Vana Strength · Påminnelse</value></data>
   <data name="Notification_RestTimer_Title" xml:space="preserve"><value>Vilotimer klar!</value></data>
   <data name="Notification_RestTimer_Body_Format" xml:space="preserve"><value>Dags för nästa set – {0}</value></data>
 
