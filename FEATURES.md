@@ -371,7 +371,7 @@ _Senast uppdaterad: 2026-06-27_
 - [x] **Omedelbar körguide för övning** (S) – `ShowExerciseInfoAsync` visar övningsbeskrivning via `DisplayAlert` i ActiveWorkoutPage.  
   Prioritet: **Hög**
 
-- [ ] **Onboarding för HealthKit** (S) – HealthKit-behörighet begärs vid toggle i Settings, inte vid förstakörning. Användare missar strain/recovery-data tills de hittar inställningen.  
+- [x] **Onboarding för HealthKit** (S) – HealthKit-behörighet begärs vid toggle i Settings, inte vid förstakörning. Användare missar strain/recovery-data tills de hittar inställningen.  
   _Beroenden: Lägg till HealthKit-steg i `OnboardingPage` (steg 6) eller en contextual prompt på HemPage._  
   Prioritet: **Medel**
 
