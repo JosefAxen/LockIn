@@ -36,6 +36,7 @@ public class DatabaseService
         await _db.CreateTableAsync<BodyCompositionEntry>();
         await _db.CreateTableAsync<UserAchievement>();
         await _db.CreateTableAsync<WorkoutPhoto>();
+        await _db.CreateTableAsync<CardioSession>();
 
         try { await _db.ExecuteAsync("ALTER TABLE WorkoutTemplates ADD COLUMN ProgramId TEXT NULL"); }
         catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
@@ -942,6 +943,32 @@ public class DatabaseService
         return await _db.QueryAsync<WorkoutSession>(
             "SELECT * FROM WorkoutSessions WHERE CompletedAt IS NOT NULL AND CompletedAt >= ? AND CompletedAt <= ? ORDER BY StartedAt DESC",
             from, to);
+    }
+
+    // ── Cardio sessions ───────────────────────────────────────────────────
+
+    public async Task SaveCardioSessionAsync(CardioSession session)
+    {
+        await InitAsync();
+        if (session.Id == 0)
+            await _db.InsertAsync(session);
+        else
+            await _db.UpdateAsync(session);
+    }
+
+    public async Task<List<CardioSession>> GetCardioSessionsAsync(int limit = 50)
+    {
+        await InitAsync();
+        return await _db.Table<CardioSession>()
+            .OrderByDescending(s => s.StartedAt)
+            .Take(limit)
+            .ToListAsync();
+    }
+
+    public async Task DeleteCardioSessionAsync(int id)
+    {
+        await InitAsync();
+        await _db.DeleteAsync<CardioSession>(id);
     }
 
     // ── Body composition ───────────────────────────────────────────────────
