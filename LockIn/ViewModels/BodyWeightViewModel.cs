@@ -20,6 +20,11 @@ public partial class BodyWeightViewModel(DatabaseService db) : ObservableObject
     [ObservableProperty] private bool _isLoading;
     [ObservableProperty] private bool _hasMore;
     [ObservableProperty] private IReadOnlyList<ChartPoint> _chartPoints = [];
+    [ObservableProperty] private string _bmiText    = "–";
+    [ObservableProperty] private string _bmiCategory = "";
+    [ObservableProperty] private bool   _hasBmi;
+    [ObservableProperty] private string _weightTrend = "";
+    [ObservableProperty] private bool   _hasTrend;
 
     public ObservableCollection<BodyWeightEntry> RecentEntries { get; } = new();
 
@@ -39,6 +44,53 @@ public partial class BodyWeightViewModel(DatabaseService db) : ObservableObject
                 .OrderBy(e => e.LoggedAt)
                 .Select(e => new ChartPoint(e.LoggedAt, (double)e.WeightKg))
                 .ToList();
+        }
+
+        // BMI
+        var settings = await db.GetAppSettingsAsync();
+        if (settings.HeightCm > 0 && HasData)
+        {
+            var latestKg = (double)_allEntries[0].WeightKg;
+            var heightM  = settings.HeightCm / 100.0;
+            var bmi      = latestKg / (heightM * heightM);
+            BmiText     = bmi.ToString("F1");
+            BmiCategory = bmi switch
+            {
+                < 18.5 => AppResources.BodyWeight_BmiCategory_Underweight,
+                < 25.0 => AppResources.BodyWeight_BmiCategory_Normal,
+                < 30.0 => AppResources.BodyWeight_BmiCategory_Overweight,
+                _      => AppResources.BodyWeight_BmiCategory_Obese,
+            };
+            HasBmi = true;
+        }
+        else
+        {
+            BmiText     = "–";
+            BmiCategory = "";
+            HasBmi      = false;
+        }
+
+        // Trend
+        var thirtyDaysAgo = DateTime.Now.AddDays(-30);
+        var recent = _allEntries
+            .Where(e => e.LoggedAt >= thirtyDaysAgo)
+            .OrderBy(e => e.LoggedAt)
+            .ToList();
+        if (recent.Count >= 2)
+        {
+            var delta    = (double)(recent.Last().WeightKg - recent.First().WeightKg);
+            var absDelta = Math.Abs(delta);
+            WeightTrend = absDelta < 0.2
+                ? AppResources.BodyWeight_Trend_Stable
+                : delta > 0
+                    ? string.Format(AppResources.BodyWeight_Trend_Up,   absDelta.ToString("F1", CultureInfo.InvariantCulture))
+                    : string.Format(AppResources.BodyWeight_Trend_Down, absDelta.ToString("F1", CultureInfo.InvariantCulture));
+            HasTrend = true;
+        }
+        else
+        {
+            WeightTrend = "";
+            HasTrend    = false;
         }
 
         _displayedCount = Math.Min(PageSize, _allEntries.Count);
