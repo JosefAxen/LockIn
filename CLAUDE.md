@@ -64,12 +64,13 @@ Modala/push-sidor registreras i `AppShell.xaml.cs` och navigeras till med `Shell
 | `PlateCalculatorPage.xaml` | ActiveWorkoutPage |
 | `ProgressPhotosPage.xaml` | KroppPage / PostWorkoutPage |
 | `OnboardingPage.xaml` | App-start (första körning) |
+| `CardioPage.xaml` | TrainPage → cardio-knapp |
 
 **Global konvention för alla sidor:**
 - Alla sidor har `Shell.NavBarIsVisible="False"` + `ios:Page.UseSafeArea="False"` (bakgrund fyller hela skärmen inkl. Dynamic Island)
 - Header-raden har `Padding="...,56,..."` som manuell safe area-offset för Dynamic Island
-- Om en ändring misstänks kunna gälla alla sidor: fråga användaren innan du applicerar den på alla 19 sidor
-- När en sida läggs till eller tas bort: uppdatera tabellerna ovan OCH räkna om antalet (just nu 19 sidor totalt)
+- Om en ändring misstänks kunna gälla alla sidor: fråga användaren innan du applicerar den på alla 20 sidor
+- När en sida läggs till eller tas bort: uppdatera tabellerna ovan OCH räkna om antalet (just nu 20 sidor totalt)
 
 ### Databas
 `DatabaseService` är en singleton som wrappar `SQLiteAsyncConnection`. Init sker via `Lazy<Task>` — varje publik metod kallar `await InitAsync()` som säkerställer idempotent initiering.

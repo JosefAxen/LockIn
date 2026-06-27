@@ -388,10 +388,10 @@
                 <Label Text="{loc:Localize Hem_MuscleTrend_Title}"
                        Style="{StaticResource SectionLabel}"
                        Margin="22,18,0,8"
-                       IsVisible="{Binding MuscleTrends.Count, Converter={x:Static views:GreaterThanZeroConverter.Instance}}"/>
+                       IsVisible="{Binding MuscleTrends.Count, Converter={x:Static vm:GreaterThanZeroConverter.Instance}}"/>
                 <ScrollView Orientation="Horizontal"
                             HorizontalScrollBarVisibility="Never"
-                            IsVisible="{Binding MuscleTrends.Count, Converter={x:Static views:GreaterThanZeroConverter.Instance}}"
+                            IsVisible="{Binding MuscleTrends.Count, Converter={x:Static vm:GreaterThanZeroConverter.Instance}}"
                             Margin="0,0,0,32">
                     <HorizontalStackLayout BindableLayout.ItemsSource="{Binding MuscleTrends}"
                                            Spacing="8" Padding="16,0,16,0">

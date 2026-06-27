@@ -14,7 +14,7 @@
              ios:Page.UseSafeArea="False">
 
     <ContentPage.Resources>
-        <views:GreaterThanZeroConverter x:Key="GtzConverter"/>
+        <vm:GreaterThanZeroConverter x:Key="GtzConverter"/>
     </ContentPage.Resources>
 
     <Grid SafeAreaEdges="None">
