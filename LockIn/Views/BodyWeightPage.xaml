@@ -57,6 +57,24 @@
                         <Label Text="{Binding LatestDate}"
                                Style="{StaticResource MutedLabel}"
                                HorizontalOptions="Center"/>
+                        <!-- BMI -->
+                        <HorizontalStackLayout Spacing="6" HorizontalOptions="Center"
+                                               IsVisible="{Binding HasBmi}">
+                            <Label Text="{loc:Localize BodyWeight_Bmi}"
+                                   Style="{StaticResource MutedLabel}" FontSize="13"/>
+                            <Label Text="{Binding BmiText}"
+                                   FontFamily="DMSansMedium" FontSize="13"
+                                   TextColor="{AppThemeBinding Light={StaticResource LightAccent}, Dark={StaticResource ForgeAccent}}"/>
+                            <Label Text="{Binding BmiCategory}"
+                                   Style="{StaticResource MutedLabel}" FontSize="13"/>
+                        </HorizontalStackLayout>
+
+                        <!-- Trend -->
+                        <Label Text="{Binding WeightTrend}"
+                               Style="{StaticResource MutedLabel}"
+                               FontSize="13"
+                               HorizontalOptions="Center"
+                               IsVisible="{Binding HasTrend}"/>
                         <Label Text="{loc:Localize BodyWeight_NoData}"
                                Style="{StaticResource MutedLabel}"
                                HorizontalOptions="Center"
