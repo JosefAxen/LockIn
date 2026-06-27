@@ -306,7 +306,7 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
         {
             var weekStart     = GetMondayThisWeek();
             var prevWeekStart = weekStart.AddDays(-7);
-            var prevWeekEnd   = weekStart.AddSeconds(-1);
+            var prevWeekEnd   = weekStart.AddTicks(-1);
             var tomorrow      = DateTime.Today.AddDays(1);
             var recentCutoff  = DateTime.Now.AddDays(-30);
 

@@ -13,5 +13,5 @@ public partial class CoachChipSheet : Popup
         BodyLabel.Text   = chip.DetailBody;
     }
 
-    private void OnCloseTapped(object sender, TappedEventArgs e) => CloseAsync();
+    private void OnCloseTapped(object sender, TappedEventArgs e) => _ = CloseAsync();
 }
