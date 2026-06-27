@@ -155,6 +155,96 @@
                     </Border.GestureRecognizers>
                 </Border>
 
+                <!-- Reminders section -->
+                <Label Text="{loc:Localize Settings_Section_Reminders}" Style="{StaticResource SectionLabel}" Margin="4,0"/>
+                <Border Style="{StaticResource CardFrame}" Padding="0">
+                    <VerticalStackLayout Spacing="0">
+                        <!-- Header row -->
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12" Padding="16,14,16,10">
+                            <Border Grid.Column="0" BackgroundColor="{StaticResource ForgeSuccessDim}"
+                                    StrokeShape="RoundRectangle 10" StrokeThickness="0"
+                                    WidthRequest="38" HeightRequest="38" VerticalOptions="Center">
+                                <Label Text="🔔" FontSize="18" HorizontalOptions="Center" VerticalOptions="Center"/>
+                            </Border>
+                            <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                <Label Text="{loc:Localize Settings_Reminders_Title}" FontFamily="DMSansMedium" FontSize="15"/>
+                                <Label Text="{Binding ReminderDisplay}" Style="{StaticResource MutedLabel}"/>
+                            </StackLayout>
+                        </Grid>
+                        <!-- Day chips -->
+                        <HorizontalStackLayout Spacing="6" HorizontalOptions="Center" Padding="0,0,0,12">
+                            <Border BackgroundColor="{Binding Day0Bg}" StrokeShape="RoundRectangle 8" StrokeThickness="0"
+                                    WidthRequest="36" HeightRequest="36">
+                                <Label Text="{loc:Localize Settings_Reminders_Day_0}" FontFamily="DMSansMedium" FontSize="11"
+                                       TextColor="{Binding Day0Fg}" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding ToggleReminderDayCommand}" CommandParameter="{x:Int32 0}"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+                            <Border BackgroundColor="{Binding Day1Bg}" StrokeShape="RoundRectangle 8" StrokeThickness="0"
+                                    WidthRequest="36" HeightRequest="36">
+                                <Label Text="{loc:Localize Settings_Reminders_Day_1}" FontFamily="DMSansMedium" FontSize="11"
+                                       TextColor="{Binding Day1Fg}" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding ToggleReminderDayCommand}" CommandParameter="{x:Int32 1}"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+                            <Border BackgroundColor="{Binding Day2Bg}" StrokeShape="RoundRectangle 8" StrokeThickness="0"
+                                    WidthRequest="36" HeightRequest="36">
+                                <Label Text="{loc:Localize Settings_Reminders_Day_2}" FontFamily="DMSansMedium" FontSize="11"
+                                       TextColor="{Binding Day2Fg}" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding ToggleReminderDayCommand}" CommandParameter="{x:Int32 2}"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+                            <Border BackgroundColor="{Binding Day3Bg}" StrokeShape="RoundRectangle 8" StrokeThickness="0"
+                                    WidthRequest="36" HeightRequest="36">
+                                <Label Text="{loc:Localize Settings_Reminders_Day_3}" FontFamily="DMSansMedium" FontSize="11"
+                                       TextColor="{Binding Day3Fg}" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding ToggleReminderDayCommand}" CommandParameter="{x:Int32 3}"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+                            <Border BackgroundColor="{Binding Day4Bg}" StrokeShape="RoundRectangle 8" StrokeThickness="0"
+                                    WidthRequest="36" HeightRequest="36">
+                                <Label Text="{loc:Localize Settings_Reminders_Day_4}" FontFamily="DMSansMedium" FontSize="11"
+                                       TextColor="{Binding Day4Fg}" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding ToggleReminderDayCommand}" CommandParameter="{x:Int32 4}"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+                            <Border BackgroundColor="{Binding Day5Bg}" StrokeShape="RoundRectangle 8" StrokeThickness="0"
+                                    WidthRequest="36" HeightRequest="36">
+                                <Label Text="{loc:Localize Settings_Reminders_Day_5}" FontFamily="DMSansMedium" FontSize="11"
+                                       TextColor="{Binding Day5Fg}" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding ToggleReminderDayCommand}" CommandParameter="{x:Int32 5}"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+                            <Border BackgroundColor="{Binding Day6Bg}" StrokeShape="RoundRectangle 8" StrokeThickness="0"
+                                    WidthRequest="36" HeightRequest="36">
+                                <Label Text="{loc:Localize Settings_Reminders_Day_6}" FontFamily="DMSansMedium" FontSize="11"
+                                       TextColor="{Binding Day6Fg}" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding ToggleReminderDayCommand}" CommandParameter="{x:Int32 6}"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+                        </HorizontalStackLayout>
+                        <!-- Divider -->
+                        <BoxView HeightRequest="1" BackgroundColor="{StaticResource ForgeSurface2}"/>
+                        <!-- Time row -->
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8" Padding="16,12">
+                            <Label Grid.Column="0" Text="{loc:Localize Settings_Reminders_Time_Label}"
+                                   FontFamily="DMSansMedium" FontSize="14" VerticalOptions="Center"/>
+                            <Label Grid.Column="1" Text="{Binding ReminderTimeDisplay}"
+                                   Style="{StaticResource MutedLabel}" VerticalOptions="Center"/>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding EditReminderTimeCommand}"/>
+                            </Grid.GestureRecognizers>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
                 <!-- Weight unit -->
                 <Label Text="{loc:Localize Settings_Section_Units}" Style="{StaticResource SectionLabel}" Margin="4,0"/>
                 <Border Style="{StaticResource CardFrame}" Padding="16,14">
