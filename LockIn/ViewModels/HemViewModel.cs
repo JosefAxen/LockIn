@@ -654,3 +654,10 @@ public class DayStreakItem
         ? DesignTokens.TextSecondary
         : DesignTokens.TextMuted;
 }
+
+public class MuscleTrendItem
+{
+    public string Name { get; set; } = "";
+    public Color Color { get; set; } = Colors.White;
+    public double[] Values { get; set; } = [];
+}

@@ -875,7 +875,10 @@ public class DatabaseService
 
         var now = DateTime.Now;
         var result = new Dictionary<MuscleGroup, double[]>();
-        foreach (var mg in Enum.GetValues<MuscleGroup>().Take(7))
+        // Only the 7 primary muscle groups are shown in volume trend (FullBody/Other/Forearms excluded)
+        MuscleGroup[] primaryGroups = [MuscleGroup.Chest, MuscleGroup.Back, MuscleGroup.Shoulders,
+            MuscleGroup.Biceps, MuscleGroup.Triceps, MuscleGroup.Legs, MuscleGroup.Core];
+        foreach (var mg in primaryGroups)
         {
             var arr = new double[weeks];
             foreach (var row in rows.Where(r => (MuscleGroup)r.MuscleGroup == mg))
