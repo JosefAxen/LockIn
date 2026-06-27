@@ -16,10 +16,16 @@ public partial class SettingsViewModel(DatabaseService db, IHealthService health
     [ObservableProperty] private bool _soundEnabled = true;
     [ObservableProperty] private int _weeklyGoal = 4;
     [ObservableProperty] private string _userName = "";
+    [ObservableProperty] private int _heightCm;
     [ObservableProperty] private bool _healthKitSyncEnabled;
 
     public string WeeklyGoalDisplay =>
         string.Format(AppResources.Settings_WeeklyGoal_Format, WeeklyGoal);
+
+    public string HeightDisplay =>
+        HeightCm > 0
+            ? string.Format(AppResources.Settings_Height_Format, HeightCm)
+            : "–";
 
     public async Task LoadAsync()
     {
@@ -31,10 +37,14 @@ public partial class SettingsViewModel(DatabaseService db, IHealthService health
         HealthKitSyncEnabled = Preferences.Default.Get("healthkit_sync_enabled", false);
         AppVersion = AppInfo.VersionString;
         UserName   = settings.UserName ?? "";
+        HeightCm   = settings.HeightCm;
     }
 
     partial void OnWeeklyGoalChanged(int value) =>
         OnPropertyChanged(nameof(WeeklyGoalDisplay));
+
+    partial void OnHeightCmChanged(int value) =>
+        OnPropertyChanged(nameof(HeightDisplay));
 
     partial void OnUseKgChanged(bool value) => _ = SaveSettingsAsync();
 
@@ -87,6 +97,22 @@ public partial class SettingsViewModel(DatabaseService db, IHealthService health
         WeeklyGoal = goal;
         var settings = await db.GetAppSettingsAsync();
         settings.WeeklyWorkoutGoal = goal;
+        await db.SaveAppSettingsAsync(settings);
+    }
+
+    [RelayCommand]
+    private async Task EditHeightAsync()
+    {
+        var result = await Shell.Current.DisplayPromptAsync(
+            AppResources.Settings_Height_Prompt_Title,
+            AppResources.Settings_Height_Prompt_Body,
+            keyboard: Keyboard.Numeric,
+            initialValue: HeightCm > 0 ? HeightCm.ToString() : "",
+            maxLength: 3);
+        if (!int.TryParse(result, out var cm) || cm < 100 || cm > 250) return;
+        HeightCm = cm;
+        var settings = await db.GetAppSettingsAsync();
+        settings.HeightCm = cm;
         await db.SaveAppSettingsAsync(settings);
     }
 
