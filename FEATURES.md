@@ -297,7 +297,7 @@ _Senast uppdaterad: 2026-06-27_
   _Beroenden: `NotificationService` utökning, `AppSettings`-fält._  
   Prioritet: **Medel**
 
-- [ ] **Mallkopiering** (S) – Kopiera en befintlig mall som bas för en ny. Saknas idag — användaren måste bygga från scratch.  
+- [x] **Mallkopiering** (S) – Kopiera en befintlig mall som bas för en ny. Saknas idag — användaren måste bygga från scratch.  
   _Beroenden: Ny DB-metod, enkel menyknapp i `LibraryPage`._  
   Prioritet: **Medel**
 
