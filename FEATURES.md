@@ -328,8 +328,7 @@ _Senast uppdaterad: 2026-06-27_
   _Beroenden: Utökning av `GetLastSessionSetsAsync`, ny UI-sektion._  
   Prioritet: **Medel**
 
-- [ ] **Exportera data** (M) – Exportera träningshistorik som CSV eller JSON. Viktigt för App Store-trovärdighet och GDPR.  
-  _Beroenden: Ny DB-metod, `Share`-API, ny menypost i SettingsPage._  
+- [x] **Exportera data** (M) – ZIP med sessions.csv + sets.csv via `ExportService`, `Share`-API i `SettingsViewModel`, exportrad i `SettingsPage`. Se specs/2026-06-27-export-data-design.md.  
   Prioritet: **Hög**
 
 - [ ] **Körjournal / progressrapport** (L) – PDF eller delningsbar bild med N veckors progression per övning.  
@@ -393,8 +392,7 @@ _Senast uppdaterad: 2026-06-27_
   _Beroenden: CloudKit-integration eller iCloud Documents-sökväg för SQLite-filen. Kräver entitlement `com.apple.developer.icloud-container-identifiers`._  
   Prioritet: **Hög**
 
-- [ ] **Exportera träningsdata** (M) – Se "Analys & insikter" ovan.  
-  _Beroenden: Minimal DB-metod + Share-API._  
+- [x] **Exportera träningsdata** (M) – Se "Analys & insikter" ovan. Implementerat.  
   Prioritet: **Hög**
 
 - [ ] **Importera från Strong / Hevy** (L) – CSV-import av historiska pass. Höjer switchingkostnaden för konkurrenternas användare.  
