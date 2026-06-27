@@ -314,6 +314,56 @@
   <data name="Hem_Coach_RecoveryTips" xml:space="preserve"><value>Recovery tips</value></data>
   <data name="Hem_Coach_NextSession" xml:space="preserve"><value>Suggest next session</value></data>
 
+  <!-- Hem — Coach chips -->
+  <data name="Hem_Chip_PRProximity_Text" xml:space="preserve">
+    <value>{0}: {1:F1} kg from PR</value>
+  </data>
+  <data name="Hem_Chip_MuscleGap_Text" xml:space="preserve">
+    <value>{0}: not trained lately</value>
+  </data>
+  <data name="Hem_Chip_VolumeTrendUp_Text" xml:space="preserve">
+    <value>Volume: +{0}% vs last week</value>
+  </data>
+  <data name="Hem_Chip_VolumeTrendDown_Text" xml:space="preserve">
+    <value>Volume: −{0}% vs last week</value>
+  </data>
+  <data name="Hem_Chip_WeekSummary_Text" xml:space="preserve">
+    <value>Week: {0} sessions, {1:N0} kg</value>
+  </data>
+  <data name="Hem_Chip_StreakWeeks_Text" xml:space="preserve">
+    <value>{0} weeks in a row</value>
+  </data>
+  <data name="Hem_Chip_PRProximity_Header" xml:space="preserve">
+    <value>{0} — close to PR</value>
+  </data>
+  <data name="Hem_Chip_PRProximity_Body" xml:space="preserve">
+    <value>{0}: {1:F1} kg away from a new PR.&#xA;Current max: {2:F1} kg&#xA;PR: {3:F1} kg</value>
+  </data>
+  <data name="Hem_Chip_MuscleGap_Header" xml:space="preserve">
+    <value>{0} — not trained lately</value>
+  </data>
+  <data name="Hem_Chip_MuscleGap_Body" xml:space="preserve">
+    <value>No sets for {0} in the past week.</value>
+  </data>
+  <data name="Hem_Chip_VolumeTrend_Header" xml:space="preserve">
+    <value>Volume trend</value>
+  </data>
+  <data name="Hem_Chip_VolumeTrend_Body" xml:space="preserve">
+    <value>This week: {0:N0} kg&#xA;Last week: {1:N0} kg</value>
+  </data>
+  <data name="Hem_Chip_WeekSummary_Header" xml:space="preserve">
+    <value>This week's training</value>
+  </data>
+  <data name="Hem_Chip_WeekSummary_Body" xml:space="preserve">
+    <value>{0} sessions · {1:N0} kg total volume</value>
+  </data>
+  <data name="Hem_Chip_StreakWeeks_Header" xml:space="preserve">
+    <value>Weekly streak</value>
+  </data>
+  <data name="Hem_Chip_StreakWeeks_Body" xml:space="preserve">
+    <value>{0} consecutive weeks with at least one session.</value>
+  </data>
+
   <!-- Hem — Sparkline accessibility -->
   <data name="Hem_Sparkline_Steps" xml:space="preserve"><value>Step trend last 7 days</value></data>
   <data name="Hem_Sparkline_Calories" xml:space="preserve"><value>Calorie trend last 7 days</value></data>

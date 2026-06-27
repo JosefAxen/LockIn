@@ -221,6 +221,25 @@ public static class AppResources
     public static string Hem_Coach_WeeklySummary        => Get(nameof(Hem_Coach_WeeklySummary));
     public static string Hem_Coach_RecoveryTips         => Get(nameof(Hem_Coach_RecoveryTips));
     public static string Hem_Coach_NextSession          => Get(nameof(Hem_Coach_NextSession));
+
+    // Hem — Coach chips
+    public static string Hem_Chip_PRProximity_Text    => Get(nameof(Hem_Chip_PRProximity_Text));
+    public static string Hem_Chip_MuscleGap_Text      => Get(nameof(Hem_Chip_MuscleGap_Text));
+    public static string Hem_Chip_VolumeTrendUp_Text  => Get(nameof(Hem_Chip_VolumeTrendUp_Text));
+    public static string Hem_Chip_VolumeTrendDown_Text => Get(nameof(Hem_Chip_VolumeTrendDown_Text));
+    public static string Hem_Chip_WeekSummary_Text    => Get(nameof(Hem_Chip_WeekSummary_Text));
+    public static string Hem_Chip_StreakWeeks_Text     => Get(nameof(Hem_Chip_StreakWeeks_Text));
+    public static string Hem_Chip_PRProximity_Header  => Get(nameof(Hem_Chip_PRProximity_Header));
+    public static string Hem_Chip_PRProximity_Body    => Get(nameof(Hem_Chip_PRProximity_Body));
+    public static string Hem_Chip_MuscleGap_Header    => Get(nameof(Hem_Chip_MuscleGap_Header));
+    public static string Hem_Chip_MuscleGap_Body      => Get(nameof(Hem_Chip_MuscleGap_Body));
+    public static string Hem_Chip_VolumeTrend_Header  => Get(nameof(Hem_Chip_VolumeTrend_Header));
+    public static string Hem_Chip_VolumeTrend_Body    => Get(nameof(Hem_Chip_VolumeTrend_Body));
+    public static string Hem_Chip_WeekSummary_Header  => Get(nameof(Hem_Chip_WeekSummary_Header));
+    public static string Hem_Chip_WeekSummary_Body    => Get(nameof(Hem_Chip_WeekSummary_Body));
+    public static string Hem_Chip_StreakWeeks_Header   => Get(nameof(Hem_Chip_StreakWeeks_Header));
+    public static string Hem_Chip_StreakWeeks_Body     => Get(nameof(Hem_Chip_StreakWeeks_Body));
+
     public static string Hem_Sparkline_Steps            => Get(nameof(Hem_Sparkline_Steps));
     public static string Hem_Sparkline_Calories         => Get(nameof(Hem_Sparkline_Calories));
     public static string Hem_Sparkline_ActiveTime       => Get(nameof(Hem_Sparkline_ActiveTime));
