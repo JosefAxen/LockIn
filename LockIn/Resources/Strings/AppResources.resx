@@ -425,6 +425,9 @@
   <data name="Library_Badge_Custom" xml:space="preserve"><value>EGNA</value></data>
   <data name="Library_ViewProgram" xml:space="preserve"><value>SE PROGRAM →</value></data>
   <data name="Library_DaysPerWeek_Format" xml:space="preserve"><value>{0} dgr/v</value></data>
+  <data name="Library_DuplicateTemplate" xml:space="preserve">
+    <value>Kopiera</value>
+  </data>
 
   <!-- Library — VM strings -->
   <data name="Library_Chip_All" xml:space="preserve"><value>ALLA</value></data>

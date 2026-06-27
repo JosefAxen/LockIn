@@ -429,6 +429,33 @@ public class DatabaseService
         return await _db.DeleteAsync(template);
     }
 
+    public async Task<int> DuplicateTemplateAsync(WorkoutTemplate source, string newName)
+    {
+        await InitAsync();
+        var copy = new WorkoutTemplate { Name = newName };
+        await _db.InsertAsync(copy);
+
+        var sourceExercises = await GetTemplateExercisesAsync(source.Id);
+        var copies = sourceExercises.Select(te => new TemplateExercise
+        {
+            TemplateId         = copy.Id,
+            ExerciseId         = te.ExerciseId,
+            OrderIndex         = te.OrderIndex,
+            Sets               = te.Sets,
+            Reps               = te.Reps,
+            TargetWeight       = te.TargetWeight,
+            DefaultRestSeconds = te.DefaultRestSeconds,
+            TargetRepsMin      = te.TargetRepsMin,
+            TargetRepsMax      = te.TargetRepsMax,
+            WeightIncrementKg  = te.WeightIncrementKg,
+            AutoProgressMode   = te.AutoProgressMode,
+            SupersetGroupId    = te.SupersetGroupId,
+        }).ToList();
+
+        await ReplaceTemplateExercisesAsync(copy.Id, copies);
+        return copy.Id;
+    }
+
     public async Task<Dictionary<int, DateTime>> GetLastSessionDatePerTemplateAsync()
     {
         await InitAsync();
