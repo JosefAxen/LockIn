@@ -350,7 +350,7 @@ _Senast uppdaterad: 2026-06-27_
   _Beroenden: SkiaSharp off-screen rendering, `Share`-API._  
   Prioritet: **Låg**
 
-- [ ] **Träningspåminnelser** (S) – Schemalagda notiser för träningsdagar (t.ex. "Dags att träna! Benen väntar.").  
+- [x] **Träningspåminnelser** (S) – Schemalagda notiser för träningsdagar (t.ex. "Dags att träna! Benen väntar.").  
   _Beroenden: `NotificationService` utökning, `AppSettings`-fält för dagar + tid._  
   Prioritet: **Medel**
 
