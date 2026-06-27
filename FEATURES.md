@@ -266,8 +266,7 @@ _Senast uppdaterad: 2026-06-27_
 - [x] **Timerset med sekundinmatning** (S) – `SetType.Time`, ⏱-label, "SEK"-placeholder och `DurationSeconds`-lagring var redan implementerade. Fixat: `DurationSeconds` från föregående session används nu som hint (tidigare visades alltid "SEK"), och auto-fill gäller nu även Time-set vid completing.  
   Prioritet: **Hög**
 
-- [ ] **Värme-set-visualisering** (S) – Warmup-set (SetType.Warmup) loggas redan, men de är inte tydligt separerade från arbetsset i PostWorkoutPage eller SessionDetailPage.  
-  _Beroenden: Filtrering i `GetSessionVolumeByMuscleGroupAsync`._  
+- [x] **Värme-set-visualisering** (S) – `SessionExerciseDetailRow` fick `SetLabel`/`SetLabelColor`/`WeightDisplay`/`RepsDisplay`. SessionDetailPage visar nu "W" (amber), "↓" (rosa), "⏱" (blå) för respektive set-typ. Time-set visar DurationSeconds i sekunder istället för 0. Volymen i PostWorkoutPage exkluderade redan warmup-set via SQL-filtret.  
   Prioritet: **Medel**
 
 - [ ] **Snabb-logg utan mall** (M) – Möjlighet att logga enstaka set direkt från LibraryPage (träna utan att skapa ett pass), till exempel för drop-in-set.  
