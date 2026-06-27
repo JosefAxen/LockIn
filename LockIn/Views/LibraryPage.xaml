@@ -348,7 +348,7 @@
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}}, Path=EditTemplateCommand}"
                                         CommandParameter="{Binding .}"/>
                                 </Border.GestureRecognizers>
-                                <Grid ColumnDefinitions="12,*,44,44" ColumnSpacing="10">
+                                <Grid ColumnDefinitions="12,*,44,44,44" ColumnSpacing="10">
                                     <Ellipse Grid.Column="0"
                                              WidthRequest="10" HeightRequest="10"
                                              Fill="{StaticResource ForgeAccentCoral}"
@@ -374,6 +374,15 @@
                                         </Border.GestureRecognizers>
                                     </Border>
                                     <Button Grid.Column="3"
+                                            Text="⧉"
+                                            BackgroundColor="Transparent"
+                                            TextColor="{StaticResource ForgeMuted}"
+                                            FontSize="16" HeightRequest="44"
+                                            MinimumWidthRequest="44"
+                                            Padding="0"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}}, Path=DuplicateTemplateCommand}"
+                                            CommandParameter="{Binding .}"/>
+                                    <Button Grid.Column="4"
                                             Text="✕"
                                             BackgroundColor="Transparent"
                                             TextColor="{StaticResource ForgeMuted}"
