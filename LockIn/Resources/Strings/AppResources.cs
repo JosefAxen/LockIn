@@ -150,6 +150,7 @@ public static class AppResources
     public static string Train_Muscle_Triceps             => Get(nameof(Train_Muscle_Triceps));
     public static string Train_Muscle_Legs                => Get(nameof(Train_Muscle_Legs));
     public static string Train_Muscle_Core                => Get(nameof(Train_Muscle_Core));
+    public static string Train_Muscle_Forearms            => Get(nameof(Train_Muscle_Forearms));
 
     // ── Hem ─────────────────────────────────────────────────────────
     public static string Hem_ScoreCard_Title            => Get(nameof(Hem_ScoreCard_Title));

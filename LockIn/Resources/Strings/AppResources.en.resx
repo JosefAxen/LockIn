@@ -296,6 +296,7 @@
   <data name="Train_Muscle_Triceps" xml:space="preserve"><value>TRICEPS</value></data>
   <data name="Train_Muscle_Legs" xml:space="preserve"><value>LEGS</value></data>
   <data name="Train_Muscle_Core" xml:space="preserve"><value>CORE</value></data>
+  <data name="Train_Muscle_Forearms" xml:space="preserve"><value>FOREARMS</value></data>
 
   <!-- Hem — Accessibility labels -->
   <data name="Hem_Accessibility_GaugeLoading" xml:space="preserve"><value>Training score loading</value></data>
