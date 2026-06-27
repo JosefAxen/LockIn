@@ -314,7 +314,7 @@ _Senast uppdaterad: 2026-06-27_
   _Beroenden: Ny HealthKit-permission, ny `IHealthService`-metod._  
   Prioritet: **Medel**
 
-- [ ] **Vikt-trend och BMI** (S) – Beräkna BMI eller trendriktning (viktnedgång/uppgång) baserat på `BodyWeightEntries`. Appen har all data men visar bara råvärden.  
+- [x] **Vikt-trend och BMI** (S) – Beräkna BMI eller trendriktning (viktnedgång/uppgång) baserat på `BodyWeightEntries`. Appen har all data men visar bara råvärden.  
   _Beroenden: Beräkning i `KroppViewModel` eller `BodyWeightViewModel`._  
   Prioritet: **Medel**
 
