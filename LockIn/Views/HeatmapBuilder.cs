@@ -27,7 +27,7 @@ public static class HeatmapBuilder
                 StrokeShape = new Microsoft.Maui.Controls.Shapes.RoundRectangle { CornerRadius = 18 },
                 StrokeThickness = 0,
                 Padding = new Thickness(8, 14, 8, 10),
-                HeightRequest = 96,
+                HeightRequest = string.IsNullOrEmpty(tile.FrequencyText) ? 96 : 108,
                 Shadow = new Shadow
                 {
                     Brush = Colors.Black,
@@ -75,6 +75,19 @@ public static class HeatmapBuilder
                 CharacterSpacing = -1,
                 HorizontalOptions = LayoutOptions.Center,
             });
+            if (!string.IsNullOrEmpty(tile.FrequencyText))
+            {
+                stack.Add(new Label
+                {
+                    Text = tile.FrequencyText,
+                    FontSize = 8,
+                    FontFamily = "DMSansRegular",
+                    TextColor = tile.TextColor,
+                    Opacity = 0.65,
+                    HorizontalOptions = LayoutOptions.Center,
+                    CharacterSpacing = 0.3,
+                });
+            }
             Grid.SetRow(stack, 0);
             rootGrid.Children.Add(stack);
 

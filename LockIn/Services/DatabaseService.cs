@@ -858,6 +858,21 @@ public class DatabaseService
         return result;
     }
 
+    public async Task<Dictionary<MuscleGroup, int>> GetMuscleFrequencyAsync(int weeks)
+    {
+        await InitAsync();
+        var cutoff = DateTime.Now.AddDays(-7 * weeks);
+        var rows = await _db.QueryAsync<MuscleFrequencyRow>(
+            @"SELECT e.MuscleGroup, COUNT(DISTINCT ws.Id) AS SessionCount
+              FROM SessionExercises se
+              JOIN Exercises e ON e.Id = se.ExerciseId
+              JOIN WorkoutSessions ws ON ws.Id = se.SessionId
+              WHERE ws.CompletedAt IS NOT NULL
+                AND ws.StartedAt >= ?
+              GROUP BY e.MuscleGroup", cutoff);
+        return rows.ToDictionary(r => (MuscleGroup)r.MuscleGroup, r => r.SessionCount);
+    }
+
     public async Task<HashSet<int>> GetTrainedDaysInMonthAsync(int year, int month)
     {
         await InitAsync();
@@ -965,6 +980,12 @@ public class DatabaseService
     {
         public int MuscleGroup { get; set; }
         public int? RIR { get; set; }
+    }
+
+    private class MuscleFrequencyRow
+    {
+        public int MuscleGroup { get; set; }
+        public int SessionCount { get; set; }
     }
 
     private class PRGapRow

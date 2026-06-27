@@ -233,5 +233,6 @@ public class HeatmapTile
     public double Score { get; set; }
     public Color TileColor { get; set; } = Colors.Transparent;
     public Color TextColor { get; set; } = Colors.White;
+    public string FrequencyText { get; set; } = "";
     public string ScoreText => Score >= 0.05 ? Score.ToString("F1") : "—";
 }

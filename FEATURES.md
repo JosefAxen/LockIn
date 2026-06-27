@@ -311,8 +311,7 @@ _Senast uppdaterad: 2026-06-27_
   _Beroenden: Ny DB-query `GetWeeklyVolumeByMuscleGroupAsync(weeks)`, ny vy eller sektion på HemPage._  
   Prioritet: **Hög**
 
-- [ ] **Träningsfrekvens-analys** (S) – Visa genomsnittlig frekvens per muskelgrupp per vecka. Enkel komplettering till HemPage-heatmap.  
-  _Beroenden: Query på `SessionExercises` + `Exercises.MuscleGroup`._  
+- [x] **Träningsfrekvens-analys** (S) – Genomsnittlig frekvens per muskelgrupp (senaste 4 veckor) visas som "X/v"-label under scoret i varje heatmap-tile på HemPage. `DatabaseService.GetMuscleFrequencyAsync(4)` + `HeatmapTile.FrequencyText`.  
   Prioritet: **Hög**
 
 - [ ] **VO2Max-estimat** (M) – HealthKit exponerar VO2Max för Apple Watch-användare. Kan visas på HemPage som konditionsmått.  

@@ -367,7 +367,8 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
 
     private async Task LoadHeatmapAsync()
     {
-        var scores = await db.GetMuscleScoresAsync();
+        var scores    = await db.GetMuscleScoresAsync();
+        var frequency = await db.GetMuscleFrequencyAsync(4);
         var muscles = new (MuscleGroup mg, string name)[]
         {
             (MuscleGroup.Chest,     AppResources.Train_Muscle_Chest),
@@ -382,12 +383,18 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
         {
             var score = scores.TryGetValue(m.mg, out var s) ? s : 0.0;
             var t = score / 10.0;
+            var count = frequency.TryGetValue(m.mg, out var c) ? c : 0;
+            var freqPerWeek = count / 4.0;
+            var freqText = count == 0 ? ""
+                : freqPerWeek % 1 < 0.05 ? $"{(int)Math.Round(freqPerWeek)}/v"
+                : $"{freqPerWeek:F1}/v";
             return new HeatmapTile
             {
-                Name      = m.name,
-                Score     = score,
-                TileColor = DesignTokens.HeatmapTile(t),
-                TextColor = DesignTokens.HeatmapText(t),
+                Name          = m.name,
+                Score         = score,
+                TileColor     = DesignTokens.HeatmapTile(t),
+                TextColor     = DesignTokens.HeatmapText(t),
+                FrequencyText = freqText,
             };
         }).ToList();
     }
