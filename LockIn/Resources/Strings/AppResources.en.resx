@@ -769,6 +769,21 @@
   <data name="Program_531bbb_Day1_Label" xml:space="preserve"><value>Session A — Squat &amp; Bench</value></data>
   <data name="Program_531bbb_Day2_Label" xml:space="preserve"><value>Session B — Deadlift &amp; Press</value></data>
   <data name="Program_531bbb_Day3_Label" xml:space="preserve"><value>Session C — Strength &amp; Accessories</value></data>
+  <data name="Program_phul_Description" xml:space="preserve"><value>4-day split with two strength-focused and two hypertrophy-focused sessions. Effective combination for building strength and muscle.</value></data>
+  <data name="Program_phul_Day1_Label" xml:space="preserve"><value>Upper — Power</value></data>
+  <data name="Program_phul_Day2_Label" xml:space="preserve"><value>Lower — Power</value></data>
+  <data name="Program_phul_Day3_Label" xml:space="preserve"><value>Upper — Hypertrophy</value></data>
+  <data name="Program_phul_Day4_Label" xml:space="preserve"><value>Lower — Hypertrophy</value></data>
+  <data name="Program_phat_Description" xml:space="preserve"><value>5-day program with 2 power days and 3 hypertrophy days. Inspired by Layne Norton's training philosophy.</value></data>
+  <data name="Program_phat_Day1_Label" xml:space="preserve"><value>Upper — Power</value></data>
+  <data name="Program_phat_Day2_Label" xml:space="preserve"><value>Lower — Power</value></data>
+  <data name="Program_phat_Day3_Label" xml:space="preserve"><value>Back &amp; Shoulders</value></data>
+  <data name="Program_phat_Day4_Label" xml:space="preserve"><value>Chest &amp; Arms</value></data>
+  <data name="Program_phat_Day5_Label" xml:space="preserve"><value>Legs</value></data>
+  <data name="Program_arnoldsplit_Description" xml:space="preserve"><value>Arnold Schwarzenegger's classic 3-way split. Run each session twice per week for 6 training days total.</value></data>
+  <data name="Program_arnoldsplit_Day1_Label" xml:space="preserve"><value>Chest &amp; Back</value></data>
+  <data name="Program_arnoldsplit_Day2_Label" xml:space="preserve"><value>Shoulders &amp; Arms</value></data>
+  <data name="Program_arnoldsplit_Day3_Label" xml:space="preserve"><value>Legs</value></data>
 
   <!-- Notifications -->
   <data name="Notification_RestTimer_Title" xml:space="preserve"><value>Rest timer done!</value></data>

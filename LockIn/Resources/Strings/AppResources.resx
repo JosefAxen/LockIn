@@ -769,6 +769,21 @@
   <data name="Program_531bbb_Day1_Label" xml:space="preserve"><value>Pass A — Knäböj &amp; Bänkpress</value></data>
   <data name="Program_531bbb_Day2_Label" xml:space="preserve"><value>Pass B — Marklyft &amp; Militärpress</value></data>
   <data name="Program_531bbb_Day3_Label" xml:space="preserve"><value>Pass C — Styrka &amp; Accessoarer</value></data>
+  <data name="Program_phul_Description" xml:space="preserve"><value>4-dagars split med två styrkefokuserade och två hypertrofifokuserade pass. Effektiv kombination för styrka och muskeltillväxt.</value></data>
+  <data name="Program_phul_Day1_Label" xml:space="preserve"><value>Upper — Styrka</value></data>
+  <data name="Program_phul_Day2_Label" xml:space="preserve"><value>Lower — Styrka</value></data>
+  <data name="Program_phul_Day3_Label" xml:space="preserve"><value>Upper — Hypertrofi</value></data>
+  <data name="Program_phul_Day4_Label" xml:space="preserve"><value>Lower — Hypertrofi</value></data>
+  <data name="Program_phat_Description" xml:space="preserve"><value>5-dagars program med 2 styrkdagar och 3 hypertrofidagar. Inspirerat av Layne Nortons träningsfilosofi.</value></data>
+  <data name="Program_phat_Day1_Label" xml:space="preserve"><value>Upper — Styrka</value></data>
+  <data name="Program_phat_Day2_Label" xml:space="preserve"><value>Lower — Styrka</value></data>
+  <data name="Program_phat_Day3_Label" xml:space="preserve"><value>Rygg &amp; Axlar</value></data>
+  <data name="Program_phat_Day4_Label" xml:space="preserve"><value>Bröst &amp; Armar</value></data>
+  <data name="Program_phat_Day5_Label" xml:space="preserve"><value>Ben</value></data>
+  <data name="Program_arnoldsplit_Description" xml:space="preserve"><value>Arnold Schwarzeneggers klassiska 3-split. Kör varje pass 2 gånger i veckan för 6 träningsdagar totalt.</value></data>
+  <data name="Program_arnoldsplit_Day1_Label" xml:space="preserve"><value>Bröst &amp; Rygg</value></data>
+  <data name="Program_arnoldsplit_Day2_Label" xml:space="preserve"><value>Axlar &amp; Armar</value></data>
+  <data name="Program_arnoldsplit_Day3_Label" xml:space="preserve"><value>Ben</value></data>
 
   <!-- Notifications -->
   <data name="Notification_RestTimer_Title" xml:space="preserve"><value>Vilotimer klar!</value></data>

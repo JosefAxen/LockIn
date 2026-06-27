@@ -285,8 +285,7 @@ _Senast uppdaterad: 2026-06-27_
 ---
 
 ### Planering & program
-- [ ] **Hypertrofi-program** (M) – Appen har 6 styrkebaserade program (PPL, U/L, Starting Strength, Texas Method, 5/3/1) men saknar rena hypertrofi-scheman (t.ex. PHUL, PHAT, Arnold Split).  
-  _Beroenden: Nya poster i `WorkoutPrograms.cs` + lokaliseringsnycklar._  
+- [x] **Hypertrofi-program** (M) – Lade till PHUL (4 dagar), PHAT (5 dagar) och Arnold Split (3-split × 2) i `WorkoutPrograms.All` med svenska och engelska i18n-nycklar. Totalt 9 program.  
   Prioritet: **Hög**
 
 - [ ] **Anpassningsbar programlängd** (L) – Användaren kan inte ändra antal set/reps i ett inbyggt program utan att skapa en kopia. Lägg till "Anpassa program"-flöde.  
