@@ -15,7 +15,13 @@ public partial class LoggedSetRow : ObservableObject
     [ObservableProperty] private int _rir = -1;
     [ObservableProperty] private bool _isCompleted;
     [ObservableProperty] private bool _isPR;
-    [ObservableProperty] private SetType _setType = SetType.Normal;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(SetLabel))]
+    [NotifyPropertyChangedFor(nameof(SetLabelColor))]
+    [NotifyPropertyChangedFor(nameof(SeparatorLabel))]
+    [NotifyPropertyChangedFor(nameof(IsDropset))]
+    [NotifyPropertyChangedFor(nameof(RowAccentColor))]
+    private SetType _setType = SetType.Normal;
 
     public string PrevWeightHint { get; init; } = "";
     public string PrevRepsHint { get; init; } = "";
@@ -50,6 +56,12 @@ public partial class LoggedSetRow : ObservableObject
         _               => DesignTokens.SetNormal
     };
 
+    public bool IsDropset => SetType == SetType.Dropset;
+
+    public Color RowAccentColor => SetType == SetType.Dropset
+        ? DesignTokens.SetDropset.WithAlpha(0.15f)
+        : Colors.Transparent;
+
     public string SeparatorLabel => SetType == SetType.Time ? "⏱" : "×";
 
     public string RepsPlaceholder => SetType == SetType.Time
@@ -58,9 +70,6 @@ public partial class LoggedSetRow : ObservableObject
 
     partial void OnSetTypeChanged(SetType value)
     {
-        OnPropertyChanged(nameof(SetLabel));
-        OnPropertyChanged(nameof(SetLabelColor));
-        OnPropertyChanged(nameof(SeparatorLabel));
         OnPropertyChanged(nameof(RepsPlaceholder));
     }
 

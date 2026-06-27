@@ -264,6 +264,24 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             SetType.Dropset => SetType.Normal,
             _               => SetType.Normal
         };
+
+        if (set.SetType == SetType.Dropset)
+            SuggestDropWeight(set);
+    }
+
+    private void SuggestDropWeight(LoggedSetRow set)
+    {
+        var section = Exercises.FirstOrDefault(s => s.Sets.Contains(set));
+        if (section == null) return;
+        var idx = section.Sets.IndexOf(set);
+        if (idx <= 0) return;
+        var prev = section.Sets[idx - 1];
+        var baseStr = !string.IsNullOrEmpty(prev.WeightText) ? prev.WeightText : prev.PrevWeightHint;
+        if (string.IsNullOrEmpty(baseStr)) return;
+        if (!decimal.TryParse(baseStr, System.Globalization.NumberStyles.Any,
+                System.Globalization.CultureInfo.InvariantCulture, out var baseW) || baseW <= 0) return;
+        var suggested = Math.Round(baseW * 0.8m / 2.5m) * 2.5m;
+        set.WeightText = suggested.ToString("G", System.Globalization.CultureInfo.InvariantCulture);
     }
 
     [RelayCommand]

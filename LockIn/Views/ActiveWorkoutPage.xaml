@@ -295,7 +295,7 @@
 
                                                     <!-- Set number / type label — tap to change type -->
                                                     <Border Grid.Column="0"
-                                                            BackgroundColor="Transparent"
+                                                            BackgroundColor="{Binding RowAccentColor}"
                                                             StrokeThickness="0"
                                                             Padding="0"
                                                             MinimumHeightRequest="44">
