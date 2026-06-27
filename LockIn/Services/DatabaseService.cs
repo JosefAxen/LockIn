@@ -1159,4 +1159,80 @@ public class DatabaseService
             }
         }
     }
+
+    // ── Export ─────────────────────────────────────────────────────────────────
+
+    public class ExportSessionRow
+    {
+        public int SessionId { get; set; }
+        public DateTime StartedAt { get; set; }
+        public DateTime? CompletedAt { get; set; }
+        public string TemplateName { get; set; } = "";
+        public string Notes { get; set; } = "";
+        public int TotalSets { get; set; }
+        public double TotalVolumeKg { get; set; }
+        public int PRCount { get; set; }
+    }
+
+    public class ExportSetRow
+    {
+        public int SessionId { get; set; }
+        public DateTime SessionDate { get; set; }
+        public string ExerciseName { get; set; } = "";
+        public int MuscleGroup { get; set; }
+        public int Equipment { get; set; }
+        public int SetNumber { get; set; }
+        public int SetType { get; set; }
+        public double WeightKg { get; set; }
+        public int Reps { get; set; }
+        public int RIR { get; set; }
+        public bool IsPR { get; set; }
+        public int DurationSeconds { get; set; }
+    }
+
+    public async Task<(List<ExportSessionRow> Sessions, List<ExportSetRow> Sets)> GetExportDataAsync()
+    {
+        await InitAsync();
+
+        var sessions = await _db.QueryAsync<ExportSessionRow>(@"
+            SELECT
+                ws.Id                                                    AS SessionId,
+                ws.StartedAt,
+                ws.CompletedAt,
+                COALESCE(wt.Name, '')                                    AS TemplateName,
+                ws.Notes,
+                COUNT(ls.Id)                                             AS TotalSets,
+                COALESCE(SUM(CAST(ls.WeightKg AS REAL) * ls.Reps), 0.0) AS TotalVolumeKg,
+                COALESCE(SUM(ls.IsPR), 0)                                AS PRCount
+            FROM WorkoutSessions ws
+            LEFT JOIN WorkoutTemplates wt ON wt.Id = ws.TemplateId
+            LEFT JOIN SessionExercises se ON se.SessionId = ws.Id
+            LEFT JOIN LoggedSets ls ON ls.SessionExerciseId = se.Id
+            WHERE ws.CompletedAt IS NOT NULL
+            GROUP BY ws.Id
+            ORDER BY ws.StartedAt");
+
+        var sets = await _db.QueryAsync<ExportSetRow>(@"
+            SELECT
+                ws.Id           AS SessionId,
+                ws.StartedAt    AS SessionDate,
+                e.Name          AS ExerciseName,
+                e.MuscleGroup,
+                e.Equipment,
+                ls.SetNumber,
+                ls.SetType,
+                CAST(ls.WeightKg AS REAL) AS WeightKg,
+                ls.Reps,
+                ls.RIR,
+                ls.IsPR,
+                ls.DurationSeconds
+            FROM LoggedSets ls
+            JOIN SessionExercises se ON se.Id = ls.SessionExerciseId
+            JOIN WorkoutSessions ws ON ws.Id = se.SessionId
+            JOIN Exercises e ON e.Id = se.ExerciseId
+            WHERE ws.CompletedAt IS NOT NULL
+            ORDER BY ws.StartedAt, se.OrderIndex, ls.SetNumber");
+
+        return (sessions, sets);
+    }
 }
