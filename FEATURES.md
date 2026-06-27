@@ -277,8 +277,7 @@ _Senast uppdaterad: 2026-06-27_
   _Beroenden: Ny tabell `CardioSessions`, ny vy, `HKWorkoutActivityType`._  
   Prioritet: **Låg**
 
-- [ ] **Dropset- och supermax-UI** (S) – `SetType.Dropset` finns i enum men saknar dedikerat UI (t.ex. kedjad vikt-inmatning).  
-  _Beroenden: UI-justering i set-raden i `ActiveWorkoutPage`._  
+- [x] **Dropset- och supermax-UI** (S) – När ett set cyklas till Dropset auto-föreslår ViewModel 80% av föregående sets vikt (avrundat till närmaste 2.5 kg). Set-label-kolumnen får en subtil rosa bakgrundston via `RowAccentColor` på `LoggedSetRow`. `IsDropset`/`RowAccentColor` notifieras via `[NotifyPropertyChangedFor]` vid `SetType`-ändringar.  
   Prioritet: **Medel**
 
 ---
