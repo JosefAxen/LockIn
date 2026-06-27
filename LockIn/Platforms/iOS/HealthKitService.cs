@@ -27,7 +27,6 @@ public class HealthKitService : IHealthService
     private static readonly HKObjectType[] s_writeTypes =
     [
         HKQuantityType.Create(HKQuantityTypeIdentifier.ActiveEnergyBurned)!,
-        HKWorkoutType.GetWorkoutType()!,
     ];
 
     public async Task<bool> RequestPermissionsAsync()
@@ -347,7 +346,7 @@ public class HealthKitService : IHealthService
             : null;
 
         var workout = HKWorkout.Create(activityType, ToNSDate(start), ToNSDate(end),
-                                       (end - start).TotalSeconds, kcalQty, distQty, null);
+                                       (end - start).TotalSeconds, kcalQty, distQty, (NSDictionary?)null);
 
         var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
         _store.SaveObject(workout, (ok, err) =>
