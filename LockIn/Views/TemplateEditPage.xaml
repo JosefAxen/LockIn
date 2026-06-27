@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:LockIn.ViewModels"
@@ -9,12 +9,11 @@
              Title="{loc:Localize TemplateEdit_PageTitle}"
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
              Shell.NavBarIsVisible="False"
-             BackgroundColor="Transparent"
-             ios:Page.UseSafeArea="False">
+             BackgroundColor="Transparent">
 
     <Grid RowDefinitions="Auto,*" Padding="0" SafeAreaEdges="None">
 
-        <!-- Atmosfärisk bakgrund -->
+        <!-- Atmosf�risk bakgrund -->
         <controls:AtmosphericBackgroundView Grid.RowSpan="2" InputTransparent="True"/>
 
         <!-- Permanent status bar gradient -->
@@ -59,7 +58,7 @@
             <Label Grid.Column="1" Text="{loc:Localize TemplateEdit_PageTitle}"
                    Style="{StaticResource DisplayLabel}"
                    FontSize="24" HorizontalOptions="Center" VerticalOptions="Center"/>
-            <!-- Spara-knapp — pill, premium gym-stil -->
+            <!-- Spara-knapp � pill, premium gym-stil -->
             <Border Grid.Column="2"
                     BackgroundColor="{StaticResource ForgeAccent}"
                     StrokeShape="RoundRectangle 20"
@@ -113,7 +112,7 @@
                                                FontSize="15"
                                                VerticalOptions="Center"/>
                                         <Button Grid.Column="1"
-                                                Text="✕"
+                                                Text="?"
                                                 BackgroundColor="Transparent"
                                                 TextColor="{StaticResource ForgeMuted}"
                                                 FontSize="15"
@@ -311,7 +310,7 @@
                                                     HeightRequest="46">
                                                 <Entry Text="{Binding WeightText, Mode=TwoWay}"
                                                        Keyboard="Numeric"
-                                                       Placeholder="—"
+                                                       Placeholder="�"
                                                        PlaceholderColor="{StaticResource ForgeMuted}"
                                                        HorizontalTextAlignment="Center"
                                                        FontFamily="BebasNeue"
@@ -363,7 +362,7 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- Bottom gradient fade — matchar topp-gradienten spegelvänt -->
+        <!-- Bottom gradient fade � matchar topp-gradienten spegelv�nt -->
         <BoxView Grid.RowSpan="2" InputTransparent="True" VerticalOptions="End" HeightRequest="150" ZIndex="22">
             <BoxView.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">

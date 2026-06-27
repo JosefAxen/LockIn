@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:LockIn.ViewModels"
@@ -12,8 +12,7 @@
              x:DataType="vm:LibraryViewModel"
              Title="{loc:Localize Library_Title}"
              Shell.NavBarIsVisible="False"
-             BackgroundColor="Transparent"
-             ios:Page.UseSafeArea="False">
+             BackgroundColor="Transparent">
 
     <ContentPage.Resources>
         <vm:MuscleGroupColorConverter x:Key="MuscleGroupColorConverter"/>
@@ -24,7 +23,7 @@
 
     <Grid SafeAreaEdges="None">
 
-        <!-- Atmosfärisk bakgrund -->
+        <!-- Atmosf�risk bakgrund -->
         <controls:AtmosphericBackgroundView InputTransparent="True"/>
 
         <!-- Permanent status bar gradient (alltid synlig, fyller Dynamic Island-zonen) -->
@@ -37,7 +36,7 @@
             </BoxView.Background>
         </BoxView>
 
-        <!-- Loading indicator — Forge stålband -->
+        <!-- Loading indicator � Forge st�lband -->
         <VerticalStackLayout IsVisible="{Binding IsLoading}"
                              HorizontalOptions="Center"
                              VerticalOptions="Center"
@@ -82,7 +81,7 @@
                         VerticalScrollBarVisibility="Never">
             <CollectionView.Header>
                 <VerticalStackLayout Spacing="0">
-                    <!-- Sidrubrik — scrollar bort med innehållet -->
+                    <!-- Sidrubrik � scrollar bort med inneh�llet -->
                     <Grid ColumnDefinitions="*,Auto" Padding="16,56,16,8">
                         <Label Grid.Column="0" Text="{loc:Localize Library_Title}"
                                FontFamily="BebasNeue" FontSize="34" CharacterSpacing="1"
@@ -96,7 +95,7 @@
                                 Command="{Binding ActionButtonCommand}"
                                 VerticalOptions="Center"/>
                     </Grid>
-                    <!-- Tab-pill — scrollar med innehållet -->
+                    <!-- Tab-pill � scrollar med inneh�llet -->
                     <Border x:Name="TabSegmentExercises"
                             BackgroundColor="{StaticResource ForgePillTrack}"
                             StrokeThickness="0"
@@ -137,7 +136,7 @@
                             </Border>
                         </Grid>
                     </Border>
-                    <!-- Pill-formad sökruta -->
+                    <!-- Pill-formad s�kruta -->
                     <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface2}}"
                             StrokeShape="RoundRectangle 26"
                             StrokeThickness="0"
@@ -146,7 +145,7 @@
                             Margin="16,0,16,10">
                         <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
                             <Label Grid.Column="0"
-                                   Text="⌕"
+                                   Text="?"
                                    FontSize="20"
                                    TextColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"
                                    VerticalOptions="Center"/>
@@ -276,7 +275,7 @@
         <ScrollView IsVisible="{Binding ShowTemplates}" VerticalScrollBarVisibility="Never"
                     Scrolled="OnTemplatesScrolled">
             <VerticalStackLayout Spacing="0">
-                <!-- Sidrubrik — scrollar bort med innehållet -->
+                <!-- Sidrubrik � scrollar bort med inneh�llet -->
                 <Grid ColumnDefinitions="*,Auto" Padding="16,56,16,8">
                     <Label Grid.Column="0" Text="{loc:Localize Library_Title}"
                            FontFamily="BebasNeue" FontSize="34" CharacterSpacing="1"
@@ -290,7 +289,7 @@
                             Command="{Binding ActionButtonCommand}"
                             VerticalOptions="Center"/>
                 </Grid>
-                <!-- Tab-pill — scrollar med innehållet -->
+                <!-- Tab-pill � scrollar med inneh�llet -->
                 <Border x:Name="TabSegmentTemplates"
                         BackgroundColor="{StaticResource ForgePillTrack}"
                         StrokeThickness="0"
@@ -374,7 +373,7 @@
                                         </Border.GestureRecognizers>
                                     </Border>
                                     <Button Grid.Column="3"
-                                            Text="⧉"
+                                            Text="?"
                                             BackgroundColor="Transparent"
                                             TextColor="{StaticResource ForgeMuted}"
                                             FontSize="16" HeightRequest="44"
@@ -383,7 +382,7 @@
                                             Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}}, Path=DuplicateTemplateCommand}"
                                             CommandParameter="{Binding .}"/>
                                     <Button Grid.Column="4"
-                                            Text="✕"
+                                            Text="?"
                                             BackgroundColor="Transparent"
                                             TextColor="{StaticResource ForgeMuted}"
                                             FontSize="15" HeightRequest="44"
@@ -415,14 +414,14 @@
         <ScrollView IsVisible="{Binding ShowPrograms}" VerticalScrollBarVisibility="Never"
                     Scrolled="OnProgramsScrolled">
             <VerticalStackLayout Spacing="0">
-                <!-- Sidrubrik — scrollar bort med innehållet -->
+                <!-- Sidrubrik � scrollar bort med inneh�llet -->
                 <Grid ColumnDefinitions="*,Auto" Padding="16,56,16,8">
                     <Label Grid.Column="0" Text="{loc:Localize Library_Title}"
                            FontFamily="BebasNeue" FontSize="34" CharacterSpacing="1"
                            TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
                            VerticalOptions="Center"/>
                 </Grid>
-                <!-- Tab-pill — scrollar med innehållet -->
+                <!-- Tab-pill � scrollar med inneh�llet -->
                 <Border x:Name="TabSegmentPrograms"
                         BackgroundColor="{StaticResource ForgePillTrack}"
                         StrokeThickness="0"
@@ -537,7 +536,7 @@
             </Grid>
         </Grid>
 
-        <!-- ═══ WORKOUT BANNER — Live Forge Capsule ═══ -->
+        <!-- --- WORKOUT BANNER � Live Forge Capsule --- -->
         <Grid x:Name="WorkoutBanner"
               IsVisible="False"
               VerticalOptions="End"

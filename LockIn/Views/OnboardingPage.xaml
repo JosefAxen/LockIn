@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:LockIn.ViewModels"
@@ -8,8 +8,7 @@
              x:Class="LockIn.Views.OnboardingPage"
              x:DataType="vm:OnboardingViewModel"
              Shell.NavBarIsVisible="False"
-             BackgroundColor="Transparent"
-             ios:Page.UseSafeArea="False">
+             BackgroundColor="Transparent">
 
     <ContentPage.Resources>
         <Style x:Key="StepCard" TargetType="Border">
@@ -21,7 +20,7 @@
 
     <Grid RowDefinitions="Auto,*,Auto" SafeAreaEdges="None">
 
-        <!-- Atmosfärisk bakgrund -->
+        <!-- Atmosf�risk bakgrund -->
         <controls:AtmosphericBackgroundView Grid.RowSpan="3" InputTransparent="True"/>
 
         <!-- Top bar: back + step dots + skip -->
@@ -59,7 +58,7 @@
                          BackgroundColor="{Binding IsStep4, Converter={x:Static vm:DotColorConverter.Instance}}"/>
             </HorizontalStackLayout>
 
-            <!-- Skip link — synlig på alla steg så erfarna lyftare kan bail när som helst -->
+            <!-- Skip link � synlig p� alla steg s� erfarna lyftare kan bail n�r som helst -->
             <Border Grid.Column="2"
                     BackgroundColor="Transparent"
                     StrokeThickness="0"
@@ -83,7 +82,7 @@
         <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Never">
             <VerticalStackLayout Padding="24,0,24,24" Spacing="0">
 
-                <!-- ══ Steg 0: Namn ══════════════════════════════════════ -->
+                <!-- -- Steg 0: Namn -------------------------------------- -->
                 <VerticalStackLayout x:Name="Step0" IsVisible="{Binding IsStep0}" Spacing="0">
                     <Label Text="{loc:Localize Onboarding_Step0_Welcome}"
                            FontFamily="BebasNeue" FontSize="44" CharacterSpacing="2"
@@ -114,7 +113,7 @@
                     </Border>
                 </VerticalStackLayout>
 
-                <!-- ══ Steg 1: Veckomål ══════════════════════════════════ -->
+                <!-- -- Steg 1: Veckom�l ---------------------------------- -->
                 <VerticalStackLayout x:Name="Step1" IsVisible="{Binding IsStep1}" Spacing="10">
                     <Label Text="{loc:Localize Onboarding_Step1_Title}"
                            FontFamily="BebasNeue" FontSize="44" CharacterSpacing="2"
@@ -186,7 +185,7 @@
                     </Border>
                 </VerticalStackLayout>
 
-                <!-- ══ Steg 2: Erfarenhet ════════════════════════════════ -->
+                <!-- -- Steg 2: Erfarenhet -------------------------------- -->
                 <VerticalStackLayout x:Name="Step2" IsVisible="{Binding IsStep2}" Spacing="12">
                     <Label Text="{loc:Localize Onboarding_Step2_Title}"
                            FontFamily="BebasNeue" FontSize="44" CharacterSpacing="2"
@@ -202,7 +201,7 @@
                                 <Label Text="{loc:Localize Onboarding_Step2_Exp0_Title}" FontFamily="BebasNeue" FontSize="22" CharacterSpacing="1" TextColor="{Binding Exp0Fg}"/>
                                 <Label Text="{loc:Localize Onboarding_Step2_Exp0_Sub}" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding Exp0Fg}" Opacity="0.7"/>
                             </VerticalStackLayout>
-                            <Label Grid.Column="1" Text="✓" FontFamily="DMSansMedium" FontSize="22" TextColor="{Binding Exp0Fg}" VerticalOptions="Center" IsVisible="{Binding Exp0Selected}"/>
+                            <Label Grid.Column="1" Text="?" FontFamily="DMSansMedium" FontSize="22" TextColor="{Binding Exp0Fg}" VerticalOptions="Center" IsVisible="{Binding Exp0Selected}"/>
                         </Grid>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding SelectExperienceCommand}" CommandParameter="{x:Int32 0}"/>
@@ -214,7 +213,7 @@
                                 <Label Text="{loc:Localize Onboarding_Step2_Exp1_Title}" FontFamily="BebasNeue" FontSize="22" CharacterSpacing="1" TextColor="{Binding Exp1Fg}"/>
                                 <Label Text="{loc:Localize Onboarding_Step2_Exp1_Sub}" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding Exp1Fg}" Opacity="0.7"/>
                             </VerticalStackLayout>
-                            <Label Grid.Column="1" Text="✓" FontFamily="DMSansMedium" FontSize="22" TextColor="{Binding Exp1Fg}" VerticalOptions="Center" IsVisible="{Binding Exp1Selected}"/>
+                            <Label Grid.Column="1" Text="?" FontFamily="DMSansMedium" FontSize="22" TextColor="{Binding Exp1Fg}" VerticalOptions="Center" IsVisible="{Binding Exp1Selected}"/>
                         </Grid>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding SelectExperienceCommand}" CommandParameter="{x:Int32 1}"/>
@@ -226,7 +225,7 @@
                                 <Label Text="{loc:Localize Onboarding_Step2_Exp2_Title}" FontFamily="BebasNeue" FontSize="22" CharacterSpacing="1" TextColor="{Binding Exp2Fg}"/>
                                 <Label Text="{loc:Localize Onboarding_Step2_Exp2_Sub}" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding Exp2Fg}" Opacity="0.7"/>
                             </VerticalStackLayout>
-                            <Label Grid.Column="1" Text="✓" FontFamily="DMSansMedium" FontSize="22" TextColor="{Binding Exp2Fg}" VerticalOptions="Center" IsVisible="{Binding Exp2Selected}"/>
+                            <Label Grid.Column="1" Text="?" FontFamily="DMSansMedium" FontSize="22" TextColor="{Binding Exp2Fg}" VerticalOptions="Center" IsVisible="{Binding Exp2Selected}"/>
                         </Grid>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding SelectExperienceCommand}" CommandParameter="{x:Int32 2}"/>
@@ -234,7 +233,7 @@
                     </Border>
                 </VerticalStackLayout>
 
-                <!-- ══ Steg 3: Mål ═══════════════════════════════════════ -->
+                <!-- -- Steg 3: M�l --------------------------------------- -->
                 <VerticalStackLayout x:Name="Step3" IsVisible="{Binding IsStep3}" Spacing="12">
                     <Label Text="{loc:Localize Onboarding_Step3_Title}"
                            FontFamily="BebasNeue" FontSize="44" CharacterSpacing="2"
@@ -250,7 +249,7 @@
                                 <Label Text="{loc:Localize Onboarding_Step3_Strength_Title}" FontFamily="BebasNeue" FontSize="28" CharacterSpacing="1" TextColor="{Binding GoalStrengthFg}"/>
                                 <Label Text="{loc:Localize Onboarding_Step3_Strength_Sub}" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding GoalStrengthFg}" Opacity="0.7"/>
                             </VerticalStackLayout>
-                            <Label Grid.Column="1" Text="✓" FontFamily="DMSansMedium" FontSize="26" TextColor="{Binding GoalStrengthFg}" VerticalOptions="Center" IsVisible="{Binding GoalStrengthSelected}"/>
+                            <Label Grid.Column="1" Text="?" FontFamily="DMSansMedium" FontSize="26" TextColor="{Binding GoalStrengthFg}" VerticalOptions="Center" IsVisible="{Binding GoalStrengthSelected}"/>
                         </Grid>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding SelectGoalCommand}" CommandParameter="{x:Int32 0}"/>
@@ -262,7 +261,7 @@
                                 <Label Text="{loc:Localize Onboarding_Step3_Hyper_Title}" FontFamily="BebasNeue" FontSize="28" CharacterSpacing="1" TextColor="{Binding GoalHyperFg}"/>
                                 <Label Text="{loc:Localize Onboarding_Step3_Hyper_Sub}" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding GoalHyperFg}" Opacity="0.7"/>
                             </VerticalStackLayout>
-                            <Label Grid.Column="1" Text="✓" FontFamily="DMSansMedium" FontSize="26" TextColor="{Binding GoalHyperFg}" VerticalOptions="Center" IsVisible="{Binding GoalHyperSelected}"/>
+                            <Label Grid.Column="1" Text="?" FontFamily="DMSansMedium" FontSize="26" TextColor="{Binding GoalHyperFg}" VerticalOptions="Center" IsVisible="{Binding GoalHyperSelected}"/>
                         </Grid>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding SelectGoalCommand}" CommandParameter="{x:Int32 1}"/>
@@ -270,7 +269,7 @@
                     </Border>
                 </VerticalStackLayout>
 
-                <!-- ══ Steg 4: Rekommendation ════════════════════════════ -->
+                <!-- -- Steg 4: Rekommendation ---------------------------- -->
                 <VerticalStackLayout x:Name="Step4" IsVisible="{Binding IsStep4}" Spacing="0">
                     <Label Text="{loc:Localize Onboarding_Step4_Title}"
                            FontFamily="BebasNeue" FontSize="44" CharacterSpacing="2"
@@ -328,7 +327,7 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- Bottom CTA (visible steps 0–3) -->
+        <!-- Bottom CTA (visible steps 0�3) -->
         <Grid Grid.Row="2"
               IsVisible="{Binding IsStep4, Converter={x:Static vm:InverseBoolConverter.Instance}}"
               Padding="24,12,24,44">

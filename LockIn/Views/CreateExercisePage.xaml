@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:LockIn.ViewModels"
@@ -9,12 +9,11 @@
              Title="{loc:Localize CreateExercise_PageTitle}"
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
              Shell.NavBarIsVisible="False"
-             BackgroundColor="Transparent"
-             ios:Page.UseSafeArea="False">
+             BackgroundColor="Transparent">
 
     <Grid SafeAreaEdges="None">
 
-        <!-- Atmosfärisk bakgrund -->
+        <!-- Atmosf�risk bakgrund -->
         <controls:AtmosphericBackgroundView InputTransparent="True"/>
 
         <ScrollView>
@@ -137,7 +136,7 @@
                     <VerticalStackLayout Spacing="8">
                         <Label Text="{loc:Localize CreateExercise_RestLabel}" Style="{StaticResource SectionLabel}"/>
                         <Grid ColumnDefinitions="52,*,52" ColumnSpacing="0">
-                            <Button Grid.Column="0" Text="−"
+                            <Button Grid.Column="0" Text="-"
                                     Style="{StaticResource SecondaryButton}"
                                     FontSize="20" HeightRequest="52" WidthRequest="52"
                                     Command="{Binding DecreaseRestCommand}"/>

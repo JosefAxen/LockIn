@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:LockIn.ViewModels"
@@ -11,12 +11,11 @@
              x:DataType="vm:TrainViewModel"
              Title="{loc:Localize Train_PageTitle}"
              Shell.NavBarIsVisible="False"
-             BackgroundColor="Transparent"
-             ios:Page.UseSafeArea="False">
+             BackgroundColor="Transparent">
 
     <Grid SafeAreaEdges="None">
 
-        <!-- Atmosfärisk bakgrund — renderas under allt annat -->
+        <!-- Atmosf�risk bakgrund � renderas under allt annat -->
         <controls:AtmosphericBackgroundView InputTransparent="True"/>
 
         <!-- Permanent status bar gradient (alltid synlig, fyller Dynamic Island-zonen) -->
@@ -114,7 +113,7 @@
                                    FontSize="12"
                                    LineBreakMode="WordWrap"/>
                         </StackLayout>
-                        <Label Grid.Column="1" Text="✕"
+                        <Label Grid.Column="1" Text="?"
                                FontSize="16"
                                TextColor="{StaticResource ForgeMuted}"
                                VerticalOptions="Center">
@@ -125,7 +124,7 @@
                     </Grid>
                 </Border>
 
-                <!-- Muskelpoäng: Senaste 7 dagarna -->
+                <!-- Muskelpo�ng: Senaste 7 dagarna -->
                 <Border Style="{StaticResource CardFrame}" Padding="16,14" Margin="0,0,0,4">
                     <VerticalStackLayout Spacing="0">
                         <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,14">
@@ -343,7 +342,7 @@
                 HeightRequest="56" Padding="20,0"
                 ZIndex="30">
             <HorizontalStackLayout Spacing="8" HorizontalOptions="Center" VerticalOptions="Center">
-                <Label Text="♥" FontSize="16" TextColor="{StaticResource ForgeAccentCoral}"
+                <Label Text="?" FontSize="16" TextColor="{StaticResource ForgeAccentCoral}"
                        VerticalOptions="Center"/>
                 <Label Text="{loc:Localize TrainPage_Cardio_Button}"
                        FontFamily="BebasNeue" FontSize="17" CharacterSpacing="2"
@@ -354,10 +353,10 @@
             </Border.GestureRecognizers>
         </Border>
 
-        <!-- Floating FAB: starta fritt pass — premium pill -->
-        <!-- ZIndex 30 = ovanför bottom-gradient (22) så den inte mörkas -->
-        <!-- Metallisk silver-gradient direkt på Border.Background (klipps av StrokeShape) -->
-        <!-- istället för en separat highlight-BoxView som syns som fyrkant igenom rundningen. -->
+        <!-- Floating FAB: starta fritt pass � premium pill -->
+        <!-- ZIndex 30 = ovanf�r bottom-gradient (22) s� den inte m�rkas -->
+        <!-- Metallisk silver-gradient direkt p� Border.Background (klipps av StrokeShape) -->
+        <!-- ist�llet f�r en separat highlight-BoxView som syns som fyrkant igenom rundningen. -->
         <Border x:Name="FrittPassButton"
                 StrokeShape="RoundRectangle 28" StrokeThickness="0"
                 HorizontalOptions="End" VerticalOptions="End"
@@ -389,7 +388,7 @@
                 <TapGestureRecognizer Command="{Binding StartFreeWorkoutCommand}" Tapped="OnFabTapped"/>
             </Border.GestureRecognizers>
         </Border>
-        <!-- ═══ WORKOUT BANNER — Live Forge Capsule ═══ -->
+        <!-- --- WORKOUT BANNER � Live Forge Capsule --- -->
         <Grid x:Name="WorkoutBanner"
               IsVisible="False"
               VerticalOptions="End"
@@ -430,7 +429,7 @@
             </Border>
         </Grid>
 
-    <!-- Bottom gradient fade behind floating tab bar — matchar topp-gradienten spegelvänt -->
+    <!-- Bottom gradient fade behind floating tab bar � matchar topp-gradienten spegelv�nt -->
     <BoxView Grid.RowSpan="99" InputTransparent="True" VerticalOptions="End" HeightRequest="150">
         <BoxView.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">

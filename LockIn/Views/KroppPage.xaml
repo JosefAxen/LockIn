@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:LockIn.ViewModels"
@@ -11,12 +11,11 @@
              x:DataType="vm:KroppViewModel"
              Title="{loc:Localize Tab_Body}"
              Shell.NavBarIsVisible="False"
-             BackgroundColor="Transparent"
-             ios:Page.UseSafeArea="False">
+             BackgroundColor="Transparent">
 
     <Grid SafeAreaEdges="None">
 
-        <!-- Atmosfärisk bakgrund -->
+        <!-- Atmosf�risk bakgrund -->
         <controls:AtmosphericBackgroundView InputTransparent="True"/>
 
         <!-- Permanent status bar gradient (alltid synlig, fyller Dynamic Island-zonen) -->
@@ -91,7 +90,7 @@
                         </Border>
                     </Grid>
 
-                    <!-- Segment tabs — iOS glass pill -->
+                    <!-- Segment tabs � iOS glass pill -->
                     <Border BackgroundColor="{StaticResource ForgePillTrack}"
                             StrokeThickness="0"
                             StrokeShape="RoundRectangle 50"
@@ -136,7 +135,7 @@
                         </Grid>
                     </Border>
 
-                    <!-- ═══ VIKT TAB ═══ -->
+                    <!-- --- VIKT TAB --- -->
                     <VerticalStackLayout IsVisible="{Binding IsViktTab}" Spacing="14">
 
                         <!-- Latest weight hero -->
@@ -228,7 +227,7 @@
 
                     </VerticalStackLayout>
 
-                    <!-- ═══ KROPP TAB ═══ -->
+                    <!-- --- KROPP TAB --- -->
                     <VerticalStackLayout IsVisible="{Binding IsKroppTab}" Spacing="14">
 
                         <!-- Latest measurements -->
@@ -335,7 +334,7 @@
 
                     </VerticalStackLayout>
 
-                    <!-- ═══ HEATMAP TAB ═══ -->
+                    <!-- --- HEATMAP TAB --- -->
                     <VerticalStackLayout IsVisible="{Binding IsHeatmapTab}" Spacing="14">
 
                         <Label Text="{loc:Localize Kropp_MuscleGroups_Title}"
@@ -351,7 +350,7 @@
                 </VerticalStackLayout>
             </ScrollView>
 
-            <!-- ═══ WORKOUT BANNER — Live Forge Capsule ═══ -->
+            <!-- --- WORKOUT BANNER � Live Forge Capsule --- -->
             <Grid x:Name="WorkoutBanner"
                   IsVisible="False"
                   VerticalOptions="End"
@@ -392,7 +391,7 @@
                 </Border>
             </Grid>
 
-    <!-- Bottom gradient fade behind floating tab bar — matchar topp-gradienten spegelvänt -->
+    <!-- Bottom gradient fade behind floating tab bar � matchar topp-gradienten spegelv�nt -->
     <BoxView Grid.RowSpan="99" InputTransparent="True" VerticalOptions="End" HeightRequest="150">
         <BoxView.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">

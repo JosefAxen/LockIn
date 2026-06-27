@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:LockIn.ViewModels"
@@ -11,12 +11,11 @@
              x:DataType="vm:HemViewModel"
              Title="{loc:Localize Tab_Home}"
              Shell.NavBarIsVisible="False"
-             BackgroundColor="Transparent"
-             ios:Page.UseSafeArea="False">
+             BackgroundColor="Transparent">
 
     <Grid SafeAreaEdges="None">
 
-        <!-- Atmosfärisk bakgrund — renderas under allt annat -->
+        <!-- Atmosf�risk bakgrund � renderas under allt annat -->
         <controls:AtmosphericBackgroundView InputTransparent="True"/>
 
         <!-- Permanent status bar gradient (alltid synlig, fyller Dynamic Island-zonen) -->
@@ -54,7 +53,7 @@
         <ScrollView VerticalScrollBarVisibility="Never" Scrolled="OnScrolled">
             <VerticalStackLayout Spacing="0" Padding="0,0,0,120">
 
-                <!-- ═══ HEADER ═══ -->
+                <!-- --- HEADER --- -->
                 <Grid Padding="22,56,22,4" ColumnDefinitions="*,48">
                     <VerticalStackLayout Grid.Column="0" Spacing="0" VerticalOptions="End">
                         <Label Text="{Binding Greeting}"
@@ -81,7 +80,7 @@
                     </Border>
                 </Grid>
 
-                <!-- ═══ SCORE CARD (HERO GAUGE) ═══ -->
+                <!-- --- SCORE CARD (HERO GAUGE) --- -->
                 <Border Margin="16,14,16,0"
                         StrokeShape="RoundRectangle 22"
                         BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
@@ -105,7 +104,7 @@
                     </VerticalStackLayout>
                 </Border>
 
-                <!-- ═══ IDAG-REKOMMENDATION ═══ -->
+                <!-- --- IDAG-REKOMMENDATION --- -->
                 <Border Margin="16,16,16,4"
                         BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
                         StrokeShape="RoundRectangle 18"
@@ -129,7 +128,7 @@
                     </VerticalStackLayout>
                 </Border>
 
-                <!-- ═══ DATA-CHIPS ═══ -->
+                <!-- --- DATA-CHIPS --- -->
                 <CollectionView ItemsSource="{Binding CoachChips}"
                                 IsVisible="{Binding HasCoachChips}"
                                 Margin="16,10,0,0"
@@ -160,7 +159,7 @@
                     </CollectionView.ItemTemplate>
                 </CollectionView>
 
-                <!-- ═══ STRAIN / RECOVERY / SÖMN-RINGAR ═══ -->
+                <!-- --- STRAIN / RECOVERY / S�MN-RINGAR --- -->
                 <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8" Margin="16,18,16,4">
                     <StackLayout Grid.Column="0" Spacing="8" HorizontalOptions="Center">
                         <controls:MetricRingView Progress="{Binding StrainProgress}"
@@ -213,7 +212,7 @@
                        HorizontalTextAlignment="Center"
                        Margin="16,6,16,0"/>
 
-                <!-- ═══ SÖMN-DETALJER ═══ -->
+                <!-- --- S�MN-DETALJER --- -->
                 <Label Text="{loc:Localize Hem_Sleep_Label}" Style="{StaticResource SectionLabel}" Margin="22,18,0,10"/>
                 <Border Margin="16,0,16,0"
                         BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
@@ -255,7 +254,7 @@
                     </Grid>
                 </Border>
 
-                <!-- ═══ STREAK HEADER ═══ -->
+                <!-- --- STREAK HEADER --- -->
                 <Grid Padding="22,22,22,10" ColumnDefinitions="*,Auto">
                     <VerticalStackLayout Grid.Column="0" Spacing="2">
                         <Label Text="{loc:Localize Hem_Streak_Label}" Style="{StaticResource SectionLabel}"/>
@@ -274,7 +273,7 @@
                     </Label>
                 </Grid>
 
-                <!-- ═══ DAY STREAK TRACKER ═══ -->
+                <!-- --- DAY STREAK TRACKER --- -->
                 <CollectionView x:Name="StreakCollectionView"
                                 ItemsSource="{Binding Days}"
                                 Margin="12,0" HeightRequest="76"
@@ -305,10 +304,10 @@
                     </CollectionView.ItemTemplate>
                 </CollectionView>
 
-                <!-- ═══ STATS HEADER ═══ -->
+                <!-- --- STATS HEADER --- -->
                 <Label Text="{loc:Localize Hem_Activity_Label}" Style="{StaticResource SectionLabel}" Margin="22,18,0,10"/>
 
-                <!-- ═══ DATA CARDS 2×2 ═══ -->
+                <!-- --- DATA CARDS 2�2 --- -->
                 <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto"
                       ColumnSpacing="8" RowSpacing="8" Margin="16,0">
 
@@ -377,14 +376,14 @@
                     </Border>
                 </Grid>
 
-                <!-- ═══ MUSKELHEATMAP ═══ -->
+                <!-- --- MUSKELHEATMAP --- -->
                 <Label Text="{loc:Localize Hem_Muscles_Title}" Style="{StaticResource SectionLabel}" Margin="22,18,0,10"/>
                 <Grid x:Name="HemHeatmapGrid"
                       ColumnDefinitions="*,*,*,*"
                       ColumnSpacing="8" RowSpacing="8"
                       Margin="16,0"/>
 
-                <!-- ═══ VOLYMTREND ═══ -->
+                <!-- --- VOLYMTREND --- -->
                 <Label Text="{loc:Localize Hem_MuscleTrend_Title}"
                        Style="{StaticResource SectionLabel}"
                        Margin="22,18,0,8"
@@ -424,7 +423,7 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- ═══ WORKOUT BANNER — Live Forge Capsule ═══ -->
+        <!-- --- WORKOUT BANNER � Live Forge Capsule --- -->
         <Grid x:Name="WorkoutBanner"
               IsVisible="False"
               VerticalOptions="End"
@@ -432,7 +431,7 @@
               Margin="0,0,0,96"
               ZIndex="10">
 
-            <!-- Soft silver halo bakom kapseln — "upplyst inifrån" -->
+            <!-- Soft silver halo bakom kapseln � "upplyst inifr�n" -->
             <Border StrokeThickness="0"
                     StrokeShape="RoundRectangle 36"
                     BackgroundColor="{StaticResource ForgeAccentGlow}"
@@ -479,7 +478,7 @@
                 </Border.GestureRecognizers>
             </Border>
         </Grid>
-    <!-- Bottom gradient fade behind floating tab bar — matchar topp-gradienten spegelvänt -->
+    <!-- Bottom gradient fade behind floating tab bar � matchar topp-gradienten spegelv�nt -->
     <BoxView Grid.RowSpan="99" InputTransparent="True" VerticalOptions="End" HeightRequest="150">
         <BoxView.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">

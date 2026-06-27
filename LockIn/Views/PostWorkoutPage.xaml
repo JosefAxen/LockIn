@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:LockIn.ViewModels"
@@ -10,8 +10,7 @@
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
              Shell.NavBarIsVisible="False"
              Shell.TabBarIsVisible="False"
-             BackgroundColor="Transparent"
-             ios:Page.UseSafeArea="False">
+             BackgroundColor="Transparent">
 
     <ContentPage.Resources>
         <vm:GreaterThanZeroConverter x:Key="GtzConverter"/>
@@ -19,10 +18,10 @@
 
     <Grid SafeAreaEdges="None">
 
-        <!-- Atmosfärisk bakgrund -->
+        <!-- Atmosf�risk bakgrund -->
         <controls:AtmosphericBackgroundView InputTransparent="True"/>
 
-        <!-- Celebration gradient — edge-to-edge inkl. Dynamic Island -->
+        <!-- Celebration gradient � edge-to-edge inkl. Dynamic Island -->
         <BoxView VerticalOptions="Start" HeightRequest="200" InputTransparent="True" ZIndex="1">
             <BoxView.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
@@ -70,7 +69,7 @@
         <ScrollView VerticalScrollBarVisibility="Never" Scrolled="OnScrolled">
             <StackLayout Padding="16,0,16,120" Spacing="16">
 
-                <!-- Header — scrollar med innehållet -->
+                <!-- Header � scrollar med inneh�llet -->
                 <VerticalStackLayout Padding="4,56,4,4" Spacing="4">
                     <Label Text="{loc:Localize PostWorkout_GreatJob}"
                            Style="{StaticResource SectionLabel}"
@@ -227,7 +226,7 @@
                                             StrokeThickness="0"
                                             VerticalOptions="End"
                                             Padding="6,4">
-                                        <Label Text="✕"
+                                        <Label Text="?"
                                                TextColor="White" FontSize="14"
                                                HorizontalOptions="End">
                                             <Label.GestureRecognizers>
@@ -253,7 +252,7 @@
                             <DataTemplate x:DataType="vm:PRRow">
                                 <Grid ColumnDefinitions="Auto,*,Auto" Padding="0,8,0,8"
                                       ColumnSpacing="12">
-                                    <Label Grid.Column="0" Text="🏆"
+                                    <Label Grid.Column="0" Text="??"
                                            FontSize="18" VerticalOptions="Center"/>
                                     <StackLayout Grid.Column="1" Spacing="2">
                                         <Label Text="{Binding ExerciseName}"
@@ -277,7 +276,7 @@
 
     </Grid>
 
-    <!-- Floating KLAR-knapp — fast längst ner, ingen container/gradient -->
+    <!-- Floating KLAR-knapp � fast l�ngst ner, ingen container/gradient -->
     <Border BackgroundColor="{StaticResource ForgePrimary}"
             StrokeShape="RoundRectangle 26"
             StrokeThickness="0"

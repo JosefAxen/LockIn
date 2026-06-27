@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:LockIn.ViewModels"
@@ -12,12 +12,11 @@
              x:DataType="vm:HistoryViewModel"
              Title="{loc:Localize Tab_History}"
              Shell.NavBarIsVisible="False"
-             BackgroundColor="Transparent"
-             ios:Page.UseSafeArea="False">
+             BackgroundColor="Transparent">
 
     <Grid SafeAreaEdges="None">
 
-        <!-- Atmosfärisk bakgrund -->
+        <!-- Atmosf�risk bakgrund -->
         <controls:AtmosphericBackgroundView InputTransparent="True"/>
 
         <!-- Permanent status bar gradient (alltid synlig, fyller Dynamic Island-zonen) -->
@@ -93,12 +92,12 @@
                     <Border Style="{StaticResource CardFrame}" Padding="14,12">
                         <VerticalStackLayout Spacing="10">
 
-                            <!-- Månadsnavigering -->
+                            <!-- M�nadsnavigering -->
                             <Grid ColumnDefinitions="Auto,*,Auto">
                                 <Border Grid.Column="0" BackgroundColor="Transparent" StrokeThickness="0"
                                         MinimumWidthRequest="44" MinimumHeightRequest="44"
                                         HorizontalOptions="Start" VerticalOptions="Center">
-                                    <Label Text="‹" FontSize="26" TextColor="{StaticResource ForgeMuted}"
+                                    <Label Text="�" FontSize="26" TextColor="{StaticResource ForgeMuted}"
                                            HorizontalOptions="Center" VerticalOptions="Center"/>
                                     <Border.GestureRecognizers>
                                         <TapGestureRecognizer Tapped="OnCalNavTapped" Command="{Binding PrevMonthCommand}"/>
@@ -112,7 +111,7 @@
                                 <Border Grid.Column="2" BackgroundColor="Transparent" StrokeThickness="0"
                                         MinimumWidthRequest="44" MinimumHeightRequest="44"
                                         HorizontalOptions="End" VerticalOptions="Center">
-                                    <Label Text="›" FontSize="26" TextColor="{StaticResource ForgeMuted}"
+                                    <Label Text="�" FontSize="26" TextColor="{StaticResource ForgeMuted}"
                                            HorizontalOptions="Center" VerticalOptions="Center"/>
                                     <Border.GestureRecognizers>
                                         <TapGestureRecognizer Tapped="OnCalNavTapped" Command="{Binding NextMonthCommand}"/>
@@ -332,7 +331,7 @@
                 </VerticalStackLayout>
             </ScrollView>
 
-            <!-- ═══ WORKOUT BANNER — Live Forge Capsule ═══ -->
+            <!-- --- WORKOUT BANNER � Live Forge Capsule --- -->
             <Grid x:Name="WorkoutBanner"
                   IsVisible="False"
                   VerticalOptions="End"
@@ -373,7 +372,7 @@
                 </Border>
             </Grid>
 
-    <!-- Bottom gradient fade behind floating tab bar — matchar topp-gradienten spegelvänt -->
+    <!-- Bottom gradient fade behind floating tab bar � matchar topp-gradienten spegelv�nt -->
     <BoxView Grid.RowSpan="99" InputTransparent="True" VerticalOptions="End" HeightRequest="150">
         <BoxView.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">

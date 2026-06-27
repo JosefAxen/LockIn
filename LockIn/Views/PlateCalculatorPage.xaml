@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:LockIn.ViewModels"
@@ -9,12 +9,11 @@
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
              Shell.NavBarIsVisible="False"
              Shell.TabBarIsVisible="False"
-             BackgroundColor="Transparent"
-             ios:Page.UseSafeArea="False">
+             BackgroundColor="Transparent">
 
     <Grid RowDefinitions="Auto,*" SafeAreaEdges="None">
 
-        <!-- Atmosfärisk bakgrund -->
+        <!-- Atmosf�risk bakgrund -->
         <controls:AtmosphericBackgroundView Grid.RowSpan="2" InputTransparent="True"/>
 
         <!-- Header -->
@@ -45,7 +44,7 @@
                 <Border Style="{StaticResource CardFrame}" Padding="16,14">
                     <VerticalStackLayout Spacing="16">
 
-                        <!-- Målvikt -->
+                        <!-- M�lvikt -->
                         <VerticalStackLayout Spacing="6">
                             <Label Text="{loc:Localize PlateCalculator_TargetWeight}" Style="{StaticResource SectionLabel}"/>
                             <Border BackgroundColor="{StaticResource ForgeSurface2}"
@@ -73,7 +72,7 @@
                         <BoxView BackgroundColor="{StaticResource ForgeBorder}"
                                  HeightRequest="1" Margin="0"/>
 
-                        <!-- Stångvikt -->
+                        <!-- St�ngvikt -->
                         <VerticalStackLayout Spacing="6">
                             <Label Text="{loc:Localize PlateCalculator_BarWeight}" Style="{StaticResource SectionLabel}"/>
                             <Border BackgroundColor="{StaticResource ForgeSurface2}"

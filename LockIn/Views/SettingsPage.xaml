@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:LockIn.ViewModels"
@@ -10,8 +10,7 @@
              Title="{loc:Localize Settings_PageTitle}"
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
              Shell.NavBarIsVisible="False"
-             BackgroundColor="Transparent"
-             ios:Page.UseSafeArea="False">
+             BackgroundColor="Transparent">
 
     <ContentPage.Resources>
         <views:WeightUnitConverter x:Key="WeightUnitConverter"/>
@@ -19,7 +18,7 @@
 
     <Grid SafeAreaEdges="None">
 
-        <!-- Atmosfärisk bakgrund -->
+        <!-- Atmosf�risk bakgrund -->
         <controls:AtmosphericBackgroundView InputTransparent="True"/>
 
         <!-- Permanent status bar gradient -->
@@ -99,7 +98,7 @@
                         <Border Grid.Column="0" BackgroundColor="{StaticResource ForgeAccentBlueDim}"
                                 StrokeShape="RoundRectangle 10" StrokeThickness="0"
                                 WidthRequest="38" HeightRequest="38" VerticalOptions="Center">
-                            <Label Text="👤" FontSize="18"
+                            <Label Text="??" FontSize="18"
                                    HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Border>
                         <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
@@ -119,7 +118,7 @@
                         <Border Grid.Column="0" BackgroundColor="{StaticResource ForgeSurface2}"
                                 StrokeShape="RoundRectangle 10" StrokeThickness="0"
                                 WidthRequest="38" HeightRequest="38" VerticalOptions="Center">
-                            <Label Text="📏" FontSize="18"
+                            <Label Text="??" FontSize="18"
                                    HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Border>
                         <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
@@ -164,7 +163,7 @@
                             <Border Grid.Column="0" BackgroundColor="{StaticResource ForgeSuccessDim}"
                                     StrokeShape="RoundRectangle 10" StrokeThickness="0"
                                     WidthRequest="38" HeightRequest="38" VerticalOptions="Center">
-                                <Label Text="🔔" FontSize="18" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                <Label Text="??" FontSize="18" HorizontalOptions="Center" VerticalOptions="Center"/>
                             </Border>
                             <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
                                 <Label Text="{loc:Localize Settings_Reminders_Title}" FontFamily="DMSansMedium" FontSize="15"/>
@@ -306,7 +305,7 @@
                         <Border Grid.Column="0" BackgroundColor="{StaticResource ForgeAccentCoralDim}"
                                 StrokeShape="RoundRectangle 10" StrokeThickness="0"
                                 WidthRequest="38" HeightRequest="38" VerticalOptions="Center">
-                            <Label Text="♥" FontSize="18" TextColor="{StaticResource ForgeAccentCoral}"
+                            <Label Text="?" FontSize="18" TextColor="{StaticResource ForgeAccentCoral}"
                                    HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Border>
                         <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
@@ -345,7 +344,7 @@
                         <Border Grid.Column="0" BackgroundColor="{StaticResource ForgeAccentDim}"
                                 StrokeShape="RoundRectangle 10" StrokeThickness="0"
                                 WidthRequest="38" HeightRequest="38" VerticalOptions="Center">
-                            <Label Text="📸" FontSize="18"
+                            <Label Text="??" FontSize="18"
                                    HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Border>
                         <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
@@ -366,7 +365,7 @@
                         <Border Grid.Column="0" BackgroundColor="{StaticResource ForgeAccentBlueDim}"
                                 StrokeShape="RoundRectangle 10" StrokeThickness="0"
                                 WidthRequest="38" HeightRequest="38" VerticalOptions="Center">
-                            <Label Text="📤" FontSize="18"
+                            <Label Text="??" FontSize="18"
                                    HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Border>
                         <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
@@ -409,7 +408,7 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- ═══ WORKOUT BANNER — Live Forge Capsule ═══ -->
+        <!-- --- WORKOUT BANNER � Live Forge Capsule --- -->
         <Grid x:Name="WorkoutBanner"
               IsVisible="False"
               VerticalOptions="End"

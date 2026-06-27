@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:LockIn.ViewModels"
@@ -11,8 +11,7 @@
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
              Shell.NavBarIsVisible="False"
              Shell.TabBarIsVisible="False"
-             BackgroundColor="Transparent"
-             ios:Page.UseSafeArea="False">
+             BackgroundColor="Transparent">
 
     <ContentPage.Resources>
         <views:EquipmentLabelConverter x:Key="EquipmentLabelConverter"/>
@@ -22,7 +21,7 @@
 
     <Grid RowDefinitions="Auto,Auto,Auto,Auto,*" SafeAreaEdges="None">
 
-        <!-- Atmosfärisk bakgrund -->
+        <!-- Atmosf�risk bakgrund -->
         <controls:AtmosphericBackgroundView Grid.RowSpan="5" InputTransparent="True"/>
 
         <Grid Grid.Row="0" Padding="16,56,16,8" ColumnDefinitions="48,*">
@@ -50,7 +49,7 @@
                         VerticalScrollBarVisibility="Never">
             <CollectionView.Header>
                 <VerticalStackLayout Spacing="0">
-                    <!-- Pill-formad sökruta (scrollar med) -->
+                    <!-- Pill-formad s�kruta (scrollar med) -->
                     <Border BackgroundColor="{StaticResource ForgeSurface2}"
                             StrokeShape="RoundRectangle 26"
                             StrokeThickness="0"
@@ -59,7 +58,7 @@
                             Margin="16,0,16,10">
                         <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
                             <Label Grid.Column="0"
-                                   Text="⌕"
+                                   Text="?"
                                    FontSize="20"
                                    TextColor="{StaticResource ForgeMuted}"
                                    VerticalOptions="Center"/>

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:LockIn.ViewModels"
@@ -10,13 +10,12 @@
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
              Shell.NavBarIsVisible="False"
              Shell.TabBarIsVisible="False"
-             BackgroundColor="Transparent"
-             ios:Page.UseSafeArea="False">
+             BackgroundColor="Transparent">
 
     <ContentPage.Resources>
         <views:BoolToColorConverter x:Key="BoolToColorConverter"/>
         <vm:CompletedOpacityConverter x:Key="CompletedOpacityConverter"/>
-        <!-- Page is always dark — override AppThemeBinding label colors -->
+        <!-- Page is always dark � override AppThemeBinding label colors -->
         <Style TargetType="Label">
             <Setter Property="TextColor" Value="{StaticResource ForgeText}" />
             <Setter Property="FontFamily" Value="DMSansRegular" />
@@ -26,7 +25,7 @@
 
     <Grid RowDefinitions="Auto,*" SafeAreaEdges="None">
 
-        <!-- Atmosfärisk bakgrund -->
+        <!-- Atmosf�risk bakgrund -->
         <controls:AtmosphericBackgroundView Grid.RowSpan="2" InputTransparent="True"/>
 
         <!-- Permanent status bar gradient (alltid synlig, fyller Dynamic Island-zonen) -->
@@ -85,11 +84,11 @@
             </Grid>
         </Grid>
 
-        <!-- Scrollable content (TopBar ligger som första element och scrollar bort) -->
+        <!-- Scrollable content (TopBar ligger som f�rsta element och scrollar bort) -->
         <ScrollView x:Name="MainScrollView" Grid.Row="0" Grid.RowSpan="2" VerticalScrollBarVisibility="Never" Scrolled="OnScrolled">
             <StackLayout Padding="16,0,16,140" Spacing="12">
 
-                <!-- Top bar — scrollar med innehållet -->
+                <!-- Top bar � scrollar med inneh�llet -->
                 <Grid x:Name="TopBar" Padding="0,56,4,8" ColumnDefinitions="Auto,*,Auto,Auto">
                     <Border Grid.Column="0"
                             WidthRequest="44" HeightRequest="44"
@@ -136,7 +135,7 @@
                         StrokeShape="RoundRectangle 12"
                         StrokeThickness="0.5" Padding="14,12">
                     <Grid ColumnDefinitions="Auto,*">
-                        <Label Grid.Column="0" Text="🏆" FontSize="20"
+                        <Label Grid.Column="0" Text="??" FontSize="20"
                                VerticalOptions="Center" Margin="0,0,10,0"/>
                         <Label Grid.Column="1" Text="{Binding PrMessage}"
                                TextColor="{StaticResource ForgeAccentAmber}"
@@ -152,7 +151,7 @@
                         StrokeShape="RoundRectangle 12"
                         StrokeThickness="0" Padding="14,12">
                     <Grid ColumnDefinitions="Auto,*">
-                        <Label Grid.Column="0" Text="📈" FontSize="20"
+                        <Label Grid.Column="0" Text="??" FontSize="20"
                                VerticalOptions="Center" Margin="0,0,10,0"/>
                         <Label Grid.Column="1" Text="{Binding AutoProgressMessage}"
                                TextColor="{StaticResource ForgeAccent}"
@@ -161,7 +160,7 @@
                     </Grid>
                 </Border>
 
-                <!-- Exercise sections — one card per exercise -->
+                <!-- Exercise sections � one card per exercise -->
                 <StackLayout x:Name="ExercisesLayout" BindableLayout.ItemsSource="{Binding Exercises}" Spacing="14">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate x:DataType="vm:WorkoutExerciseSection">
@@ -201,7 +200,7 @@
                                                FontFamily="DMSansMedium" FontSize="16"
                                                VerticalOptions="Center"/>
 
-                                        <!-- Info button — only visible when description exists -->
+                                        <!-- Info button � only visible when description exists -->
                                         <Border Grid.Column="2"
                                                 IsVisible="{Binding HasDescription}"
                                                 BackgroundColor="Transparent"
@@ -209,7 +208,7 @@
                                                 MinimumWidthRequest="44"
                                                 MinimumHeightRequest="44"
                                                 Padding="10">
-                                            <Label Text="ⓘ"
+                                            <Label Text="?"
                                                    TextColor="{StaticResource ForgeMuted}"
                                                    FontSize="18"
                                                    HorizontalOptions="Center"
@@ -221,7 +220,7 @@
                                             </Border.GestureRecognizers>
                                         </Border>
 
-                                        <!-- Rest time badge — tap to change -->
+                                        <!-- Rest time badge � tap to change -->
                                         <Border Grid.Column="3"
                                                 BackgroundColor="{StaticResource ForgeAccentDim}"
                                                 StrokeShape="RoundRectangle 8"
@@ -254,7 +253,7 @@
                                                 MinimumWidthRequest="44"
                                                 MinimumHeightRequest="44"
                                                 Padding="10">
-                                            <Label Text="✕"
+                                            <Label Text="?"
                                                    TextColor="{StaticResource ForgeMuted}"
                                                    FontSize="16"
                                                    HorizontalOptions="Center"
@@ -293,7 +292,7 @@
                                                       Opacity="{Binding IsCompleted, Converter={StaticResource CompletedOpacityConverter}}"
                                                       Loaded="OnSetRowLoaded">
 
-                                                    <!-- Set number / type label — tap to change type -->
+                                                    <!-- Set number / type label � tap to change type -->
                                                     <Border Grid.Column="0"
                                                             BackgroundColor="{Binding RowAccentColor}"
                                                             StrokeThickness="0"
@@ -306,7 +305,7 @@
                                                                    HorizontalOptions="Center"
                                                                    VerticalOptions="Center"/>
                                                             <!-- PR star badge -->
-                                                            <Label Text="★"
+                                                            <Label Text="?"
                                                                    FontSize="12"
                                                                    TextColor="{StaticResource ForgePrStar}"
                                                                    HorizontalOptions="End"
@@ -344,7 +343,7 @@
                                                                HeightRequest="44" Margin="0"/>
                                                     </Border>
 
-                                                    <!-- Separator (× or ⏱) -->
+                                                    <!-- Separator (� or ?) -->
                                                     <Label Grid.Column="2"
                                                            Text="{Binding SeparatorLabel}"
                                                            Style="{StaticResource MutedLabel}"
@@ -367,7 +366,7 @@
                                                                HeightRequest="44" Margin="0"/>
                                                     </Border>
 
-                                                    <!-- RIR — tap to cycle 0-5 -->
+                                                    <!-- RIR � tap to cycle 0-5 -->
                                                     <Border Grid.Column="4"
                                                             BackgroundColor="{StaticResource ForgeSurface2}"
                                                             StrokeShape="RoundRectangle 8"
@@ -390,7 +389,7 @@
                                                             StrokeShape="RoundRectangle 8"
                                                             StrokeThickness="0"
                                                             BackgroundColor="{Binding IsCompleted, Converter={StaticResource BoolToColorConverter}}">
-                                                        <Label Text="✓"
+                                                        <Label Text="?"
                                                                HorizontalOptions="Center"
                                                                VerticalOptions="Center"
                                                                FontSize="16"
@@ -410,7 +409,7 @@
                                         </BindableLayout.ItemTemplate>
                                     </StackLayout>
 
-                                    <!-- + SET / − SET row -->
+                                    <!-- + SET / - SET row -->
                                     <Grid ColumnDefinitions="*,*"
                                           Padding="12,6,12,10" ColumnSpacing="8">
                                         <Button Grid.Column="0"
@@ -485,7 +484,7 @@
             </StackLayout>
         </ScrollView>
 
-        <!-- Confetti overlay — full screen, triggered on PR -->
+        <!-- Confetti overlay � full screen, triggered on PR -->
         <controls:ConfettiView x:Name="Confetti"
                                Grid.Row="0" Grid.RowSpan="2"
                                InputTransparent="True"
@@ -493,7 +492,7 @@
                                HorizontalOptions="Fill"
                                VerticalOptions="Fill"/>
 
-        <!-- Bottom gradient fade — matchar topp-gradienten spegelvänt -->
+        <!-- Bottom gradient fade � matchar topp-gradienten spegelv�nt -->
         <BoxView Grid.RowSpan="2" InputTransparent="True" VerticalOptions="End" HeightRequest="150" ZIndex="22">
             <BoxView.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
@@ -505,7 +504,7 @@
             </BoxView.Background>
         </BoxView>
 
-        <!-- Floating FAB: avsluta pass — silver pill (samma stil som FRITT PASS) -->
+        <!-- Floating FAB: avsluta pass � silver pill (samma stil som FRITT PASS) -->
         <Border Grid.Row="1"
                 StrokeShape="RoundRectangle 28" StrokeThickness="0"
                 HorizontalOptions="End" VerticalOptions="End"

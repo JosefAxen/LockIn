@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:LockIn.ViewModels"
@@ -10,8 +10,7 @@
              x:DataType="vm:ProgramDetailViewModel"
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
              Shell.NavBarIsVisible="False"
-             BackgroundColor="Transparent"
-             ios:Page.UseSafeArea="False">
+             BackgroundColor="Transparent">
 
     <ContentPage.Resources>
         <views:InvertedBoolConverter x:Key="InvertedBoolConverter"/>
@@ -19,7 +18,7 @@
 
     <Grid RowDefinitions="Auto,*,Auto" SafeAreaEdges="None">
 
-        <!-- Atmosfärisk bakgrund -->
+        <!-- Atmosf�risk bakgrund -->
         <controls:AtmosphericBackgroundView Grid.RowSpan="3" InputTransparent="True"/>
 
         <!-- Permanent status bar gradient -->
@@ -109,7 +108,7 @@
                                                            FontFamily="DMSansRegular" FontSize="14"
                                                            VerticalOptions="Center"/>
                                                     <Label Grid.Column="1"
-                                                           Text="{Binding Sets, StringFormat='{0}×'}"
+                                                           Text="{Binding Sets, StringFormat='{0}�'}"
                                                            Style="{StaticResource MutedLabel}"
                                                            FontFamily="BebasNeue" FontSize="15"
                                                            VerticalOptions="Center"/>
@@ -137,7 +136,7 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- Bottom gradient fade — matchar topp-gradienten spegelvänt -->
+        <!-- Bottom gradient fade � matchar topp-gradienten spegelv�nt -->
         <BoxView Grid.RowSpan="3" InputTransparent="True" VerticalOptions="End" HeightRequest="150" ZIndex="22">
             <BoxView.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
