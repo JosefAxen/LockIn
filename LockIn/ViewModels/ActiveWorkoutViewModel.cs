@@ -153,7 +153,9 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
                 : (prev is { WeightKg: > 0 } ? prev.WeightKg.ToString("G") : "");
             var repsHint = autoProgressMode > 0
                 ? reps.ToString()
-                : (prev is { Reps: > 0 } ? prev.Reps.ToString() : "");
+                : prev?.SetType == SetType.Time && prev.DurationSeconds > 0
+                    ? prev.DurationSeconds.ToString()
+                    : (prev is { Reps: > 0 } ? prev.Reps.ToString() : "");
 
             section.Sets.Add(new LoggedSetRow
             {
@@ -270,7 +272,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         // Auto-fill från hint om fälten är tomma
         if (string.IsNullOrWhiteSpace(set.WeightText) && !string.IsNullOrWhiteSpace(set.PrevWeightHint))
             set.WeightText = set.PrevWeightHint;
-        if (set.SetType != SetType.Time && string.IsNullOrWhiteSpace(set.RepsText) && !string.IsNullOrWhiteSpace(set.PrevRepsHint))
+        if (string.IsNullOrWhiteSpace(set.RepsText) && !string.IsNullOrWhiteSpace(set.PrevRepsHint))
             set.RepsText = set.PrevRepsHint;
 
         decimal weight = 0;
