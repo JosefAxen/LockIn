@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    x:Class="LockIn.Views.CoachChipSheet"
+    CanBeDismissedByTappingOutsideOfPopup="True"
+    Color="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource ForgeSurface2}}">
+
+    <Border StrokeShape="RoundRectangle 24,24,0,0"
+            BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface2}}"
+            StrokeThickness="0"
+            Padding="24,20,24,40"
+            MinimumWidthRequest="320">
+
+        <VerticalStackLayout Spacing="12">
+
+            <!-- Drag handle -->
+            <BoxView WidthRequest="36" HeightRequest="4" CornerRadius="2"
+                     HorizontalOptions="Center"
+                     BackgroundColor="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorder}}"/>
+
+            <!-- Header row -->
+            <Grid ColumnDefinitions="*,36" Margin="0,8,0,0">
+                <Label Grid.Column="0"
+                       x:Name="HeaderLabel"
+                       FontFamily="BebasNeue" FontSize="28" CharacterSpacing="0.5"
+                       LineHeight="1"
+                       TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                <Border Grid.Column="1"
+                        WidthRequest="32" HeightRequest="32"
+                        StrokeShape="Ellipse"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface3}}"
+                        StrokeThickness="0"
+                        VerticalOptions="Center">
+                    <Label Text="×" FontFamily="DMSansRegular" FontSize="18"
+                           TextColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"
+                           HorizontalOptions="Center" VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnCloseTapped"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Border>
+            </Grid>
+
+            <!-- Body -->
+            <Label x:Name="BodyLabel"
+                   FontFamily="DMSansRegular" FontSize="14"
+                   LineHeight="1.6"
+                   TextColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"
+                   LineBreakMode="WordWrap"/>
+
+        </VerticalStackLayout>
+    </Border>
+</toolkit:Popup>
