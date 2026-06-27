@@ -488,6 +488,7 @@ public static class AppResources
     public static string Settings_Vibration_Description => Get(nameof(Settings_Vibration_Description));
     public static string Settings_Sound_Title           => Get(nameof(Settings_Sound_Title));
     public static string Settings_Sound_Description     => Get(nameof(Settings_Sound_Description));
+    public static string Settings_Height_Title          => Get(nameof(Settings_Height_Title));
     public static string Settings_Section_Health        => Get(nameof(Settings_Section_Health));
     public static string Settings_HealthSync_Title      => Get(nameof(Settings_HealthSync_Title));
     public static string Settings_HealthSync_Description => Get(nameof(Settings_HealthSync_Description));
@@ -501,6 +502,9 @@ public static class AppResources
     public static string Settings_EditName_Body         => Get(nameof(Settings_EditName_Body));
     public static string Settings_EditWeeklyGoal_Title  => Get(nameof(Settings_EditWeeklyGoal_Title));
     public static string Settings_EditWeeklyGoal_Body   => Get(nameof(Settings_EditWeeklyGoal_Body));
+    public static string Settings_Height_Format         => Get(nameof(Settings_Height_Format));
+    public static string Settings_Height_Prompt_Body    => Get(nameof(Settings_Height_Prompt_Body));
+    public static string Settings_Height_Prompt_Title   => Get(nameof(Settings_Height_Prompt_Title));
     public static string Settings_ClearData_Body        => Get(nameof(Settings_ClearData_Body));
     public static string Settings_ClearData_Confirm     => Get(nameof(Settings_ClearData_Confirm));
     public static string Settings_ClearData_Toast       => Get(nameof(Settings_ClearData_Toast));
@@ -526,9 +530,17 @@ public static class AppResources
     public static string BodyWeight_Title              => Get(nameof(BodyWeight_Title));
     public static string BodyWeight_NoData             => Get(nameof(BodyWeight_NoData));
     public static string BodyWeight_ChartTitle         => Get(nameof(BodyWeight_ChartTitle));
+    public static string BodyWeight_Bmi                => Get(nameof(BodyWeight_Bmi));
+    public static string BodyWeight_BmiCategory_Normal => Get(nameof(BodyWeight_BmiCategory_Normal));
+    public static string BodyWeight_BmiCategory_Obese => Get(nameof(BodyWeight_BmiCategory_Obese));
+    public static string BodyWeight_BmiCategory_Overweight => Get(nameof(BodyWeight_BmiCategory_Overweight));
+    public static string BodyWeight_BmiCategory_Underweight => Get(nameof(BodyWeight_BmiCategory_Underweight));
     public static string BodyWeight_LogButton          => Get(nameof(BodyWeight_LogButton));
     public static string BodyWeight_RecentLogs         => Get(nameof(BodyWeight_RecentLogs));
     public static string BodyWeight_ShowMore           => Get(nameof(BodyWeight_ShowMore));
+    public static string BodyWeight_Trend_Down         => Get(nameof(BodyWeight_Trend_Down));
+    public static string BodyWeight_Trend_Stable       => Get(nameof(BodyWeight_Trend_Stable));
+    public static string BodyWeight_Trend_Up           => Get(nameof(BodyWeight_Trend_Up));
     public static string BodyWeight_Prompt_Title       => Get(nameof(BodyWeight_Prompt_Title));
     public static string BodyWeight_Prompt_Body        => Get(nameof(BodyWeight_Prompt_Body));
     public static string BodyWeight_EntryPlaceholder   => Get(nameof(BodyWeight_EntryPlaceholder));

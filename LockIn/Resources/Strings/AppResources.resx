@@ -644,6 +644,7 @@
   <data name="Settings_Vibration_Description" xml:space="preserve"><value>Vibrera när vilotimern är klar</value></data>
   <data name="Settings_Sound_Title" xml:space="preserve"><value>Ljud</value></data>
   <data name="Settings_Sound_Description" xml:space="preserve"><value>Vilotimer + achievement-ljud</value></data>
+  <data name="Settings_Height_Title" xml:space="preserve"><value>Längd</value></data>
   <data name="Settings_Section_Health" xml:space="preserve"><value>HÄLSA</value></data>
   <data name="Settings_HealthSync_Title" xml:space="preserve"><value>Synka till Apple Hälsa</value></data>
   <data name="Settings_HealthSync_Description" xml:space="preserve"><value>Sparar träningspass med kalorier i Hälsa</value></data>
@@ -659,6 +660,9 @@
   <data name="Settings_EditName_Body" xml:space="preserve"><value>Vad heter du?</value></data>
   <data name="Settings_EditWeeklyGoal_Title" xml:space="preserve"><value>Veckans träningsmål</value></data>
   <data name="Settings_EditWeeklyGoal_Body" xml:space="preserve"><value>Hur många pass per vecka vill du träna? (1–7)</value></data>
+  <data name="Settings_Height_Format" xml:space="preserve"><value>{0} cm</value></data>
+  <data name="Settings_Height_Prompt_Body" xml:space="preserve"><value>Ange din längd i centimeter</value></data>
+  <data name="Settings_Height_Prompt_Title" xml:space="preserve"><value>Din längd</value></data>
   <data name="Settings_ClearData_Body" xml:space="preserve"><value>All träningsdata, mallar och historik tas bort permanent. Övningsbiblioteket återställs.</value></data>
   <data name="Settings_ClearData_Confirm" xml:space="preserve"><value>Rensa</value></data>
   <data name="Settings_ClearData_Toast" xml:space="preserve"><value>All data har rensats.</value></data>
@@ -701,9 +705,17 @@
   <data name="BodyWeight_Title" xml:space="preserve"><value>KROPPSVIKT</value></data>
   <data name="BodyWeight_NoData" xml:space="preserve"><value>Ingen data ännu – logga din första vikt nedan</value></data>
   <data name="BodyWeight_ChartTitle" xml:space="preserve"><value>VIKTUTVECKLING</value></data>
+  <data name="BodyWeight_Bmi" xml:space="preserve"><value>BMI</value></data>
+  <data name="BodyWeight_BmiCategory_Normal" xml:space="preserve"><value>Normal</value></data>
+  <data name="BodyWeight_BmiCategory_Obese" xml:space="preserve"><value>Fetma</value></data>
+  <data name="BodyWeight_BmiCategory_Overweight" xml:space="preserve"><value>Övervikt</value></data>
+  <data name="BodyWeight_BmiCategory_Underweight" xml:space="preserve"><value>Undervikt</value></data>
   <data name="BodyWeight_LogButton" xml:space="preserve"><value>LOGGA VIKT</value></data>
   <data name="BodyWeight_RecentLogs" xml:space="preserve"><value>SENASTE LOGGNINGAR</value></data>
   <data name="BodyWeight_ShowMore" xml:space="preserve"><value>VISA FLER</value></data>
+  <data name="BodyWeight_Trend_Down" xml:space="preserve"><value>↓ {0} kg / 30 dgr</value></data>
+  <data name="BodyWeight_Trend_Stable" xml:space="preserve"><value>→ Stabil</value></data>
+  <data name="BodyWeight_Trend_Up" xml:space="preserve"><value>↑ {0} kg / 30 dgr</value></data>
 
   <!-- BodyWeight — VM strings -->
   <data name="BodyWeight_Prompt_Title" xml:space="preserve"><value>Logga vikt</value></data>
