@@ -843,7 +843,25 @@
   <data name="Program_arnoldsplit_Day3_Label" xml:space="preserve"><value>Legs</value></data>
 
   <!-- Notifications -->
+  <data name="Notification_Reminder_Body" xml:space="preserve"><value>Time to train! Open the app and get going 💪</value></data>
+  <data name="Notification_Reminder_Title" xml:space="preserve"><value>LockIn · Reminder</value></data>
   <data name="Notification_RestTimer_Title" xml:space="preserve"><value>Rest timer done!</value></data>
   <data name="Notification_RestTimer_Body_Format" xml:space="preserve"><value>Time for your next set – {0}</value></data>
+
+  <!-- Settings — Reminders -->
+  <data name="Settings_Reminders_Day_0" xml:space="preserve"><value>Mon</value></data>
+  <data name="Settings_Reminders_Day_1" xml:space="preserve"><value>Tue</value></data>
+  <data name="Settings_Reminders_Day_2" xml:space="preserve"><value>Wed</value></data>
+  <data name="Settings_Reminders_Day_3" xml:space="preserve"><value>Thu</value></data>
+  <data name="Settings_Reminders_Day_4" xml:space="preserve"><value>Fri</value></data>
+  <data name="Settings_Reminders_Day_5" xml:space="preserve"><value>Sat</value></data>
+  <data name="Settings_Reminders_Day_6" xml:space="preserve"><value>Sun</value></data>
+  <data name="Settings_Reminders_Off" xml:space="preserve"><value>Off</value></data>
+  <data name="Settings_Reminders_Time_Label" xml:space="preserve"><value>Time</value></data>
+  <data name="Settings_Reminders_TimeInvalid" xml:space="preserve"><value>Invalid time — enter HH:MM (e.g. 08:00)</value></data>
+  <data name="Settings_Reminders_TimePrompt_Body" xml:space="preserve"><value>Enter desired time in HH:MM format</value></data>
+  <data name="Settings_Reminders_TimePrompt_Title" xml:space="preserve"><value>Reminder Time</value></data>
+  <data name="Settings_Reminders_Title" xml:space="preserve"><value>Workout Reminders</value></data>
+  <data name="Settings_Section_Reminders" xml:space="preserve"><value>REMINDERS</value></data>
 
 </root>

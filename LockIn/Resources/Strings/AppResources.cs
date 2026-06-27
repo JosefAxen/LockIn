@@ -76,6 +76,8 @@ public static class AppResources
     public static string Cardio_Activity_Custom              => Get(nameof(Cardio_Activity_Custom));
 
     // ── Notifications ──────────────────────────────────────────────────
+    public static string Notification_Reminder_Body         => Get(nameof(Notification_Reminder_Body));
+    public static string Notification_Reminder_Title        => Get(nameof(Notification_Reminder_Title));
     public static string Notification_RestTimer_Title       => Get(nameof(Notification_RestTimer_Title));
     public static string Notification_RestTimer_Body_Format => Get(nameof(Notification_RestTimer_Body_Format));
 
@@ -484,6 +486,7 @@ public static class AppResources
     public static string Settings_Section_Units         => Get(nameof(Settings_Section_Units));
     public static string Settings_WeightUnit_Title      => Get(nameof(Settings_WeightUnit_Title));
     public static string Settings_Section_RestTimer     => Get(nameof(Settings_Section_RestTimer));
+    public static string Settings_Section_Reminders     => Get(nameof(Settings_Section_Reminders));
     public static string Settings_Vibration_Title       => Get(nameof(Settings_Vibration_Title));
     public static string Settings_Vibration_Description => Get(nameof(Settings_Vibration_Description));
     public static string Settings_Sound_Title           => Get(nameof(Settings_Sound_Title));
@@ -508,6 +511,19 @@ public static class AppResources
     public static string Settings_ClearData_Body        => Get(nameof(Settings_ClearData_Body));
     public static string Settings_ClearData_Confirm     => Get(nameof(Settings_ClearData_Confirm));
     public static string Settings_ClearData_Toast       => Get(nameof(Settings_ClearData_Toast));
+    public static string Settings_Reminders_Day_0       => Get(nameof(Settings_Reminders_Day_0));
+    public static string Settings_Reminders_Day_1       => Get(nameof(Settings_Reminders_Day_1));
+    public static string Settings_Reminders_Day_2       => Get(nameof(Settings_Reminders_Day_2));
+    public static string Settings_Reminders_Day_3       => Get(nameof(Settings_Reminders_Day_3));
+    public static string Settings_Reminders_Day_4       => Get(nameof(Settings_Reminders_Day_4));
+    public static string Settings_Reminders_Day_5       => Get(nameof(Settings_Reminders_Day_5));
+    public static string Settings_Reminders_Day_6       => Get(nameof(Settings_Reminders_Day_6));
+    public static string Settings_Reminders_Off         => Get(nameof(Settings_Reminders_Off));
+    public static string Settings_Reminders_Time_Label        => Get(nameof(Settings_Reminders_Time_Label));
+    public static string Settings_Reminders_TimeInvalid       => Get(nameof(Settings_Reminders_TimeInvalid));
+    public static string Settings_Reminders_TimePrompt_Body   => Get(nameof(Settings_Reminders_TimePrompt_Body));
+    public static string Settings_Reminders_TimePrompt_Title  => Get(nameof(Settings_Reminders_TimePrompt_Title));
+    public static string Settings_Reminders_Title             => Get(nameof(Settings_Reminders_Title));
     public static string Settings_ExportData_Title    => Get(nameof(Settings_ExportData_Title));
     public static string Settings_ExportData_Subtitle => Get(nameof(Settings_ExportData_Subtitle));
     public static string Settings_ExportData_Error    => Get(nameof(Settings_ExportData_Error));

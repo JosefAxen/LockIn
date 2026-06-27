@@ -23,4 +23,7 @@ public class AppSettings
     // Fryst morgon-recovery för ansträngningsmål — sätts en gång per dag vid första laddning.
     public string MorningRecoveryDate { get; set; } = "";
     public double MorningRecoveryPct  { get; set; } = 0;
+
+    public int ReminderDays        { get; set; } = 0;
+    public int ReminderTimeMinutes { get; set; } = 0;
 }
