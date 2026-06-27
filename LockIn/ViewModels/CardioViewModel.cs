@@ -29,6 +29,9 @@ public partial class CardioViewModel(DatabaseService db) : ObservableObject
         => IsCustom = value.Type == CardioActivityType.Custom;
 
     [RelayCommand]
+    private void SelectActivity(ActivityOption opt) => SelectedActivity = opt;
+
+    [RelayCommand]
     private async Task SaveAsync()
     {
         if (SelectedActivity is null) return;

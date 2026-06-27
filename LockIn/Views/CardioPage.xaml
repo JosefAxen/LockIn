@@ -1,6 +1,203 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:LockIn.ViewModels"
+             xmlns:views="clr-namespace:LockIn.Views"
+             xmlns:controls="clr-namespace:LockIn.Controls"
+             xmlns:loc="clr-namespace:LockIn.Resources.Strings"
              x:Class="LockIn.Views.CardioPage"
-             Shell.NavBarIsVisible="False">
+             x:DataType="vm:CardioViewModel"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="Transparent"
+             xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+             ios:Page.UseSafeArea="False">
+
+    <Grid SafeAreaEdges="None">
+
+        <!-- Atmosfärisk bakgrund -->
+        <controls:AtmosphericBackgroundView InputTransparent="True"/>
+
+        <!-- Permanent status bar gradient -->
+        <BoxView VerticalOptions="Start" HeightRequest="90" InputTransparent="True" ZIndex="19">
+            <BoxView.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="{AppThemeBinding Light=#28FCFCFC, Dark=#28141418}" Offset="0.0"/>
+                    <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark=#00141418}" Offset="1.0"/>
+                </LinearGradientBrush>
+            </BoxView.Background>
+        </BoxView>
+
+        <ScrollView VerticalScrollBarVisibility="Never">
+            <VerticalStackLayout Spacing="0">
+
+                <!-- Header-rad -->
+                <Grid Padding="16,56,16,8" ColumnDefinitions="48,*">
+                    <Border Grid.Column="0"
+                            WidthRequest="36" HeightRequest="36"
+                            StrokeShape="Ellipse"
+                            BackgroundColor="{AppThemeBinding Light=#1A000000, Dark=#17FFFFFF}"
+                            Stroke="{AppThemeBinding Light=#0D000000, Dark=#29FFFFFF}"
+                            StrokeThickness="0.5"
+                            VerticalOptions="Center">
+                        <Path Style="{StaticResource BackChevron}"/>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnBackClicked"/>
+                            <PointerGestureRecognizer PointerPressed="OnBackPointerPressed" PointerReleased="OnBackPointerReleased"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+                    <Label Grid.Column="1"
+                           Text="{loc:Localize Cardio_Title}"
+                           Style="{StaticResource DisplayLabel}" FontSize="28"
+                           VerticalOptions="End" Margin="4,0,0,0"/>
+                </Grid>
+
+                <StackLayout Padding="16,8,16,48" Spacing="20">
+
+                    <!-- Aktivitetstyp-sektion -->
+                    <StackLayout Spacing="10">
+                        <Label Text="{loc:Localize Cardio_ActivityType_Label}" Style="{StaticResource SectionLabel}" Margin="4,0"/>
+                        <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
+                            <HorizontalStackLayout Spacing="8"
+                                BindableLayout.ItemsSource="{Binding ActivityOptions}">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:CardioViewModel+ActivityOption">
+                                        <Border StrokeShape="RoundRectangle 20"
+                                                StrokeThickness="0"
+                                                BackgroundColor="{StaticResource ForgeSurface2}"
+                                                Padding="14,10">
+                                            <Label Text="{Binding Name}"
+                                                   FontFamily="DMSansMedium" FontSize="14"
+                                                   TextColor="{StaticResource ForgeText}"
+                                                   VerticalOptions="Center"/>
+                                            <Border.GestureRecognizers>
+                                                <TapGestureRecognizer
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CardioViewModel}}, Path=SelectActivityCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                            </Border.GestureRecognizers>
+                                        </Border>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </HorizontalStackLayout>
+                        </ScrollView>
+
+                        <!-- Valt alternativ -->
+                        <Label Text="{Binding SelectedActivity.Name}"
+                               FontFamily="DMSansMedium" FontSize="14"
+                               TextColor="{StaticResource ForgeAccent}"
+                               Margin="4,0"/>
+                    </StackLayout>
+
+                    <!-- Eget aktivitetsnamn (visas endast vid Custom) -->
+                    <StackLayout IsVisible="{Binding IsCustom}" Spacing="4">
+                        <Label Text="{loc:Localize Cardio_CustomName_Label}" Style="{StaticResource SectionLabel}" Margin="4,0"/>
+                        <Border BackgroundColor="{StaticResource ForgeSurface2}"
+                                StrokeShape="RoundRectangle 12"
+                                StrokeThickness="0" Padding="16,0">
+                            <Entry Text="{Binding CustomName}"
+                                   FontFamily="DMSansMedium" FontSize="16"
+                                   BackgroundColor="Transparent"
+                                   TextColor="{StaticResource ForgeText}"
+                                   HeightRequest="48"/>
+                        </Border>
+                    </StackLayout>
+
+                    <!-- Tid -->
+                    <StackLayout Spacing="4">
+                        <Label Text="{loc:Localize Cardio_Duration_Label}" Style="{StaticResource SectionLabel}" Margin="4,0"/>
+                        <Border BackgroundColor="{StaticResource ForgeSurface2}"
+                                StrokeShape="RoundRectangle 12"
+                                StrokeThickness="0" Padding="16,0">
+                            <Entry Text="{Binding DurationText}"
+                                   Keyboard="Numeric"
+                                   FontFamily="DMSansMedium" FontSize="16"
+                                   BackgroundColor="Transparent"
+                                   TextColor="{StaticResource ForgeText}"
+                                   HeightRequest="48"/>
+                        </Border>
+                    </StackLayout>
+
+                    <!-- Distans -->
+                    <StackLayout Spacing="4">
+                        <Label Text="{loc:Localize Cardio_Distance_Label}" Style="{StaticResource SectionLabel}" Margin="4,0"/>
+                        <Border BackgroundColor="{StaticResource ForgeSurface2}"
+                                StrokeShape="RoundRectangle 12"
+                                StrokeThickness="0" Padding="16,0">
+                            <Entry Text="{Binding DistanceText}"
+                                   Keyboard="Numeric"
+                                   FontFamily="DMSansMedium" FontSize="16"
+                                   BackgroundColor="Transparent"
+                                   TextColor="{StaticResource ForgeText}"
+                                   HeightRequest="48"/>
+                        </Border>
+                    </StackLayout>
+
+                    <!-- Snittpuls -->
+                    <StackLayout Spacing="4">
+                        <Label Text="{loc:Localize Cardio_HeartRate_Label}" Style="{StaticResource SectionLabel}" Margin="4,0"/>
+                        <Border BackgroundColor="{StaticResource ForgeSurface2}"
+                                StrokeShape="RoundRectangle 12"
+                                StrokeThickness="0" Padding="16,0">
+                            <Entry Text="{Binding HeartRateText}"
+                                   Keyboard="Numeric"
+                                   FontFamily="DMSansMedium" FontSize="16"
+                                   BackgroundColor="Transparent"
+                                   TextColor="{StaticResource ForgeText}"
+                                   HeightRequest="48"/>
+                        </Border>
+                    </StackLayout>
+
+                    <!-- Kalorier -->
+                    <StackLayout Spacing="4">
+                        <Label Text="{loc:Localize Cardio_Calories_Label}" Style="{StaticResource SectionLabel}" Margin="4,0"/>
+                        <Border BackgroundColor="{StaticResource ForgeSurface2}"
+                                StrokeShape="RoundRectangle 12"
+                                StrokeThickness="0" Padding="16,0">
+                            <Entry Text="{Binding CaloriesText}"
+                                   Keyboard="Numeric"
+                                   FontFamily="DMSansMedium" FontSize="16"
+                                   BackgroundColor="Transparent"
+                                   TextColor="{StaticResource ForgeText}"
+                                   HeightRequest="48"/>
+                        </Border>
+                    </StackLayout>
+
+                    <!-- Anteckningar -->
+                    <StackLayout Spacing="4">
+                        <Label Text="{loc:Localize Cardio_Notes_Label}" Style="{StaticResource SectionLabel}" Margin="4,0"/>
+                        <Border BackgroundColor="{StaticResource ForgeSurface2}"
+                                StrokeShape="RoundRectangle 12"
+                                StrokeThickness="0" Padding="16,8">
+                            <Editor Text="{Binding Notes}"
+                                    FontFamily="DMSansRegular" FontSize="15"
+                                    BackgroundColor="Transparent"
+                                    TextColor="{StaticResource ForgeText}"
+                                    AutoSize="TextChanges"
+                                    MinimumHeightRequest="80"/>
+                        </Border>
+                    </StackLayout>
+
+                    <!-- Spara-knapp -->
+                    <Border x:Name="SaveButton"
+                            BackgroundColor="{StaticResource ForgeAccent}"
+                            StrokeShape="RoundRectangle 16"
+                            StrokeThickness="0"
+                            Margin="0,4,0,0">
+                        <Label Text="{loc:Localize Cardio_Save_Button}"
+                               FontFamily="BebasNeue" FontSize="20"
+                               CharacterSpacing="1.5"
+                               TextColor="{StaticResource ForgeText}"
+                               HorizontalOptions="Center"
+                               Margin="0,16"/>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SaveCommand}"/>
+                            <PointerGestureRecognizer PointerPressed="OnSavePointerPressed" PointerReleased="OnSavePointerReleased"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                </StackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </Grid>
+
 </ContentPage>
