@@ -26,6 +26,47 @@
   <data name="Common_Error" xml:space="preserve"><value>Error</value></data>
   <data name="Common_Confirm" xml:space="preserve"><value>Confirm</value></data>
 
+  <!-- Cardio UI strings -->
+  <data name="Cardio_Title" xml:space="preserve"><value>CARDIO</value></data>
+  <data name="Cardio_ActivityType_Label" xml:space="preserve"><value>ACTIVITY</value></data>
+  <data name="Cardio_Duration_Label" xml:space="preserve"><value>DURATION (MIN)</value></data>
+  <data name="Cardio_Distance_Label" xml:space="preserve"><value>DISTANCE (KM)</value></data>
+  <data name="Cardio_HeartRate_Label" xml:space="preserve"><value>AVG HEART RATE</value></data>
+  <data name="Cardio_Calories_Label" xml:space="preserve"><value>CALORIES</value></data>
+  <data name="Cardio_Notes_Label" xml:space="preserve"><value>NOTES</value></data>
+  <data name="Cardio_CustomName_Label" xml:space="preserve"><value>ACTIVITY NAME</value></data>
+  <data name="Cardio_Save_Button" xml:space="preserve"><value>SAVE SESSION</value></data>
+  <data name="Cardio_Delete_Confirm" xml:space="preserve"><value>Delete this cardio session?</value></data>
+  <data name="Cardio_Delete_Yes" xml:space="preserve"><value>Delete</value></data>
+  <data name="Cardio_Delete_No" xml:space="preserve"><value>Cancel</value></data>
+
+  <!-- Cardio Activity Types -->
+  <data name="Cardio_Activity_Running" xml:space="preserve"><value>Running</value></data>
+  <data name="Cardio_Activity_OutdoorCycling" xml:space="preserve"><value>Outdoor Cycling</value></data>
+  <data name="Cardio_Activity_IndoorCycling" xml:space="preserve"><value>Indoor Cycling</value></data>
+  <data name="Cardio_Activity_Rowing" xml:space="preserve"><value>Rowing Machine</value></data>
+  <data name="Cardio_Activity_Stairmaster" xml:space="preserve"><value>Stairmaster</value></data>
+  <data name="Cardio_Activity_Elliptical" xml:space="preserve"><value>Elliptical</value></data>
+  <data name="Cardio_Activity_Walking" xml:space="preserve"><value>Walking</value></data>
+  <data name="Cardio_Activity_Swimming" xml:space="preserve"><value>Swimming</value></data>
+  <data name="Cardio_Activity_JumpRope" xml:space="preserve"><value>Jump Rope</value></data>
+  <data name="Cardio_Activity_Hiit" xml:space="preserve"><value>HIIT</value></data>
+  <data name="Cardio_Activity_Boxing" xml:space="preserve"><value>Boxing</value></data>
+  <data name="Cardio_Activity_Padel" xml:space="preserve"><value>Padel/Tennis</value></data>
+  <data name="Cardio_Activity_Dancing" xml:space="preserve"><value>Dancing</value></data>
+  <data name="Cardio_Activity_Yoga" xml:space="preserve"><value>Yoga</value></data>
+  <data name="Cardio_Activity_CrossCountrySkiing" xml:space="preserve"><value>Cross-Country Skiing</value></data>
+  <data name="Cardio_Activity_Other" xml:space="preserve"><value>Other</value></data>
+  <data name="Cardio_Activity_Custom" xml:space="preserve"><value>Custom Activity</value></data>
+
+  <!-- History Cardio Section -->
+  <data name="History_Cardio_Section" xml:space="preserve"><value>CARDIO</value></data>
+  <data name="History_Cardio_Minutes" xml:space="preserve"><value>min</value></data>
+  <data name="History_Cardio_Km" xml:space="preserve"><value>km</value></data>
+
+  <!-- TrainPage Cardio Button -->
+  <data name="TrainPage_Cardio_Button" xml:space="preserve"><value>Log cardio</value></data>
+
   <!-- Tab titles -->
   <data name="Tab_Home" xml:space="preserve"><value>Home</value></data>
   <data name="Tab_Train" xml:space="preserve"><value>Train</value></data>

@@ -40,6 +40,41 @@ public static class AppResources
     public static string Common_Error    => Get(nameof(Common_Error));
     public static string Common_Confirm  => Get(nameof(Common_Confirm));
 
+    // ── Cardio ─────────────────────────────────────────────────────────
+    public static string Cardio_Title                        => Get(nameof(Cardio_Title));
+    public static string Cardio_ActivityType_Label           => Get(nameof(Cardio_ActivityType_Label));
+    public static string Cardio_Duration_Label               => Get(nameof(Cardio_Duration_Label));
+    public static string Cardio_Distance_Label               => Get(nameof(Cardio_Distance_Label));
+    public static string Cardio_HeartRate_Label              => Get(nameof(Cardio_HeartRate_Label));
+    public static string Cardio_Calories_Label               => Get(nameof(Cardio_Calories_Label));
+    public static string Cardio_Notes_Label                  => Get(nameof(Cardio_Notes_Label));
+    public static string Cardio_CustomName_Label             => Get(nameof(Cardio_CustomName_Label));
+    public static string Cardio_Save_Button                  => Get(nameof(Cardio_Save_Button));
+    public static string Cardio_Delete_Confirm               => Get(nameof(Cardio_Delete_Confirm));
+    public static string Cardio_Delete_Yes                   => Get(nameof(Cardio_Delete_Yes));
+    public static string Cardio_Delete_No                    => Get(nameof(Cardio_Delete_No));
+    public static string History_Cardio_Section              => Get(nameof(History_Cardio_Section));
+    public static string History_Cardio_Minutes              => Get(nameof(History_Cardio_Minutes));
+    public static string History_Cardio_Km                   => Get(nameof(History_Cardio_Km));
+    public static string TrainPage_Cardio_Button             => Get(nameof(TrainPage_Cardio_Button));
+    public static string Cardio_Activity_Running             => Get(nameof(Cardio_Activity_Running));
+    public static string Cardio_Activity_OutdoorCycling      => Get(nameof(Cardio_Activity_OutdoorCycling));
+    public static string Cardio_Activity_IndoorCycling       => Get(nameof(Cardio_Activity_IndoorCycling));
+    public static string Cardio_Activity_Rowing              => Get(nameof(Cardio_Activity_Rowing));
+    public static string Cardio_Activity_Stairmaster         => Get(nameof(Cardio_Activity_Stairmaster));
+    public static string Cardio_Activity_Elliptical          => Get(nameof(Cardio_Activity_Elliptical));
+    public static string Cardio_Activity_Walking             => Get(nameof(Cardio_Activity_Walking));
+    public static string Cardio_Activity_Swimming            => Get(nameof(Cardio_Activity_Swimming));
+    public static string Cardio_Activity_JumpRope            => Get(nameof(Cardio_Activity_JumpRope));
+    public static string Cardio_Activity_Hiit                => Get(nameof(Cardio_Activity_Hiit));
+    public static string Cardio_Activity_Boxing              => Get(nameof(Cardio_Activity_Boxing));
+    public static string Cardio_Activity_Padel               => Get(nameof(Cardio_Activity_Padel));
+    public static string Cardio_Activity_Dancing             => Get(nameof(Cardio_Activity_Dancing));
+    public static string Cardio_Activity_Yoga                => Get(nameof(Cardio_Activity_Yoga));
+    public static string Cardio_Activity_CrossCountrySkiing  => Get(nameof(Cardio_Activity_CrossCountrySkiing));
+    public static string Cardio_Activity_Other               => Get(nameof(Cardio_Activity_Other));
+    public static string Cardio_Activity_Custom              => Get(nameof(Cardio_Activity_Custom));
+
     // ── Notifications ──────────────────────────────────────────────────
     public static string Notification_RestTimer_Title       => Get(nameof(Notification_RestTimer_Title));
     public static string Notification_RestTimer_Body_Format => Get(nameof(Notification_RestTimer_Body_Format));

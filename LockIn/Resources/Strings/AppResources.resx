@@ -26,6 +26,47 @@
   <data name="Common_Error" xml:space="preserve"><value>Fel</value></data>
   <data name="Common_Confirm" xml:space="preserve"><value>Bekräfta</value></data>
 
+  <!-- Cardio UI strings -->
+  <data name="Cardio_Title" xml:space="preserve"><value>CARDIO</value></data>
+  <data name="Cardio_ActivityType_Label" xml:space="preserve"><value>AKTIVITET</value></data>
+  <data name="Cardio_Duration_Label" xml:space="preserve"><value>TID (MIN)</value></data>
+  <data name="Cardio_Distance_Label" xml:space="preserve"><value>DISTANS (KM)</value></data>
+  <data name="Cardio_HeartRate_Label" xml:space="preserve"><value>SNITTPULS</value></data>
+  <data name="Cardio_Calories_Label" xml:space="preserve"><value>KALORIER</value></data>
+  <data name="Cardio_Notes_Label" xml:space="preserve"><value>ANTECKNINGAR</value></data>
+  <data name="Cardio_CustomName_Label" xml:space="preserve"><value>AKTIVITETSNAMN</value></data>
+  <data name="Cardio_Save_Button" xml:space="preserve"><value>SPARA PASS</value></data>
+  <data name="Cardio_Delete_Confirm" xml:space="preserve"><value>Ta bort detta cardiopass?</value></data>
+  <data name="Cardio_Delete_Yes" xml:space="preserve"><value>Ta bort</value></data>
+  <data name="Cardio_Delete_No" xml:space="preserve"><value>Avbryt</value></data>
+
+  <!-- Cardio Activity Types -->
+  <data name="Cardio_Activity_Running" xml:space="preserve"><value>Löpning</value></data>
+  <data name="Cardio_Activity_OutdoorCycling" xml:space="preserve"><value>Cykling utomhus</value></data>
+  <data name="Cardio_Activity_IndoorCycling" xml:space="preserve"><value>Spinningcykel</value></data>
+  <data name="Cardio_Activity_Rowing" xml:space="preserve"><value>Roddmaskin</value></data>
+  <data name="Cardio_Activity_Stairmaster" xml:space="preserve"><value>Stairmaster</value></data>
+  <data name="Cardio_Activity_Elliptical" xml:space="preserve"><value>Elliptical</value></data>
+  <data name="Cardio_Activity_Walking" xml:space="preserve"><value>Gång</value></data>
+  <data name="Cardio_Activity_Swimming" xml:space="preserve"><value>Simning</value></data>
+  <data name="Cardio_Activity_JumpRope" xml:space="preserve"><value>Hopprep</value></data>
+  <data name="Cardio_Activity_Hiit" xml:space="preserve"><value>HIIT</value></data>
+  <data name="Cardio_Activity_Boxing" xml:space="preserve"><value>Boxning</value></data>
+  <data name="Cardio_Activity_Padel" xml:space="preserve"><value>Padel/Tennis</value></data>
+  <data name="Cardio_Activity_Dancing" xml:space="preserve"><value>Dans</value></data>
+  <data name="Cardio_Activity_Yoga" xml:space="preserve"><value>Yoga</value></data>
+  <data name="Cardio_Activity_CrossCountrySkiing" xml:space="preserve"><value>Skidåkning</value></data>
+  <data name="Cardio_Activity_Other" xml:space="preserve"><value>Övrigt</value></data>
+  <data name="Cardio_Activity_Custom" xml:space="preserve"><value>Egen aktivitet</value></data>
+
+  <!-- History Cardio Section -->
+  <data name="History_Cardio_Section" xml:space="preserve"><value>CARDIO</value></data>
+  <data name="History_Cardio_Minutes" xml:space="preserve"><value>min</value></data>
+  <data name="History_Cardio_Km" xml:space="preserve"><value>km</value></data>
+
+  <!-- TrainPage Cardio Button -->
+  <data name="TrainPage_Cardio_Button" xml:space="preserve"><value>Logga cardio</value></data>
+
   <!-- Tab-titlar -->
   <data name="Tab_Home" xml:space="preserve"><value>Hem</value></data>
   <data name="Tab_Train" xml:space="preserve"><value>Träna</value></data>
