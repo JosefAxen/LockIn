@@ -1,5 +1,6 @@
 using Foundation;
 using HealthKit;
+using LockIn.Models;
 using LockIn.Services;
 
 namespace LockIn.Platforms.iOS;
@@ -26,6 +27,7 @@ public class HealthKitService : IHealthService
     private static readonly HKObjectType[] s_writeTypes =
     [
         HKQuantityType.Create(HKQuantityTypeIdentifier.ActiveEnergyBurned)!,
+        HKWorkoutType.GetWorkoutType()!,
     ];
 
     public async Task<bool> RequestPermissionsAsync()
@@ -331,6 +333,48 @@ public class HealthKitService : IHealthService
         try   { await tcs.Task.WaitAsync(TimeSpan.FromSeconds(10)); }
         catch (TimeoutException) { System.Diagnostics.Debug.WriteLine("[HealthKit] SaveEnergy timeout"); }
     }
+
+    public async Task SaveCardioWorkoutAsync(CardioActivityType type, DateTime start, DateTime end, double kcal, double distanceMeters)
+    {
+        if (!HKHealthStore.IsHealthDataAvailable) return;
+        if (end <= start) return;
+
+        var activityType = ToHKWorkoutActivityType(type);
+        var safeKcal     = double.IsNaN(kcal) ? 0.0 : Math.Max(0, kcal);
+        var kcalQty      = HKQuantity.FromQuantity(s_kcal, safeKcal);
+        var distQty      = distanceMeters > 0
+            ? HKQuantity.FromQuantity(HKUnit.Meter, distanceMeters)
+            : null;
+
+        var workout = HKWorkout.Create(activityType, ToNSDate(start), ToNSDate(end),
+                                       (end - start).TotalSeconds, kcalQty, distQty, null);
+
+        var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+        _store.SaveObject(workout, (ok, err) =>
+        {
+            if (err is not null)
+                System.Diagnostics.Debug.WriteLine($"[HealthKit] SaveCardio: {err.LocalizedDescription}");
+            tcs.TrySetResult(ok);
+        });
+        try   { await tcs.Task.WaitAsync(TimeSpan.FromSeconds(10)); }
+        catch (TimeoutException) { System.Diagnostics.Debug.WriteLine("[HealthKit] SaveCardio timeout"); }
+    }
+
+    private static HKWorkoutActivityType ToHKWorkoutActivityType(CardioActivityType t) => t switch
+    {
+        CardioActivityType.Running            => HKWorkoutActivityType.Running,
+        CardioActivityType.OutdoorCycling     => HKWorkoutActivityType.Cycling,
+        CardioActivityType.IndoorCycling      => HKWorkoutActivityType.Cycling,
+        CardioActivityType.Rowing             => HKWorkoutActivityType.Rowing,
+        CardioActivityType.Stairmaster        => HKWorkoutActivityType.StairClimbing,
+        CardioActivityType.Elliptical         => HKWorkoutActivityType.Elliptical,
+        CardioActivityType.Walking            => HKWorkoutActivityType.Walking,
+        CardioActivityType.Swimming           => HKWorkoutActivityType.Swimming,
+        CardioActivityType.Hiit               => HKWorkoutActivityType.HighIntensityIntervalTraining,
+        CardioActivityType.Yoga               => HKWorkoutActivityType.Yoga,
+        CardioActivityType.CrossCountrySkiing => HKWorkoutActivityType.CrossCountrySkiing,
+        _                                     => HKWorkoutActivityType.Other,
+    };
 
     private Task<double> GetTodaySumAsync(HKQuantityTypeIdentifier typeId, HKUnit unit) =>
         GetTodayStatAsync(typeId, unit, HKStatisticsOptions.CumulativeSum,

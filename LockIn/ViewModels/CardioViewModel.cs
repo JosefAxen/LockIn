@@ -6,7 +6,7 @@ using LockIn.Services;
 
 namespace LockIn.ViewModels;
 
-public partial class CardioViewModel(DatabaseService db) : ObservableObject
+public partial class CardioViewModel(DatabaseService db, IHealthService health) : ObservableObject
 {
     public record ActivityOption(CardioActivityType Type, string Name);
 
@@ -55,6 +55,16 @@ public partial class CardioViewModel(DatabaseService db) : ObservableObject
         };
 
         await db.SaveCardioSessionAsync(session);
+
+        var hkStart = session.StartedAt;
+        var hkEnd   = hkStart.AddMinutes(session.DurationMinutes > 0 ? session.DurationMinutes : 1);
+        await health.SaveCardioWorkoutAsync(
+            session.ActivityType,
+            hkStart,
+            hkEnd,
+            session.CaloriesBurned,
+            session.DistanceKm * 1000.0);
+
         await Shell.Current.GoToAsync("..");
     }
 

@@ -269,11 +269,10 @@ _Senast uppdaterad: 2026-06-27_
 - [x] **Värme-set-visualisering** (S) – `SessionExerciseDetailRow` fick `SetLabel`/`SetLabelColor`/`WeightDisplay`/`RepsDisplay`. SessionDetailPage visar nu "W" (amber), "↓" (rosa), "⏱" (blå) för respektive set-typ. Time-set visar DurationSeconds i sekunder istället för 0. Volymen i PostWorkoutPage exkluderade redan warmup-set via SQL-filtret.  
   Prioritet: **Medel**
 
-- [ ] **Snabb-logg utan mall** (M) – Möjlighet att logga enstaka set direkt från LibraryPage (träna utan att skapa ett pass), till exempel för drop-in-set.  
-  _Beroenden: Ny session-skapningsflöde, ny vy eller sheet._  
+- [~] **Snabb-logg utan mall** (M) – Skippat — ej önskad funktion.  
   Prioritet: **Låg**
 
-- [ ] **Cardio-loggning** (M) – Logga löpning, cykling etc. med distans, tid och genomsnittspuls. Koppla mot HealthKit workout-typer.  
+- [x] **Cardio-loggning** (M) – Logga löpning, cykling etc. med distans, tid och genomsnittspuls. Koppla mot HealthKit workout-typer.  
   _Beroenden: Ny tabell `CardioSessions`, ny vy, `HKWorkoutActivityType`._  
   Prioritet: **Låg**
 

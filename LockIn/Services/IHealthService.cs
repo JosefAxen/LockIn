@@ -1,3 +1,5 @@
+using LockIn.Models;
+
 namespace LockIn.Services;
 
 public record HrvSample(double TodayMs, double BaselineMs);
@@ -21,6 +23,7 @@ public interface IHealthService
     Task<double[]> GetWeeklyCaloriesAsync();
     Task<double[]> GetWeeklyMaxHeartRateAsync();
     Task SaveWorkoutAsync(DateTime start, DateTime end, double activeKcal);
+    Task SaveCardioWorkoutAsync(CardioActivityType type, DateTime start, DateTime end, double kcal, double distanceMeters);
     Task<double> GetSleepHoursLastNightAsync();
     Task<HrvSample> GetHrvSampleAsync();
     Task<RestingHrSample> GetRestingHrSampleAsync();
