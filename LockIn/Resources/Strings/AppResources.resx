@@ -179,6 +179,7 @@
   <data name="Hem_ActiveTime_Sub" xml:space="preserve"><value>minuter</value></data>
   <data name="Hem_HeartRate_Sub" xml:space="preserve"><value>slag/min</value></data>
   <data name="Hem_Muscles_Title" xml:space="preserve"><value>MUSKLER · 7 DAGAR</value></data>
+  <data name="Hem_MuscleTrend_Title" xml:space="preserve"><value>VOLYMTREND · 4 VECKOR</value></data>
   <data name="Hem_WorkoutBanner_Label" xml:space="preserve"><value>PASS PÅGÅR</value></data>
 
   <!-- Hem — Greetings -->

@@ -21,6 +21,7 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
     [ObservableProperty] private bool _isLoading = true;
     [ObservableProperty] private IReadOnlyList<DayStreakItem> _days = Array.Empty<DayStreakItem>();
     [ObservableProperty] private IReadOnlyList<HeatmapTile> _heatmapItems = Array.Empty<HeatmapTile>();
+    [ObservableProperty] private IReadOnlyList<MuscleTrendItem> _muscleTrends = Array.Empty<MuscleTrendItem>();
     [ObservableProperty] private double[] _stepsValues     = [];
     [ObservableProperty] private double[] _caloriesValues  = [];
     [ObservableProperty] private double[] _activeValues    = [];
@@ -369,6 +370,7 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
     {
         var scores    = await db.GetMuscleScoresAsync();
         var frequency = await db.GetMuscleFrequencyAsync(4);
+        var weeklyVol = await db.GetWeeklyVolumeByMuscleGroupAsync(4);
         var muscles = new (MuscleGroup mg, string name)[]
         {
             (MuscleGroup.Chest,     AppResources.Train_Muscle_Chest),
@@ -397,6 +399,17 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
                 FrequencyText = freqText,
             };
         }).ToList();
+
+        MuscleTrends = muscles
+            .Where(m => weeklyVol.ContainsKey(m.mg))
+            .OrderByDescending(m => weeklyVol[m.mg].Sum())
+            .Select(m => new MuscleTrendItem
+            {
+                Name   = m.name,
+                Color  = DesignTokens.MuscleColor(m.mg),
+                Values = weeklyVol[m.mg],
+            })
+            .ToList();
     }
 
     public int TodayIndex { get; private set; } = 45;

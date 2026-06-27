@@ -227,6 +227,13 @@ public partial class KroppViewModel(DatabaseService db) : ObservableObject
         await Shell.Current.GoToAsync(nameof(SettingsPage));
 }
 
+public class MuscleTrendItem
+{
+    public string Name { get; set; } = "";
+    public Color Color { get; set; } = Colors.White;
+    public double[] Values { get; set; } = [];
+}
+
 public class HeatmapTile
 {
     public string Name { get; set; } = "";

@@ -307,8 +307,7 @@ _Senast uppdaterad: 2026-06-27_
 ---
 
 ### Analys & insikter
-- [ ] **Volymtrend per muskelgrupp** (M) – Visa hur volymen per muskelgrupp förändrats över tid (4/8/12 veckor), inte bara nuläget. Identifierar muskelgrupper som är undertränade.  
-  _Beroenden: Ny DB-query `GetWeeklyVolumeByMuscleGroupAsync(weeks)`, ny vy eller sektion på HemPage._  
+- [x] **Volymtrend per muskelgrupp** (M) – Horisontell scrollbar med sparkline-kort per muskelgrupp (senaste 4 veckor) läggs till på HemPage under heatmapen. `GetWeeklyVolumeByMuscleGroupAsync(4)` + `MuscleTrendItem` + `DesignTokens.MuscleColor()`.  
   Prioritet: **Hög**
 
 - [x] **Träningsfrekvens-analys** (S) – Genomsnittlig frekvens per muskelgrupp (senaste 4 veckor) visas som "X/v"-label under scoret i varje heatmap-tile på HemPage. `DatabaseService.GetMuscleFrequencyAsync(4)` + `HeatmapTile.FrequencyText`.  

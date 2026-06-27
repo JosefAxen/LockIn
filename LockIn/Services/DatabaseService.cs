@@ -858,6 +858,38 @@ public class DatabaseService
         return result;
     }
 
+    public async Task<Dictionary<MuscleGroup, double[]>> GetWeeklyVolumeByMuscleGroupAsync(int weeks)
+    {
+        await InitAsync();
+        var cutoff = DateTime.Now.AddDays(-7 * weeks);
+        var rows = await _db.QueryAsync<VolumeByMuscleRow>(
+            @"SELECT e.MuscleGroup, ws.StartedAt, SUM(ls.WeightKg * ls.Reps) AS VolumeKg
+              FROM LoggedSets ls
+              JOIN SessionExercises se ON se.Id = ls.SessionExerciseId
+              JOIN Exercises e ON e.Id = se.ExerciseId
+              JOIN WorkoutSessions ws ON ws.Id = se.SessionId
+              WHERE ws.CompletedAt IS NOT NULL
+                AND ws.StartedAt >= ?
+                AND (ls.SetType = 0 OR ls.SetType IS NULL)
+              GROUP BY e.MuscleGroup, ws.Id", cutoff);
+
+        var now = DateTime.Now;
+        var result = new Dictionary<MuscleGroup, double[]>();
+        foreach (var mg in Enum.GetValues<MuscleGroup>().Take(7))
+        {
+            var arr = new double[weeks];
+            foreach (var row in rows.Where(r => (MuscleGroup)r.MuscleGroup == mg))
+            {
+                var weekIndex = (int)((now - row.StartedAt).TotalDays / 7);
+                if (weekIndex >= 0 && weekIndex < weeks)
+                    arr[weeks - 1 - weekIndex] += row.VolumeKg;
+            }
+            if (arr.Any(v => v > 0))
+                result[mg] = arr;
+        }
+        return result;
+    }
+
     public async Task<Dictionary<MuscleGroup, int>> GetMuscleFrequencyAsync(int weeks)
     {
         await InitAsync();
@@ -986,6 +1018,13 @@ public class DatabaseService
     {
         public int MuscleGroup { get; set; }
         public int SessionCount { get; set; }
+    }
+
+    private class VolumeByMuscleRow
+    {
+        public int MuscleGroup { get; set; }
+        public DateTime StartedAt { get; set; }
+        public double VolumeKg { get; set; }
     }
 
     private class PRGapRow

@@ -76,6 +76,8 @@ public static class DesignTokens
     public static readonly Color AccentPurple = Color.FromArgb("#A78BFA");
     public static readonly Color AccentAmber  = Color.FromArgb("#FBBF24");
     public static readonly Color AccentOrange = Color.FromArgb("#FB923C");
+    public static readonly Color AccentGreen  = Color.FromArgb("#22C55E");
+    public static readonly Color AccentTeal   = Color.FromArgb("#2DD4BF");
 
     // ─── Primary foreground (text on primary buttons) ────────────────────────
     public static readonly Color PrimaryForeground = Color.FromArgb("#FAFAFA");
@@ -119,4 +121,17 @@ public static class DesignTokens
     }
 
     public static Color HeatmapText(double normalizedScore) => Colors.White;
+
+    // ─── Per-muscle-group sparkline colors ───────────────────────────────────
+    public static Color MuscleColor(Models.MuscleGroup mg) => mg switch
+    {
+        Models.MuscleGroup.Chest     => AccentCoral,
+        Models.MuscleGroup.Back      => AccentBlue,
+        Models.MuscleGroup.Shoulders => AccentAmber,
+        Models.MuscleGroup.Biceps    => AccentPurple,
+        Models.MuscleGroup.Triceps   => AccentOrange,
+        Models.MuscleGroup.Legs      => AccentGreen,
+        Models.MuscleGroup.Core      => AccentTeal,
+        _                            => Accent,
+    };
 }

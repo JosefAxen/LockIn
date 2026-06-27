@@ -384,6 +384,43 @@
                       ColumnSpacing="8" RowSpacing="8"
                       Margin="16,0"/>
 
+                <!-- ═══ VOLYMTREND ═══ -->
+                <Label Text="{loc:Localize Hem_MuscleTrend_Title}"
+                       Style="{StaticResource SectionLabel}"
+                       Margin="22,18,0,8"
+                       IsVisible="{Binding MuscleTrends.Count, Converter={x:Static views:GreaterThanZeroConverter.Instance}}"/>
+                <ScrollView Orientation="Horizontal"
+                            HorizontalScrollBarVisibility="Never"
+                            IsVisible="{Binding MuscleTrends.Count, Converter={x:Static views:GreaterThanZeroConverter.Instance}}"
+                            Margin="0,0,0,32">
+                    <HorizontalStackLayout BindableLayout.ItemsSource="{Binding MuscleTrends}"
+                                           Spacing="8" Padding="16,0,16,0">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="vm:MuscleTrendItem">
+                                <Border BackgroundColor="{StaticResource ForgeSurface}"
+                                        Stroke="{StaticResource ForgeBorder}"
+                                        StrokeThickness="1"
+                                        StrokeShape="RoundRectangle 14"
+                                        Padding="12,10,12,8"
+                                        WidthRequest="84">
+                                    <VerticalStackLayout Spacing="6">
+                                        <Label Text="{Binding Name}"
+                                               FontSize="8"
+                                               FontFamily="BebasNeue"
+                                               TextColor="{StaticResource ForgeTextSecondary}"
+                                               CharacterSpacing="0.8"
+                                               HorizontalOptions="Center"/>
+                                        <controls:SparklineView Values="{Binding Values}"
+                                                               StrokeColor="{Binding Color}"
+                                                               HeightRequest="44"
+                                                               BackgroundColor="Transparent"/>
+                                    </VerticalStackLayout>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </HorizontalStackLayout>
+                </ScrollView>
+
             </VerticalStackLayout>
         </ScrollView>
 

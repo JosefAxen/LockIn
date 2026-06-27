@@ -179,6 +179,7 @@
   <data name="Hem_ActiveTime_Sub" xml:space="preserve"><value>minutes</value></data>
   <data name="Hem_HeartRate_Sub" xml:space="preserve"><value>bpm</value></data>
   <data name="Hem_Muscles_Title" xml:space="preserve"><value>MUSCLES · 7 DAYS</value></data>
+  <data name="Hem_MuscleTrend_Title" xml:space="preserve"><value>VOLUME TREND · 4 WEEKS</value></data>
   <data name="Hem_WorkoutBanner_Label" xml:space="preserve"><value>SESSION ACTIVE</value></data>
 
   <!-- Hem — Greetings -->
