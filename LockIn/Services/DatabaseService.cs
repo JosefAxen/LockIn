@@ -571,6 +571,46 @@ public class DatabaseService
     public Task<double> GetVolumeIntensityForDateAsync(DateTime date)
         => GetVolumeIntensityForRangeAsync(date.Date, date.Date.AddDays(1));
 
+    public async Task<double> GetRawVolumeForRangeAsync(DateTime from, DateTime toExclusive)
+    {
+        await InitAsync();
+        return await _db.ExecuteScalarAsync<double>(
+            @"SELECT COALESCE(SUM(ls.WeightKg * ls.Reps), 0)
+              FROM LoggedSets ls
+              JOIN SessionExercises se ON se.Id = ls.SessionExerciseId
+              JOIN WorkoutSessions ws ON ws.Id = se.SessionId
+              WHERE ws.CompletedAt IS NOT NULL
+                AND ws.StartedAt >= ? AND ws.StartedAt < ?
+                AND (ls.SetType = 0 OR ls.SetType IS NULL)", from, toExclusive);
+    }
+
+    public async Task<(string ExerciseName, double GapKg, double RecentMaxKg, double AllTimeMaxKg)?> GetNearestPRGapAsync(DateTime recentCutoff)
+    {
+        await InitAsync();
+        var rows = await _db.QueryAsync<PRGapRow>(@"
+            SELECT e.Name AS ExerciseName,
+                   MAX(ls.WeightKg) AS AllTimeMaxKg,
+                   MAX(CASE WHEN ws.CompletedAt >= ? THEN CAST(ls.WeightKg AS REAL) END) AS RecentMaxKg,
+                   (MAX(ls.WeightKg) - MAX(CASE WHEN ws.CompletedAt >= ? THEN CAST(ls.WeightKg AS REAL) END)) AS GapKg
+            FROM LoggedSets ls
+            JOIN SessionExercises se ON se.Id = ls.SessionExerciseId
+            JOIN WorkoutSessions ws ON ws.Id = se.SessionId
+            JOIN Exercises e ON e.Id = se.ExerciseId
+            WHERE ws.CompletedAt IS NOT NULL
+              AND (ls.SetType = 0 OR ls.SetType IS NULL)
+            GROUP BY e.Id, e.Name
+            HAVING RecentMaxKg IS NOT NULL
+               AND GapKg > 0
+               AND GapKg <= 10
+            ORDER BY GapKg ASC
+            LIMIT 1",
+            recentCutoff, recentCutoff);
+
+        var row = rows.FirstOrDefault();
+        if (row is null) return null;
+        return (row.ExerciseName, row.GapKg, row.RecentMaxKg, row.AllTimeMaxKg);
+    }
+
     public async Task<double> GetMaxEpley1RMAsync(int exerciseId, int excludeLoggedSetId = 0)
     {
         await InitAsync();
@@ -925,6 +965,14 @@ public class DatabaseService
     {
         public int MuscleGroup { get; set; }
         public int? RIR { get; set; }
+    }
+
+    private class PRGapRow
+    {
+        public string ExerciseName { get; set; } = "";
+        public double AllTimeMaxKg { get; set; }
+        public double RecentMaxKg { get; set; }
+        public double GapKg { get; set; }
     }
 
     // ── Achievements ──────────────────────────────────────────────────────
