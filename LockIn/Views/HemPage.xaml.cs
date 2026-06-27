@@ -1,3 +1,4 @@
+using CommunityToolkit.Maui.Extensions;
 using LockIn.Services;
 using LockIn.ViewModels;
 using Microsoft.Maui.Devices;
@@ -99,6 +100,15 @@ public partial class HemPage : ContentPage
 
     private async void OnWorkoutBannerTapped(object sender, TappedEventArgs e)
         => await Shell.Current.GoToAsync(nameof(ActiveWorkoutPage));
+
+    private async void OnChipTapped(object sender, TappedEventArgs e)
+    {
+        if (sender is not VisualElement view) return;
+        if (view.BindingContext is not LockIn.Models.CoachChip chip) return;
+
+        LockIn.Services.CoachPromptEngine.MarkShown(chip.PromptId);
+        await this.ShowPopupAsync(new CoachChipSheet(chip), new CommunityToolkit.Maui.PopupOptions());
+    }
 
     private static async void OnBannerPointerPressed(object? sender, PointerEventArgs e)
     {

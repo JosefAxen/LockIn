@@ -6,6 +6,7 @@
              xmlns:controls="clr-namespace:LockIn.Controls"
              xmlns:loc="clr-namespace:LockIn.Resources.Strings"
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+             xmlns:models="clr-namespace:LockIn.Models"
              x:Class="LockIn.Views.HemPage"
              x:DataType="vm:HemViewModel"
              Title="{loc:Localize Tab_Home}"
@@ -127,6 +128,37 @@
                                LineBreakMode="WordWrap"/>
                     </VerticalStackLayout>
                 </Border>
+
+                <!-- ═══ DATA-CHIPS ═══ -->
+                <CollectionView ItemsSource="{Binding CoachChips}"
+                                IsVisible="{Binding HasCoachChips}"
+                                Margin="16,10,0,0"
+                                HeightRequest="40"
+                                HorizontalScrollBarVisibility="Never"
+                                VerticalScrollBarVisibility="Never">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8"/>
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:CoachChip">
+                            <Border StrokeShape="RoundRectangle 10"
+                                    Padding="14,0"
+                                    HeightRequest="36"
+                                    VerticalOptions="Center"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}"
+                                    Stroke="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorderLight}}"
+                                    StrokeThickness="1">
+                                <Label Text="{Binding ChipText}"
+                                       FontFamily="DMSansMedium" FontSize="13"
+                                       TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                                       VerticalOptions="Center"/>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnChipTapped"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
 
                 <!-- ═══ STRAIN / RECOVERY / SÖMN-RINGAR ═══ -->
                 <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8" Margin="16,18,16,4">
