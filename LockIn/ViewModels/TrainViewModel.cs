@@ -166,6 +166,10 @@ public partial class TrainViewModel(DatabaseService db, ActiveWorkoutStateServic
     }
 
     [RelayCommand]
+    private async Task OpenCardioAsync()
+        => await Shell.Current.GoToAsync(nameof(CardioPage));
+
+    [RelayCommand]
     private async Task DeleteTemplateAsync(WorkoutTemplate template)
     {
         var confirmed = await Shell.Current.DisplayAlert(

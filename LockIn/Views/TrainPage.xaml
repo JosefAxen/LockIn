@@ -334,6 +334,26 @@
             </StackLayout>
         </ScrollView>
 
+        <!-- Cardio-shortcut -->
+        <Border StrokeShape="RoundRectangle 28" StrokeThickness="1"
+                Stroke="{StaticResource ForgeBorder}"
+                BackgroundColor="{StaticResource ForgeSurface}"
+                HorizontalOptions="Start" VerticalOptions="End"
+                Margin="18,0,0,100"
+                HeightRequest="56" Padding="20,0"
+                ZIndex="30">
+            <HorizontalStackLayout Spacing="8" HorizontalOptions="Center" VerticalOptions="Center">
+                <Label Text="♥" FontSize="16" TextColor="{StaticResource ForgeAccentCoral}"
+                       VerticalOptions="Center"/>
+                <Label Text="{loc:Localize TrainPage_Cardio_Button}"
+                       FontFamily="BebasNeue" FontSize="17" CharacterSpacing="2"
+                       TextColor="{StaticResource ForgeText}" VerticalOptions="Center"/>
+            </HorizontalStackLayout>
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding OpenCardioCommand}"/>
+            </Border.GestureRecognizers>
+        </Border>
+
         <!-- Floating FAB: starta fritt pass — premium pill -->
         <!-- ZIndex 30 = ovanför bottom-gradient (22) så den inte mörkas -->
         <!-- Metallisk silver-gradient direkt på Border.Background (klipps av StrokeShape) -->

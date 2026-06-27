@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using LockIn.Models;
 using LockIn.Resources.Strings;
 using LockIn.Services;
 using LockIn.Views;
@@ -18,6 +19,7 @@ public partial class HistoryViewModel(DatabaseService db) : ObservableObject
     [ObservableProperty] private int _selectedSort = 0;
     [ObservableProperty] private bool _hasNoSessions;
     [ObservableProperty] private string _calendarTitle = "";
+    [ObservableProperty] private IReadOnlyList<CardioSession> _cardioSessions = Array.Empty<CardioSession>();
 
     public string EmptyStateTitle => _allSessions.Count == 0
         ? AppResources.History_Empty_Title_NoSessions
@@ -97,6 +99,7 @@ public partial class HistoryViewModel(DatabaseService db) : ObservableObject
     {
         IsLoading = true;
         _allSessions = await db.GetCompletedSessionsAsync();
+        CardioSessions = (await db.GetCardioSessionsAsync(20)).AsReadOnly();
         await RefreshCalendarAsync();
         ApplyFilterSort();
         RefreshTabColors();

@@ -2,6 +2,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:LockIn.ViewModels"
+             xmlns:views="clr-namespace:LockIn.Views"
+             xmlns:models="clr-namespace:LockIn.Models"
              xmlns:svc="clr-namespace:LockIn.Services"
              xmlns:controls="clr-namespace:LockIn.Controls"
              xmlns:loc="clr-namespace:LockIn.Resources.Strings"
@@ -279,6 +281,49 @@
                                             Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HistoryViewModel}}, Path=OpenSessionCommand}"
                                             CommandParameter="{Binding .}"/>
                                     </Border.GestureRecognizers>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </StackLayout>
+
+                    <!-- Cardio-sessioner -->
+                    <Label Text="{loc:Localize History_Cardio_Section}"
+                           Style="{StaticResource SectionLabel}"
+                           Margin="4,16,0,8"
+                           IsVisible="{Binding CardioSessions.Count, Converter={x:Static vm:GreaterThanZeroConverter.Instance}}"/>
+                    <StackLayout BindableLayout.ItemsSource="{Binding CardioSessions}"
+                                 Spacing="0"
+                                 IsVisible="{Binding CardioSessions.Count, Converter={x:Static vm:GreaterThanZeroConverter.Instance}}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="models:CardioSession">
+                                <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
+                                        StrokeShape="RoundRectangle 18"
+                                        StrokeThickness="0"
+                                        Margin="0,0,0,10"
+                                        Padding="18,14">
+                                    <Grid ColumnDefinitions="12,*,Auto" ColumnSpacing="12">
+                                        <Ellipse Grid.Column="0"
+                                                 WidthRequest="10" HeightRequest="10"
+                                                 Fill="{StaticResource ForgeAccentCoral}"
+                                                 VerticalOptions="Center"/>
+                                        <VerticalStackLayout Grid.Column="1" Spacing="4">
+                                            <Label Text="{Binding ActivityType, Converter={x:Static views:CardioActivityLabelConverter.Instance}}"
+                                                   FontFamily="BebasNeue" FontSize="22" CharacterSpacing="1"
+                                                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                                            <HorizontalStackLayout Spacing="8">
+                                                <Label Text="{Binding DurationMinutes, StringFormat='{0} min'}"
+                                                       Style="{StaticResource MutedLabel}" FontSize="12"
+                                                       IsVisible="{Binding DurationMinutes, Converter={x:Static vm:GreaterThanZeroConverter.Instance}}"/>
+                                                <Label Text="{Binding DistanceKm, StringFormat='{0:F1} km'}"
+                                                       Style="{StaticResource MutedLabel}" FontSize="12"
+                                                       IsVisible="{Binding DistanceKm, Converter={x:Static vm:GreaterThanZeroConverter.Instance}}"/>
+                                            </HorizontalStackLayout>
+                                        </VerticalStackLayout>
+                                        <Label Grid.Column="2"
+                                               Text="{Binding StartedAt, StringFormat='{0:d MMM}'}"
+                                               Style="{StaticResource MutedLabel}"
+                                               FontSize="12" VerticalOptions="Center"/>
+                                    </Grid>
                                 </Border>
                             </DataTemplate>
                         </BindableLayout.ItemTemplate>
