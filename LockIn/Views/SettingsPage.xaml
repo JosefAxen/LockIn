@@ -183,6 +183,7 @@
                                     </Border.GestureRecognizers>
                                 </Border>
                                 <Label Text="{Binding Day0Label}" FontFamily="DMSansRegular" FontSize="8"
+                                       MinimumHeightRequest="10"
                                        TextColor="{StaticResource ForgeAccent}" HorizontalOptions="Center"
                                        LineBreakMode="TailTruncation">
                                     <Label.GestureRecognizers>
@@ -200,6 +201,7 @@
                                     </Border.GestureRecognizers>
                                 </Border>
                                 <Label Text="{Binding Day1Label}" FontFamily="DMSansRegular" FontSize="8"
+                                       MinimumHeightRequest="10"
                                        TextColor="{StaticResource ForgeAccent}" HorizontalOptions="Center"
                                        LineBreakMode="TailTruncation">
                                     <Label.GestureRecognizers>
@@ -217,6 +219,7 @@
                                     </Border.GestureRecognizers>
                                 </Border>
                                 <Label Text="{Binding Day2Label}" FontFamily="DMSansRegular" FontSize="8"
+                                       MinimumHeightRequest="10"
                                        TextColor="{StaticResource ForgeAccent}" HorizontalOptions="Center"
                                        LineBreakMode="TailTruncation">
                                     <Label.GestureRecognizers>
@@ -234,6 +237,7 @@
                                     </Border.GestureRecognizers>
                                 </Border>
                                 <Label Text="{Binding Day3Label}" FontFamily="DMSansRegular" FontSize="8"
+                                       MinimumHeightRequest="10"
                                        TextColor="{StaticResource ForgeAccent}" HorizontalOptions="Center"
                                        LineBreakMode="TailTruncation">
                                     <Label.GestureRecognizers>
@@ -251,6 +255,7 @@
                                     </Border.GestureRecognizers>
                                 </Border>
                                 <Label Text="{Binding Day4Label}" FontFamily="DMSansRegular" FontSize="8"
+                                       MinimumHeightRequest="10"
                                        TextColor="{StaticResource ForgeAccent}" HorizontalOptions="Center"
                                        LineBreakMode="TailTruncation">
                                     <Label.GestureRecognizers>
@@ -268,6 +273,7 @@
                                     </Border.GestureRecognizers>
                                 </Border>
                                 <Label Text="{Binding Day5Label}" FontFamily="DMSansRegular" FontSize="8"
+                                       MinimumHeightRequest="10"
                                        TextColor="{StaticResource ForgeAccent}" HorizontalOptions="Center"
                                        LineBreakMode="TailTruncation">
                                     <Label.GestureRecognizers>
@@ -285,6 +291,7 @@
                                     </Border.GestureRecognizers>
                                 </Border>
                                 <Label Text="{Binding Day6Label}" FontFamily="DMSansRegular" FontSize="8"
+                                       MinimumHeightRequest="10"
                                        TextColor="{StaticResource ForgeAccent}" HorizontalOptions="Center"
                                        LineBreakMode="TailTruncation">
                                     <Label.GestureRecognizers>
