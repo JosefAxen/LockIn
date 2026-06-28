@@ -338,7 +338,7 @@ _Senast uppdaterad: 2026-06-27_
 - [x] **HKWorkout-typ vid HealthKit-sync** (S) – `HealthKitService.SaveWorkoutAsync` sparar nu `HKWorkout` (TraditionalStrengthTraining) med `totalEnergyBurned`. Write-permission för workout-typen tillagd i `s_writeTypes`.  
   Prioritet: **Hög**
 
-- [ ] **Vikt-sync med Apple Health** (S) – Läs och skriv kroppsvikt via HealthKit. Undviker dubbelregistrering och speglar vad Apple Watch mäter.  
+- [x] **Vikt-sync med Apple Health** (S) – Läs och skriv kroppsvikt via HealthKit. Undviker dubbelregistrering och speglar vad Apple Watch mäter.  
   _Beroenden: Ny HealthKit-permission `HKQuantityType.BodyMass`, ny `IHealthService`-metod._  
   Prioritet: **Medel**
 
@@ -393,7 +393,7 @@ _Senast uppdaterad: 2026-06-27_
   _Beroenden: CSV-parser, mappning till `Exercise`-modell, import-vy._  
   Prioritet: **Medel**
 
-- [ ] **Vikt-sync med Apple Health** (S) – Se "Engagemang & vanor" ovan.  
+- [x] **Vikt-sync med Apple Health** (S) – Se "Engagemang & vanor" ovan.  
   _Beroenden: HealthKit write-permission._  
   Prioritet: **Medel**
 
