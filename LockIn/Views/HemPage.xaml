@@ -376,6 +376,21 @@
                     </Border>
                 </Grid>
 
+                <!-- = VO2MAX = -->
+                <Border Margin="16,8,16,0"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
+                        StrokeShape="RoundRectangle 18"
+                        StrokeThickness="0"
+                        Padding="16,14,16,14">
+                    <VerticalStackLayout Spacing="0">
+                        <Label Text="{loc:Localize Hem_VO2Max_Label}" Style="{StaticResource SectionLabel}" Margin="0,0,0,4"/>
+                        <Label Text="{Binding Vo2MaxText}"
+                               FontSize="36" CharacterSpacing="0" LineHeight="1"
+                               TextColor="{AppThemeBinding Light={StaticResource LightAccentBlue}, Dark={StaticResource ForgeAccentBlue}}"/>
+                        <Label Text="{loc:Localize Hem_VO2Max_Sub}" Style="{StaticResource MutedLabel}" Margin="0,2,0,0"/>
+                    </VerticalStackLayout>
+                </Border>
+
                 <!-- = MUSKELHEATMAP = -->
                 <Label Text="{loc:Localize Hem_Muscles_Title}" Style="{StaticResource SectionLabel}" Margin="22,18,0,10"/>
                 <Grid x:Name="HemHeatmapGrid"
