@@ -529,21 +529,12 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         });
     }
 
-    public void ForceDeactivate()
+    private void ForceDeactivateCore()
     {
-        // Stäng eventuell orphan-session (inga sets loggades)
-        if (_session is not null && !Exercises.Any(s => s.Sets.Any(r => r.IsCompleted)))
-        {
-            var s = _session;
-            s.CompletedAt = DateTime.Now;
-            _ = db.SaveSessionAsync(s);
-        }
-        _session = null;
         _clockCts?.Cancel();
         timer.Tick -= OnTimerTick;
         timer.Completed -= OnTimerCompleted;
         timer.Cancel();
-        notifications.CancelTimer();
         state.Deactivate();
         Exercises.Clear();
         _supersetRound.Clear();
@@ -555,6 +546,20 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         AutoProgressMessage = "";
         _activeTimerSection = null;
         _currentTimerSection = null;
+    }
+
+    public void ForceDeactivate()
+    {
+        // Stäng eventuell orphan-session (inga sets loggades)
+        if (_session is not null && !Exercises.Any(s => s.Sets.Any(r => r.IsCompleted)))
+        {
+            var s = _session;
+            s.CompletedAt = DateTime.Now;
+            _ = db.SaveSessionAsync(s);
+        }
+        _session = null;
+        notifications.CancelTimer();
+        ForceDeactivateCore();
     }
 
     [RelayCommand]
@@ -605,20 +610,35 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         timer.Cancel();
 
         if (_session is null) return;
-        _session.CompletedAt = DateTime.Now;
-        await db.SaveSessionAsync(_session);
 
-        await ApplyProgressionAsync();
-
+        // CompletedAt sätts INTE här — defer till CommitFinishAsync
         var sessionId = _session.Id;
-        _session = null;
-        state.Deactivate();
-        notifications.CancelTimer();
+        state.Deactivate();   // döljer bannern men lämnar _session och Exercises intakta
 
         await Shell.Current.GoToAsync(nameof(PostWorkoutPage), new Dictionary<string, object>
         {
             { "SessionId", sessionId }
         });
+    }
+
+    public async Task CommitFinishAsync(string notes)
+    {
+        if (_session is null) return;
+        _session.CompletedAt = DateTime.Now;
+        _session.Notes = notes;
+        await db.SaveSessionAsync(_session);
+        await ApplyProgressionAsync();
+        _session = null;
+        notifications.CancelTimer();
+        ForceDeactivateCore();
+    }
+
+    public void ResumeFromPostWorkout()
+    {
+        if (_session is null) return;
+        state.Activate();
+        // Återstarta klockan från befintlig _startTime
+        StartClock();
     }
 
     private async Task ApplyProgressionAsync()
