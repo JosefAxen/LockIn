@@ -58,7 +58,7 @@
                             Margin="16,0,16,10">
                         <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
                             <Label Grid.Column="0"
-                                   Text="?"
+                                   Text="🔍"
                                    FontSize="20"
                                    TextColor="{StaticResource ForgeMuted}"
                                    VerticalOptions="Center"/>

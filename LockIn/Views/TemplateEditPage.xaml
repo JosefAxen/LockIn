@@ -112,7 +112,7 @@
                                                FontSize="15"
                                                VerticalOptions="Center"/>
                                         <Button Grid.Column="1"
-                                                Text="?"
+                                                Text="×"
                                                 BackgroundColor="Transparent"
                                                 TextColor="{StaticResource ForgeMuted}"
                                                 FontSize="15"

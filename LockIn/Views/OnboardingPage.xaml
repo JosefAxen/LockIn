@@ -206,7 +206,7 @@
                                 <Label Text="{loc:Localize Onboarding_Step2_Exp0_Title}" FontFamily="BebasNeue" FontSize="22" CharacterSpacing="1" TextColor="{Binding Exp0Fg}"/>
                                 <Label Text="{loc:Localize Onboarding_Step2_Exp0_Sub}" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding Exp0Fg}" Opacity="0.7"/>
                             </VerticalStackLayout>
-                            <Label Grid.Column="1" Text="?" FontFamily="DMSansMedium" FontSize="22" TextColor="{Binding Exp0Fg}" VerticalOptions="Center" IsVisible="{Binding Exp0Selected}"/>
+                            <Label Grid.Column="1" Text="✓" FontFamily="DMSansMedium" FontSize="22" TextColor="{Binding Exp0Fg}" VerticalOptions="Center" IsVisible="{Binding Exp0Selected}"/>
                         </Grid>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding SelectExperienceCommand}" CommandParameter="{x:Int32 0}"/>
@@ -218,7 +218,7 @@
                                 <Label Text="{loc:Localize Onboarding_Step2_Exp1_Title}" FontFamily="BebasNeue" FontSize="22" CharacterSpacing="1" TextColor="{Binding Exp1Fg}"/>
                                 <Label Text="{loc:Localize Onboarding_Step2_Exp1_Sub}" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding Exp1Fg}" Opacity="0.7"/>
                             </VerticalStackLayout>
-                            <Label Grid.Column="1" Text="?" FontFamily="DMSansMedium" FontSize="22" TextColor="{Binding Exp1Fg}" VerticalOptions="Center" IsVisible="{Binding Exp1Selected}"/>
+                            <Label Grid.Column="1" Text="✓" FontFamily="DMSansMedium" FontSize="22" TextColor="{Binding Exp1Fg}" VerticalOptions="Center" IsVisible="{Binding Exp1Selected}"/>
                         </Grid>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding SelectExperienceCommand}" CommandParameter="{x:Int32 1}"/>
@@ -230,7 +230,7 @@
                                 <Label Text="{loc:Localize Onboarding_Step2_Exp2_Title}" FontFamily="BebasNeue" FontSize="22" CharacterSpacing="1" TextColor="{Binding Exp2Fg}"/>
                                 <Label Text="{loc:Localize Onboarding_Step2_Exp2_Sub}" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding Exp2Fg}" Opacity="0.7"/>
                             </VerticalStackLayout>
-                            <Label Grid.Column="1" Text="?" FontFamily="DMSansMedium" FontSize="22" TextColor="{Binding Exp2Fg}" VerticalOptions="Center" IsVisible="{Binding Exp2Selected}"/>
+                            <Label Grid.Column="1" Text="✓" FontFamily="DMSansMedium" FontSize="22" TextColor="{Binding Exp2Fg}" VerticalOptions="Center" IsVisible="{Binding Exp2Selected}"/>
                         </Grid>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding SelectExperienceCommand}" CommandParameter="{x:Int32 2}"/>
@@ -254,7 +254,7 @@
                                 <Label Text="{loc:Localize Onboarding_Step3_Strength_Title}" FontFamily="BebasNeue" FontSize="28" CharacterSpacing="1" TextColor="{Binding GoalStrengthFg}"/>
                                 <Label Text="{loc:Localize Onboarding_Step3_Strength_Sub}" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding GoalStrengthFg}" Opacity="0.7"/>
                             </VerticalStackLayout>
-                            <Label Grid.Column="1" Text="?" FontFamily="DMSansMedium" FontSize="26" TextColor="{Binding GoalStrengthFg}" VerticalOptions="Center" IsVisible="{Binding GoalStrengthSelected}"/>
+                            <Label Grid.Column="1" Text="✓" FontFamily="DMSansMedium" FontSize="26" TextColor="{Binding GoalStrengthFg}" VerticalOptions="Center" IsVisible="{Binding GoalStrengthSelected}"/>
                         </Grid>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding SelectGoalCommand}" CommandParameter="{x:Int32 0}"/>
@@ -266,7 +266,7 @@
                                 <Label Text="{loc:Localize Onboarding_Step3_Hyper_Title}" FontFamily="BebasNeue" FontSize="28" CharacterSpacing="1" TextColor="{Binding GoalHyperFg}"/>
                                 <Label Text="{loc:Localize Onboarding_Step3_Hyper_Sub}" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding GoalHyperFg}" Opacity="0.7"/>
                             </VerticalStackLayout>
-                            <Label Grid.Column="1" Text="?" FontFamily="DMSansMedium" FontSize="26" TextColor="{Binding GoalHyperFg}" VerticalOptions="Center" IsVisible="{Binding GoalHyperSelected}"/>
+                            <Label Grid.Column="1" Text="✓" FontFamily="DMSansMedium" FontSize="26" TextColor="{Binding GoalHyperFg}" VerticalOptions="Center" IsVisible="{Binding GoalHyperSelected}"/>
                         </Grid>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding SelectGoalCommand}" CommandParameter="{x:Int32 1}"/>

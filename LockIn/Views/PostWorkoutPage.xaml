@@ -226,7 +226,7 @@
                                             StrokeThickness="0"
                                             VerticalOptions="End"
                                             Padding="6,4">
-                                        <Label Text="?"
+                                        <Label Text="✕"
                                                TextColor="White" FontSize="14"
                                                HorizontalOptions="End">
                                             <Label.GestureRecognizers>

@@ -113,7 +113,7 @@
                                    FontSize="12"
                                    LineBreakMode="WordWrap"/>
                         </StackLayout>
-                        <Label Grid.Column="1" Text="?"
+                        <Label Grid.Column="1" Text="×"
                                FontSize="16"
                                TextColor="{StaticResource ForgeMuted}"
                                VerticalOptions="Center">
@@ -342,7 +342,7 @@
                 HeightRequest="56" Padding="20,0"
                 ZIndex="30">
             <HorizontalStackLayout Spacing="8" HorizontalOptions="Center" VerticalOptions="Center">
-                <Label Text="?" FontSize="16" TextColor="{StaticResource ForgeAccentCoral}"
+                <Label Text="♥" FontSize="16" TextColor="{StaticResource ForgeAccentCoral}"
                        VerticalOptions="Center"/>
                 <Label Text="{loc:Localize TrainPage_Cardio_Button}"
                        FontFamily="BebasNeue" FontSize="17" CharacterSpacing="2"

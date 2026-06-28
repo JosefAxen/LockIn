@@ -135,7 +135,7 @@
                                     <Border BackgroundColor="#CC000000"
                                             StrokeThickness="0"
                                             VerticalOptions="End" Padding="6,4">
-                                        <Label Text="?" TextColor="White" FontSize="14"
+                                        <Label Text="✕" TextColor="White" FontSize="14"
                                                HorizontalOptions="End">
                                             <Label.GestureRecognizers>
                                                 <TapGestureRecognizer

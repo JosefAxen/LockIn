@@ -210,11 +210,8 @@
                                                 MinimumWidthRequest="44"
                                                 MinimumHeightRequest="44"
                                                 Padding="10">
-                                            <Label Text="?"
-                                                   TextColor="{StaticResource ForgeMuted}"
-                                                   FontSize="18"
-                                                   HorizontalOptions="Center"
-                                                   VerticalOptions="Center"/>
+                                            <views:AppIcon Source="ic_barbell.png" WidthRequest="18" HeightRequest="18"
+                                                         HorizontalOptions="Center" VerticalOptions="Center"/>
                                             <Border.GestureRecognizers>
                                                 <TapGestureRecognizer
                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ActiveWorkoutViewModel}}, Path=ShowExerciseInfoCommand}"
@@ -255,11 +252,8 @@
                                                 MinimumWidthRequest="44"
                                                 MinimumHeightRequest="44"
                                                 Padding="10">
-                                            <Label Text="?"
-                                                   TextColor="{StaticResource ForgeMuted}"
-                                                   FontSize="16"
-                                                   HorizontalOptions="Center"
-                                                   VerticalOptions="Center"/>
+                                            <views:AppIcon Source="ic_trash.png" WidthRequest="18" HeightRequest="18"
+                                                         HorizontalOptions="Center" VerticalOptions="Center"/>
                                             <Border.GestureRecognizers>
                                                 <TapGestureRecognizer
                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ActiveWorkoutViewModel}}, Path=RemoveExerciseCommand}"
@@ -307,7 +301,7 @@
                                                                    HorizontalOptions="Center"
                                                                    VerticalOptions="Center"/>
                                                             <!-- PR star badge -->
-                                                            <Label Text="?"
+                                                            <Label Text="★"
                                                                    FontSize="12"
                                                                    TextColor="{StaticResource ForgePrStar}"
                                                                    HorizontalOptions="End"
@@ -391,11 +385,8 @@
                                                             StrokeShape="RoundRectangle 8"
                                                             StrokeThickness="0"
                                                             BackgroundColor="{Binding IsCompleted, Converter={StaticResource BoolToColorConverter}}">
-                                                        <Label Text="?"
-                                                               HorizontalOptions="Center"
-                                                               VerticalOptions="Center"
-                                                               FontSize="16"
-                                                               TextColor="White"/>
+                                                        <views:AppIcon Source="ic_check.png" ForceTint="White" WidthRequest="16" HeightRequest="16"
+                                                                     HorizontalOptions="Center" VerticalOptions="Center"/>
                                                         <Border.GestureRecognizers>
                                                             <TapGestureRecognizer
                                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ActiveWorkoutViewModel}}, Path=CompleteSetCommand}"

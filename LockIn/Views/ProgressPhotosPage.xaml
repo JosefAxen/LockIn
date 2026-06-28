@@ -94,7 +94,7 @@
                                        FontFamily="DMSansMedium" FontSize="14"
                                        TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
                                        VerticalOptions="Center"/>
-                                <Label Grid.Column="1" Text="?"
+                                <Label Grid.Column="1" Text="✕"
                                        TextColor="{StaticResource ForgeMuted}"
                                        FontSize="16" VerticalOptions="Center">
                                     <Label.GestureRecognizers>
