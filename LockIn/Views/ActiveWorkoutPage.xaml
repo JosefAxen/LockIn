@@ -135,7 +135,8 @@
                         StrokeShape="RoundRectangle 12"
                         StrokeThickness="0.5" Padding="14,12">
                     <Grid ColumnDefinitions="Auto,*">
-                        <Label Grid.Column="0" Text="??" FontSize="20"
+                        <views:AppIcon Grid.Column="0" Source="ic_flame.png"
+                               WidthRequest="20" HeightRequest="20"
                                VerticalOptions="Center" Margin="0,0,10,0"/>
                         <Label Grid.Column="1" Text="{Binding PrMessage}"
                                TextColor="{StaticResource ForgeAccentAmber}"
@@ -151,7 +152,8 @@
                         StrokeShape="RoundRectangle 12"
                         StrokeThickness="0" Padding="14,12">
                     <Grid ColumnDefinitions="Auto,*">
-                        <Label Grid.Column="0" Text="??" FontSize="20"
+                        <views:AppIcon Grid.Column="0" Source="ic_check.png"
+                               WidthRequest="20" HeightRequest="20"
                                VerticalOptions="Center" Margin="0,0,10,0"/>
                         <Label Grid.Column="1" Text="{Binding AutoProgressMessage}"
                                TextColor="{StaticResource ForgeAccent}"

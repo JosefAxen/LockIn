@@ -252,8 +252,8 @@
                             <DataTemplate x:DataType="vm:PRRow">
                                 <Grid ColumnDefinitions="Auto,*,Auto" Padding="0,8,0,8"
                                       ColumnSpacing="12">
-                                    <Label Grid.Column="0" Text="??"
-                                           FontSize="18" VerticalOptions="Center"/>
+                                    <views:AppIcon Grid.Column="0" Source="ic_flame.png"
+                                           WidthRequest="18" HeightRequest="18" VerticalOptions="Center"/>
                                     <StackLayout Grid.Column="1" Spacing="2">
                                         <Label Text="{Binding ExerciseName}"
                                                FontFamily="DMSansMedium" FontSize="13"/>
