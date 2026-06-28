@@ -135,7 +135,7 @@
                         </Grid>
                     </Border>
 
-                    <!-- --- VIKT TAB --- -->
+                    <!-- = VIKT TAB = -->
                     <VerticalStackLayout IsVisible="{Binding IsViktTab}" Spacing="14">
 
                         <!-- Latest weight hero -->
@@ -227,7 +227,7 @@
 
                     </VerticalStackLayout>
 
-                    <!-- --- KROPP TAB --- -->
+                    <!-- = KROPP TAB = -->
                     <VerticalStackLayout IsVisible="{Binding IsKroppTab}" Spacing="14">
 
                         <!-- Latest measurements -->
@@ -334,7 +334,7 @@
 
                     </VerticalStackLayout>
 
-                    <!-- --- HEATMAP TAB --- -->
+                    <!-- = HEATMAP TAB = -->
                     <VerticalStackLayout IsVisible="{Binding IsHeatmapTab}" Spacing="14">
 
                         <Label Text="{loc:Localize Kropp_MuscleGroups_Title}"
@@ -350,7 +350,7 @@
                 </VerticalStackLayout>
             </ScrollView>
 
-            <!-- --- WORKOUT BANNER � Live Forge Capsule --- -->
+            <!-- = WORKOUT BANNER � Live Forge Capsule = -->
             <Grid x:Name="WorkoutBanner"
                   IsVisible="False"
                   VerticalOptions="End"

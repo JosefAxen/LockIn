@@ -82,7 +82,7 @@
         <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Never">
             <VerticalStackLayout Padding="24,0,24,24" Spacing="0">
 
-                <!-- -- Steg 0: Namn -------------------------------------- -->
+                <!-- Steg 0: Namn -->
                 <VerticalStackLayout x:Name="Step0" IsVisible="{Binding IsStep0}" Spacing="0">
                     <!-- Logo mark -->
                     <Image Source="logo.svg"
@@ -118,7 +118,7 @@
                     </Border>
                 </VerticalStackLayout>
 
-                <!-- -- Steg 1: Veckom�l ---------------------------------- -->
+                <!-- Steg 1: Veckom�l -->
                 <VerticalStackLayout x:Name="Step1" IsVisible="{Binding IsStep1}" Spacing="10">
                     <Label Text="{loc:Localize Onboarding_Step1_Title}"
                            FontFamily="BebasNeue" FontSize="44" CharacterSpacing="2"
@@ -190,7 +190,7 @@
                     </Border>
                 </VerticalStackLayout>
 
-                <!-- -- Steg 2: Erfarenhet -------------------------------- -->
+                <!-- Steg 2: Erfarenhet -->
                 <VerticalStackLayout x:Name="Step2" IsVisible="{Binding IsStep2}" Spacing="12">
                     <Label Text="{loc:Localize Onboarding_Step2_Title}"
                            FontFamily="BebasNeue" FontSize="44" CharacterSpacing="2"
@@ -238,7 +238,7 @@
                     </Border>
                 </VerticalStackLayout>
 
-                <!-- -- Steg 3: M�l --------------------------------------- -->
+                <!-- Steg 3: M�l -->
                 <VerticalStackLayout x:Name="Step3" IsVisible="{Binding IsStep3}" Spacing="12">
                     <Label Text="{loc:Localize Onboarding_Step3_Title}"
                            FontFamily="BebasNeue" FontSize="44" CharacterSpacing="2"
@@ -274,7 +274,7 @@
                     </Border>
                 </VerticalStackLayout>
 
-                <!-- -- Steg 4: Rekommendation ---------------------------- -->
+                <!-- Steg 4: Rekommendation -->
                 <VerticalStackLayout x:Name="Step4" IsVisible="{Binding IsStep4}" Spacing="0">
                     <Label Text="{loc:Localize Onboarding_Step4_Title}"
                            FontFamily="BebasNeue" FontSize="44" CharacterSpacing="2"

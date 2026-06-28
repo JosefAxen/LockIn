@@ -388,7 +388,7 @@
                 <TapGestureRecognizer Command="{Binding StartFreeWorkoutCommand}" Tapped="OnFabTapped"/>
             </Border.GestureRecognizers>
         </Border>
-        <!-- --- WORKOUT BANNER � Live Forge Capsule --- -->
+        <!-- = WORKOUT BANNER � Live Forge Capsule = -->
         <Grid x:Name="WorkoutBanner"
               IsVisible="False"
               VerticalOptions="End"

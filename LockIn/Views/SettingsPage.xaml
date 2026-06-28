@@ -416,7 +416,7 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- --- WORKOUT BANNER � Live Forge Capsule --- -->
+        <!-- = WORKOUT BANNER � Live Forge Capsule = -->
         <Grid x:Name="WorkoutBanner"
               IsVisible="False"
               VerticalOptions="End"
