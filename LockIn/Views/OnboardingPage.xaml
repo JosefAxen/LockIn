@@ -84,6 +84,11 @@
 
                 <!-- -- Steg 0: Namn -------------------------------------- -->
                 <VerticalStackLayout x:Name="Step0" IsVisible="{Binding IsStep0}" Spacing="0">
+                    <!-- Logo mark -->
+                    <Image Source="logo.svg"
+                           WidthRequest="72" HeightRequest="72"
+                           HorizontalOptions="Center"
+                           Margin="0,8,0,20"/>
                     <Label Text="{loc:Localize Onboarding_Step0_Welcome}"
                            FontFamily="BebasNeue" FontSize="44" CharacterSpacing="2"
                            TextColor="{StaticResource ForgeAccent}"

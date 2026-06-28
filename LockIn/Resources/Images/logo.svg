@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="vfill" x1="0.18" y1="0.05" x2="0.86" y2="0.95">
+      <stop offset="0%"   stop-color="#C0392B"/>
+      <stop offset="34%"  stop-color="#8E44AD"/>
+      <stop offset="72%"  stop-color="#5876C9"/>
+      <stop offset="100%" stop-color="#3498DB"/>
+    </linearGradient>
+
+    <linearGradient id="vhi" x1="0.5" y1="0" x2="0.5" y2="0.4">
+      <stop offset="0%"   stop-color="#FFFFFF" stop-opacity="0.42"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+
+    <filter id="bloom" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="34"/>
+    </filter>
+
+    <filter id="drop" x="-25%" y="-25%" width="150%" height="150%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#8E44AD" flood-opacity="0.55"/>
+    </filter>
+  </defs>
+
+  <path fill="url(#vfill)" opacity="0.55" filter="url(#bloom)"
+        d="M 76 95 Q 68 95 72 102 L 253 417 Q 256 422 259 417 L 440 102 Q 444 95 436 95 L 370 95 Q 364 95 362 101 L 258 359 Q 256 364 254 359 L 150 101 Q 148 95 142 95 Z"/>
+
+  <path fill="url(#vfill)" filter="url(#drop)"
+        d="M 76 95 Q 68 95 72 102 L 253 417 Q 256 422 259 417 L 440 102 Q 444 95 436 95 L 370 95 Q 364 95 362 101 L 258 359 Q 256 364 254 359 L 150 101 Q 148 95 142 95 Z"/>
+
+  <path fill="url(#vhi)" opacity="0.85"
+        d="M 76 95 Q 68 95 72 102 L 253 417 Q 256 422 259 417 L 440 102 Q 444 95 436 95 L 370 95 Q 364 95 362 101 L 258 359 Q 256 364 254 359 L 150 101 Q 148 95 142 95 Z"/>
+</svg>

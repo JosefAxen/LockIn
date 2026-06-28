@@ -398,11 +398,19 @@
                     </Grid>
                 </Border>
 
-                <!-- Version -->
-                <Label Text="{Binding AppVersion, StringFormat='LockIn v{0}'}"
-                       Style="{StaticResource MutedLabel}"
-                       HorizontalOptions="Center"
-                       Margin="0,16,0,0"/>
+                <!-- About / version -->
+                <VerticalStackLayout HorizontalOptions="Center" Spacing="6" Margin="0,24,0,0">
+                    <Image Source="logo.svg"
+                           WidthRequest="40" HeightRequest="40"
+                           HorizontalOptions="Center"/>
+                    <Label Text="Vana Strength"
+                           FontFamily="BebasNeue" FontSize="16" CharacterSpacing="2"
+                           TextColor="{StaticResource ForgeAccent}"
+                           HorizontalOptions="Center"/>
+                    <Label Text="{Binding AppVersion, StringFormat='v{0}'}"
+                           Style="{StaticResource MutedLabel}"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
 
                 </StackLayout>
             </VerticalStackLayout>

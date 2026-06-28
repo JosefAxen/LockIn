@@ -1,37 +1,40 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
   <defs>
-    <radialGradient id="bg" cx="50%" cy="35%" r="85%">
-      <stop offset="0%" stop-color="#26262E"/>
-      <stop offset="60%" stop-color="#0A0A10"/>
-      <stop offset="100%" stop-color="#000000"/>
+    <radialGradient id="bg" cx="50%" cy="55%" r="70%">
+      <stop offset="0%"   stop-color="#181434"/>
+      <stop offset="60%"  stop-color="#0A0814"/>
+      <stop offset="100%" stop-color="#06060C"/>
     </radialGradient>
-    <linearGradient id="silver" x1="30%" y1="0%" x2="70%" y2="100%">
-      <stop offset="0%" stop-color="#FAFAFA"/>
-      <stop offset="12%" stop-color="#E5E5E8"/>
-      <stop offset="32%" stop-color="#B8B8BC"/>
-      <stop offset="58%" stop-color="#7A7A80"/>
-      <stop offset="82%" stop-color="#3E3E44"/>
-      <stop offset="100%" stop-color="#1A1A1E"/>
+
+    <linearGradient id="vfill" x1="0.18" y1="0.05" x2="0.86" y2="0.95">
+      <stop offset="0%"   stop-color="#C0392B"/>
+      <stop offset="34%"  stop-color="#8E44AD"/>
+      <stop offset="72%"  stop-color="#5876C9"/>
+      <stop offset="100%" stop-color="#3498DB"/>
     </linearGradient>
-    <linearGradient id="topgloss" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.18"/>
-      <stop offset="40%" stop-color="#FFFFFF" stop-opacity="0.04"/>
+
+    <linearGradient id="vhi" x1="0.5" y1="0" x2="0.5" y2="0.4">
+      <stop offset="0%"   stop-color="#FFFFFF" stop-opacity="0.42"/>
       <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
     </linearGradient>
-    <linearGradient id="leftrim" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.28"/>
-      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
-    </linearGradient>
+
+    <filter id="bloom" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="68"/>
+    </filter>
+
+    <filter id="drop" x="-25%" y="-25%" width="150%" height="150%">
+      <feDropShadow dx="0" dy="24" stdDeviation="32" flood-color="#8E44AD" flood-opacity="0.55"/>
+    </filter>
   </defs>
 
   <rect width="1024" height="1024" fill="url(#bg)"/>
-  <rect x="0" y="0" width="1024" height="512" fill="url(#topgloss)"/>
 
-  <g transform="translate(286, 192)">
-    <path d="M 30 30 L 30 654 L 488 654 L 488 564 L 134 564 L 134 30 Z" fill="#000" opacity="0.55"/>
-    <path d="M 0 0 L 0 624 L 458 624 L 458 534 L 104 534 L 104 0 Z" fill="url(#silver)"/>
-    <rect x="0" y="0" width="104" height="13" fill="#FFFFFF" opacity="0.85"/>
-    <rect x="0" y="0" width="15" height="624" fill="url(#leftrim)"/>
-    <rect x="104" y="522" width="354" height="12" fill="#FFFFFF" opacity="0.22"/>
-  </g>
+  <path fill="url(#vfill)" opacity="0.55" filter="url(#bloom)"
+        d="M 152 190 Q 136 190 144 204 L 506 834 Q 512 844 518 834 L 880 204 Q 888 190 872 190 L 740 190 Q 728 190 724 202 L 516 718 Q 512 728 508 718 L 300 202 Q 296 190 284 190 Z"/>
+
+  <path fill="url(#vfill)" filter="url(#drop)"
+        d="M 152 190 Q 136 190 144 204 L 506 834 Q 512 844 518 834 L 880 204 Q 888 190 872 190 L 740 190 Q 728 190 724 202 L 516 718 Q 512 728 508 718 L 300 202 Q 296 190 284 190 Z"/>
+
+  <path fill="url(#vhi)" opacity="0.85"
+        d="M 152 190 Q 136 190 144 204 L 506 834 Q 512 844 518 834 L 880 204 Q 888 190 872 190 L 740 190 Q 728 190 724 202 L 516 718 Q 512 728 508 718 L 300 202 Q 296 190 284 190 Z"/>
 </svg>
