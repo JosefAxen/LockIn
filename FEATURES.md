@@ -310,7 +310,7 @@ _Senast uppdaterad: 2026-06-27_
 - [x] **Träningsfrekvens-analys** (S) – Genomsnittlig frekvens per muskelgrupp (senaste 4 veckor) visas som "X/v"-label under scoret i varje heatmap-tile på HemPage. `DatabaseService.GetMuscleFrequencyAsync(4)` + `HeatmapTile.FrequencyText`.  
   Prioritet: **Hög**
 
-- [ ] **VO2Max-estimat** (M) – HealthKit exponerar VO2Max för Apple Watch-användare. Kan visas på HemPage som konditionsmått.  
+- [x] **VO2Max-estimat** (M) – HealthKit exponerar VO2Max för Apple Watch-användare. Kan visas på HemPage som konditionsmått.  
   _Beroenden: Ny HealthKit-permission, ny `IHealthService`-metod._  
   Prioritet: **Medel**
 
