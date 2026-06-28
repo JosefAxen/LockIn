@@ -12,6 +12,8 @@ public partial class WorkoutExerciseSection : ObservableObject
     public string ExerciseName { get; set; } = "";
     public string ExerciseDescription { get; set; } = "";
     public bool HasDescription => !string.IsNullOrWhiteSpace(ExerciseDescription);
+    public string PrevSessionSummary { get; set; } = "";
+    public bool HasPrevSession => !string.IsNullOrEmpty(PrevSessionSummary);
     public int DefaultRestSeconds { get; set; }
     public int TargetReps { get; set; } = 0;
     public int TargetRepsMin { get; set; } = 0;

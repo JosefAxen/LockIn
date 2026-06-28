@@ -143,6 +143,22 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
 
         var prevSets = await db.GetLastSessionSetsAsync(exercise.Id, _session!.Id);
 
+        string prevSummary = "";
+        if (prevSets.Count > 0)
+        {
+            var parts = prevSets
+                .Select(s => s.SetType == SetType.Time && s.DurationSeconds > 0
+                    ? $"{s.DurationSeconds}s"
+                    : s.WeightKg > 0
+                        ? $"{s.WeightKg:G}×{s.Reps}"
+                        : s.Reps > 0
+                            ? $"{s.Reps}r"
+                            : null)
+                .Where(p => p is not null);
+            prevSummary = parts.Any() ? "Förra: " + string.Join(" · ", parts) : "";
+        }
+        section.PrevSessionSummary = prevSummary;
+
         for (int s = 1; s <= sets; s++)
         {
             var prev = prevSets.ElementAtOrDefault(s - 1);
