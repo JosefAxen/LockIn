@@ -8,7 +8,11 @@ using System.Collections.ObjectModel;
 namespace LockIn.ViewModels;
 
 [QueryProperty(nameof(SessionId), "SessionId")]
-public partial class PostWorkoutViewModel(DatabaseService db, IHealthService health, PhotoService photos) : ObservableObject
+public partial class PostWorkoutViewModel(
+    DatabaseService db,
+    IHealthService health,
+    PhotoService photos,
+    ActiveWorkoutViewModel activeWorkout) : ObservableObject
 {
     [ObservableProperty] private int _sessionId;
     [ObservableProperty] private string _templateName = "";
@@ -19,6 +23,7 @@ public partial class PostWorkoutViewModel(DatabaseService db, IHealthService hea
     [ObservableProperty] private string _notes = "";
     [ObservableProperty] private bool _isLoading;
 
+    private bool _committed;
     private WorkoutSession? _loadedSession;
 
     public ObservableCollection<MuscleGroupRow> MuscleGroups { get; } = new();
@@ -26,7 +31,11 @@ public partial class PostWorkoutViewModel(DatabaseService db, IHealthService hea
     public ObservableCollection<NewAchievementRow> NewAchievements { get; } = new();
     public ObservableCollection<PhotoRow> Photos { get; } = new();
 
-    partial void OnSessionIdChanged(int value) => _ = LoadAsync(value);
+    partial void OnSessionIdChanged(int value)
+    {
+        _committed = false;
+        _ = LoadAsync(value);
+    }
 
     private async Task LoadAsync(int sessionId)
     {
@@ -233,15 +242,28 @@ public partial class PostWorkoutViewModel(DatabaseService db, IHealthService hea
     }
 
     [RelayCommand]
+    private async Task UndoFinishAsync()
+    {
+        _committed = true;  // markera som "hanterad" — ingen commit
+        activeWorkout.ResumeFromPostWorkout();
+        await Shell.Current.GoToAsync("..");
+    }
+
+    [RelayCommand]
     private async Task DoneAsync()
     {
-        if (_loadedSession is not null)
-        {
-            _loadedSession.Notes = Notes;
-            await db.SaveSessionAsync(_loadedSession);
-        }
+        if (_committed) return;
+        _committed = true;
+        await activeWorkout.CommitFinishAsync(Notes);
         await Shell.Current.Navigation.PopToRootAsync(false);
         await Shell.Current.GoToAsync("//TrainPage");
+    }
+
+    public async Task CommitIfNotDoneAsync()
+    {
+        if (_committed) return;
+        _committed = true;
+        await activeWorkout.CommitFinishAsync(Notes);
     }
 
     private static string MuscleGroupName(MuscleGroup mg) => mg switch
