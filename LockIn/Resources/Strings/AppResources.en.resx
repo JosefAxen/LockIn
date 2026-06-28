@@ -506,6 +506,7 @@
   <data name="PostWorkout_VolumeDisplay_Format" xml:space="preserve"><value>{0} kg</value></data>
   <data name="PostWorkout_SetsDisplay_Format" xml:space="preserve"><value>{0} sets</value></data>
   <data name="PostWorkout_Epley1RM_Format" xml:space="preserve"><value>Est. 1RM {0} kg</value></data>
+  <data name="PostWorkout_UndoFinish" xml:space="preserve"><value>Undo — return to workout</value></data>
 
   <!-- SessionDetail — XAML labels -->
   <data name="SessionDetail_Col_Volume" xml:space="preserve"><value>VOLUME</value></data>

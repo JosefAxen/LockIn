@@ -376,6 +376,7 @@ public static class AppResources
     public static string PostWorkout_VolumeDisplay_Format     => Get(nameof(PostWorkout_VolumeDisplay_Format));
     public static string PostWorkout_SetsDisplay_Format       => Get(nameof(PostWorkout_SetsDisplay_Format));
     public static string PostWorkout_Epley1RM_Format          => Get(nameof(PostWorkout_Epley1RM_Format));
+    public static string PostWorkout_UndoFinish              => Get(nameof(PostWorkout_UndoFinish));
 
     // ── TemplateEdit ─────────────────────────────────────────────────────
     public static string TemplateEdit_PageTitle           => Get(nameof(TemplateEdit_PageTitle));
