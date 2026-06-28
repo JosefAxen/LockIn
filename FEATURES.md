@@ -318,7 +318,7 @@ _Senast uppdaterad: 2026-06-27_
   _Beroenden: Beräkning i `KroppViewModel` eller `BodyWeightViewModel`._  
   Prioritet: **Medel**
 
-- [ ] **Jämförelse sessionvis** (M) – Visa förra gångens set/vikt bredvid aktuell session i ActiveWorkoutPage (hints visas redan som `PrevWeightHint`/`PrevRepsHint` i `LoggedSetRow`, men ingen "förra sessionen"-summering).  
+- [x] **Jämförelse sessionvis** (M) – Visa förra gångens set/vikt bredvid aktuell session i ActiveWorkoutPage (hints visas redan som `PrevWeightHint`/`PrevRepsHint` i `LoggedSetRow`, men ingen "förra sessionen"-summering).  
   _Beroenden: Utökning av `GetLastSessionSetsAsync`, ny UI-sektion._  
   Prioritet: **Medel**
 
