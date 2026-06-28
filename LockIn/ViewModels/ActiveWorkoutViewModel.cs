@@ -147,6 +147,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         if (prevSets.Count > 0)
         {
             var parts = prevSets
+                .Where(s => s.SetType != SetType.Warmup)
                 .Select(s => s.SetType == SetType.Time && s.DurationSeconds > 0
                     ? $"{s.DurationSeconds}s"
                     : s.WeightKg > 0
@@ -154,8 +155,9 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
                         : s.Reps > 0
                             ? $"{s.Reps}r"
                             : null)
-                .Where(p => p is not null);
-            prevSummary = parts.Any() ? "Förra: " + string.Join(" · ", parts) : "";
+                .Where(p => p is not null)
+                .ToList();
+            prevSummary = parts.Count > 0 ? "Förra: " + string.Join(" · ", parts) : "";
         }
         section.PrevSessionSummary = prevSummary;
 
