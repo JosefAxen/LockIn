@@ -24,4 +24,5 @@ public class NullHealthService : IHealthService
     public Task<List<HeartRateSample>> GetTodayHeartRateSamplesAsync()
         => Task.FromResult(new List<HeartRateSample>());
     public Task<int> GetEstimatedMaxHeartRateAsync() => Task.FromResult(190);
+    public Task<double> GetVO2MaxAsync() => Task.FromResult(0.0);
 }

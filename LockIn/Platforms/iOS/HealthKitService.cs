@@ -14,6 +14,7 @@ public class HealthKitService : IHealthService
     private static readonly HKUnit s_bpm   = HKUnit.FromString("count/min");
     private static readonly HKUnit s_ms    = HKUnit.FromString("ms");
     private static readonly HKUnit s_kg    = HKUnit.FromString("kg");
+    private static readonly HKUnit s_vo2MaxUnit = HKUnit.FromString("ml/(kg·min)");
 
     private static readonly HKObjectType[] s_readTypes =
     [
@@ -23,6 +24,7 @@ public class HealthKitService : IHealthService
         HKQuantityType.Create(HKQuantityTypeIdentifier.HeartRateVariabilitySdnn)!,
         HKQuantityType.Create(HKQuantityTypeIdentifier.RestingHeartRate)!,
         HKCategoryType.Create(HKCategoryTypeIdentifier.SleepAnalysis)!,
+        HKQuantityType.Create(HKQuantityTypeIdentifier.VO2Max)!,
     ];
 
     private static readonly HKObjectType[] s_writeTypes =
@@ -215,6 +217,12 @@ public class HealthKitService : IHealthService
                                           DateTime.Today.AddDays(-90), DateTime.Now);
         return max > 100 ? (int)max : 190;
     }
+
+    public Task<double> GetVO2MaxAsync() =>
+        GetLatestSampleValueAsync(
+            HKQuantityTypeIdentifier.VO2Max,
+            s_vo2MaxUnit,
+            DateTime.Today.AddYears(-10));
 
     private async Task<double> GetWindowMaxAsync(
         HKQuantityTypeIdentifier typeId, HKUnit unit, DateTime start, DateTime end)

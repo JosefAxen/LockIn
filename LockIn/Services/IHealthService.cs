@@ -31,4 +31,5 @@ public interface IHealthService
     Task<SleepStages> GetSleepStagesLastNightAsync();
     Task<List<HeartRateSample>> GetTodayHeartRateSamplesAsync();
     Task<int> GetEstimatedMaxHeartRateAsync();
+    Task<double> GetVO2MaxAsync();
 }
