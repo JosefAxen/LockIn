@@ -44,7 +44,7 @@ public class NotificationService
 #endif
     }
 
-    public void ScheduleReminders(int daysBitmask, int timeMinutes)
+    public void ScheduleReminders(int daysBitmask, int timeMinutes, string[] labels)
     {
         CancelReminders();
 #if IOS
@@ -54,10 +54,14 @@ public class NotificationService
         for (var bit = 0; bit < 7; bit++)
         {
             if ((daysBitmask & (1 << bit)) == 0) continue;
+            var label = labels.Length > bit ? labels[bit].Trim() : "";
+            var body  = label.Length > 0
+                ? string.Format(AppResources.Notification_Reminder_Body_Label_Format, label)
+                : AppResources.Notification_Reminder_Body;
             var content = new UNMutableNotificationContent
             {
                 Title = AppResources.Notification_Reminder_Title,
-                Body  = AppResources.Notification_Reminder_Body,
+                Body  = body,
                 Sound = UNNotificationSound.Default
             };
             var components = new NSDateComponents

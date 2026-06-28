@@ -21,6 +21,7 @@ public partial class SettingsViewModel(DatabaseService db, IHealthService health
     [ObservableProperty] private bool _healthKitSyncEnabled;
     [ObservableProperty] private int _reminderDays;
     [ObservableProperty] private int _reminderTimeMinutes;
+    [ObservableProperty] private string _reminderLabels = "";
 
     public string WeeklyGoalDisplay =>
         string.Format(AppResources.Settings_WeeklyGoal_Format, WeeklyGoal);
@@ -62,6 +63,17 @@ public partial class SettingsViewModel(DatabaseService db, IHealthService health
         }
     }
 
+    private string[] ParseLabels() =>
+        ReminderLabels.Split(',').Concat(Enumerable.Repeat("", 7)).Take(7).ToArray();
+
+    public string Day0Label => ParseLabels()[0];
+    public string Day1Label => ParseLabels()[1];
+    public string Day2Label => ParseLabels()[2];
+    public string Day3Label => ParseLabels()[3];
+    public string Day4Label => ParseLabels()[4];
+    public string Day5Label => ParseLabels()[5];
+    public string Day6Label => ParseLabels()[6];
+
     // Day chip colors (bit 0=Mån .. bit 6=Sön)
     public Color Day0Bg => (ReminderDays & (1 << 0)) != 0 ? DesignTokens.Accent   : DesignTokens.Surface2;
     public Color Day1Bg => (ReminderDays & (1 << 1)) != 0 ? DesignTokens.Accent   : DesignTokens.Surface2;
@@ -91,6 +103,7 @@ public partial class SettingsViewModel(DatabaseService db, IHealthService health
         HeightCm   = settings.HeightCm;
         ReminderDays        = settings.ReminderDays;
         ReminderTimeMinutes = settings.ReminderTimeMinutes;
+        ReminderLabels = settings.ReminderLabels ?? "";
     }
 
     partial void OnWeeklyGoalChanged(int value) =>
@@ -115,6 +128,17 @@ public partial class SettingsViewModel(DatabaseService db, IHealthService health
     {
         OnPropertyChanged(nameof(ReminderTimeDisplay));
         OnPropertyChanged(nameof(ReminderDisplay));
+    }
+
+    partial void OnReminderLabelsChanged(string value)
+    {
+        OnPropertyChanged(nameof(Day0Label));
+        OnPropertyChanged(nameof(Day1Label));
+        OnPropertyChanged(nameof(Day2Label));
+        OnPropertyChanged(nameof(Day3Label));
+        OnPropertyChanged(nameof(Day4Label));
+        OnPropertyChanged(nameof(Day5Label));
+        OnPropertyChanged(nameof(Day6Label));
     }
 
     partial void OnUseKgChanged(bool value) => _ = SaveSettingsAsync();
@@ -223,13 +247,30 @@ public partial class SettingsViewModel(DatabaseService db, IHealthService health
         var settings = await db.GetAppSettingsAsync();
         settings.ReminderDays        = ReminderDays;
         settings.ReminderTimeMinutes = ReminderTimeMinutes;
+        settings.ReminderLabels      = ReminderLabels;
         await db.SaveAppSettingsAsync(settings);
 
         var mins = ReminderTimeMinutes > 0 ? ReminderTimeMinutes : 480;
         if (ReminderDays == 0)
             notifications.CancelReminders();
         else
-            notifications.ScheduleReminders(ReminderDays, mins);
+            notifications.ScheduleReminders(ReminderDays, mins, ParseLabels());
+    }
+
+    [RelayCommand]
+    private async Task EditReminderLabelAsync(int bitIndex)
+    {
+        var labels  = ParseLabels();
+        var current = labels[bitIndex];
+        var result  = await Shell.Current.DisplayPromptAsync(
+            AppResources.Settings_Reminders_Label_Prompt_Title,
+            AppResources.Settings_Reminders_Label_Prompt_Body,
+            initialValue: current,
+            maxLength: 12);
+        if (result is null) return;
+        labels[bitIndex] = result.Trim();
+        ReminderLabels   = string.Join(",", labels);
+        await SaveAndRescheduleAsync();
     }
 
     [RelayCommand]
