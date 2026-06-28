@@ -364,6 +364,7 @@ public class HealthKitService : IHealthService
     public async Task SaveBodyMassAsync(decimal kg, DateTime at)
     {
         if (!HKHealthStore.IsHealthDataAvailable) return;
+        if (kg <= 0) return;
 
         var bodyMassType = HKQuantityType.Create(HKQuantityTypeIdentifier.BodyMass);
         if (bodyMassType is null) return;
