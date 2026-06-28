@@ -73,6 +73,8 @@ public class DatabaseService
         catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
         try { await _db.ExecuteAsync("ALTER TABLE AppSettings ADD COLUMN ReminderTimeMinutes INTEGER NOT NULL DEFAULT 0"); }
         catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
+        try { await _db.ExecuteAsync("ALTER TABLE AppSettings ADD COLUMN ReminderLabels TEXT NOT NULL DEFAULT ''"); }
+        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
 
         // Fas 2: Auto-progression per övning
         try { await _db.ExecuteAsync("ALTER TABLE TemplateExercises ADD COLUMN TargetRepsMin INTEGER NOT NULL DEFAULT 0"); }

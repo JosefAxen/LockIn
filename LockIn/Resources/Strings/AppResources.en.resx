@@ -848,6 +848,7 @@
   <!-- Notifications -->
   <data name="Notification_Reminder_Body" xml:space="preserve"><value>Time to train! Open the app and get going 💪</value></data>
   <data name="Notification_Reminder_Title" xml:space="preserve"><value>Vana Strength · Reminder</value></data>
+  <data name="Notification_Reminder_Body_Label_Format" xml:space="preserve"><value>Time for {0}! Open the app and get going 💪</value></data>
   <data name="Notification_RestTimer_Title" xml:space="preserve"><value>Rest timer done!</value></data>
   <data name="Notification_RestTimer_Body_Format" xml:space="preserve"><value>Time for your next set – {0}</value></data>
 
@@ -865,6 +866,8 @@
   <data name="Settings_Reminders_TimePrompt_Body" xml:space="preserve"><value>Enter desired time in HH:MM format</value></data>
   <data name="Settings_Reminders_TimePrompt_Title" xml:space="preserve"><value>Reminder Time</value></data>
   <data name="Settings_Reminders_Title" xml:space="preserve"><value>Workout Reminders</value></data>
+  <data name="Settings_Reminders_Label_Prompt_Title" xml:space="preserve"><value>Day label</value></data>
+  <data name="Settings_Reminders_Label_Prompt_Body" xml:space="preserve"><value>Short name for this training day (e.g. "Leg day") — leave empty to remove</value></data>
   <data name="Settings_Section_Reminders" xml:space="preserve"><value>REMINDERS</value></data>
 
 </root>

@@ -26,4 +26,5 @@ public class AppSettings
 
     public int ReminderDays        { get; set; } = 0;
     public int ReminderTimeMinutes { get; set; } = 0;
+    public string ReminderLabels { get; set; } = "";
 }

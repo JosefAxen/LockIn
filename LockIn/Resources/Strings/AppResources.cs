@@ -78,6 +78,7 @@ public static class AppResources
     // ── Notifications ──────────────────────────────────────────────────
     public static string Notification_Reminder_Body         => Get(nameof(Notification_Reminder_Body));
     public static string Notification_Reminder_Title        => Get(nameof(Notification_Reminder_Title));
+    public static string Notification_Reminder_Body_Label_Format => Get(nameof(Notification_Reminder_Body_Label_Format));
     public static string Notification_RestTimer_Title       => Get(nameof(Notification_RestTimer_Title));
     public static string Notification_RestTimer_Body_Format => Get(nameof(Notification_RestTimer_Body_Format));
 
@@ -525,6 +526,8 @@ public static class AppResources
     public static string Settings_Reminders_TimePrompt_Body   => Get(nameof(Settings_Reminders_TimePrompt_Body));
     public static string Settings_Reminders_TimePrompt_Title  => Get(nameof(Settings_Reminders_TimePrompt_Title));
     public static string Settings_Reminders_Title             => Get(nameof(Settings_Reminders_Title));
+    public static string Settings_Reminders_Label_Prompt_Title => Get(nameof(Settings_Reminders_Label_Prompt_Title));
+    public static string Settings_Reminders_Label_Prompt_Body  => Get(nameof(Settings_Reminders_Label_Prompt_Body));
     public static string Settings_ExportData_Title    => Get(nameof(Settings_ExportData_Title));
     public static string Settings_ExportData_Subtitle => Get(nameof(Settings_ExportData_Subtitle));
     public static string Settings_ExportData_Error    => Get(nameof(Settings_ExportData_Error));

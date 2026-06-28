@@ -848,6 +848,7 @@
   <!-- Notifications -->
   <data name="Notification_Reminder_Body" xml:space="preserve"><value>Dags att träna! Öppna appen och sätt igång 💪</value></data>
   <data name="Notification_Reminder_Title" xml:space="preserve"><value>Vana Strength · Påminnelse</value></data>
+  <data name="Notification_Reminder_Body_Label_Format" xml:space="preserve"><value>Dags med {0}! Öppna appen och sätt igång 💪</value></data>
   <data name="Notification_RestTimer_Title" xml:space="preserve"><value>Vilotimer klar!</value></data>
   <data name="Notification_RestTimer_Body_Format" xml:space="preserve"><value>Dags för nästa set – {0}</value></data>
 
@@ -865,6 +866,8 @@
   <data name="Settings_Reminders_TimePrompt_Body" xml:space="preserve"><value>Ange önskad tid i formatet HH:MM</value></data>
   <data name="Settings_Reminders_TimePrompt_Title" xml:space="preserve"><value>Påminnelsetid</value></data>
   <data name="Settings_Reminders_Title" xml:space="preserve"><value>Träningspåminnelser</value></data>
+  <data name="Settings_Reminders_Label_Prompt_Title" xml:space="preserve"><value>Dagsetikett</value></data>
+  <data name="Settings_Reminders_Label_Prompt_Body" xml:space="preserve"><value>Kort namn för träningsdagen (t.ex. "Bendag") — lämna tomt för att ta bort</value></data>
   <data name="Settings_Section_Reminders" xml:space="preserve"><value>PÅMINNELSER</value></data>
 
 </root>
