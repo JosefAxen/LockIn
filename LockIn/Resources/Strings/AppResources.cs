@@ -204,6 +204,8 @@ public static class AppResources
     public static string Hem_Calories_Sub               => Get(nameof(Hem_Calories_Sub));
     public static string Hem_ActiveTime_Sub             => Get(nameof(Hem_ActiveTime_Sub));
     public static string Hem_HeartRate_Sub              => Get(nameof(Hem_HeartRate_Sub));
+    public static string Hem_VO2Max_Label               => Get(nameof(Hem_VO2Max_Label));
+    public static string Hem_VO2Max_Sub                 => Get(nameof(Hem_VO2Max_Sub));
     public static string Hem_Muscles_Title              => Get(nameof(Hem_Muscles_Title));
     public static string Hem_MuscleTrend_Title          => Get(nameof(Hem_MuscleTrend_Title));
     public static string Hem_WorkoutBanner_Label        => Get(nameof(Hem_WorkoutBanner_Label));

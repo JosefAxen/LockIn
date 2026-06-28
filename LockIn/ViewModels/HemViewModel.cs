@@ -44,6 +44,7 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
     [ObservableProperty] private string _strainTargetText = "–";
     [ObservableProperty] private float  _sleepProgress;
     [ObservableProperty] private string _sleepText    = "–";
+    [ObservableProperty] private string _vo2MaxText   = "–";
 
     // Statusindikatorer — kontext för mätvärden (OPTIMAL / BRA / MEDEL / LÅGT etc.)
     [ObservableProperty] private string _recoveryStatusText = "";
@@ -108,6 +109,7 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
             var rhrTask            = health.GetRestingHrSampleAsync();
             var hrSamplesTask      = health.GetTodayHeartRateSamplesAsync();
             var maxHrTask          = health.GetEstimatedMaxHeartRateAsync();
+            var vo2MaxTask         = health.GetVO2MaxAsync();
 
             // Volym × intensitet idag + ACWR-fönster (acute = senaste 7d inkl idag, chronic = 28d).
             // ACWR (Acute:Chronic Workload Ratio) är en etablerad metod inom sport science
@@ -122,7 +124,7 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
                 stepsTask, caloriesTask, heartRateTask,
                 weeklyStepsTask, weeklyCaloriesTask, weeklyMaxHRTask,
                 sleepHoursTask, sleepStagesTask, hrvTask, rhrTask,
-                hrSamplesTask, maxHrTask,
+                hrSamplesTask, maxHrTask, vo2MaxTask,
                 volTodayTask, volAcuteTask, volChrTask);
 
             var weekSessions   = weekSessionsTask.Result;
@@ -164,6 +166,9 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
             CaloriesValues  = weeklyCaloriesTask.Result.ToArray();
             ActiveValues    = BuildWeeklyActiveMinutes(recentSessions);
             HeartRateValues = weeklyMaxHRTask.Result.ToArray();
+
+            var vo2Max = vo2MaxTask.Result;
+            Vo2MaxText = vo2Max > 0 ? $"{vo2Max:F1}" : "–";
 
             // Strain (Ansträngning) = HR-TRIMP + träningsvolym, log-mappad till 0–100.
             // Båda källorna summeras okappat och komprimeras via tanh — toppen är
