@@ -8,7 +8,7 @@ using System.Globalization;
 
 namespace LockIn.ViewModels;
 
-public partial class BodyWeightViewModel(DatabaseService db) : ObservableObject
+public partial class BodyWeightViewModel(DatabaseService db, IHealthService health) : ObservableObject
 {
     private const int PageSize = 10;
     private List<BodyWeightEntry> _allEntries = [];
@@ -125,7 +125,10 @@ public partial class BodyWeightViewModel(DatabaseService db) : ObservableObject
         if (!decimal.TryParse(result.Replace(',', '.'), System.Globalization.NumberStyles.Any,
             System.Globalization.CultureInfo.InvariantCulture, out var kg) || kg <= 0) return;
 
-        await db.SaveBodyWeightEntryAsync(new BodyWeightEntry { LoggedAt = DateTime.Now, WeightKg = kg });
+        var loggedAt = DateTime.Now;
+        await db.SaveBodyWeightEntryAsync(new BodyWeightEntry { LoggedAt = loggedAt, WeightKg = kg });
+        try { await health.SaveBodyMassAsync(kg, loggedAt); }
+        catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"[BodyWeight] HealthKit sync misslyckades: {ex.Message}"); }
         await LoadAsync();
     }
 
