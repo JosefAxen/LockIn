@@ -13,6 +13,7 @@ public class HealthKitService : IHealthService
     private static readonly HKUnit s_kcal  = HKUnit.FromString("kcal");
     private static readonly HKUnit s_bpm   = HKUnit.FromString("count/min");
     private static readonly HKUnit s_ms    = HKUnit.FromString("ms");
+    private static readonly HKUnit s_kg    = HKUnit.FromString("kg");
 
     private static readonly HKObjectType[] s_readTypes =
     [
@@ -27,6 +28,7 @@ public class HealthKitService : IHealthService
     private static readonly HKObjectType[] s_writeTypes =
     [
         HKQuantityType.Create(HKQuantityTypeIdentifier.ActiveEnergyBurned)!,
+        HKQuantityType.Create(HKQuantityTypeIdentifier.BodyMass)!,
     ];
 
     public async Task<bool> RequestPermissionsAsync()
@@ -357,6 +359,28 @@ public class HealthKitService : IHealthService
         });
         try   { await tcs.Task.WaitAsync(TimeSpan.FromSeconds(10)); }
         catch (TimeoutException) { System.Diagnostics.Debug.WriteLine("[HealthKit] SaveCardio timeout"); }
+    }
+
+    public async Task SaveBodyMassAsync(decimal kg, DateTime at)
+    {
+        if (!HKHealthStore.IsHealthDataAvailable) return;
+
+        var bodyMassType = HKQuantityType.Create(HKQuantityTypeIdentifier.BodyMass);
+        if (bodyMassType is null) return;
+
+        var qty    = HKQuantity.FromQuantity(s_kg, (double)kg);
+        var nsDate = ToNSDate(at);
+        var sample = HKQuantitySample.FromType(bodyMassType, qty, nsDate, nsDate);
+
+        var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+        _store.SaveObject(sample, (ok, err) =>
+        {
+            if (err is not null)
+                System.Diagnostics.Debug.WriteLine($"[HealthKit] SaveBodyMass: {err.LocalizedDescription}");
+            tcs.TrySetResult(ok);
+        });
+        try   { await tcs.Task.WaitAsync(TimeSpan.FromSeconds(10)); }
+        catch (TimeoutException) { System.Diagnostics.Debug.WriteLine("[HealthKit] SaveBodyMass timeout"); }
     }
 
     private static HKWorkoutActivityType ToHKWorkoutActivityType(CardioActivityType t) => t switch

@@ -24,6 +24,7 @@ public interface IHealthService
     Task<double[]> GetWeeklyMaxHeartRateAsync();
     Task SaveWorkoutAsync(DateTime start, DateTime end, double activeKcal);
     Task SaveCardioWorkoutAsync(CardioActivityType type, DateTime start, DateTime end, double kcal, double distanceMeters);
+    Task SaveBodyMassAsync(decimal kg, DateTime at);
     Task<double> GetSleepHoursLastNightAsync();
     Task<HrvSample> GetHrvSampleAsync();
     Task<RestingHrSample> GetRestingHrSampleAsync();
