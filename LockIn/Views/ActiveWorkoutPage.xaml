@@ -197,10 +197,15 @@
                                                  WidthRequest="10" HeightRequest="10"
                                                  Fill="{Binding AccentColor}"
                                                  VerticalOptions="Center"/>
-                                        <Label Grid.Column="1"
-                                               Text="{Binding ExerciseName}"
-                                               FontFamily="DMSansMedium" FontSize="16"
-                                               VerticalOptions="Center"/>
+                                        <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                                            <Label Text="{Binding ExerciseName}"
+                                                   FontFamily="DMSansMedium" FontSize="16"/>
+                                            <Label Text="{Binding PrevSessionSummary}"
+                                                   IsVisible="{Binding HasPrevSession}"
+                                                   FontFamily="DMSansRegular" FontSize="11"
+                                                   TextColor="{StaticResource ForgeMuted}"
+                                                   LineBreakMode="TailTruncation"/>
+                                        </VerticalStackLayout>
 
                                         <!-- Info button � only visible when description exists -->
                                         <Border Grid.Column="2"
