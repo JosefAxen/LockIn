@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
   <defs>
     <radialGradient id="bg" cx="50%" cy="55%" r="70%">
-      <stop offset="0%"   stop-color="#181434"/>
-      <stop offset="60%"  stop-color="#0A0814"/>
+      <stop offset="0%"   stop-color="#1E1050"/>
+      <stop offset="60%"  stop-color="#0F0828"/>
       <stop offset="100%" stop-color="#06060C"/>
     </radialGradient>
 
@@ -17,22 +17,11 @@
       <stop offset="0%"   stop-color="#FFFFFF" stop-opacity="0.42"/>
       <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
     </linearGradient>
-
-    <filter id="bloom" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="68"/>
-    </filter>
-
-    <filter id="drop" x="-25%" y="-25%" width="150%" height="150%">
-      <feDropShadow dx="0" dy="24" stdDeviation="32" flood-color="#8E44AD" flood-opacity="0.55"/>
-    </filter>
   </defs>
 
   <rect width="1024" height="1024" fill="url(#bg)"/>
 
-  <path fill="url(#vfill)" opacity="0.55" filter="url(#bloom)"
-        d="M 152 190 Q 136 190 144 204 L 506 834 Q 512 844 518 834 L 880 204 Q 888 190 872 190 L 740 190 Q 728 190 724 202 L 516 718 Q 512 728 508 718 L 300 202 Q 296 190 284 190 Z"/>
-
-  <path fill="url(#vfill)" filter="url(#drop)"
+  <path fill="url(#vfill)"
         d="M 152 190 Q 136 190 144 204 L 506 834 Q 512 844 518 834 L 880 204 Q 888 190 872 190 L 740 190 Q 728 190 724 202 L 516 718 Q 512 728 508 718 L 300 202 Q 296 190 284 190 Z"/>
 
   <path fill="url(#vhi)" opacity="0.85"

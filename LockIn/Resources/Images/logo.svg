@@ -12,20 +12,9 @@
       <stop offset="0%"   stop-color="#FFFFFF" stop-opacity="0.42"/>
       <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
     </linearGradient>
-
-    <filter id="bloom" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="34"/>
-    </filter>
-
-    <filter id="drop" x="-25%" y="-25%" width="150%" height="150%">
-      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#8E44AD" flood-opacity="0.55"/>
-    </filter>
   </defs>
 
-  <path fill="url(#vfill)" opacity="0.55" filter="url(#bloom)"
-        d="M 76 95 Q 68 95 72 102 L 253 417 Q 256 422 259 417 L 440 102 Q 444 95 436 95 L 370 95 Q 364 95 362 101 L 258 359 Q 256 364 254 359 L 150 101 Q 148 95 142 95 Z"/>
-
-  <path fill="url(#vfill)" filter="url(#drop)"
+  <path fill="url(#vfill)"
         d="M 76 95 Q 68 95 72 102 L 253 417 Q 256 422 259 417 L 440 102 Q 444 95 436 95 L 370 95 Q 364 95 362 101 L 258 359 Q 256 364 254 359 L 150 101 Q 148 95 142 95 Z"/>
 
   <path fill="url(#vhi)" opacity="0.85"
