@@ -293,7 +293,7 @@ _Senast uppdaterad: 2026-06-27_
   _Beroenden: Ny tabell `TrainingCycles`, ny vy, komplex VM-logik._  
   Prioritet: **Låg**
 
-- [ ] **Vila-dag-schemaläggning** (S) – Påminnelsenotiser för specifika träningsdagar (t.ex. "Måndag är bent dag").  
+- [x] **Vila-dag-schemaläggning** (S) – Påminnelsenotiser för specifika träningsdagar (t.ex. "Måndag är bent dag").  
   _Beroenden: `NotificationService` utökning, `AppSettings`-fält._  
   Prioritet: **Medel**
 
