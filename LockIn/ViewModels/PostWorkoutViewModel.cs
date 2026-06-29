@@ -12,7 +12,8 @@ public partial class PostWorkoutViewModel(
     DatabaseService db,
     IHealthService health,
     PhotoService photos,
-    ActiveWorkoutViewModel activeWorkout) : ObservableObject
+    ActiveWorkoutViewModel activeWorkout,
+    WorkoutShareService share) : ObservableObject
 {
     [ObservableProperty] private int _sessionId;
     [ObservableProperty] private string _templateName = "";
@@ -22,6 +23,7 @@ public partial class PostWorkoutViewModel(
     [ObservableProperty] private string _prCount = "";
     [ObservableProperty] private string _notes = "";
     [ObservableProperty] private bool _isLoading;
+    [ObservableProperty] private bool _isSharing;
 
     private bool _committed;
     private WorkoutSession? _loadedSession;
@@ -232,6 +234,47 @@ public partial class PostWorkoutViewModel(
         if (!confirmed) return;
         await db.DeletePhotoAsync(row.Photo);
         Photos.Remove(row);
+    }
+
+    [RelayCommand]
+    private async Task ShareWorkoutAsync()
+    {
+        if (IsSharing) return;
+        IsSharing = true;
+        try
+        {
+            var topMuscles = MuscleGroups
+                .Take(3)
+                .Select(m => (m.Name, m.ProgressFraction))
+                .ToList();
+
+            var imageData = new ShareImageData(
+                TemplateName,
+                _loadedSession?.StartedAt.ToString("d MMM yyyy") ?? "",
+                Duration,
+                TotalVolume,
+                TotalSets,
+                PrCount,
+                topMuscles);
+
+            var filePath = await share.CreateShareImageAsync(imageData);
+
+            await Share.Default.RequestAsync(new ShareFileRequest
+            {
+                Title = AppResources.PostWorkout_Share_ImageTitle,
+                File  = new ShareFile(filePath, "image/png")
+            });
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[Share] Fel: {ex.Message}");
+            await Shell.Current.DisplayAlert(
+                "", AppResources.PostWorkout_Share_Error, AppResources.Common_OK);
+        }
+        finally
+        {
+            IsSharing = false;
+        }
     }
 
     [RelayCommand]
