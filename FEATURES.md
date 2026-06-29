@@ -364,7 +364,7 @@ _Senast uppdaterad: 2026-06-27_
   _Beroenden: Minimal UI-ändring._  
   Prioritet: **Låg**
 
-- [ ] **Ångra "avsluta pass"** (M) – Om användaren råkar trycka "avsluta" finns ingen ångra-funktion. Passet sparas men går inte att återuppta.  
+- [x] **Ångra "avsluta pass"** (M) – Om användaren råkar trycka "avsluta" finns ingen ångra-funktion. Passet sparas men går inte att återuppta.  
   _Beroenden: Sessionsstatus-fält eller "osparad"-state i `ActiveWorkoutViewModel`._  
   Prioritet: **Medel**
 
