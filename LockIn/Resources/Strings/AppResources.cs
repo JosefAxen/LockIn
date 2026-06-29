@@ -380,6 +380,8 @@ public static class AppResources
     public static string PostWorkout_Share                  => Get(nameof(PostWorkout_Share));
     public static string PostWorkout_Share_Error            => Get(nameof(PostWorkout_Share_Error));
     public static string PostWorkout_Share_ImageTitle       => Get(nameof(PostWorkout_Share_ImageTitle));
+    public static string ExerciseProgress_Share_Error      => Get(nameof(ExerciseProgress_Share_Error));
+    public static string ExerciseProgress_Share_ImageTitle => Get(nameof(ExerciseProgress_Share_ImageTitle));
     public static string Share_Footer_Tagline               => Get(nameof(Share_Footer_Tagline));
 
     // ── TemplateEdit ─────────────────────────────────────────────────────

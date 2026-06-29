@@ -510,6 +510,12 @@
   <data name="PostWorkout_Share" xml:space="preserve"><value>Share</value></data>
   <data name="PostWorkout_Share_Error" xml:space="preserve"><value>Could not create image</value></data>
   <data name="PostWorkout_Share_ImageTitle" xml:space="preserve"><value>LockIn workout</value></data>
+  <data name="ExerciseProgress_Share_Error" xml:space="preserve">
+    <value>Failed to create image</value>
+  </data>
+  <data name="ExerciseProgress_Share_ImageTitle" xml:space="preserve">
+    <value>LockIn progress</value>
+  </data>
   <data name="Share_Footer_Tagline" xml:space="preserve"><value>Vana Strength</value></data>
 
   <!-- SessionDetail — XAML labels -->

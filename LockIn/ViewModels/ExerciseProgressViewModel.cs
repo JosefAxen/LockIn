@@ -6,7 +6,7 @@ using LockIn.Services;
 
 namespace LockIn.ViewModels;
 
-public partial class ExerciseProgressViewModel(DatabaseService db) : ObservableObject, IQueryAttributable
+public partial class ExerciseProgressViewModel(DatabaseService db, ProgressReportService report) : ObservableObject, IQueryAttributable
 {
     [ObservableProperty] private string _exerciseName = "";
     [ObservableProperty] private string _muscleGroupName = "";
@@ -25,8 +25,13 @@ public partial class ExerciseProgressViewModel(DatabaseService db) : ObservableO
     [ObservableProperty] private string _mechanicName = "";
     [ObservableProperty] private string _forceName = "";
     [ObservableProperty] private bool _hasMetadata;
+    [ObservableProperty] private bool _isSharing;
 
+    private int _sessionCount;
     private Exercise? _exercise;
+
+    partial void OnIsSharingChanged(bool value)     => ShareProgressCommand.NotifyCanExecuteChanged();
+    partial void OnChartPointsChanged(IReadOnlyList<ChartPoint> value) => ShareProgressCommand.NotifyCanExecuteChanged();
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)
     {
@@ -60,6 +65,7 @@ public partial class ExerciseProgressViewModel(DatabaseService db) : ObservableO
 
         var history = await db.GetBestSetPerSessionForExerciseAsync(exerciseId);
         HasData = history.Count > 0;
+        _sessionCount = history.Count;
 
         if (HasData)
         {
@@ -83,6 +89,41 @@ public partial class ExerciseProgressViewModel(DatabaseService db) : ObservableO
         if (_exercise is null) return;
         _exercise.Notes = ExerciseNotes;
         await db.SaveExerciseAsync(_exercise);
+    }
+
+    private bool CanShareProgress() => !IsSharing && ChartPoints.Count > 0;
+
+    [RelayCommand(CanExecute = nameof(CanShareProgress))]
+    private async Task ShareProgressAsync()
+    {
+        if (IsSharing) return;
+        IsSharing = true;
+        try
+        {
+            var data = new ProgressReportData(
+                ExerciseName,
+                MuscleGroupName,
+                ChartPoints,
+                _sessionCount);
+
+            var path = await report.CreateReportImageAsync(data);
+            await Share.Default.RequestAsync(new ShareFileRequest
+            {
+                Title = AppResources.ExerciseProgress_Share_ImageTitle,
+                File  = new ShareFile(path, "image/png")
+            });
+        }
+        catch
+        {
+            await Shell.Current.DisplayAlert(
+                null,
+                AppResources.ExerciseProgress_Share_Error,
+                AppResources.Common_OK);
+        }
+        finally
+        {
+            IsSharing = false;
+        }
     }
 
     private static string EquipmentLabel(EquipmentType e) => e switch
