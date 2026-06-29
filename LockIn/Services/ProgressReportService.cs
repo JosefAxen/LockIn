@@ -225,6 +225,11 @@ public class ProgressReportService
         int step = Math.Max(1, (history.Count - 1) / 4);
         for (int i = 0; i < history.Count; i += step)
             canvas.DrawText(history[i].Date.ToString("MMM d"), XAt(i), chartBottom + 40f, lblPaint);
+
+        // Visa alltid sista punktens datum
+        int lastIdx = history.Count - 1;
+        if (lastIdx > 0 && lastIdx % step != 0)
+            canvas.DrawText(history[lastIdx].Date.ToString("MMM d"), XAt(lastIdx), chartBottom + 40f, lblPaint);
     }
 
     // ─── DrawStats (y: 820–1050) ──────────────────────────────────────────────
@@ -245,8 +250,11 @@ public class ProgressReportService
         {
             double first = data.History[0].Value;
             double last  = data.History[data.History.Count - 1].Value;
-            double pct   = (last - first) / first * 100;
-            improvStr = pct >= 0 ? $"+{pct:F0}%" : $"{pct:F0}%";
+            if (first <= 0) { improvStr = "–"; }
+            else {
+                double pct = (last - first) / first * 100;
+                improvStr = pct >= 0 ? $"+{pct:F0}%" : $"{pct:F0}%";
+            }
         }
 
         (string Value, string Label, string Color)[] cards =
