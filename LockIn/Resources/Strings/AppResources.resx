@@ -507,6 +507,10 @@
   <data name="PostWorkout_SetsDisplay_Format" xml:space="preserve"><value>{0} set</value></data>
   <data name="PostWorkout_Epley1RM_Format" xml:space="preserve"><value>Est. 1RM {0} kg</value></data>
   <data name="PostWorkout_UndoFinish" xml:space="preserve"><value>Ångra — återgå till passet</value></data>
+  <data name="PostWorkout_Share" xml:space="preserve"><value>Dela</value></data>
+  <data name="PostWorkout_Share_Error" xml:space="preserve"><value>Kunde inte skapa bild</value></data>
+  <data name="PostWorkout_Share_ImageTitle" xml:space="preserve"><value>LockIn pass</value></data>
+  <data name="Share_Footer_Tagline" xml:space="preserve"><value>Vana Strength</value></data>
 
   <!-- SessionDetail — XAML labels -->
   <data name="SessionDetail_Col_Volume" xml:space="preserve"><value>VOLYM</value></data>

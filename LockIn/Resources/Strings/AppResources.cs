@@ -377,6 +377,10 @@ public static class AppResources
     public static string PostWorkout_SetsDisplay_Format       => Get(nameof(PostWorkout_SetsDisplay_Format));
     public static string PostWorkout_Epley1RM_Format          => Get(nameof(PostWorkout_Epley1RM_Format));
     public static string PostWorkout_UndoFinish              => Get(nameof(PostWorkout_UndoFinish));
+    public static string PostWorkout_Share                  => Get(nameof(PostWorkout_Share));
+    public static string PostWorkout_Share_Error            => Get(nameof(PostWorkout_Share_Error));
+    public static string PostWorkout_Share_ImageTitle       => Get(nameof(PostWorkout_Share_ImageTitle));
+    public static string Share_Footer_Tagline               => Get(nameof(Share_Footer_Tagline));
 
     // ── TemplateEdit ─────────────────────────────────────────────────────
     public static string TemplateEdit_PageTitle           => Get(nameof(TemplateEdit_PageTitle));
