@@ -346,7 +346,7 @@ _Senast uppdaterad: 2026-06-27_
   _Beroenden: Ny iOS Extension-target, `ActivityKit`._  
   Prioritet: **Låg**
 
-- [ ] **Social delning** (M) – Dela passammanfattning som bild (SkiaSharp-render av PostWorkoutPage-statistik).  
+- [x] **Social delning** (M) – Dela passammanfattning som bild (SkiaSharp-render av PostWorkoutPage-statistik).  
   _Beroenden: SkiaSharp off-screen rendering, `Share`-API._  
   Prioritet: **Låg**
 
