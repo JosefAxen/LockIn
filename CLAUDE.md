@@ -47,7 +47,7 @@ Modala/push-sidor registreras i `AppShell.xaml.cs` och navigeras till med `Shell
 | `LibraryPage.xaml` | Bibliotek |
 | `KroppPage.xaml` | Kropp |
 
-**Push/modala sidor** (13 st):
+**Push/modala sidor** (15 st):
 | Fil | Nås från |
 |-----|----------|
 | `ActiveWorkoutPage.xaml` | TrainPage → starta pass |
@@ -65,12 +65,14 @@ Modala/push-sidor registreras i `AppShell.xaml.cs` och navigeras till med `Shell
 | `ProgressPhotosPage.xaml` | KroppPage / PostWorkoutPage |
 | `OnboardingPage.xaml` | App-start (första körning) |
 | `CardioPage.xaml` | TrainPage → cardio-knapp |
+| `PeriodizationPage.xaml` | LibraryPage → Tab 3 Cykler |
+| `CycleDetailPage.xaml` | PeriodizationPage / LibraryPage |
 
 **Global konvention för alla sidor:**
 - Alla sidor har `Shell.NavBarIsVisible="False"` + `ios:Page.UseSafeArea="False"` (bakgrund fyller hela skärmen inkl. Dynamic Island)
 - Header-raden har `Padding="...,56,..."` som manuell safe area-offset för Dynamic Island
-- Om en ändring misstänks kunna gälla alla sidor: fråga användaren innan du applicerar den på alla 20 sidor
-- När en sida läggs till eller tas bort: uppdatera tabellerna ovan OCH räkna om antalet (just nu 20 sidor totalt)
+- Om en ändring misstänks kunna gälla alla sidor: fråga användaren innan du applicerar den på alla 22 sidor
+- När en sida läggs till eller tas bort: uppdatera tabellerna ovan OCH räkna om antalet (just nu 22 sidor totalt)
 
 ### Databas
 `DatabaseService` är en singleton som wrappar `SQLiteAsyncConnection`. Init sker via `Lazy<Task>` — varje publik metod kallar `await InitAsync()` som säkerställer idempotent initiering.
