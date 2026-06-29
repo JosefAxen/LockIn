@@ -102,9 +102,9 @@
                             StrokeShape="RoundRectangle 50"
                             Margin="16,0,16,12"
                             Padding="2">
-                        <Grid ColumnDefinitions="*,*,*" HeightRequest="40"
+                        <Grid ColumnDefinitions="*,*,*,*" HeightRequest="40"
                               SizeChanged="OnTabContainerSizeChanged">
-                            <Border x:Name="TabIndicatorExercises" Grid.ColumnSpan="3"
+                            <Border x:Name="TabIndicatorExercises" Grid.ColumnSpan="4"
                                     BackgroundColor="{StaticResource ForgePillIndicator}"
                                     StrokeThickness="0"
                                     StrokeShape="RoundRectangle 48"
@@ -132,6 +132,14 @@
                                        HorizontalOptions="Center" VerticalOptions="Center"/>
                                 <Border.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 2}" Tapped="OnPillTapped"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+                            <Border Grid.Column="3" BackgroundColor="Transparent" StrokeThickness="0" Padding="0,9">
+                                <Label Text="{loc:Localize Library_Tab_Cycles}" TextColor="{Binding Tab3Fg}"
+                                       FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
+                                       HorizontalOptions="Center" VerticalOptions="Center"/>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 3}" Tapped="OnPillTapped"/>
                                 </Border.GestureRecognizers>
                             </Border>
                         </Grid>
@@ -296,9 +304,9 @@
                         StrokeShape="RoundRectangle 50"
                         Margin="16,0,16,12"
                         Padding="2">
-                    <Grid ColumnDefinitions="*,*,*" HeightRequest="40"
+                    <Grid ColumnDefinitions="*,*,*,*" HeightRequest="40"
                           SizeChanged="OnTabContainerSizeChanged">
-                        <Border x:Name="TabIndicatorTemplates" Grid.ColumnSpan="3"
+                        <Border x:Name="TabIndicatorTemplates" Grid.ColumnSpan="4"
                                 BackgroundColor="{StaticResource ForgePillIndicator}"
                                 StrokeThickness="0"
                                 StrokeShape="RoundRectangle 48"
@@ -326,6 +334,14 @@
                                    HorizontalOptions="Center" VerticalOptions="Center"/>
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 2}" Tapped="OnPillTapped"/>
+                            </Border.GestureRecognizers>
+                        </Border>
+                        <Border Grid.Column="3" BackgroundColor="Transparent" StrokeThickness="0" Padding="0,9">
+                            <Label Text="{loc:Localize Library_Tab_Cycles}" TextColor="{Binding Tab3Fg}"
+                                   FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 3}" Tapped="OnPillTapped"/>
                             </Border.GestureRecognizers>
                         </Border>
                     </Grid>
@@ -428,9 +444,9 @@
                         StrokeShape="RoundRectangle 50"
                         Margin="16,0,16,12"
                         Padding="2">
-                    <Grid ColumnDefinitions="*,*,*" HeightRequest="40"
+                    <Grid ColumnDefinitions="*,*,*,*" HeightRequest="40"
                           SizeChanged="OnTabContainerSizeChanged">
-                        <Border x:Name="TabIndicatorPrograms" Grid.ColumnSpan="3"
+                        <Border x:Name="TabIndicatorPrograms" Grid.ColumnSpan="4"
                                 BackgroundColor="{StaticResource ForgePillIndicator}"
                                 StrokeThickness="0"
                                 StrokeShape="RoundRectangle 48"
@@ -458,6 +474,14 @@
                                    HorizontalOptions="Center" VerticalOptions="Center"/>
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 2}" Tapped="OnPillTapped"/>
+                            </Border.GestureRecognizers>
+                        </Border>
+                        <Border Grid.Column="3" BackgroundColor="Transparent" StrokeThickness="0" Padding="0,9">
+                            <Label Text="{loc:Localize Library_Tab_Cycles}" TextColor="{Binding Tab3Fg}"
+                                   FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 3}" Tapped="OnPillTapped"/>
                             </Border.GestureRecognizers>
                         </Border>
                     </Grid>
@@ -505,6 +529,130 @@
                             </Border>
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>
+                </StackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Tab 3: Cykler -->
+        <ScrollView IsVisible="{Binding ShowCycles}" VerticalScrollBarVisibility="Never"
+                    Scrolled="OnCyclesScrolled">
+            <VerticalStackLayout Spacing="0">
+                <!-- Sidrubrik — scrollar bort med innehållet -->
+                <Grid ColumnDefinitions="*,Auto" Padding="16,56,16,8">
+                    <Label Grid.Column="0" Text="{loc:Localize Library_Title}"
+                           FontFamily="BebasNeue" FontSize="34" CharacterSpacing="1"
+                           TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                           VerticalOptions="Center"/>
+                    <Button Grid.Column="1"
+                            IsVisible="{Binding ShowActionButton}"
+                            Text="{loc:Localize Library_AddButton}"
+                            Style="{StaticResource SecondaryButton}"
+                            Padding="12,8" HeightRequest="36"
+                            Command="{Binding ActionButtonCommand}"
+                            VerticalOptions="Center"/>
+                </Grid>
+                <!-- Tab-pill — scrollar med innehållet -->
+                <Border x:Name="TabSegmentCycles"
+                        BackgroundColor="{StaticResource ForgePillTrack}"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 50"
+                        Margin="16,0,16,12"
+                        Padding="2">
+                    <Grid ColumnDefinitions="*,*,*,*" HeightRequest="40"
+                          SizeChanged="OnTabContainerSizeChanged">
+                        <Border x:Name="TabIndicatorCycles" Grid.ColumnSpan="4"
+                                BackgroundColor="{StaticResource ForgePillIndicator}"
+                                StrokeThickness="0"
+                                StrokeShape="RoundRectangle 48"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Fill"/>
+                        <Border Grid.Column="0" BackgroundColor="Transparent" StrokeThickness="0" Padding="0,9">
+                            <Label Text="{loc:Localize Library_Tab_Exercises}" TextColor="{Binding Tab0Fg}"
+                                   FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 0}" Tapped="OnPillTapped"/>
+                            </Border.GestureRecognizers>
+                        </Border>
+                        <Border Grid.Column="1" BackgroundColor="Transparent" StrokeThickness="0" Padding="0,9">
+                            <Label Text="{loc:Localize Library_Tab_Templates}" TextColor="{Binding Tab1Fg}"
+                                   FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 1}" Tapped="OnPillTapped"/>
+                            </Border.GestureRecognizers>
+                        </Border>
+                        <Border Grid.Column="2" BackgroundColor="Transparent" StrokeThickness="0" Padding="0,9">
+                            <Label Text="{loc:Localize Library_Tab_Programs}" TextColor="{Binding Tab2Fg}"
+                                   FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 2}" Tapped="OnPillTapped"/>
+                            </Border.GestureRecognizers>
+                        </Border>
+                        <Border Grid.Column="3" BackgroundColor="Transparent" StrokeThickness="0" Padding="0,9">
+                            <Label Text="{loc:Localize Library_Tab_Cycles}" TextColor="{Binding Tab3Fg}"
+                                   FontFamily="BebasNeue" FontSize="13" CharacterSpacing="1"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SelectTabCommand}" CommandParameter="{x:Int32 3}" Tapped="OnPillTapped"/>
+                            </Border.GestureRecognizers>
+                        </Border>
+                    </Grid>
+                </Border>
+                <!-- Cykel-lista -->
+                <StackLayout BindableLayout.ItemsSource="{Binding Cycles}" Spacing="0">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="models:TrainingCycle">
+                            <Border Margin="16,0,16,8"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
+                                    StrokeShape="RoundRectangle 18"
+                                    StrokeThickness="0"
+                                    Padding="18,14">
+                                <Border.Shadow>
+                                    <Shadow Brush="Black" Offset="0,2" Radius="10" Opacity="0.18"/>
+                                </Border.Shadow>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}}, Path=OpenCycleCommand}"
+                                        CommandParameter="{Binding .}"/>
+                                </Border.GestureRecognizers>
+                                <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" RowSpacing="4">
+                                    <Label Grid.Column="0" Grid.Row="0"
+                                           Text="{Binding Name}"
+                                           FontFamily="BebasNeue" FontSize="22" CharacterSpacing="1"
+                                           TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                                           VerticalOptions="Center"/>
+                                    <Border Grid.Column="1" Grid.Row="0"
+                                            IsVisible="{Binding IsActive}"
+                                            BackgroundColor="{StaticResource ForgeAccentBlueDim}"
+                                            StrokeShape="RoundRectangle 8"
+                                            StrokeThickness="0" Padding="10,5"
+                                            VerticalOptions="Center">
+                                        <Label Text="{loc:Localize Periodization_Active_Badge}"
+                                               TextColor="{StaticResource ForgeAccentBlue}"
+                                               FontFamily="BebasNeue" FontSize="11" CharacterSpacing="1"/>
+                                    </Border>
+                                    <Label Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"
+                                           Text="{Binding WeekCount, StringFormat='{0} VECKOR'}"
+                                           FontFamily="DMSansRegular" FontSize="13"
+                                           TextColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                    <BindableLayout.EmptyView>
+                        <StackLayout Padding="24,40" Spacing="8">
+                            <Label Text="{loc:Localize Periodization_NoCycles_Title}"
+                                   Style="{StaticResource DisplayLabel}"
+                                   FontSize="22"
+                                   HorizontalOptions="Center"
+                                   TextColor="{StaticResource ForgeMuted}"/>
+                            <Label Text="{loc:Localize Periodization_NoCycles_Body}"
+                                   Style="{StaticResource MutedLabel}"
+                                   HorizontalTextAlignment="Center"/>
+                        </StackLayout>
+                    </BindableLayout.EmptyView>
                 </StackLayout>
             </VerticalStackLayout>
         </ScrollView>

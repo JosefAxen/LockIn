@@ -19,7 +19,8 @@ public partial class LibraryViewModel(DatabaseService db) : ObservableObject
     public bool ShowExercises => SelectedTab == 0;
     public bool ShowTemplates => SelectedTab == 1;
     public bool ShowPrograms  => SelectedTab == 2;
-    public bool ShowActionButton => SelectedTab < 2;
+    public bool ShowCycles    => SelectedTab == 3;
+    public bool ShowActionButton => SelectedTab < 2 || SelectedTab == 3;
 
     private static readonly Color _glassActiveBg   = DesignTokens.GlassActiveBg;
     private static readonly Color _glassActiveFg   = DesignTokens.GlassActiveFg;
@@ -34,20 +35,25 @@ public partial class LibraryViewModel(DatabaseService db) : ObservableObject
     public Color Tab0Bg => SelectedTab == 0 ? ActiveTabBg  : InactiveTabBg;
     public Color Tab1Bg => SelectedTab == 1 ? ActiveTabBg  : InactiveTabBg;
     public Color Tab2Bg => SelectedTab == 2 ? ActiveTabBg  : InactiveTabBg;
+    public Color Tab3Bg => SelectedTab == 3 ? ActiveTabBg  : InactiveTabBg;
     public Color Tab0Fg => SelectedTab == 0 ? ActiveTabFg  : InactiveTabFg;
     public Color Tab1Fg => SelectedTab == 1 ? ActiveTabFg  : InactiveTabFg;
     public Color Tab2Fg => SelectedTab == 2 ? ActiveTabFg  : InactiveTabFg;
+    public Color Tab3Fg => SelectedTab == 3 ? ActiveTabFg  : InactiveTabFg;
 
     partial void OnSelectedTabChanged(int value)
     {
         OnPropertyChanged(nameof(ShowExercises));
         OnPropertyChanged(nameof(ShowTemplates));
         OnPropertyChanged(nameof(ShowPrograms));
+        OnPropertyChanged(nameof(ShowCycles));
         OnPropertyChanged(nameof(ShowActionButton));
         OnPropertyChanged(nameof(Tab0Bg)); OnPropertyChanged(nameof(Tab0Fg));
         OnPropertyChanged(nameof(Tab1Bg)); OnPropertyChanged(nameof(Tab1Fg));
         OnPropertyChanged(nameof(Tab2Bg)); OnPropertyChanged(nameof(Tab2Fg));
+        OnPropertyChanged(nameof(Tab3Bg)); OnPropertyChanged(nameof(Tab3Fg));
         if (value == 1) _ = LoadTemplatesAsync();
+        if (value == 3) _ = LoadCyclesAsync();
     }
 
     [RelayCommand]
@@ -58,6 +64,7 @@ public partial class LibraryViewModel(DatabaseService db) : ObservableObject
     {
         if (SelectedTab == 0) await AddCustomExerciseAsync();
         else if (SelectedTab == 1) await NewTemplateAsync();
+        else if (SelectedTab == 3) await Shell.Current.GoToAsync(nameof(PeriodizationPage));
     }
 
     // ── Exercises tab ──────────────────────────────────────────────────────
@@ -124,6 +131,7 @@ public partial class LibraryViewModel(DatabaseService db) : ObservableObject
         OnPropertyChanged(nameof(Tab0Bg)); OnPropertyChanged(nameof(Tab0Fg));
         OnPropertyChanged(nameof(Tab1Bg)); OnPropertyChanged(nameof(Tab1Fg));
         OnPropertyChanged(nameof(Tab2Bg)); OnPropertyChanged(nameof(Tab2Fg));
+        OnPropertyChanged(nameof(Tab3Bg)); OnPropertyChanged(nameof(Tab3Fg));
     }
 
     [RelayCommand]
@@ -323,6 +331,26 @@ public partial class LibraryViewModel(DatabaseService db) : ObservableObject
         await Shell.Current.GoToAsync(nameof(ProgramDetailPage), new Dictionary<string, object>
         {
             { "ProgramId", program.Id }
+        });
+    }
+
+    // ── Cycles tab ─────────────────────────────────────────────────────────
+
+    public ObservableCollection<TrainingCycle> Cycles { get; } = new();
+
+    private async Task LoadCyclesAsync()
+    {
+        var cycles = await db.GetCyclesAsync();
+        Cycles.Clear();
+        foreach (var c in cycles) Cycles.Add(c);
+    }
+
+    [RelayCommand]
+    private async Task OpenCycleAsync(TrainingCycle cycle)
+    {
+        await Shell.Current.GoToAsync("cycledetail", new Dictionary<string, object>
+        {
+            { "CycleId", cycle.Id }
         });
     }
 

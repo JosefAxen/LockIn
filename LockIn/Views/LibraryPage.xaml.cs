@@ -98,12 +98,13 @@ public partial class LibraryPage : ContentPage
     private void OnTabContainerSizeChanged(object? sender, EventArgs e)
     {
         if (sender is not VisualElement ve || ve.Width <= 0) return;
-        var newWidth = ve.Width / 3.0;
+        var newWidth = ve.Width / 4.0;
         if (Math.Abs(newWidth - _tabColumnWidth) < 0.5) return;
         _tabColumnWidth = newWidth;
         TabIndicatorExercises.WidthRequest = _tabColumnWidth;
         TabIndicatorTemplates.WidthRequest = _tabColumnWidth;
         TabIndicatorPrograms.WidthRequest  = _tabColumnWidth;
+        TabIndicatorCycles.WidthRequest    = _tabColumnWidth;
         UpdateAllTabIndicators(animated: false);
     }
 
@@ -116,12 +117,14 @@ public partial class LibraryPage : ContentPage
             TabIndicatorExercises.TranslateTo(targetX, 0, 280, Easing.SpringOut);
             TabIndicatorTemplates.TranslateTo(targetX, 0, 280, Easing.SpringOut);
             TabIndicatorPrograms.TranslateTo(targetX, 0, 280, Easing.SpringOut);
+            TabIndicatorCycles.TranslateTo(targetX, 0, 280, Easing.SpringOut);
         }
         else
         {
             TabIndicatorExercises.TranslationX = targetX;
             TabIndicatorTemplates.TranslationX = targetX;
             TabIndicatorPrograms.TranslationX  = targetX;
+            TabIndicatorCycles.TranslationX    = targetX;
         }
     }
 
@@ -140,6 +143,9 @@ public partial class LibraryPage : ContentPage
         => StickyHeader.Opacity = Math.Clamp((e.ScrollY - 80.0) / 40.0, 0, 1);
 
     private void OnProgramsScrolled(object sender, ScrolledEventArgs e)
+        => StickyHeader.Opacity = Math.Clamp((e.ScrollY - 80.0) / 40.0, 0, 1);
+
+    private void OnCyclesScrolled(object sender, ScrolledEventArgs e)
         => StickyHeader.Opacity = Math.Clamp((e.ScrollY - 80.0) / 40.0, 0, 1);
 
     private async void OnPillTapped(object sender, TappedEventArgs e)
