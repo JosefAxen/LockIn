@@ -86,7 +86,7 @@ public partial class TemplateEditViewModel(DatabaseService db) : ObservableObjec
     private void ClearExercise(TemplateExerciseRow row)
     {
         row.SetsText = "3";
-        row.RepsText = "0";
+        row.RepsText = "";
         row.WeightText = "";
         row.ProgressionEnabled = false;
         row.TargetRepsMinText = "";
