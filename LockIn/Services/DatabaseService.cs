@@ -1469,8 +1469,10 @@ public class DatabaseService
     public async Task SetActiveCycleAsync(int cycleId)
     {
         await InitAsync();
-        await _db.ExecuteAsync("UPDATE TrainingCycles SET IsActive = 0");
-        await _db.ExecuteAsync(
-            "UPDATE TrainingCycles SET IsActive = 1 WHERE Id = ?", cycleId);
+        await _db.RunInTransactionAsync(conn =>
+        {
+            conn.Execute("UPDATE TrainingCycles SET IsActive = 0");
+            conn.Execute("UPDATE TrainingCycles SET IsActive = 1 WHERE Id = ?", cycleId);
+        });
     }
 }

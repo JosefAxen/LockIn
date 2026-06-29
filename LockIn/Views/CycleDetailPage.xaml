@@ -76,7 +76,7 @@
                         Padding="16,0">
                     <Grid ColumnDefinitions="*,Auto" HeightRequest="50">
                         <Label Grid.Column="0"
-                               Text="{loc:Localize CycleDetail_WeekCount_Label}"
+                               Text="{loc:Localize CycleDetail_StartDate_Label}"
                                FontFamily="DMSansRegular" FontSize="14"
                                TextColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"
                                VerticalOptions="Center"/>
@@ -178,7 +178,7 @@
                                             StrokeThickness="0"
                                             Padding="12,0">
                                         <Entry Text="{Binding Label}"
-                                               Placeholder="Etikett (t.ex. Accumulation)"
+                                               Placeholder="{loc:Localize CycleDetail_Label_Placeholder}"
                                                PlaceholderColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"
                                                BackgroundColor="Transparent"
                                                TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"

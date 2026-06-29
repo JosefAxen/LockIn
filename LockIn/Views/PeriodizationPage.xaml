@@ -96,7 +96,7 @@
                                             <Label Text="{Binding Name}"
                                                    FontFamily="BebasNeue" FontSize="22" CharacterSpacing="1"
                                                    TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
-                                            <Label Text="{Binding WeekCount, StringFormat='{0} VECKOR'}"
+                                            <Label Text="{Binding WeekCountText}"
                                                    FontFamily="DMSansRegular" FontSize="13"
                                                    TextColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"/>
                                         </VerticalStackLayout>

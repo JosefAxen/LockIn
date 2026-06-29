@@ -56,7 +56,8 @@ public partial class CycleDetailViewModel(DatabaseService db) : ObservableObject
         if (cycle is null) return;
         Name = cycle.Name;
         StartDate = cycle.StartDate;
-        WeekCount = cycle.WeekCount;
+        _weekCount = cycle.WeekCount;
+        OnPropertyChanged(nameof(WeekCount));
         var weeks = await db.GetCycleWeeksAsync(_cycleId);
         Weeks.Clear();
         foreach (var w in weeks)

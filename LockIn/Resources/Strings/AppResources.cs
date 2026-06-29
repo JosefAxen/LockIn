@@ -488,6 +488,8 @@ public static class AppResources
     public static string CycleDetail_Title_Edit             => Get(nameof(CycleDetail_Title_Edit));
     public static string CycleDetail_Name_Placeholder       => Get(nameof(CycleDetail_Name_Placeholder));
     public static string CycleDetail_WeekCount_Label        => Get(nameof(CycleDetail_WeekCount_Label));
+    public static string CycleDetail_StartDate_Label        => Get(nameof(CycleDetail_StartDate_Label));
+    public static string CycleDetail_Label_Placeholder      => Get(nameof(CycleDetail_Label_Placeholder));
     public static string CycleDetail_Intensity_Label_Format => Get(nameof(CycleDetail_Intensity_Label_Format));
     public static string CycleDetail_Save_Button            => Get(nameof(CycleDetail_Save_Button));
     public static string CycleDetail_PickTemplate_Title     => Get(nameof(CycleDetail_PickTemplate_Title));

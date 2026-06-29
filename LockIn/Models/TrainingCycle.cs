@@ -1,4 +1,5 @@
 using SQLite;
+using LockIn.Resources.Strings;
 namespace LockIn.Models;
 
 [Table("TrainingCycles")]
@@ -11,4 +12,7 @@ public class TrainingCycle
     public DateTime StartDate { get; set; }
     public int WeekCount { get; set; }
     public bool IsActive { get; set; }
+
+    [Ignore]
+    public string WeekCountText => string.Format(AppResources.Periodization_Weeks_Format, WeekCount);
 }

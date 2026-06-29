@@ -634,7 +634,7 @@
                                                FontFamily="BebasNeue" FontSize="11" CharacterSpacing="1"/>
                                     </Border>
                                     <Label Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"
-                                           Text="{Binding WeekCount, StringFormat='{0} VECKOR'}"
+                                           Text="{Binding WeekCountText}"
                                            FontFamily="DMSansRegular" FontSize="13"
                                            TextColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"/>
                                 </Grid>

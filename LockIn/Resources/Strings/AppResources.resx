@@ -893,6 +893,8 @@
   <data name="CycleDetail_Title_Edit" xml:space="preserve"><value>Redigera cykel</value></data>
   <data name="CycleDetail_Name_Placeholder" xml:space="preserve"><value>Cykelnamn</value></data>
   <data name="CycleDetail_WeekCount_Label" xml:space="preserve"><value>Antal veckor</value></data>
+  <data name="CycleDetail_StartDate_Label" xml:space="preserve"><value>Startdatum</value></data>
+  <data name="CycleDetail_Label_Placeholder" xml:space="preserve"><value>Etikett (t.ex. Accumulation)</value></data>
   <data name="CycleDetail_Intensity_Label_Format" xml:space="preserve"><value>Intensitet {0}%</value></data>
   <data name="CycleDetail_Save_Button" xml:space="preserve"><value>Spara</value></data>
   <data name="CycleDetail_PickTemplate_Title" xml:space="preserve"><value>Välj mall</value></data>
