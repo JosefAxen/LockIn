@@ -14,7 +14,6 @@
 
     <ContentPage.Resources>
         <vm:GreaterThanZeroConverter x:Key="GtzConverter"/>
-        <vm:InverseBoolConverter x:Key="InverseBoolConverter"/>
     </ContentPage.Resources>
 
     <Grid SafeAreaEdges="None">
@@ -314,7 +313,7 @@
                                    WidthRequest="22" HeightRequest="22"
                                    HorizontalOptions="Center" VerticalOptions="Center"/>
                 <Label Text="↗"
-                       IsVisible="{Binding IsSharing, Converter={StaticResource InverseBoolConverter}}"
+                       IsVisible="{Binding IsSharing, Converter={x:Static vm:InverseBoolConverter.Instance}}"
                        FontSize="20"
                        TextColor="{StaticResource ForgeAccent}"
                        HorizontalOptions="Center" VerticalOptions="Center"/>

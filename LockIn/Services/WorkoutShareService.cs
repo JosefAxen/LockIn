@@ -38,7 +38,7 @@ public class WorkoutShareService
             var path = Path.Combine(FileSystem.CacheDirectory, "share_preview.png");
             using var image = SKImage.FromBitmap(bitmap);
             using var encoded = image.Encode(SKEncodedImageFormat.Png, 90);
-            using var stream = File.OpenWrite(path);
+            using var stream = File.Create(path);
             encoded.SaveTo(stream);
 
             return path;
