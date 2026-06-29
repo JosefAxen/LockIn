@@ -34,6 +34,7 @@ public partial class PostWorkoutPage : ContentPage
         base.OnDisappearing();
         _vm.NewAchievements.CollectionChanged -= OnAchievementsChanged;
         ConfettiOverlay.Stop();
+        _ = _vm.CommitIfNotDoneAsync();
     }
 
     private async void OnKlarTapped(object sender, TappedEventArgs e)
