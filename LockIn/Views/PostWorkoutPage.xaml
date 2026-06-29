@@ -14,6 +14,7 @@
 
     <ContentPage.Resources>
         <vm:GreaterThanZeroConverter x:Key="GtzConverter"/>
+        <vm:InverseBoolConverter x:Key="InverseBoolConverter"/>
     </ContentPage.Resources>
 
     <Grid SafeAreaEdges="None">
@@ -291,26 +292,58 @@
         </Label.GestureRecognizers>
     </Label>
 
-    <!-- Floating KLAR-knapp � fast l�ngst ner, ingen container/gradient -->
-    <Border BackgroundColor="{StaticResource ForgePrimary}"
-            StrokeShape="RoundRectangle 26"
-            StrokeThickness="0"
-            HeightRequest="56"
-            HorizontalOptions="Fill"
-            VerticalOptions="End"
-            Margin="16,0,16,40"
-            ZIndex="23">
-        <Label Text="{loc:Localize Common_Done}"
-               TextColor="{StaticResource ForgePrimaryForeground}"
-               FontFamily="BebasNeue"
-               FontSize="20"
-               CharacterSpacing="3"
-               HorizontalOptions="Center"
-               VerticalOptions="Center"/>
-        <Border.GestureRecognizers>
-            <TapGestureRecognizer Command="{Binding DoneCommand}" Tapped="OnKlarTapped"/>
-        </Border.GestureRecognizers>
-    </Border>
+    <!-- Floating-zon: Dela-knapp + KLAR-knapp -->
+    <Grid ColumnDefinitions="56,16,*"
+          HorizontalOptions="Fill"
+          VerticalOptions="End"
+          Margin="16,0,16,40"
+          ZIndex="23">
+
+        <!-- Dela-ikoncirkel -->
+        <Border Grid.Column="0"
+                BackgroundColor="{StaticResource ForgeSurface2}"
+                StrokeShape="RoundRectangle 28"
+                StrokeThickness="1"
+                Stroke="{StaticResource ForgeBorder}"
+                HeightRequest="56"
+                WidthRequest="56">
+            <Grid>
+                <ActivityIndicator IsRunning="{Binding IsSharing}"
+                                   IsVisible="{Binding IsSharing}"
+                                   Color="{StaticResource ForgeAccent}"
+                                   WidthRequest="22" HeightRequest="22"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                <Label Text="↗"
+                       IsVisible="{Binding IsSharing, Converter={StaticResource InverseBoolConverter}}"
+                       FontSize="20"
+                       TextColor="{StaticResource ForgeAccent}"
+                       HorizontalOptions="Center" VerticalOptions="Center"/>
+            </Grid>
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding ShareWorkoutCommand}"/>
+            </Border.GestureRecognizers>
+        </Border>
+
+        <!-- KLAR-knapp (Grid.Column="2") -->
+        <Border Grid.Column="2"
+                BackgroundColor="{StaticResource ForgePrimary}"
+                StrokeShape="RoundRectangle 26"
+                StrokeThickness="0"
+                HeightRequest="56"
+                HorizontalOptions="Fill">
+            <Label Text="{loc:Localize Common_Done}"
+                   TextColor="{StaticResource ForgePrimaryForeground}"
+                   FontFamily="BebasNeue"
+                   FontSize="20"
+                   CharacterSpacing="3"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"/>
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding DoneCommand}" Tapped="OnKlarTapped"/>
+            </Border.GestureRecognizers>
+        </Border>
+
+    </Grid>
 
     <controls:ConfettiView x:Name="ConfettiOverlay"/>
 
