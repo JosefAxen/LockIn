@@ -22,7 +22,7 @@
         <controls:AtmosphericBackgroundView Grid.RowSpan="2" InputTransparent="True"/>
 
         <!-- Header -->
-        <Grid Grid.Row="0" Padding="16,56,16,8" ColumnDefinitions="48,*">
+        <Grid Grid.Row="0" Padding="16,56,16,8" ColumnDefinitions="48,*,48">
             <Border Grid.Column="0"
                     WidthRequest="36" HeightRequest="36"
                     StrokeShape="Ellipse"
@@ -42,6 +42,24 @@
                 <Label Text="{Binding MuscleGroupName}"
                        Style="{StaticResource MutedLabel}"/>
             </StackLayout>
+            <Border Grid.Column="2"
+                    WidthRequest="36" HeightRequest="36"
+                    StrokeShape="Ellipse"
+                    BackgroundColor="#17FFFFFF"
+                    Stroke="#29FFFFFF"
+                    StrokeThickness="0.5"
+                    VerticalOptions="Center"
+                    HorizontalOptions="End"
+                    Opacity="{Binding IsSharing, Converter={StaticResource InvertedBoolConverter}}">
+                <Label Text="↗"
+                       TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                       FontSize="16"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"/>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ShareProgressCommand}"/>
+                </Border.GestureRecognizers>
+            </Border>
         </Grid>
 
         <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Never">
