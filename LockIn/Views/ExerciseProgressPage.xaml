@@ -50,7 +50,7 @@
                     StrokeThickness="0.5"
                     VerticalOptions="Center"
                     HorizontalOptions="End"
-                    Opacity="{Binding IsSharing, Converter={StaticResource InvertedBoolConverter}}">
+                    IsEnabled="{Binding IsSharing, Converter={StaticResource InvertedBoolConverter}}">
                 <Label Text="↗"
                        TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
                        FontSize="16"
