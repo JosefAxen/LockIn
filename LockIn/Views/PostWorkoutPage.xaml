@@ -276,6 +276,21 @@
 
     </Grid>
 
+    <!-- Ångra-länk ovanför KLAR-knappen -->
+    <Label Text="{loc:Localize PostWorkout_UndoFinish}"
+           TextColor="{StaticResource ForgeMuted}"
+           FontFamily="DMSansRegular"
+           FontSize="13"
+           TextDecorations="Underline"
+           HorizontalOptions="Center"
+           VerticalOptions="End"
+           Margin="16,0,16,104"
+           ZIndex="22">
+        <Label.GestureRecognizers>
+            <TapGestureRecognizer Command="{Binding UndoFinishCommand}"/>
+        </Label.GestureRecognizers>
+    </Label>
+
     <!-- Floating KLAR-knapp � fast l�ngst ner, ingen container/gradient -->
     <Border BackgroundColor="{StaticResource ForgePrimary}"
             StrokeShape="RoundRectangle 26"
