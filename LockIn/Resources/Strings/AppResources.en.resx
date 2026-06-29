@@ -549,6 +549,7 @@
   <data name="TemplateEdit_Toast_EnterName" xml:space="preserve"><value>Enter a name for the template.</value></data>
   <data name="TemplateEdit_SupersetAdd" xml:space="preserve"><value>SUPERSET +</value></data>
   <data name="TemplateEdit_SupersetRemove" xml:space="preserve"><value>UNLINK</value></data>
+  <data name="TemplateEdit_ClearExercise" xml:space="preserve"><value>CLEAR</value></data>
 
   <!-- ExerciseProgress — XAML labels -->
   <data name="ExerciseProgress_Chart_1RM" xml:space="preserve"><value>EST. 1RM PROGRESSION</value></data>

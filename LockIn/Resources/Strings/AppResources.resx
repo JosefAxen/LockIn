@@ -549,6 +549,7 @@
   <data name="TemplateEdit_Toast_EnterName" xml:space="preserve"><value>Ange ett namn för mallen.</value></data>
   <data name="TemplateEdit_SupersetAdd" xml:space="preserve"><value>SUPERSET +</value></data>
   <data name="TemplateEdit_SupersetRemove" xml:space="preserve"><value>KOPPLA BORT</value></data>
+  <data name="TemplateEdit_ClearExercise" xml:space="preserve"><value>TÖM</value></data>
 
   <!-- ExerciseProgress — XAML labels -->
   <data name="ExerciseProgress_Chart_1RM" xml:space="preserve"><value>EST. 1RM PROGRESSION</value></data>

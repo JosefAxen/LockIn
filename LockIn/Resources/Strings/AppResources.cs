@@ -396,6 +396,7 @@ public static class AppResources
     public static string TemplateEdit_Toast_EnterName     => Get(nameof(TemplateEdit_Toast_EnterName));
     public static string TemplateEdit_SupersetAdd         => Get(nameof(TemplateEdit_SupersetAdd));
     public static string TemplateEdit_SupersetRemove      => Get(nameof(TemplateEdit_SupersetRemove));
+    public static string TemplateEdit_ClearExercise       => Get(nameof(TemplateEdit_ClearExercise));
 
     // ── ExerciseProgress ─────────────────────────────────────────────────
     public static string ExerciseProgress_Chart_1RM            => Get(nameof(ExerciseProgress_Chart_1RM));
