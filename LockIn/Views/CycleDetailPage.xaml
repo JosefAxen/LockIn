@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:LockIn.ViewModels"
+             xmlns:views="clr-namespace:LockIn.Views"
+             xmlns:controls="clr-namespace:LockIn.Controls"
+             xmlns:loc="clr-namespace:LockIn.Resources.Strings"
+             xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+             x:Class="LockIn.Views.CycleDetailPage"
+             x:DataType="vm:CycleDetailViewModel"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="Transparent">
+
+    <ContentPage.Resources>
+        <views:InvertedBoolConverter x:Key="InvertedBoolConverter"/>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="*,Auto" SafeAreaEdges="None">
+
+        <!-- Atmosfärisk bakgrund -->
+        <controls:AtmosphericBackgroundView Grid.RowSpan="2" InputTransparent="True"/>
+
+        <!-- Permanent status bar gradient -->
+        <BoxView Grid.RowSpan="2" VerticalOptions="Start" HeightRequest="90" InputTransparent="True" ZIndex="19">
+            <BoxView.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="{AppThemeBinding Light=#28FCFCFC, Dark=#28141418}" Offset="0.0"/>
+                    <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark=#00141418}" Offset="1.0"/>
+                </LinearGradientBrush>
+            </BoxView.Background>
+        </BoxView>
+
+        <!-- Row 0: Scrollbart innehåll -->
+        <ScrollView Grid.Row="0" VerticalScrollBarVisibility="Never">
+            <VerticalStackLayout Padding="16,56,16,96" Spacing="20">
+
+                <!-- Header: tillbaka-knapp + sidtitel -->
+                <Grid ColumnDefinitions="48,*" ColumnSpacing="8">
+                    <Border Grid.Column="0"
+                            WidthRequest="36" HeightRequest="36"
+                            StrokeShape="Ellipse"
+                            BackgroundColor="{AppThemeBinding Light=#17000000, Dark=#17FFFFFF}"
+                            Stroke="{AppThemeBinding Light=#29000000, Dark=#29FFFFFF}"
+                            StrokeThickness="0.5"
+                            VerticalOptions="Center">
+                        <Path Style="{StaticResource BackChevron}"/>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoBackCommand}"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+                    <Label Grid.Column="1"
+                           Text="{Binding PageTitle}"
+                           FontFamily="BebasNeue" FontSize="28" CharacterSpacing="1"
+                           TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                           VerticalOptions="Center"/>
+                </Grid>
+
+                <!-- Namnfält -->
+                <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface2}}"
+                        StrokeShape="RoundRectangle 14"
+                        StrokeThickness="0"
+                        Padding="16,0">
+                    <Entry Text="{Binding Name}"
+                           Placeholder="{loc:Localize CycleDetail_Name_Placeholder}"
+                           PlaceholderColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"
+                           BackgroundColor="Transparent"
+                           TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                           FontFamily="DMSansRegular" FontSize="15"
+                           HeightRequest="50"/>
+                </Border>
+
+                <!-- Startdatum -->
+                <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface2}}"
+                        StrokeShape="RoundRectangle 14"
+                        StrokeThickness="0"
+                        Padding="16,0">
+                    <Grid ColumnDefinitions="*,Auto" HeightRequest="50">
+                        <Label Grid.Column="0"
+                               Text="{loc:Localize CycleDetail_WeekCount_Label}"
+                               FontFamily="DMSansRegular" FontSize="14"
+                               TextColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"
+                               VerticalOptions="Center"/>
+                        <DatePicker Grid.Column="1"
+                                    Date="{Binding StartDate}"
+                                    TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                                    BackgroundColor="Transparent"
+                                    FontFamily="DMSansRegular" FontSize="14"
+                                    VerticalOptions="Center"/>
+                    </Grid>
+                </Border>
+
+                <!-- Veckoantal-stepper -->
+                <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface2}}"
+                        StrokeShape="RoundRectangle 14"
+                        StrokeThickness="0"
+                        Padding="16,12">
+                    <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="12">
+                        <Label Grid.Column="0"
+                               Text="{loc:Localize CycleDetail_WeekCount_Label}"
+                               FontFamily="DMSansRegular" FontSize="14"
+                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                               VerticalOptions="Center"/>
+                        <Border Grid.Column="1"
+                                WidthRequest="36" HeightRequest="36"
+                                StrokeShape="Ellipse"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface3}}"
+                                StrokeThickness="0"
+                                VerticalOptions="Center">
+                            <Label Text="−"
+                                   FontFamily="BebasNeue" FontSize="20"
+                                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding DecrementWeeksCommand}"/>
+                            </Border.GestureRecognizers>
+                        </Border>
+                        <Label Grid.Column="2"
+                               Text="{Binding WeekCount}"
+                               FontFamily="BebasNeue" FontSize="22"
+                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                               VerticalOptions="Center"
+                               MinimumWidthRequest="28"
+                               HorizontalTextAlignment="Center"/>
+                        <Border Grid.Column="3"
+                                WidthRequest="36" HeightRequest="36"
+                                StrokeShape="Ellipse"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface3}}"
+                                StrokeThickness="0"
+                                VerticalOptions="Center">
+                            <Label Text="+"
+                                   FontFamily="BebasNeue" FontSize="20"
+                                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding IncrementWeeksCommand}"/>
+                            </Border.GestureRecognizers>
+                        </Border>
+                    </Grid>
+                </Border>
+
+                <!-- Veckor (CycleWeekRow) -->
+                <StackLayout BindableLayout.ItemsSource="{Binding Weeks}" Spacing="12">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="vm:CycleWeekRow">
+                            <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
+                                    StrokeShape="RoundRectangle 14"
+                                    StrokeThickness="0"
+                                    Padding="16,12">
+                                <Border.Shadow>
+                                    <Shadow Brush="Black" Offset="0,2" Radius="8" Opacity="0.15"/>
+                                </Border.Shadow>
+                                <VerticalStackLayout Spacing="10">
+
+                                    <!-- Veckoheader: "VECKA N" + intensitets-label -->
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                        <Label Grid.Column="0"
+                                               Text="{Binding WeekNumber, StringFormat='VECKA {0}'}"
+                                               FontFamily="BebasNeue" FontSize="18" CharacterSpacing="1"
+                                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                                               VerticalOptions="Center"/>
+                                        <Label Grid.Column="1"
+                                               Text="{Binding IntensityPercent, StringFormat='{0}%'}"
+                                               FontFamily="BebasNeue" FontSize="16"
+                                               TextColor="{StaticResource ForgeAccent}"
+                                               VerticalOptions="Center"/>
+                                    </Grid>
+
+                                    <!-- Intensitetsslider -->
+                                    <Slider Minimum="0" Maximum="100"
+                                            Value="{Binding IntensityPercent}"
+                                            ThumbColor="{StaticResource ForgeAccent}"
+                                            MinimumTrackColor="{StaticResource ForgeAccent}"
+                                            MaximumTrackColor="{StaticResource ForgeSurface3}"/>
+
+                                    <!-- Etikett-entry (t.ex. "Accumulation") -->
+                                    <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}"
+                                            StrokeShape="RoundRectangle 10"
+                                            StrokeThickness="0"
+                                            Padding="12,0">
+                                        <Entry Text="{Binding Label}"
+                                               Placeholder="Etikett (t.ex. Accumulation)"
+                                               PlaceholderColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"
+                                               BackgroundColor="Transparent"
+                                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                                               FontFamily="DMSansRegular" FontSize="13"
+                                               HeightRequest="42"/>
+                                    </Border>
+
+                                    <!-- Separator -->
+                                    <BoxView BackgroundColor="{StaticResource ForgeBorder}" HeightRequest="1"/>
+
+                                    <!-- Sessioner per dag (CycleSessionRow) -->
+                                    <StackLayout BindableLayout.ItemsSource="{Binding Sessions}" Spacing="0">
+                                        <BindableLayout.ItemTemplate>
+                                            <DataTemplate x:DataType="vm:CycleSessionRow">
+                                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10"
+                                                      Padding="0,6" MinimumHeightRequest="44">
+                                                    <!-- Dagnamn -->
+                                                    <Label Grid.Column="0"
+                                                           Text="{Binding DayName}"
+                                                           FontFamily="DMSansRegular" FontSize="14"
+                                                           TextColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"
+                                                           VerticalOptions="Center"/>
+                                                    <!-- Mall-chip -->
+                                                    <Border Grid.Column="1"
+                                                            BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}"
+                                                            StrokeShape="RoundRectangle 10"
+                                                            StrokeThickness="0"
+                                                            Padding="12,8"
+                                                            VerticalOptions="Center">
+                                                        <Grid>
+                                                            <!-- Inget pass (visas när HasTemplate är false) -->
+                                                            <Label IsVisible="{Binding HasTemplate, Converter={StaticResource InvertedBoolConverter}}"
+                                                                   Text="{loc:Localize CycleDetail_NoTemplate}"
+                                                                   FontFamily="DMSansRegular" FontSize="13"
+                                                                   TextColor="{StaticResource ForgeMuted}"/>
+                                                            <!-- Mallnamn (visas när HasTemplate är true) -->
+                                                            <Label IsVisible="{Binding HasTemplate}"
+                                                                   Text="{Binding TemplateName}"
+                                                                   FontFamily="DMSansRegular" FontSize="13"
+                                                                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                                                        </Grid>
+                                                        <Border.GestureRecognizers>
+                                                            <TapGestureRecognizer
+                                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CycleDetailViewModel}}, Path=PickTemplateCommand}"
+                                                                CommandParameter="{Binding .}"/>
+                                                        </Border.GestureRecognizers>
+                                                    </Border>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </BindableLayout.ItemTemplate>
+                                    </StackLayout>
+
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </StackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Row 1: Spara-knapp (sticky bottom) -->
+        <Grid Grid.Row="1" Padding="16,8,16,40" ZIndex="10">
+            <Button Text="{loc:Localize CycleDetail_Save_Button}"
+                    Style="{StaticResource PrimaryButton}"
+                    Command="{Binding SaveCommand}"/>
+        </Grid>
+
+    </Grid>
+</ContentPage>
