@@ -14,7 +14,72 @@ public class AppDelegate : MauiUIApplicationDelegate
 		ConfigureTabBarAppearance();
 		ConfigureNavBarAppearance();
 		ConfigureWindowBackground(application);
+		RegisterShortcutItems(application);
+		HandleColdStartShortcut(launchOptions);
 		return result;
+	}
+
+	public override void PerformActionForShortcutItem(
+		UIApplication application,
+		UIApplicationShortcutItem shortcutItem,
+		UIOperationHandler completionHandler)
+	{
+		HandleShortcut(shortcutItem.Type);
+		completionHandler(true);
+	}
+
+	private static void RegisterShortcutItems(UIApplication application)
+	{
+		application.ShortcutItems = new[]
+		{
+			new UIApplicationShortcutItem(
+				"com.josefaxen.lockin.startfreeworkout",
+				"Starta fritt pass",
+				"Träna utan mall",
+				UIApplicationShortcutIcon.FromSystemImageName("play.fill"),
+				null),
+			new UIApplicationShortcutItem(
+				"com.josefaxen.lockin.logweight",
+				"Logga vikt",
+				"Lägg till kroppsvikt",
+				UIApplicationShortcutIcon.FromSystemImageName("scalemass.fill"),
+				null),
+			new UIApplicationShortcutItem(
+				"com.josefaxen.lockin.history",
+				"Se historik",
+				"Dina senaste pass",
+				UIApplicationShortcutIcon.FromSystemImageName("calendar"),
+				null)
+		};
+	}
+
+	private static void HandleColdStartShortcut(NSDictionary? launchOptions)
+	{
+		if (launchOptions == null) return;
+		if (!launchOptions.TryGetValue(UIApplication.LaunchOptionsShortcutItemKey, out var val)) return;
+		if (val is not UIApplicationShortcutItem item) return;
+		var type = item.Type;
+		// Shell is not yet initialized at FinishedLaunching time; defer navigation.
+		Task.Delay(500).ContinueWith(_ => HandleShortcut(type));
+	}
+
+	private static void HandleShortcut(string type)
+	{
+		MainThread.BeginInvokeOnMainThread(async () =>
+		{
+			switch (type)
+			{
+				case "com.josefaxen.lockin.startfreeworkout":
+					await Shell.Current.GoToAsync("//TrainPage");
+					break;
+				case "com.josefaxen.lockin.logweight":
+					await Shell.Current.GoToAsync("BodyWeightPage");
+					break;
+				case "com.josefaxen.lockin.history":
+					await Shell.Current.GoToAsync("//HistoryPage");
+					break;
+			}
+		});
 	}
 
 	private static void ConfigureNavBarAppearance()
