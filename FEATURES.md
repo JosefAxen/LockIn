@@ -360,7 +360,7 @@ _Senast uppdaterad: 2026-06-27_
 - [x] **Redigerbara sessionsnotes** (S) – Se "Kärnträning" ovan — implementerat med Editor + `SaveNotesCommand`.  
   Prioritet: **Hög**
 
-- [ ] **Töm en enskild övning ur mall** (S) – I `TemplateEditPage` kan användaren ta bort en övning, men det finns inget sätt att snabbt nollställa sets/reps till template-standard om man editerat manuellt.  
+- [x] **Töm en enskild övning ur mall** (S) – I `TemplateEditPage` kan användaren ta bort en övning, men det finns inget sätt att snabbt nollställa sets/reps till template-standard om man editerat manuellt.  
   _Beroenden: Minimal UI-ändring._  
   Prioritet: **Låg**
 
