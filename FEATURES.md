@@ -340,7 +340,7 @@ _Senast uppdaterad: 2026-06-27_
   _Beroenden: Ny HealthKit-permission `HKQuantityType.BodyMass`, ny `IHealthService`-metod._  
   Prioritet: **Medel**
 
-- [ ] **Widget (iOS 18 Live Activity / App Intent)** (L) – Visa pågående restimer eller dagens träningsstatus på hemskärm/Dynamic Island.  
+- [x] **Widget (iOS 18 Live Activity / App Intent)** (L) – Implementerat som UIApplicationShortcutItems (hemskärms-Quick Actions): Starta fritt pass, Logga vikt, Se historik. Live Activity/WidgetKit kräver native Swift extension och är utanför scope.  
   _Beroenden: Ny iOS Extension-target, `ActivityKit`._  
   Prioritet: **Låg**
 
