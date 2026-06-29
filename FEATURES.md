@@ -289,8 +289,7 @@ _Senast uppdaterad: 2026-06-27_
   _Beroenden: Klona-funktion i `db.ActivateProgramAsync`, ny UI._  
   Prioritet: **Medel**
 
-- [ ] **Periodiseringsplaner** (L) – Planera träning vecka för vecka med varierade intensiteter (mesocykler). Krävs för att matcha Strong/Whoop på planering.  
-  _Beroenden: Ny tabell `TrainingCycles`, ny vy, komplex VM-logik._  
+- [x] **Periodiseringsplaner** (L) – Planera träning vecka för vecka med varierade intensiteter (mesocykler). Tre nya tabeller (`TrainingCycles`, `CycleWeeks`, `CycleSessions`), `PeriodizationPage`, `CycleDetailPage`, LibraryPage Tab 3 "Cykler".  
   Prioritet: **Låg**
 
 - [x] **Vila-dag-schemaläggning** (S) – Påminnelsenotiser för specifika träningsdagar (t.ex. "Måndag är bent dag").  
