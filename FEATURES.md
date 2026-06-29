@@ -324,8 +324,7 @@ _Senast uppdaterad: 2026-06-27_
 - [x] **Exportera data** (M) – ZIP med sessions.csv + sets.csv via `ExportService`, `Share`-API i `SettingsViewModel`, exportrad i `SettingsPage`. Se specs/2026-06-27-export-data-design.md.  
   Prioritet: **Hög**
 
-- [ ] **Körjournal / progressrapport** (L) – PDF eller delningsbar bild med N veckors progression per övning.  
-  _Beroenden: SkiaSharp PDF-rendering eller screenshot-delning._  
+- [x] **Körjournal / progressrapport** (L) – Dela-knapp (↗) på ExerciseProgressPage renderar 1080×1350 PNG med 1RM-progressionskurva, stats och branding via SkiaSharp. Delas via iOS Share Sheet.  
   Prioritet: **Låg**
 
 ---
