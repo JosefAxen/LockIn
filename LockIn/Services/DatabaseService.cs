@@ -37,6 +37,9 @@ public class DatabaseService
         await _db.CreateTableAsync<UserAchievement>();
         await _db.CreateTableAsync<WorkoutPhoto>();
         await _db.CreateTableAsync<CardioSession>();
+        await _db.CreateTableAsync<TrainingCycle>();
+        await _db.CreateTableAsync<CycleWeek>();
+        await _db.CreateTableAsync<CycleSession>();
 
         try { await _db.ExecuteAsync("ALTER TABLE WorkoutTemplates ADD COLUMN ProgramId TEXT NULL"); }
         catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
@@ -1381,5 +1384,93 @@ public class DatabaseService
             ORDER BY ws.StartedAt, se.OrderIndex, ls.SetNumber");
 
         return (sessions, sets);
+    }
+
+    // ── Periodisering ──────────────────────────────────────────────────────────
+
+    public async Task<List<TrainingCycle>> GetCyclesAsync()
+    {
+        await InitAsync();
+        return await _db.Table<TrainingCycle>()
+            .OrderByDescending(c => c.StartDate)
+            .ToListAsync();
+    }
+
+    public async Task<List<CycleWeek>> GetCycleWeeksAsync(int cycleId)
+    {
+        await InitAsync();
+        return await _db.Table<CycleWeek>()
+            .Where(w => w.CycleId == cycleId)
+            .OrderBy(w => w.WeekNumber)
+            .ToListAsync();
+    }
+
+    public async Task<List<CycleSession>> GetCycleSessionsAsync(int cycleWeekId)
+    {
+        await InitAsync();
+        return await _db.Table<CycleSession>()
+            .Where(s => s.CycleWeekId == cycleWeekId)
+            .OrderBy(s => s.DayOfWeek)
+            .ToListAsync();
+    }
+
+    public async Task<int> SaveCycleAsync(
+        TrainingCycle cycle,
+        List<CycleWeek> weeks,
+        List<List<CycleSession>> sessionsByWeek)
+    {
+        await InitAsync();
+        await _db.RunInTransactionAsync(conn =>
+        {
+            if (cycle.Id == 0)
+                conn.Insert(cycle);
+            else
+                conn.Update(cycle);
+
+            var oldWeeks = conn.Table<CycleWeek>()
+                .Where(w => w.CycleId == cycle.Id).ToList();
+            foreach (var w in oldWeeks)
+            {
+                conn.Table<CycleSession>().Delete(s => s.CycleWeekId == w.Id);
+                conn.Delete(w);
+            }
+
+            for (int i = 0; i < weeks.Count; i++)
+            {
+                var week = weeks[i];
+                week.CycleId = cycle.Id;
+                conn.Insert(week);
+
+                var sessions = sessionsByWeek[i];
+                foreach (var s in sessions)
+                {
+                    s.CycleWeekId = week.Id;
+                    conn.Insert(s);
+                }
+            }
+        });
+        return cycle.Id;
+    }
+
+    public async Task DeleteCycleAsync(int cycleId)
+    {
+        await InitAsync();
+        await _db.RunInTransactionAsync(conn =>
+        {
+            var weeks = conn.Table<CycleWeek>()
+                .Where(w => w.CycleId == cycleId).ToList();
+            foreach (var w in weeks)
+                conn.Table<CycleSession>().Delete(s => s.CycleWeekId == w.Id);
+            conn.Table<CycleWeek>().Delete(w => w.CycleId == cycleId);
+            conn.Table<TrainingCycle>().Delete(c => c.Id == cycleId);
+        });
+    }
+
+    public async Task SetActiveCycleAsync(int cycleId)
+    {
+        await InitAsync();
+        await _db.ExecuteAsync("UPDATE TrainingCycles SET IsActive = 0");
+        await _db.ExecuteAsync(
+            "UPDATE TrainingCycles SET IsActive = 1 WHERE Id = ?", cycleId);
     }
 }
