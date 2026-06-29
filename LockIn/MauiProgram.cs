@@ -89,6 +89,10 @@ public static class MauiProgram
         builder.Services.AddTransient<OnboardingViewModel>();
         builder.Services.AddTransient<CardioPage>();
         builder.Services.AddTransient<CardioViewModel>();
+        builder.Services.AddTransient<PeriodizationPage>();
+        builder.Services.AddTransient<PeriodizationViewModel>();
+        builder.Services.AddTransient<CycleDetailPage>();
+        builder.Services.AddTransient<CycleDetailViewModel>();
         builder.Services.AddSingleton<AppShell>();
 
 #if DEBUG
