@@ -440,6 +440,7 @@ public static class AppResources
     public static string Library_Tab_Exercises              => Get(nameof(Library_Tab_Exercises));
     public static string Library_Tab_Templates              => Get(nameof(Library_Tab_Templates));
     public static string Library_Tab_Programs               => Get(nameof(Library_Tab_Programs));
+    public static string Library_Tab_Cycles                 => Get(nameof(Library_Tab_Cycles));
     public static string Library_SearchPlaceholder          => Get(nameof(Library_SearchPlaceholder));
     public static string Library_NoTemplates_Title          => Get(nameof(Library_NoTemplates_Title));
     public static string Library_NoTemplates_Body           => Get(nameof(Library_NoTemplates_Body));
@@ -472,6 +473,37 @@ public static class AppResources
     public static string Library_Equipment_FoamRoll         => Get(nameof(Library_Equipment_FoamRoll));
     public static string Library_Equipment_MedicineBall     => Get(nameof(Library_Equipment_MedicineBall));
     public static string Library_Equipment_Other            => Get(nameof(Library_Equipment_Other));
+
+    // ── Periodization ───────────────────────────────────────────────────
+    public static string Periodization_Title                => Get(nameof(Periodization_Title));
+    public static string Periodization_NoCycles_Title       => Get(nameof(Periodization_NoCycles_Title));
+    public static string Periodization_NoCycles_Body        => Get(nameof(Periodization_NoCycles_Body));
+    public static string Periodization_NewButton            => Get(nameof(Periodization_NewButton));
+    public static string Periodization_Active_Badge         => Get(nameof(Periodization_Active_Badge));
+    public static string Periodization_Weeks_Format         => Get(nameof(Periodization_Weeks_Format));
+    public static string Periodization_Week_Label_Format    => Get(nameof(Periodization_Week_Label_Format));
+
+    // ── CycleDetail ──────────────────────────────────────────────────────
+    public static string CycleDetail_Title_New              => Get(nameof(CycleDetail_Title_New));
+    public static string CycleDetail_Title_Edit             => Get(nameof(CycleDetail_Title_Edit));
+    public static string CycleDetail_Name_Placeholder       => Get(nameof(CycleDetail_Name_Placeholder));
+    public static string CycleDetail_WeekCount_Label        => Get(nameof(CycleDetail_WeekCount_Label));
+    public static string CycleDetail_Intensity_Label_Format => Get(nameof(CycleDetail_Intensity_Label_Format));
+    public static string CycleDetail_Save_Button            => Get(nameof(CycleDetail_Save_Button));
+    public static string CycleDetail_PickTemplate_Title     => Get(nameof(CycleDetail_PickTemplate_Title));
+    public static string CycleDetail_PickTemplate_Cancel    => Get(nameof(CycleDetail_PickTemplate_Cancel));
+    public static string CycleDetail_NoTemplate             => Get(nameof(CycleDetail_NoTemplate));
+    public static string CycleDetail_Delete_Title           => Get(nameof(CycleDetail_Delete_Title));
+    public static string CycleDetail_Delete_Body_Format     => Get(nameof(CycleDetail_Delete_Body_Format));
+
+    // ── Weekdays ─────────────────────────────────────────────────────────
+    public static string Day_0                              => Get(nameof(Day_0));
+    public static string Day_1                              => Get(nameof(Day_1));
+    public static string Day_2                              => Get(nameof(Day_2));
+    public static string Day_3                              => Get(nameof(Day_3));
+    public static string Day_4                              => Get(nameof(Day_4));
+    public static string Day_5                              => Get(nameof(Day_5));
+    public static string Day_6                              => Get(nameof(Day_6));
 
     // ── ProgramDetail ────────────────────────────────────────────────────
     public static string ProgramDetail_SectionDays          => Get(nameof(ProgramDetail_SectionDays));

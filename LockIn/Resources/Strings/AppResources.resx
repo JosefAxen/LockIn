@@ -878,4 +878,36 @@
   <data name="Settings_Reminders_Label_Prompt_Body" xml:space="preserve"><value>Kort namn för träningsdagen (t.ex. "Bendag") — lämna tomt för att ta bort</value></data>
   <data name="Settings_Section_Reminders" xml:space="preserve"><value>PÅMINNELSER</value></data>
 
+  <!-- Periodization — cycles tab and pages -->
+  <data name="Library_Tab_Cycles" xml:space="preserve"><value>Cykler</value></data>
+  <data name="Periodization_Title" xml:space="preserve"><value>Cykler</value></data>
+  <data name="Periodization_NoCycles_Title" xml:space="preserve"><value>Ingen cykel ännu</value></data>
+  <data name="Periodization_NoCycles_Body" xml:space="preserve"><value>Skapa din första mesocykel för att planera din träning vecka för vecka.</value></data>
+  <data name="Periodization_NewButton" xml:space="preserve"><value>Ny</value></data>
+  <data name="Periodization_Active_Badge" xml:space="preserve"><value>AKTIV</value></data>
+  <data name="Periodization_Weeks_Format" xml:space="preserve"><value>{0} VECKOR</value></data>
+  <data name="Periodization_Week_Label_Format" xml:space="preserve"><value>VECKA {0}</value></data>
+
+  <!-- CycleDetail — cycle edit/create pages -->
+  <data name="CycleDetail_Title_New" xml:space="preserve"><value>Ny cykel</value></data>
+  <data name="CycleDetail_Title_Edit" xml:space="preserve"><value>Redigera cykel</value></data>
+  <data name="CycleDetail_Name_Placeholder" xml:space="preserve"><value>Cykelnamn</value></data>
+  <data name="CycleDetail_WeekCount_Label" xml:space="preserve"><value>Antal veckor</value></data>
+  <data name="CycleDetail_Intensity_Label_Format" xml:space="preserve"><value>Intensitet {0}%</value></data>
+  <data name="CycleDetail_Save_Button" xml:space="preserve"><value>Spara</value></data>
+  <data name="CycleDetail_PickTemplate_Title" xml:space="preserve"><value>Välj mall</value></data>
+  <data name="CycleDetail_PickTemplate_Cancel" xml:space="preserve"><value>Avbryt</value></data>
+  <data name="CycleDetail_NoTemplate" xml:space="preserve"><value>Inget pass</value></data>
+  <data name="CycleDetail_Delete_Title" xml:space="preserve"><value>Ta bort cykel</value></data>
+  <data name="CycleDetail_Delete_Body_Format" xml:space="preserve"><value>Ta bort {0}?</value></data>
+
+  <!-- Weekdays (Day_0 through Day_6) — Monday to Sunday -->
+  <data name="Day_0" xml:space="preserve"><value>Måndag</value></data>
+  <data name="Day_1" xml:space="preserve"><value>Tisdag</value></data>
+  <data name="Day_2" xml:space="preserve"><value>Onsdag</value></data>
+  <data name="Day_3" xml:space="preserve"><value>Torsdag</value></data>
+  <data name="Day_4" xml:space="preserve"><value>Fredag</value></data>
+  <data name="Day_5" xml:space="preserve"><value>Lördag</value></data>
+  <data name="Day_6" xml:space="preserve"><value>Söndag</value></data>
+
 </root>

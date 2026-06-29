@@ -878,4 +878,36 @@
   <data name="Settings_Reminders_Label_Prompt_Body" xml:space="preserve"><value>Short name for this training day (e.g. "Leg day") — leave empty to remove</value></data>
   <data name="Settings_Section_Reminders" xml:space="preserve"><value>REMINDERS</value></data>
 
+  <!-- Periodization — cycles tab and pages -->
+  <data name="Library_Tab_Cycles" xml:space="preserve"><value>Cycles</value></data>
+  <data name="Periodization_Title" xml:space="preserve"><value>Cycles</value></data>
+  <data name="Periodization_NoCycles_Title" xml:space="preserve"><value>No cycles yet</value></data>
+  <data name="Periodization_NoCycles_Body" xml:space="preserve"><value>Create your first mesocycle to plan your training week by week.</value></data>
+  <data name="Periodization_NewButton" xml:space="preserve"><value>New</value></data>
+  <data name="Periodization_Active_Badge" xml:space="preserve"><value>ACTIVE</value></data>
+  <data name="Periodization_Weeks_Format" xml:space="preserve"><value>{0} WEEKS</value></data>
+  <data name="Periodization_Week_Label_Format" xml:space="preserve"><value>WEEK {0}</value></data>
+
+  <!-- CycleDetail — cycle edit/create pages -->
+  <data name="CycleDetail_Title_New" xml:space="preserve"><value>New cycle</value></data>
+  <data name="CycleDetail_Title_Edit" xml:space="preserve"><value>Edit cycle</value></data>
+  <data name="CycleDetail_Name_Placeholder" xml:space="preserve"><value>Cycle name</value></data>
+  <data name="CycleDetail_WeekCount_Label" xml:space="preserve"><value>Number of weeks</value></data>
+  <data name="CycleDetail_Intensity_Label_Format" xml:space="preserve"><value>Intensity {0}%</value></data>
+  <data name="CycleDetail_Save_Button" xml:space="preserve"><value>Save</value></data>
+  <data name="CycleDetail_PickTemplate_Title" xml:space="preserve"><value>Pick template</value></data>
+  <data name="CycleDetail_PickTemplate_Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="CycleDetail_NoTemplate" xml:space="preserve"><value>No session</value></data>
+  <data name="CycleDetail_Delete_Title" xml:space="preserve"><value>Delete cycle</value></data>
+  <data name="CycleDetail_Delete_Body_Format" xml:space="preserve"><value>Delete {0}?</value></data>
+
+  <!-- Weekdays (Day_0 through Day_6) — Monday to Sunday -->
+  <data name="Day_0" xml:space="preserve"><value>Monday</value></data>
+  <data name="Day_1" xml:space="preserve"><value>Tuesday</value></data>
+  <data name="Day_2" xml:space="preserve"><value>Wednesday</value></data>
+  <data name="Day_3" xml:space="preserve"><value>Thursday</value></data>
+  <data name="Day_4" xml:space="preserve"><value>Friday</value></data>
+  <data name="Day_5" xml:space="preserve"><value>Saturday</value></data>
+  <data name="Day_6" xml:space="preserve"><value>Sunday</value></data>
+
 </root>
