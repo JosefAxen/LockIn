@@ -624,13 +624,20 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
     public async Task CommitFinishAsync(string notes)
     {
         if (_session is null) return;
-        _session.CompletedAt = DateTime.Now;
-        _session.Notes = notes;
-        await db.SaveSessionAsync(_session);
-        await ApplyProgressionAsync();
-        _session = null;
-        notifications.CancelTimer();
-        ForceDeactivateCore();
+        WorkoutSession committed = _session;
+        try
+        {
+            committed.CompletedAt = DateTime.Now;
+            committed.Notes = notes;
+            await db.SaveSessionAsync(committed);
+            await ApplyProgressionAsync();
+        }
+        finally
+        {
+            _session = null;
+            notifications.CancelTimer();
+            ForceDeactivateCore();
+        }
     }
 
     public void ResumeFromPostWorkout()

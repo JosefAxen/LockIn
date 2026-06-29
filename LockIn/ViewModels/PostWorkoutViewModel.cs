@@ -50,9 +50,10 @@ public partial class PostWorkoutViewModel(
         var templates = await db.GetTemplatesAsync();
         TemplateName = templates.FirstOrDefault(t => t.Id == session.TemplateId)?.Name ?? "";
 
-        if (session.CompletedAt.HasValue)
         {
-            var elapsed = session.CompletedAt.Value - session.StartedAt;
+            var elapsed = session.CompletedAt.HasValue
+                ? session.CompletedAt.Value - session.StartedAt
+                : DateTime.Now - session.StartedAt;
             Duration = $"{(int)elapsed.TotalMinutes}m";
         }
 
@@ -110,16 +111,8 @@ public partial class PostWorkoutViewModel(
         // Check achievements
         await CheckAchievementsAsync(session, allSets);
 
-        // Sync to Apple Health if enabled
-        if (session.CompletedAt.HasValue &&
-            Preferences.Default.Get("healthkit_sync_enabled", false))
-        {
-            var durationMinutes = (session.CompletedAt.Value - session.StartedAt).TotalMinutes;
-            var activeKcal = durationMinutes * 6.0; // ~6 kcal/min for strength training
-            _ = health.SaveWorkoutAsync(session.StartedAt, session.CompletedAt.Value, activeKcal)
-                .ContinueWith(t => System.Diagnostics.Debug.WriteLine($"[HealthKit] Sync misslyckades: {t.Exception?.GetBaseException().Message}"),
-                              TaskContinuationOptions.OnlyOnFaulted);
-        }
+        // HealthKit-sync sker INTE här — CompletedAt är null tills CommitFinishAsync anropas.
+        // Synken sker i DoneAsync efter att CommitFinishAsync har körts.
 
         // Load photos
         await RefreshPhotosAsync();
@@ -255,6 +248,19 @@ public partial class PostWorkoutViewModel(
         if (_committed) return;
         _committed = true;
         await activeWorkout.CommitFinishAsync(Notes);
+
+        // Sync till Apple Health efter commit — CompletedAt är nu satt.
+        if (_loadedSession is not null &&
+            Preferences.Default.Get("healthkit_sync_enabled", false))
+        {
+            var completedAt = DateTime.Now;
+            var durationMinutes = (completedAt - _loadedSession.StartedAt).TotalMinutes;
+            var activeKcal = durationMinutes * 6.0; // ~6 kcal/min för styrketräning
+            _ = health.SaveWorkoutAsync(_loadedSession.StartedAt, completedAt, activeKcal)
+                .ContinueWith(t => System.Diagnostics.Debug.WriteLine($"[HealthKit] Sync misslyckades: {t.Exception?.GetBaseException().Message}"),
+                              TaskContinuationOptions.OnlyOnFaulted);
+        }
+
         await Shell.Current.Navigation.PopToRootAsync(false);
         await Shell.Current.GoToAsync("//TrainPage");
     }
