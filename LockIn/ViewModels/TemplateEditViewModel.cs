@@ -83,6 +83,18 @@ public partial class TemplateEditViewModel(DatabaseService db) : ObservableObjec
     }
 
     [RelayCommand]
+    private void ClearExercise(TemplateExerciseRow row)
+    {
+        row.SetsText = "3";
+        row.RepsText = "0";
+        row.WeightText = "";
+        row.ProgressionEnabled = false;
+        row.TargetRepsMinText = "";
+        row.TargetRepsMaxText = "";
+        row.WeightIncrementText = "2.5";
+    }
+
+    [RelayCommand]
     private async Task ChangeRestAsync(TemplateExerciseRow row)
     {
         var result = await Shell.Current.DisplayPromptAsync(

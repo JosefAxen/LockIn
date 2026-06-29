@@ -104,14 +104,25 @@
                             <Border Style="{StaticResource CardFrame}">
                                 <VerticalStackLayout Spacing="0">
 
-                                    <!-- Exercise name + remove -->
-                                    <Grid ColumnDefinitions="*,44" Padding="16,14,6,12">
+                                    <!-- Exercise name + clear + remove -->
+                                    <Grid ColumnDefinitions="*,Auto,44" Padding="16,14,6,12">
                                         <Label Grid.Column="0"
                                                Text="{Binding ExerciseName}"
                                                FontFamily="DMSansMedium"
                                                FontSize="15"
                                                VerticalOptions="Center"/>
                                         <Button Grid.Column="1"
+                                                Text="{loc:Localize TemplateEdit_ClearExercise}"
+                                                BackgroundColor="Transparent"
+                                                TextColor="{StaticResource ForgeMuted}"
+                                                FontFamily="BebasNeue"
+                                                FontSize="11"
+                                                CharacterSpacing="1"
+                                                HeightRequest="44"
+                                                Padding="6,0"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TemplateEditViewModel}}, Path=ClearExerciseCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                        <Button Grid.Column="2"
                                                 Text="×"
                                                 BackgroundColor="Transparent"
                                                 TextColor="{StaticResource ForgeMuted}"
