@@ -116,26 +116,39 @@ public class AtmosphericBackgroundView : SKCanvasView
         var bounds = new SKRect(0, 0, w, h);
         c.Clear(s_base);
 
-        using (var shader = SKShader.CreateRadialGradient(
-                   new SKPoint(w * 0.5f, h * 0.17f), w * 0.65f,
-                   [s_glow1Inner, SKColors.Transparent], [0f, 1f],
-                   SKShaderTileMode.Clamp))
-        using (var paint = new SKPaint { Shader = shader })
-            c.DrawRect(bounds, paint);
-
-        using (var shader = SKShader.CreateRadialGradient(
-                   new SKPoint(w * 0.5f, h * 0.12f), w * 0.3f,
-                   [s_glow2Inner, SKColors.Transparent], [0f, 1f],
-                   SKShaderTileMode.Clamp))
-        using (var paint = new SKPaint { Shader = shader })
-            c.DrawRect(bounds, paint);
+        // Mjuk diffus bloom — 5 överlappande gradienter med fyra stopp vardera
+        // för att undvika synliga ringar i ljuset.
+        DrawSoftGlow(c, bounds, w * 0.50f, h * 0.10f, w * 0.80f, s_glow1Inner, 0.11f);
+        DrawSoftGlow(c, bounds, w * 0.42f, h * 0.06f, w * 0.60f, s_glow1Inner, 0.08f);
+        DrawSoftGlow(c, bounds, w * 0.58f, h * 0.06f, w * 0.60f, s_glow1Inner, 0.08f);
+        DrawSoftGlow(c, bounds, w * 0.50f, h * 0.02f, w * 0.45f, s_glow2Inner, 0.10f);
+        DrawSoftGlow(c, bounds, w * 0.50f, 0f,        w * 0.30f, s_glow2Inner, 0.08f);
 
         using (var shader = SKShader.CreateRadialGradient(
                    new SKPoint(w * 0.5f, h * 0.45f), MathF.Max(w, h) * 0.75f,
-                   [SKColors.Transparent, s_vigOuter], [0.45f, 1f],
+                   [SKColors.Transparent, SKColors.Transparent, s_vigOuter],
+                   [0f, 0.6f, 1f],
                    SKShaderTileMode.Clamp))
         using (var paint = new SKPaint { Shader = shader })
             c.DrawRect(bounds, paint);
+    }
+
+    private static void DrawSoftGlow(SKCanvas c, SKRect bounds, float cx, float cy, float radius, SKColor color, float peakAlpha)
+    {
+        var colors = new[]
+        {
+            color.WithAlpha((byte)(peakAlpha * 255)),
+            color.WithAlpha((byte)(peakAlpha * 0.72f * 255)),
+            color.WithAlpha((byte)(peakAlpha * 0.38f * 255)),
+            color.WithAlpha((byte)(peakAlpha * 0.12f * 255)),
+            SKColors.Transparent,
+        };
+        using var shader = SKShader.CreateRadialGradient(
+            new SKPoint(cx, cy), radius, colors,
+            [0f, 0.25f, 0.5f, 0.75f, 1f],
+            SKShaderTileMode.Clamp);
+        using var paint = new SKPaint { Shader = shader };
+        c.DrawRect(bounds, paint);
     }
 
     // Ritar bara partiklarna (den enda delen som ändras varje frame).
@@ -151,15 +164,15 @@ public class AtmosphericBackgroundView : SKCanvasView
             float y = s.StartYrel * h - s.TravelYrel * h * t;
 
             float opacity;
-            if (t < 0.12f)      opacity = t / 0.12f;
-            else if (t > 0.80f) opacity = (1f - t) / 0.20f;
+            if (t < 0.15f)      opacity = t / 0.15f;
+            else if (t > 0.75f) opacity = (1f - t) / 0.25f;
             else                opacity = 1f;
-            opacity = MathF.Min(opacity, 1f) * 0.95f;
+            opacity = MathF.Min(opacity, 1f) * 0.90f;
 
-            float sizeMul = t < 0.15f
-                ? 0.5f + (t / 0.15f) * 0.5f
-                : 1.0f - (t - 0.15f) * 0.65f;
-            sizeMul = MathF.Max(0.3f, sizeMul);
+            float sizeMul = t < 0.20f
+                ? 0.4f + (t / 0.20f) * 0.6f
+                : 1.0f - (t - 0.20f) * 0.50f;
+            sizeMul = MathF.Max(0.4f, sizeMul);
             float size = s.SizePx * sizeMul;
 
             // Yttre halo: diffus glöd (separat paint med hårdare blur)
@@ -189,11 +202,11 @@ public class AtmosphericBackgroundView : SKCanvasView
             arr[i] = new Spark
             {
                 Xrel       = (float)((i + 0.5) / arr.Length + (rng.NextDouble() - 0.5) * 0.05),
-                StartYrel  = 0.38f + (float)rng.NextDouble() * 0.06f,
-                TravelYrel = 0.34f + (float)rng.NextDouble() * 0.08f,
-                DriftRel   = (float)(rng.NextDouble() - 0.5) * 0.05f,
-                SizePx     = (float)(rng.NextDouble() * 1.5 + 1.5),
-                Duration   = (float)(rng.NextDouble() * 1.6 + 4.2),
+                StartYrel  = 0.55f + (float)rng.NextDouble() * 0.08f,
+                TravelYrel = 0.58f + (float)rng.NextDouble() * 0.08f,
+                DriftRel   = (float)(rng.NextDouble() - 0.5) * 0.025f,
+                SizePx     = (float)(rng.NextDouble() * 2.2 + 2.0),
+                Duration   = (float)(rng.NextDouble() * 4.0 + 11.0),
                 Phase      = (float)rng.NextDouble(),
             };
         }

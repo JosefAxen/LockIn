@@ -97,7 +97,7 @@ public class AppDelegate : MauiUIApplicationDelegate
 	{
 		var bgColor = UIColor.FromDynamicProvider(t =>
 			t.UserInterfaceStyle == UIUserInterfaceStyle.Dark
-				? UIColor.FromRGB(0x0E, 0x0E, 0x10)
+				? UIColor.FromRGB(0x1E, 0x1E, 0x26)
 				: UIColor.FromRGB(0xFC, 0xFC, 0xFC));
 
 		// application.Windows is deprecated and empty in scene-based apps at

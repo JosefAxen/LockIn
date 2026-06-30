@@ -13,7 +13,7 @@ public static class DesignTokens
         Application.Current?.RequestedTheme != AppTheme.Light;
 
     // ─── Surfaces ────────────────────────────────────────────────────────────
-    public static Color Background  => Color.FromArgb(IsDark ? "#141418" : "#FCFCFC");
+    public static Color Background  => Color.FromArgb(IsDark ? "#1E1E26" : "#FCFCFC");
     public static Color Surface     => Color.FromArgb(IsDark ? "#161618" : "#FFFFFF");
     public static Color Surface2    => Color.FromArgb(IsDark ? "#222228" : "#EDEDED");
 
@@ -84,13 +84,13 @@ public static class DesignTokens
     public static readonly Color PrimaryForeground = Color.FromArgb("#FAFAFA");
 
     // ─── SkiaSharp surface / spark tokens ────────────────────────────────────
-    public static readonly SKColor SK_Background  = SKColor.Parse("#141418");
-    public static readonly SKColor SK_AccentGlow1 = SKColor.Parse("#28B8B8BC");
-    public static readonly SKColor SK_AccentGlow2 = SKColor.Parse("#1CB8B8BC");
-    public static readonly SKColor SK_Vignette    = SKColor.Parse("#22000000");
-    public static readonly SKColor SK_SparkCore   = SKColor.Parse("#FDE68A");
-    public static readonly SKColor SK_SparkMid    = SKColor.Parse("#FBBF24");
-    public static readonly SKColor SK_SparkOuter  = SKColor.Parse("#FB923C");
+    public static readonly SKColor SK_Background  = SKColor.Parse("#1E1E26");
+    public static readonly SKColor SK_AccentGlow1 = new SKColor(226, 232, 240, 28);  // cool silver-blue, diffus bloom
+    public static readonly SKColor SK_AccentGlow2 = new SKColor(255, 255, 255, 26);  // vit spotlight
+    public static readonly SKColor SK_Vignette    = SKColor.Parse("#38000000");
+    public static readonly SKColor SK_SparkCore   = SKColor.Parse("#F0F8FF");  // is-vit
+    public static readonly SKColor SK_SparkMid    = SKColor.Parse("#94A3B8");  // stålgrå
+    public static readonly SKColor SK_SparkOuter  = SKColor.Parse("#475569");  // mörk stål
 
     // ─── Icon tinting ────────────────────────────────────────────────────────
     public static Color IconTint => Color.FromArgb(IsDark ? "#C8C8D2" : "#3A3A44");
