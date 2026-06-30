@@ -38,13 +38,15 @@ public class AtmosphericBackgroundView : SKCanvasView
     private float _bgW;
     private float _bgH;
 
-    // ── Cached paint + blur filter (create once, reuse every frame) ────────────
-    // SKMaskFilter.CreateBlur ger äkta gaussian-glow, inte hårda cirklar.
+    // ── Cached paint objects (create once, reuse every frame) ────────────────
+    // Tre separata paint-objekt med fasta MaskFilter — undviker native
+    // state-ogiltigförklaring som annars sker 28 gånger per frame.
 
-    private static readonly SKMaskFilter s_glowBlur  = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 5f);
-    private static readonly SKMaskFilter s_haloBlur  = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 14f);
-    private readonly SKPaint _sparkPaint = new() { IsAntialias = true, BlendMode = SKBlendMode.Plus };
-    private readonly SKPaint _haloPaint  = new() { IsAntialias = true, BlendMode = SKBlendMode.Plus, MaskFilter = s_haloBlur };
+    private static readonly SKMaskFilter s_glowBlur = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 5f);
+    private static readonly SKMaskFilter s_haloBlur = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 14f);
+    private readonly SKPaint _haloP = new() { IsAntialias = true, BlendMode = SKBlendMode.Plus, MaskFilter = s_haloBlur };
+    private readonly SKPaint _midP  = new() { IsAntialias = true, BlendMode = SKBlendMode.Plus, MaskFilter = s_glowBlur };
+    private readonly SKPaint _coreP = new() { IsAntialias = true, BlendMode = SKBlendMode.Plus };
 
     // ── Animation state ──────────────────────────────────────────────────────
 
@@ -175,19 +177,14 @@ public class AtmosphericBackgroundView : SKCanvasView
             sizeMul = MathF.Max(0.4f, sizeMul);
             float size = s.SizePx * sizeMul;
 
-            // Yttre halo: diffus glöd (separat paint med hårdare blur)
-            _haloPaint.Color = s_outerColor.WithAlpha((byte)(opacity * 90));
-            canvas.DrawCircle(x, y, size * 5.0f, _haloPaint);
+            _haloP.Color = s_outerColor.WithAlpha((byte)(opacity * 90));
+            canvas.DrawCircle(x, y, size * 5.0f, _haloP);
 
-            // Mellanlager: amber, medium glow
-            _sparkPaint.MaskFilter = s_glowBlur;
-            _sparkPaint.Color = s_midColor.WithAlpha((byte)(opacity * 180));
-            canvas.DrawCircle(x, y, size * 2.2f, _sparkPaint);
+            _midP.Color = s_midColor.WithAlpha((byte)(opacity * 180));
+            canvas.DrawCircle(x, y, size * 2.2f, _midP);
 
-            // Ljus kärna: skarp, varm gul — ingen blur
-            _sparkPaint.MaskFilter = null;
-            _sparkPaint.Color = s_coreColor.WithAlpha((byte)(opacity * 255));
-            canvas.DrawCircle(x, y, size * 0.9f, _sparkPaint);
+            _coreP.Color = s_coreColor.WithAlpha((byte)(opacity * 255));
+            canvas.DrawCircle(x, y, size * 0.9f, _coreP);
         }
     }
 
