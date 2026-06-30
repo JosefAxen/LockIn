@@ -32,7 +32,7 @@ public class AtmosphericBackgroundView : SKCanvasView
     private static readonly SKColor s_outerColor = DesignTokens.SK_SparkOuter;
 
     // ── Pre-baked static background (gradients + vignette) ──────────────────
-    // Skapas en gång när storleken är känd. Partiklarna ritas ovanpå varje frame.
+    // Skapas en gång när storleken är känd och återanvänds under pause/resume.
 
     private SKBitmap? _bgBitmap;
     private float _bgW;
@@ -54,39 +54,82 @@ public class AtmosphericBackgroundView : SKCanvasView
     private readonly DateTime _start = DateTime.Now;
     private bool _reduceMotion;
 
+    // ── Page lifecycle tracking ───────────────────────────────────────────────
+    // Prenumererar på föräldrasidans Appearing/Disappearing för att pausa timern
+    // vid tabväxling — annars körs alla 5 tab-bakgrunder simultant.
+
+    private Page? _parentPage;
+
     // ── Lifecycle ────────────────────────────────────────────────────────────
 
     public AtmosphericBackgroundView()
     {
         EnableTouchEvents = false;
-        Loaded   += (_, _) => StartTimer();
-        Unloaded += (_, _) => StopTimer();
+        Loaded   += OnLoaded;
+        Unloaded += OnUnloaded;
     }
 
-    private void StartTimer()
+    private void OnLoaded(object sender, EventArgs e)
     {
 #if IOS
         _reduceMotion = UIKit.UIAccessibility.IsReduceMotionEnabled;
 #endif
         if (_reduceMotion)
         {
-            InvalidateSurface(); // statisk bakgrund, inga partiklar
+            InvalidateSurface();
             return;
         }
+
+        _parentPage = FindParentPage();
+        if (_parentPage is not null)
+        {
+            _parentPage.Appearing    += OnPageAppearing;
+            _parentPage.Disappearing += OnPageDisappearing;
+        }
+        // Timer startas via OnPageAppearing (Shell anropar Appearing
+        // strax efter Loaded för den aktiva sidan, och vid varje tabväxling).
+    }
+
+    private void OnUnloaded(object sender, EventArgs e)
+    {
+        if (_parentPage is not null)
+        {
+            _parentPage.Appearing    -= OnPageAppearing;
+            _parentPage.Disappearing -= OnPageDisappearing;
+            _parentPage = null;
+        }
+        DisposeResources();
+    }
+
+    private void OnPageAppearing(object sender, EventArgs e)
+    {
         if (_timer is null)
         {
             _timer = Dispatcher.CreateTimer();
-            _timer.Interval = TimeSpan.FromMilliseconds(33); // 30fps
+            _timer.Interval = TimeSpan.FromMilliseconds(33); // 30 fps
             _timer.Tick += (_, _) => InvalidateSurface();
         }
         _timer.Start();
     }
 
-    private void StopTimer()
+    private void OnPageDisappearing(object sender, EventArgs e) => _timer?.Stop();
+
+    private void DisposeResources()
     {
         _timer?.Stop();
         _bgBitmap?.Dispose();
         _bgBitmap = null;
+    }
+
+    private Page? FindParentPage()
+    {
+        Element? el = this;
+        while (el is not null)
+        {
+            el = el.Parent;
+            if (el is Page p) return p;
+        }
+        return null;
     }
 
     // ── Paint ────────────────────────────────────────────────────────────────
