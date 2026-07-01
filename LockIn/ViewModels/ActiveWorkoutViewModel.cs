@@ -10,10 +10,11 @@ using System.Globalization;
 
 namespace LockIn.ViewModels;
 
-public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, RestTimerService timer, ISoundService sound, ActiveWorkoutStateService state, NotificationService notifications, IWeightProgressionService weightProgression)
+public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, RestTimerService timer, ISoundService sound, ActiveWorkoutStateService state, NotificationService notifications, IWeightProgressionService weightProgression, ICycleContextService cycleContext)
     : ObservableObject, IQueryAttributable
 {
     private WorkoutSession? _session;
+    private CycleContext? _activeCycle;
     private WorkoutExerciseSection? _activeTimerSection;
     private WorkoutExerciseSection? _currentTimerSection;
     private DateTime _startTime;
@@ -29,6 +30,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
     [ObservableProperty] private bool _hasAutoProgress;
     [ObservableProperty] private string _autoProgressMessage = "";
     [ObservableProperty] private bool _showRirHint;
+    [ObservableProperty] private bool _isDeloadWeek;
 
     public event EventHandler? PRScored;
     public event EventHandler<int>? ScrollToSectionRequested;
@@ -63,6 +65,9 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             var settings = await db.GetAppSettingsAsync();
             ShowRirHint = !settings.HasSeenRirHint;
 
+            _activeCycle = await cycleContext.GetCurrentAsync();
+            IsDeloadWeek = _activeCycle?.IsDeloadWeek ?? false;
+
             if (templateId != 0)
             {
                 var templates = await db.GetTemplatesAsync();
@@ -72,7 +77,12 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
 
             // Skapa sessionen EFTER att övningar laddats, för att undvika orphan sessions
             // vid avbrutet pass (t.ex. Back-gesture innan SessionExercises skapas)
-            _session = new WorkoutSession { TemplateId = templateId, StartedAt = DateTime.Now };
+            _session = new WorkoutSession
+            {
+                TemplateId  = templateId,
+                StartedAt   = DateTime.Now,
+                CycleWeekId = _activeCycle?.CurrentWeek.Id,
+            };
             await db.SaveSessionAsync(_session);
             _startTime = _session.StartedAt;
 
@@ -143,6 +153,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             AutoProgressMode = autoProgressMode,
             SupersetGroupId = supersetGroupId,
             MuscleGroup = exercise.MuscleGroup,
+            TargetRir = _activeCycle?.TargetRir ?? -1,
         };
 
         var prevSets = await db.GetLastSessionSetsAsync(exercise.Id, _session!.Id);
@@ -199,7 +210,8 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
                 RepsText = "",
                 PrevWeightHint = weightHint,
                 PrevRepsHint = repsHint,
-                TargetReps = reps
+                TargetReps = reps,
+                TargetRir = _activeCycle?.TargetRir ?? -1,
             });
         }
 

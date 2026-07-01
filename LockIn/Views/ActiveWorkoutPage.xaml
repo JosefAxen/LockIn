@@ -162,6 +162,20 @@
                     </Grid>
                 </Border>
 
+                <!-- Deload-banner (aktiv cykel i sin sista vecka) -->
+                <Border IsVisible="{Binding IsDeloadWeek}"
+                        BackgroundColor="{StaticResource ForgeAccentBlueDim}"
+                        StrokeThickness="1"
+                        Stroke="{StaticResource ForgeAccentBlue}"
+                        StrokeShape="RoundRectangle 12"
+                        Padding="14,10">
+                    <Label Text="{loc:Localize ActiveWorkout_DeloadBanner_Text}"
+                           FontFamily="BebasNeue" FontSize="16"
+                           CharacterSpacing="2"
+                           TextColor="{StaticResource ForgeAccentBlue}"
+                           HorizontalOptions="Center"/>
+                </Border>
+
                 <!-- RIR-hint (första gången i appen) -->
                 <Border IsVisible="{Binding ShowRirHint}"
                         BackgroundColor="{StaticResource ForgeSurface2}"
@@ -233,6 +247,10 @@
                                                    FontFamily="DMSansRegular" FontSize="11"
                                                    TextColor="{StaticResource ForgeAccent}"
                                                    LineBreakMode="WordWrap"/>
+                                            <Label Text="{Binding TargetRirDisplay}"
+                                                   IsVisible="{Binding HasTargetRir}"
+                                                   FontFamily="DMSansMedium" FontSize="11"
+                                                   TextColor="{StaticResource ForgeAccentBlue}"/>
                                         </VerticalStackLayout>
 
                                         <!-- Info button � only visible when description exists -->

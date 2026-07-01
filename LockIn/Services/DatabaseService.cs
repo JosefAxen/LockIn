@@ -40,6 +40,7 @@ public class DatabaseService
         await _db.CreateTableAsync<TrainingCycle>();
         await _db.CreateTableAsync<CycleWeek>();
         await _db.CreateTableAsync<CycleSession>();
+        await _db.CreateTableAsync<MuscleVolumeLandmarks>();
 
         try { await _db.ExecuteAsync("ALTER TABLE WorkoutTemplates ADD COLUMN ProgramId TEXT NULL"); }
         catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
@@ -127,11 +128,59 @@ public class DatabaseService
         try { await _db.ExecuteAsync("ALTER TABLE AppSettings ADD COLUMN HasSeenRirHint INTEGER NOT NULL DEFAULT 0"); }
         catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
 
+        // Fas 8: WorkoutSession-koppling till aktiv cykel-vecka
+        try { await _db.ExecuteAsync("ALTER TABLE WorkoutSessions ADD COLUMN CycleWeekId INTEGER NULL"); }
+        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
+
+        // Fas 9: Meso Builder onboarding-flagga
+        try { await _db.ExecuteAsync("ALTER TABLE AppSettings ADD COLUMN HasSeenMesoBuilderTip INTEGER NOT NULL DEFAULT 0"); }
+        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
+
         await SeedAsync();
         await SeedExerciseDescriptionsAsync();
         await SeedForearmExercisesAsync();
         await SeedExerciseDbAsync();
         await SeedSwedishNamesAsync();
+        await SeedMuscleVolumeLandmarksAsync();
+    }
+
+    // Illustrativa RP-defaultvärden (docs/research avsnitt 2) — användaren kan justera per muskelgrupp
+    private async Task SeedMuscleVolumeLandmarksAsync()
+    {
+        var count = await _db.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM MuscleVolumeLandmarks");
+        if (count > 0) return;
+
+        var defaults = new (MuscleGroup Group, int Mev, int Mrv)[]
+        {
+            (MuscleGroup.Chest,     10, 20),
+            (MuscleGroup.Back,      12, 22),
+            (MuscleGroup.Shoulders, 10, 20),
+            (MuscleGroup.Biceps,     8, 17),
+            (MuscleGroup.Triceps,    8, 17),
+            (MuscleGroup.Legs,      10, 20),
+            (MuscleGroup.Core,       8, 18),
+            (MuscleGroup.Forearms,   6, 14),
+        };
+        foreach (var (g, mev, mrv) in defaults)
+            await _db.InsertAsync(new MuscleVolumeLandmarks { MuscleGroup = g, MEV = mev, MRV = mrv });
+    }
+
+    public async Task<List<MuscleVolumeLandmarks>> GetMuscleVolumeLandmarksAsync()
+    {
+        await InitAsync();
+        return await _db.Table<MuscleVolumeLandmarks>().ToListAsync();
+    }
+
+    public async Task SaveMuscleVolumeLandmarksAsync(MuscleVolumeLandmarks landmarks)
+    {
+        await InitAsync();
+        var existing = await _db.Table<MuscleVolumeLandmarks>()
+            .Where(l => l.MuscleGroupValue == landmarks.MuscleGroupValue)
+            .FirstOrDefaultAsync();
+        if (existing is null)
+            await _db.InsertAsync(landmarks);
+        else
+            await _db.UpdateAsync(landmarks);
     }
 
     private async Task SeedExerciseDescriptionsAsync()

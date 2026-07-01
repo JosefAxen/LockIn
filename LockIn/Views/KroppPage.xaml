@@ -135,6 +135,28 @@
                         </Grid>
                     </Border>
 
+                    <!-- Volym denna vecka — RP-genväg som alltid är synlig -->
+                    <Border Style="{StaticResource CardFrame}" Padding="16,14">
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                            <Border Grid.Column="0" BackgroundColor="{StaticResource ForgeAccentDim}"
+                                    StrokeShape="RoundRectangle 10" StrokeThickness="0"
+                                    WidthRequest="38" HeightRequest="38" VerticalOptions="Center">
+                                <views:AppIcon Source="ic_barbell.png" WidthRequest="20" HeightRequest="20"
+                                             HorizontalOptions="Center" VerticalOptions="Center"/>
+                            </Border>
+                            <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                <Label Text="{loc:Localize Kropp_WeeklyVolume_Label}"
+                                       FontFamily="DMSansMedium" FontSize="15"/>
+                                <Label Text="{loc:Localize Kropp_WeeklyVolume_Sub}"
+                                       Style="{StaticResource MutedLabel}"/>
+                            </StackLayout>
+                            <Path Grid.Column="2" Style="{StaticResource ForwardChevron}"/>
+                        </Grid>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnWeeklyVolumeTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
                     <!-- = VIKT TAB = -->
                     <VerticalStackLayout IsVisible="{Binding IsViktTab}" Spacing="14">
 

@@ -352,6 +352,48 @@ public static class AppResources
     public static string ActiveWorkout_AutoProgress_WeightUp_Format  => Get(nameof(ActiveWorkout_AutoProgress_WeightUp_Format));
     public static string ActiveWorkout_AutoProgress_RepsUp_Format    => Get(nameof(ActiveWorkout_AutoProgress_RepsUp_Format));
 
+    // ── RP MuscleVolumePage ─────────────────────────────────────────────
+    public static string MuscleVolume_Title                          => Get(nameof(MuscleVolume_Title));
+    public static string MuscleVolume_Explainer_Header               => Get(nameof(MuscleVolume_Explainer_Header));
+    public static string MuscleVolume_Explainer_Body                 => Get(nameof(MuscleVolume_Explainer_Body));
+    public static string MuscleVolume_Col_Muscle                     => Get(nameof(MuscleVolume_Col_Muscle));
+    public static string MuscleVolume_Col_Mev                        => Get(nameof(MuscleVolume_Col_Mev));
+    public static string MuscleVolume_Col_Mrv                        => Get(nameof(MuscleVolume_Col_Mrv));
+    public static string MuscleVolume_Saved_Toast                    => Get(nameof(MuscleVolume_Saved_Toast));
+    public static string Settings_MuscleVolume_Label                 => Get(nameof(Settings_MuscleVolume_Label));
+    public static string Settings_MuscleVolume_Sub                   => Get(nameof(Settings_MuscleVolume_Sub));
+
+    // ── RP WeeklyVolumePage ─────────────────────────────────────────────
+    public static string WeeklyVolume_Title                          => Get(nameof(WeeklyVolume_Title));
+    public static string WeeklyVolume_Explainer                      => Get(nameof(WeeklyVolume_Explainer));
+    public static string WeeklyVolume_Range_Format                   => Get(nameof(WeeklyVolume_Range_Format));
+    public static string WeeklyVolume_Zone_UnderMEV                  => Get(nameof(WeeklyVolume_Zone_UnderMEV));
+    public static string WeeklyVolume_Zone_InMAV                     => Get(nameof(WeeklyVolume_Zone_InMAV));
+    public static string WeeklyVolume_Zone_NearMRV                   => Get(nameof(WeeklyVolume_Zone_NearMRV));
+    public static string WeeklyVolume_Zone_OverMRV                   => Get(nameof(WeeklyVolume_Zone_OverMRV));
+    public static string Kropp_WeeklyVolume_Label                    => Get(nameof(Kropp_WeeklyVolume_Label));
+    public static string Kropp_WeeklyVolume_Sub                      => Get(nameof(Kropp_WeeklyVolume_Sub));
+
+    // ── RP MesoBuilder ──────────────────────────────────────────────────
+    public static string MesoBuilder_Title                           => Get(nameof(MesoBuilder_Title));
+    public static string MesoBuilder_Explainer_Header                => Get(nameof(MesoBuilder_Explainer_Header));
+    public static string MesoBuilder_Explainer_Body                  => Get(nameof(MesoBuilder_Explainer_Body));
+    public static string MesoBuilder_Name_Label                      => Get(nameof(MesoBuilder_Name_Label));
+    public static string MesoBuilder_Name_Placeholder                => Get(nameof(MesoBuilder_Name_Placeholder));
+    public static string MesoBuilder_WeekCount_Label                 => Get(nameof(MesoBuilder_WeekCount_Label));
+    public static string MesoBuilder_Weeks_Suffix                    => Get(nameof(MesoBuilder_Weeks_Suffix));
+    public static string MesoBuilder_WeekCount_Hint                  => Get(nameof(MesoBuilder_WeekCount_Hint));
+    public static string MesoBuilder_StartDate_Label                 => Get(nameof(MesoBuilder_StartDate_Label));
+    public static string MesoBuilder_Build_Button                    => Get(nameof(MesoBuilder_Build_Button));
+    public static string MesoBuilder_Error_NameRequired              => Get(nameof(MesoBuilder_Error_NameRequired));
+    public static string MesoBuilder_Success_Toast                   => Get(nameof(MesoBuilder_Success_Toast));
+    public static string MesoBuilder_Week_Accum                      => Get(nameof(MesoBuilder_Week_Accum));
+    public static string MesoBuilder_Week_Deload                     => Get(nameof(MesoBuilder_Week_Deload));
+    public static string Periodization_MesoBuilder_Button            => Get(nameof(Periodization_MesoBuilder_Button));
+
+    // ── RP RIR-mål per cykel-vecka ─────────────────────────────────────
+    public static string LoggedSet_TargetRir_Format                  => Get(nameof(LoggedSet_TargetRir_Format));
+
     // ── RP RIR-hint ─────────────────────────────────────────────────────
     public static string Rir_Hint_Text                               => Get(nameof(Rir_Hint_Text));
     public static string Rir_Hint_Dismiss                            => Get(nameof(Rir_Hint_Dismiss));
@@ -379,6 +421,10 @@ public static class AppResources
     public static string CoachChip_VolumeDown_Text_Format            => Get(nameof(CoachChip_VolumeDown_Text_Format));
     public static string CoachChip_VolumeDown_Header_Format          => Get(nameof(CoachChip_VolumeDown_Header_Format));
     public static string CoachChip_VolumeDown_Body_Format            => Get(nameof(CoachChip_VolumeDown_Body_Format));
+    public static string CoachChip_DeloadCycle_Text                  => Get(nameof(CoachChip_DeloadCycle_Text));
+    public static string CoachChip_DeloadCycle_Header                => Get(nameof(CoachChip_DeloadCycle_Header));
+    public static string CoachChip_DeloadCycle_Body                  => Get(nameof(CoachChip_DeloadCycle_Body));
+    public static string ActiveWorkout_DeloadBanner_Text             => Get(nameof(ActiveWorkout_DeloadBanner_Text));
     public static string ActiveWorkout_FinishConfirm_Title           => Get(nameof(ActiveWorkout_FinishConfirm_Title));
     public static string ActiveWorkout_FinishConfirm_Body            => Get(nameof(ActiveWorkout_FinishConfirm_Body));
     public static string ActiveWorkout_FinishConfirm_Yes             => Get(nameof(ActiveWorkout_FinishConfirm_Yes));

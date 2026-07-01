@@ -452,6 +452,28 @@
                     </Border.GestureRecognizers>
                 </Border>
 
+                <!-- Volyminställningar (MEV / MRV per muskelgrupp) -->
+                <Border Style="{StaticResource CardFrame}" Padding="16,14">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                        <Border Grid.Column="0" BackgroundColor="{StaticResource ForgeAccentDim}"
+                                StrokeShape="RoundRectangle 10" StrokeThickness="0"
+                                WidthRequest="38" HeightRequest="38" VerticalOptions="Center">
+                            <views:AppIcon Source="ic_barbell.png" WidthRequest="20" HeightRequest="20"
+                                         HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Border>
+                        <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                            <Label Text="{loc:Localize Settings_MuscleVolume_Label}"
+                                   FontFamily="DMSansMedium" FontSize="15"/>
+                            <Label Text="{loc:Localize Settings_MuscleVolume_Sub}"
+                                   Style="{StaticResource MutedLabel}"/>
+                        </StackLayout>
+                        <Path Grid.Column="2" Style="{StaticResource ForwardChevron}"/>
+                    </Grid>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnMuscleVolumeTapped"/>
+                    </Border.GestureRecognizers>
+                </Border>
+
                 <!-- Danger zone -->
                 <Label Text="{loc:Localize Settings_Section_Data}" Style="{StaticResource SectionLabel}" Margin="4,8,4,0"/>
                 <Border Style="{StaticResource CardFrame}" Padding="16,14">

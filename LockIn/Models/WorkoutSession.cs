@@ -21,4 +21,7 @@ public class WorkoutSession
     public int? SorenessRating { get; set; }
 
     public int? PerformanceRating { get; set; }
+
+    // Koppling till aktiv cykel-vecka (null = fritt pass utan cykel)
+    public int? CycleWeekId { get; set; }
 }

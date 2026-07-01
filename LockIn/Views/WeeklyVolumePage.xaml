@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:LockIn.ViewModels"
+             xmlns:views="clr-namespace:LockIn.Views"
+             xmlns:controls="clr-namespace:LockIn.Controls"
+             xmlns:loc="clr-namespace:LockIn.Resources.Strings"
+             x:Class="LockIn.Views.WeeklyVolumePage"
+             x:DataType="vm:WeeklyVolumeViewModel"
+             xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="Transparent">
+
+    <Grid RowDefinitions="Auto,*" SafeAreaEdges="None">
+
+        <!-- Atmosfärisk bakgrund -->
+        <controls:AtmosphericBackgroundView Grid.RowSpan="2" InputTransparent="True"/>
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Padding="16,56,16,8" ColumnDefinitions="Auto,*">
+            <Border Grid.Column="0"
+                    WidthRequest="36" HeightRequest="36"
+                    StrokeShape="Ellipse"
+                    BackgroundColor="{AppThemeBinding Light=#1A000000, Dark=#17FFFFFF}"
+                    Stroke="{AppThemeBinding Light=#0D000000, Dark=#29FFFFFF}"
+                    StrokeThickness="0.5"
+                    VerticalOptions="Center">
+                <Path Style="{StaticResource BackChevron}"/>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnBackTapped"/>
+                </Border.GestureRecognizers>
+            </Border>
+            <Label Grid.Column="1"
+                   Text="{loc:Localize WeeklyVolume_Title}"
+                   Style="{StaticResource DisplayLabel}"
+                   FontSize="24"
+                   HorizontalOptions="Center" VerticalOptions="Center"/>
+        </Grid>
+
+        <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Never">
+            <VerticalStackLayout Padding="16,4,16,48" Spacing="12">
+
+                <!-- Förklaring -->
+                <Border Style="{StaticResource CardFrame}" Padding="18,14">
+                    <Label Text="{loc:Localize WeeklyVolume_Explainer}"
+                           FontFamily="DMSansRegular" FontSize="13"
+                           TextColor="{StaticResource ForgeMuted}"
+                           LineBreakMode="WordWrap"/>
+                </Border>
+
+                <!-- Muskel-rader -->
+                <StackLayout BindableLayout.ItemsSource="{Binding Rows}" Spacing="10">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="vm:WeeklyVolumeRow">
+                            <Border Style="{StaticResource CardFrame}" Padding="18,14">
+                                <VerticalStackLayout Spacing="8">
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                        <Label Grid.Column="0" Text="{Binding DisplayName}"
+                                               FontFamily="DMSansMedium" FontSize="15"
+                                               TextColor="{StaticResource ForgeText}"
+                                               VerticalOptions="Center"/>
+                                        <Label Grid.Column="1" Text="{Binding SetsText}"
+                                               FontFamily="BebasNeue" FontSize="22"
+                                               TextColor="{Binding ZoneColor}"
+                                               VerticalOptions="Center"/>
+                                    </Grid>
+                                    <Grid HeightRequest="6">
+                                        <Border BackgroundColor="{StaticResource ForgeSurface2}"
+                                                StrokeShape="RoundRectangle 3"
+                                                StrokeThickness="0"/>
+                                        <ProgressBar Progress="{Binding ProgressFraction}"
+                                                     ProgressColor="{Binding ZoneColor}"
+                                                     HeightRequest="6"
+                                                     BackgroundColor="Transparent"/>
+                                    </Grid>
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <Label Grid.Column="0" Text="{Binding RangeText}"
+                                               Style="{StaticResource MutedLabel}" FontSize="11"/>
+                                        <Label Grid.Column="1" Text="{Binding ZoneLabel}"
+                                               FontFamily="DMSansMedium" FontSize="11"
+                                               TextColor="{Binding ZoneColor}"/>
+                                    </Grid>
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </StackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </Grid>
+
+</ContentPage>

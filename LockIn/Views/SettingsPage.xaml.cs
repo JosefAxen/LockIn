@@ -36,6 +36,9 @@ public partial class SettingsPage : ContentPage
     private async void OnBackClicked(object sender, EventArgs e)
         => await Shell.Current.GoToAsync("..");
 
+    private async void OnMuscleVolumeTapped(object sender, TappedEventArgs e)
+        => await Shell.Current.GoToAsync(nameof(MuscleVolumePage));
+
     private static async void OnBackPointerPressed(object? sender, PointerEventArgs e)
     {
         if (sender is PointerGestureRecognizer pgr && pgr.Parent is VisualElement ve)

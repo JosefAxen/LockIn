@@ -18,6 +18,9 @@ public partial class KroppPage : ContentPage
         _state = state;
     }
 
+    private async void OnWeeklyVolumeTapped(object? sender, EventArgs e)
+        => await Shell.Current.GoToAsync(nameof(WeeklyVolumePage));
+
     protected override async void OnAppearing()
     {
         base.OnAppearing();

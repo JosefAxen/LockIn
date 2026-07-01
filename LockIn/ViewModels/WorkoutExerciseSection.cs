@@ -16,6 +16,11 @@ public partial class WorkoutExerciseSection : ObservableObject
     public bool HasPrevSession => !string.IsNullOrEmpty(PrevSessionSummary);
     public string WeightSuggestionReason { get; set; } = "";
     public bool HasWeightSuggestionReason => !string.IsNullOrEmpty(WeightSuggestionReason);
+    public int TargetRir { get; set; } = -1;
+    public bool HasTargetRir => TargetRir >= 0;
+    public string TargetRirDisplay => TargetRir >= 0
+        ? string.Format(Resources.Strings.AppResources.LoggedSet_TargetRir_Format, TargetRir)
+        : "";
     public int DefaultRestSeconds { get; set; }
     public int TargetReps { get; set; } = 0;
     public int TargetRepsMin { get; set; } = 0;

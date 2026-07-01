@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:LockIn.ViewModels"
+             xmlns:views="clr-namespace:LockIn.Views"
+             xmlns:controls="clr-namespace:LockIn.Controls"
+             xmlns:loc="clr-namespace:LockIn.Resources.Strings"
+             x:Class="LockIn.Views.MesoBuilderPage"
+             x:DataType="vm:MesoBuilderViewModel"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="Transparent">
+
+    <Grid RowDefinitions="Auto,*" SafeAreaEdges="None">
+
+        <controls:AtmosphericBackgroundView Grid.RowSpan="2" InputTransparent="True"/>
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Padding="16,56,16,8" ColumnDefinitions="Auto,*">
+            <Border Grid.Column="0"
+                    WidthRequest="36" HeightRequest="36"
+                    StrokeShape="Ellipse"
+                    BackgroundColor="{AppThemeBinding Light=#1A000000, Dark=#17FFFFFF}"
+                    Stroke="{AppThemeBinding Light=#0D000000, Dark=#29FFFFFF}"
+                    StrokeThickness="0.5"
+                    VerticalOptions="Center">
+                <Path Style="{StaticResource BackChevron}"/>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnBackTapped"/>
+                </Border.GestureRecognizers>
+            </Border>
+            <Label Grid.Column="1"
+                   Text="{loc:Localize MesoBuilder_Title}"
+                   Style="{StaticResource DisplayLabel}"
+                   FontSize="24"
+                   HorizontalOptions="Center" VerticalOptions="Center"/>
+        </Grid>
+
+        <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Never">
+            <VerticalStackLayout Padding="16,4,16,48" Spacing="14">
+
+                <!-- Förklaring -->
+                <Border Style="{StaticResource CardFrame}" Padding="18,16">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="{loc:Localize MesoBuilder_Explainer_Header}"
+                               FontFamily="DMSansMedium" FontSize="14"
+                               TextColor="{StaticResource ForgeText}"/>
+                        <Label Text="{loc:Localize MesoBuilder_Explainer_Body}"
+                               FontFamily="DMSansRegular" FontSize="13"
+                               TextColor="{StaticResource ForgeMuted}"
+                               LineBreakMode="WordWrap"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Cykelnamn -->
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="{loc:Localize MesoBuilder_Name_Label}" Style="{StaticResource SectionLabel}"/>
+                    <Border Style="{StaticResource CardFrame}" Padding="14,6">
+                        <Entry Text="{Binding CycleName}"
+                               Placeholder="{loc:Localize MesoBuilder_Name_Placeholder}"
+                               PlaceholderColor="{StaticResource ForgeMuted}"
+                               BackgroundColor="Transparent"
+                               TextColor="{StaticResource ForgeText}"
+                               FontFamily="DMSansRegular" FontSize="15"/>
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Cykel-längd -->
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="{loc:Localize MesoBuilder_WeekCount_Label}" Style="{StaticResource SectionLabel}"/>
+                    <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="8">
+                        <Border Grid.Column="0" StrokeShape="RoundRectangle 10" StrokeThickness="1"
+                                Stroke="{StaticResource ForgeSurface3}" BackgroundColor="{StaticResource ForgeSurface2}" HeightRequest="52">
+                            <Border.Triggers>
+                                <DataTrigger TargetType="Border" Binding="{Binding IsWeek4Selected}" Value="True">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccent}"/>
+                                </DataTrigger>
+                            </Border.Triggers>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SelectWeekCountCommand}" CommandParameter="4"/>
+                            </Border.GestureRecognizers>
+                            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="0">
+                                <Label Text="4" FontFamily="BebasNeue" FontSize="22" TextColor="{StaticResource ForgeText}" HorizontalOptions="Center"/>
+                                <Label Text="{loc:Localize MesoBuilder_Weeks_Suffix}" FontFamily="DMSansRegular" FontSize="10" TextColor="{StaticResource ForgeMuted}" HorizontalOptions="Center"/>
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Column="1" StrokeShape="RoundRectangle 10" StrokeThickness="1"
+                                Stroke="{StaticResource ForgeSurface3}" BackgroundColor="{StaticResource ForgeSurface2}" HeightRequest="52">
+                            <Border.Triggers>
+                                <DataTrigger TargetType="Border" Binding="{Binding IsWeek5Selected}" Value="True">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccent}"/>
+                                </DataTrigger>
+                            </Border.Triggers>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SelectWeekCountCommand}" CommandParameter="5"/>
+                            </Border.GestureRecognizers>
+                            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="0">
+                                <Label Text="5" FontFamily="BebasNeue" FontSize="22" TextColor="{StaticResource ForgeText}" HorizontalOptions="Center"/>
+                                <Label Text="{loc:Localize MesoBuilder_Weeks_Suffix}" FontFamily="DMSansRegular" FontSize="10" TextColor="{StaticResource ForgeMuted}" HorizontalOptions="Center"/>
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Column="2" StrokeShape="RoundRectangle 10" StrokeThickness="1"
+                                Stroke="{StaticResource ForgeSurface3}" BackgroundColor="{StaticResource ForgeSurface2}" HeightRequest="52">
+                            <Border.Triggers>
+                                <DataTrigger TargetType="Border" Binding="{Binding IsWeek6Selected}" Value="True">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccent}"/>
+                                </DataTrigger>
+                            </Border.Triggers>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SelectWeekCountCommand}" CommandParameter="6"/>
+                            </Border.GestureRecognizers>
+                            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="0">
+                                <Label Text="6" FontFamily="BebasNeue" FontSize="22" TextColor="{StaticResource ForgeText}" HorizontalOptions="Center"/>
+                                <Label Text="{loc:Localize MesoBuilder_Weeks_Suffix}" FontFamily="DMSansRegular" FontSize="10" TextColor="{StaticResource ForgeMuted}" HorizontalOptions="Center"/>
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Column="3" StrokeShape="RoundRectangle 10" StrokeThickness="1"
+                                Stroke="{StaticResource ForgeSurface3}" BackgroundColor="{StaticResource ForgeSurface2}" HeightRequest="52">
+                            <Border.Triggers>
+                                <DataTrigger TargetType="Border" Binding="{Binding IsWeek8Selected}" Value="True">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccent}"/>
+                                </DataTrigger>
+                            </Border.Triggers>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SelectWeekCountCommand}" CommandParameter="8"/>
+                            </Border.GestureRecognizers>
+                            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="0">
+                                <Label Text="8" FontFamily="BebasNeue" FontSize="22" TextColor="{StaticResource ForgeText}" HorizontalOptions="Center"/>
+                                <Label Text="{loc:Localize MesoBuilder_Weeks_Suffix}" FontFamily="DMSansRegular" FontSize="10" TextColor="{StaticResource ForgeMuted}" HorizontalOptions="Center"/>
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+                    <Label Text="{loc:Localize MesoBuilder_WeekCount_Hint}"
+                           Style="{StaticResource MutedLabel}" FontSize="11"/>
+                </VerticalStackLayout>
+
+                <!-- Startdatum -->
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="{loc:Localize MesoBuilder_StartDate_Label}" Style="{StaticResource SectionLabel}"/>
+                    <Border Style="{StaticResource CardFrame}" Padding="14,4">
+                        <DatePicker Date="{Binding StartDate}"
+                                    TextColor="{StaticResource ForgeText}"
+                                    BackgroundColor="Transparent"
+                                    FontFamily="DMSansRegular" FontSize="15"/>
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Generera-knapp -->
+                <Button Text="{loc:Localize MesoBuilder_Build_Button}"
+                        Command="{Binding BuildCommand}"
+                        IsEnabled="{Binding IsBuilding, Converter={x:Static vm:InverseBoolConverter.Instance}}"
+                        BackgroundColor="{StaticResource ForgeAccent}"
+                        TextColor="Black"
+                        FontFamily="BebasNeue" FontSize="18"
+                        HeightRequest="52"
+                        Margin="0,8,0,0"/>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </Grid>
+
+</ContentPage>

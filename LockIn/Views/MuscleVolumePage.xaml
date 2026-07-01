@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:LockIn.ViewModels"
+             xmlns:views="clr-namespace:LockIn.Views"
+             xmlns:controls="clr-namespace:LockIn.Controls"
+             xmlns:loc="clr-namespace:LockIn.Resources.Strings"
+             x:Class="LockIn.Views.MuscleVolumePage"
+             x:DataType="vm:MuscleVolumeViewModel"
+             xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="Transparent">
+
+    <Grid RowDefinitions="Auto,*" SafeAreaEdges="None">
+
+        <!-- Atmosfärisk bakgrund -->
+        <controls:AtmosphericBackgroundView Grid.RowSpan="2" InputTransparent="True"/>
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Padding="16,56,16,8" ColumnDefinitions="Auto,*,Auto">
+            <Border Grid.Column="0"
+                    WidthRequest="36" HeightRequest="36"
+                    StrokeShape="Ellipse"
+                    BackgroundColor="{AppThemeBinding Light=#1A000000, Dark=#17FFFFFF}"
+                    Stroke="{AppThemeBinding Light=#0D000000, Dark=#29FFFFFF}"
+                    StrokeThickness="0.5"
+                    VerticalOptions="Center">
+                <Path Style="{StaticResource BackChevron}"/>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnBackTapped"/>
+                </Border.GestureRecognizers>
+            </Border>
+            <Label Grid.Column="1"
+                   Text="{loc:Localize MuscleVolume_Title}"
+                   Style="{StaticResource DisplayLabel}"
+                   FontSize="24"
+                   HorizontalOptions="Center" VerticalOptions="Center"/>
+            <Button Grid.Column="2"
+                    Text="{loc:Localize Common_Save}"
+                    Command="{Binding SaveCommand}"
+                    BackgroundColor="Transparent"
+                    TextColor="{StaticResource ForgeAccent}"
+                    FontFamily="DMSansMedium"
+                    Padding="12,6"/>
+        </Grid>
+
+        <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Never">
+            <VerticalStackLayout Padding="16,4,16,48" Spacing="12">
+
+                <!-- Onboarding-förklaring -->
+                <Border Style="{StaticResource CardFrame}" Padding="18,16">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="{loc:Localize MuscleVolume_Explainer_Header}"
+                               FontFamily="DMSansMedium" FontSize="14"
+                               TextColor="{StaticResource ForgeText}"/>
+                        <Label Text="{loc:Localize MuscleVolume_Explainer_Body}"
+                               FontFamily="DMSansRegular" FontSize="13"
+                               TextColor="{StaticResource ForgeMuted}"
+                               LineBreakMode="WordWrap"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Kolumnrubriker -->
+                <Grid ColumnDefinitions="*,80,80" ColumnSpacing="8" Padding="18,0">
+                    <Label Grid.Column="0" Text="{loc:Localize MuscleVolume_Col_Muscle}"
+                           Style="{StaticResource MutedLabel}" FontSize="11"/>
+                    <Label Grid.Column="1" Text="{loc:Localize MuscleVolume_Col_Mev}"
+                           Style="{StaticResource MutedLabel}" FontSize="11"
+                           HorizontalTextAlignment="Center"/>
+                    <Label Grid.Column="2" Text="{loc:Localize MuscleVolume_Col_Mrv}"
+                           Style="{StaticResource MutedLabel}" FontSize="11"
+                           HorizontalTextAlignment="Center"/>
+                </Grid>
+
+                <!-- Muskelgrupper -->
+                <Border Style="{StaticResource CardFrame}" Padding="4,4">
+                    <StackLayout BindableLayout.ItemsSource="{Binding Rows}" Spacing="0">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="vm:MuscleVolumeRow">
+                                <Grid ColumnDefinitions="*,80,80" ColumnSpacing="8" Padding="14,10">
+                                    <Label Grid.Column="0" Text="{Binding DisplayName}"
+                                           FontFamily="DMSansMedium" FontSize="15"
+                                           TextColor="{StaticResource ForgeText}"
+                                           VerticalOptions="Center"/>
+                                    <Entry Grid.Column="1" Text="{Binding MevText}"
+                                           Keyboard="Numeric"
+                                           HorizontalTextAlignment="Center"
+                                           BackgroundColor="{StaticResource ForgeSurface2}"
+                                           TextColor="{StaticResource ForgeText}"
+                                           FontFamily="BebasNeue" FontSize="18"
+                                           HeightRequest="40"/>
+                                    <Entry Grid.Column="2" Text="{Binding MrvText}"
+                                           Keyboard="Numeric"
+                                           HorizontalTextAlignment="Center"
+                                           BackgroundColor="{StaticResource ForgeSurface2}"
+                                           TextColor="{StaticResource ForgeText}"
+                                           FontFamily="BebasNeue" FontSize="18"
+                                           HeightRequest="40"/>
+                                </Grid>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </StackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </Grid>
+
+</ContentPage>

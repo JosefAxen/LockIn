@@ -30,4 +30,5 @@ public class AppSettings
 
     // RP onboarding-flaggor
     public bool HasSeenRirHint { get; set; } = false;
+    public bool HasSeenMesoBuilderTip { get; set; } = false;
 }

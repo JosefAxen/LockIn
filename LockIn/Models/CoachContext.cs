@@ -17,5 +17,6 @@ public record CoachContext(
     double PrevWeekVolumeKg,
     int WeekStreak,
     IReadOnlyList<VolumeAdvice> VolumeAdvices,
-    DeloadAdvice? DeloadAdvice
+    DeloadAdvice? DeloadAdvice,
+    bool IsCycleDeloadWeek
 );

@@ -21,4 +21,7 @@ public partial class PeriodizationPage : ContentPage
             this.FadeTo(1, 200),
             this.TranslateTo(0, 0, 200, Easing.CubicOut));
     }
+
+    private async void OnMesoBuilderClicked(object? sender, EventArgs e)
+        => await Shell.Current.GoToAsync(nameof(MesoBuilderPage));
 }

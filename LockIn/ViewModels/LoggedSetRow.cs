@@ -26,6 +26,12 @@ public partial class LoggedSetRow : ObservableObject
     public string PrevWeightHint { get; init; } = "";
     public string PrevRepsHint { get; init; } = "";
     public int TargetReps { get; init; } = 0;
+    public int TargetRir { get; init; } = -1;
+
+    public bool HasTargetRir => TargetRir >= 0;
+    public string TargetRirDisplay => TargetRir >= 0
+        ? string.Format(LockIn.Resources.Strings.AppResources.LoggedSet_TargetRir_Format, TargetRir)
+        : "";
 
     /// <summary>Markerad när raden precis lades till via +SET — Loaded-handlern
     /// kör en "veckla ut"-animation och nollställer flaggan.</summary>

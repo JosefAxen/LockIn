@@ -420,6 +420,14 @@
   <data name="CoachChip_VolumeDown_Header_Format" xml:space="preserve"><value>{0} är överbelastad</value></data>
   <data name="CoachChip_VolumeDown_Body_Format" xml:space="preserve"><value>Hög ömhet och sjunkande prestation för {0} — dra ner en eller två sets nästa vecka.</value></data>
 
+  <!-- Kalender-deload (aktiv cykel är i sin sista vecka) -->
+  <data name="CoachChip_DeloadCycle_Text" xml:space="preserve"><value>Denna vecka är deload</value></data>
+  <data name="CoachChip_DeloadCycle_Header" xml:space="preserve"><value>Deload-vecka i din cykel</value></data>
+  <data name="CoachChip_DeloadCycle_Body" xml:space="preserve"><value>Din aktiva mesocykel är i sin sista vecka. Kör lättare vikter (ca 80 % av peak), färre sets och sikta på RIR 4+ — låt kroppen återhämta sig inför nästa cykel.</value></data>
+
+  <!-- Deload-läge i pass-header -->
+  <data name="ActiveWorkout_DeloadBanner_Text" xml:space="preserve"><value>DELOAD-VECKA — LÄTT ÅTERHÄMTNING</value></data>
+
   <!-- Hem — Sparkline accessibility -->
   <data name="Hem_Sparkline_Steps" xml:space="preserve"><value>Stegtrend senaste 7 dagar</value></data>
   <data name="Hem_Sparkline_Calories" xml:space="preserve"><value>Kalorietrend senaste 7 dagar</value></data>
@@ -635,6 +643,48 @@
   <data name="ActiveWorkout_PR_Message_Format" xml:space="preserve"><value>Nytt PR — {0}&#10;{1} kg × {2} reps · Est. 1RM {3} kg</value></data>
   <data name="ActiveWorkout_AutoProgress_WeightUp_Format" xml:space="preserve"><value>Nästa {0}-pass: {1} kg × {2} reps</value></data>
   <data name="ActiveWorkout_AutoProgress_RepsUp_Format" xml:space="preserve"><value>Bra jobbat! Nästa mål: {0} reps @ {1} kg</value></data>
+
+  <!-- RP MuscleVolumePage -->
+  <data name="MuscleVolume_Title" xml:space="preserve"><value>VOLYMINSTÄLLNINGAR</value></data>
+  <data name="MuscleVolume_Explainer_Header" xml:space="preserve"><value>MEV / MRV per muskelgrupp</value></data>
+  <data name="MuscleVolume_Explainer_Body" xml:space="preserve"><value>MEV = minsta effektiva volym per vecka. MRV = maxvolym du klarar återhämta från. Värdena är individuella — justera efter hur du reagerar. Standardvärdena är RP:s illustrativa exempelintervall.</value></data>
+  <data name="MuscleVolume_Col_Muscle" xml:space="preserve"><value>MUSKELGRUPP</value></data>
+  <data name="MuscleVolume_Col_Mev" xml:space="preserve"><value>MEV</value></data>
+  <data name="MuscleVolume_Col_Mrv" xml:space="preserve"><value>MRV</value></data>
+  <data name="MuscleVolume_Saved_Toast" xml:space="preserve"><value>Volyminställningar sparade</value></data>
+  <data name="Settings_MuscleVolume_Label" xml:space="preserve"><value>Volyminställningar</value></data>
+  <data name="Settings_MuscleVolume_Sub" xml:space="preserve"><value>MEV och MRV per muskelgrupp</value></data>
+
+  <!-- RP WeeklyVolumePage -->
+  <data name="WeeklyVolume_Title" xml:space="preserve"><value>VOLYM DENNA VECKA</value></data>
+  <data name="WeeklyVolume_Explainer" xml:space="preserve"><value>Sets per muskelgrupp den här veckan. Grön = i MAV-zonen (bästa tillväxt). Gul = närmar sig MRV. Röd = över maxvolym du klarar återhämta från.</value></data>
+  <data name="WeeklyVolume_Range_Format" xml:space="preserve"><value>MEV {0} · MRV {1}</value></data>
+  <data name="WeeklyVolume_Zone_UnderMEV" xml:space="preserve"><value>UNDER MEV</value></data>
+  <data name="WeeklyVolume_Zone_InMAV" xml:space="preserve"><value>I MAV-ZON</value></data>
+  <data name="WeeklyVolume_Zone_NearMRV" xml:space="preserve"><value>NÄRA MRV</value></data>
+  <data name="WeeklyVolume_Zone_OverMRV" xml:space="preserve"><value>ÖVER MRV</value></data>
+  <data name="Kropp_WeeklyVolume_Label" xml:space="preserve"><value>Volym denna vecka</value></data>
+  <data name="Kropp_WeeklyVolume_Sub" xml:space="preserve"><value>Sets per muskelgrupp vs MEV/MRV</value></data>
+
+  <!-- RP MesoBuilder -->
+  <data name="MesoBuilder_Title" xml:space="preserve"><value>NY MESOCYKEL</value></data>
+  <data name="MesoBuilder_Explainer_Header" xml:space="preserve"><value>Bygg en mesocykel</value></data>
+  <data name="MesoBuilder_Explainer_Body" xml:space="preserve"><value>Skapar en cykel med accumulation-veckor följt av en deload-vecka. Volym och vikt regleras automatiskt av dina RIR-loggar och recovery-feedback under passen.</value></data>
+  <data name="MesoBuilder_Name_Label" xml:space="preserve"><value>NAMN</value></data>
+  <data name="MesoBuilder_Name_Placeholder" xml:space="preserve"><value>t.ex. Höst 2026</value></data>
+  <data name="MesoBuilder_WeekCount_Label" xml:space="preserve"><value>ANTAL VECKOR</value></data>
+  <data name="MesoBuilder_Weeks_Suffix" xml:space="preserve"><value>v</value></data>
+  <data name="MesoBuilder_WeekCount_Hint" xml:space="preserve"><value>Sista veckan är alltid deload. Nybörjare: 4v. Avancerade: 6–8v.</value></data>
+  <data name="MesoBuilder_StartDate_Label" xml:space="preserve"><value>STARTDATUM</value></data>
+  <data name="MesoBuilder_Build_Button" xml:space="preserve"><value>SKAPA CYKEL</value></data>
+  <data name="MesoBuilder_Error_NameRequired" xml:space="preserve"><value>Ange ett cykelnamn</value></data>
+  <data name="MesoBuilder_Success_Toast" xml:space="preserve"><value>Cykeln har skapats</value></data>
+  <data name="MesoBuilder_Week_Accum" xml:space="preserve"><value>V{0} – Accumulation</value></data>
+  <data name="MesoBuilder_Week_Deload" xml:space="preserve"><value>Deload</value></data>
+  <data name="Periodization_MesoBuilder_Button" xml:space="preserve"><value>+ MESO BUILDER</value></data>
+
+  <!-- RP RIR-mål per cykel-vecka (visas i pass när aktiv cykel finns) -->
+  <data name="LoggedSet_TargetRir_Format" xml:space="preserve"><value>Målsatt RIR: {0}</value></data>
 
   <!-- RP RIR-terminologi hint (visas första gången ett pass loggas) -->
   <data name="Rir_Hint_Text" xml:space="preserve"><value>RIR = Reps in Reserve — hur många reps du hade kvar innan failure</value></data>

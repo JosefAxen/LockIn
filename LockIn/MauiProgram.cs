@@ -39,6 +39,9 @@ public static class MauiProgram
         builder.Services.AddSingleton<PRService>();
         builder.Services.AddSingleton<IWeightProgressionService, WeightProgressionService>();
         builder.Services.AddSingleton<ISetProgressionEngine, SetProgressionEngine>();
+        builder.Services.AddSingleton<IWeeklyVolumeService, WeeklyVolumeService>();
+        builder.Services.AddSingleton<ICycleContextService, CycleContextService>();
+        builder.Services.AddSingleton<IMesoBuilderService, MesoBuilderService>();
         builder.Services.AddSingleton<RestTimerService>();
         builder.Services.AddSingleton<ActiveWorkoutStateService>();
         builder.Services.AddSingleton<NotificationService>();
@@ -92,6 +95,12 @@ public static class MauiProgram
         builder.Services.AddTransient<OnboardingViewModel>();
         builder.Services.AddTransient<CardioPage>();
         builder.Services.AddTransient<CardioViewModel>();
+        builder.Services.AddTransient<MuscleVolumePage>();
+        builder.Services.AddTransient<MuscleVolumeViewModel>();
+        builder.Services.AddTransient<WeeklyVolumePage>();
+        builder.Services.AddTransient<WeeklyVolumeViewModel>();
+        builder.Services.AddTransient<MesoBuilderPage>();
+        builder.Services.AddTransient<MesoBuilderViewModel>();
         builder.Services.AddTransient<PeriodizationPage>();
         builder.Services.AddTransient<PeriodizationViewModel>();
         builder.Services.AddTransient<CycleDetailPage>();

@@ -45,13 +45,19 @@
             <VerticalStackLayout Spacing="0">
 
                 <!-- Header -->
-                <Grid ColumnDefinitions="*,Auto" Padding="16,56,16,8">
+                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8" Padding="16,56,16,8">
                     <Label Grid.Column="0"
                            Text="{loc:Localize Periodization_Title}"
                            FontFamily="BebasNeue" FontSize="34" CharacterSpacing="1"
                            TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
                            VerticalOptions="Center"/>
                     <Button Grid.Column="1"
+                            Text="{loc:Localize Periodization_MesoBuilder_Button}"
+                            Style="{StaticResource SecondaryButton}"
+                            Padding="12,8" HeightRequest="36"
+                            Clicked="OnMesoBuilderClicked"
+                            VerticalOptions="Center"/>
+                    <Button Grid.Column="2"
                             Text="{loc:Localize Periodization_NewButton}"
                             Style="{StaticResource SecondaryButton}"
                             Padding="12,8" HeightRequest="36"

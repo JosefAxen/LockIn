@@ -21,7 +21,18 @@ public static class CoachPromptEngine
     {
         var candidates = new List<(int Priority, CoachChip Chip, TimeSpan Cooldown)>();
 
-        // ── Chip 0: Deload-rekommendation (högst prio) ───────────────────
+        // ── Chip 0a: Kalender-baserad deload (aktiv cykel-vecka är deload) ─
+        if (ctx.IsCycleDeloadWeek)
+        {
+            var chip = new CoachChip(
+                PromptId: "deload-cycle-week",
+                ChipText: AppResources.CoachChip_DeloadCycle_Text,
+                DetailHeader: AppResources.CoachChip_DeloadCycle_Header,
+                DetailBody: AppResources.CoachChip_DeloadCycle_Body);
+            candidates.Add((0, chip, TimeSpan.FromDays(3)));
+        }
+
+        // ── Chip 0b: Data-driven deload-rekommendation ───────────────────
         if (ctx.DeloadAdvice is not null)
         {
             var chip = new CoachChip(
