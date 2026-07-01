@@ -15,4 +15,10 @@ public class WorkoutSession
     public DateTime? CompletedAt { get; set; }
 
     public string Notes { get; set; } = "";
+
+    public int? PumpRating { get; set; }
+
+    public int? SorenessRating { get; set; }
+
+    public int? PerformanceRating { get; set; }
 }

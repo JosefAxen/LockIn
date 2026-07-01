@@ -27,4 +27,7 @@ public class AppSettings
     public int ReminderDays        { get; set; } = 0;
     public int ReminderTimeMinutes { get; set; } = 0;
     public string ReminderLabels { get; set; } = "";
+
+    // RP onboarding-flaggor
+    public bool HasSeenRirHint { get; set; } = false;
 }

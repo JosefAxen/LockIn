@@ -10,7 +10,7 @@ using System.Globalization;
 
 namespace LockIn.ViewModels;
 
-public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, RestTimerService timer, ISoundService sound, ActiveWorkoutStateService state, NotificationService notifications)
+public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, RestTimerService timer, ISoundService sound, ActiveWorkoutStateService state, NotificationService notifications, IWeightProgressionService weightProgression)
     : ObservableObject, IQueryAttributable
 {
     private WorkoutSession? _session;
@@ -28,6 +28,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
     [ObservableProperty] private string _prMessage = "";
     [ObservableProperty] private bool _hasAutoProgress;
     [ObservableProperty] private string _autoProgressMessage = "";
+    [ObservableProperty] private bool _showRirHint;
 
     public event EventHandler? PRScored;
     public event EventHandler<int>? ScrollToSectionRequested;
@@ -58,6 +59,9 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             PrMessage = "";
             HasAutoProgress = false;
             AutoProgressMessage = "";
+
+            var settings = await db.GetAppSettingsAsync();
+            ShowRirHint = !settings.HasSeenRirHint;
 
             if (templateId != 0)
             {
@@ -161,14 +165,25 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         }
         section.PrevSessionSummary = prevSummary;
 
+        // RP-baserad vikt-suggestion när template inte äger progression
+        WeightSuggestion? rpSuggestion = null;
+        if (!(autoProgressMode > 0 && targetWeight > 0))
+        {
+            rpSuggestion = await weightProgression.SuggestNextWeightAsync(exercise.Id, _session!.Id, reps);
+            if (rpSuggestion is not null)
+                section.WeightSuggestionReason = rpSuggestion.Reason;
+        }
+
         for (int s = 1; s <= sets; s++)
         {
             var prev = prevSets.ElementAtOrDefault(s - 1);
 
-            // Progression äger hints när aktiv, annars senaste session
+            // Progression äger hints när aktiv, annars RP-suggestion från förra passet, sist senaste sessions vikt
             var weightHint = autoProgressMode > 0 && targetWeight > 0
                 ? targetWeight.ToString("G")
-                : (prev is { WeightKg: > 0 } ? prev.WeightKg.ToString("G") : "");
+                : rpSuggestion is not null
+                    ? rpSuggestion.WeightKg.ToString("G", CultureInfo.InvariantCulture)
+                    : (prev is { WeightKg: > 0 } ? prev.WeightKg.ToString("G") : "");
             var repsHint = autoProgressMode > 0
                 ? reps.ToString()
                 : prev?.SetType == SetType.Time && prev.DurationSeconds > 0
@@ -195,6 +210,15 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
 
     public Task AddExerciseFromPickerAsync(Exercise exercise)
         => AddExerciseSectionAsync(exercise, Exercises.Count);
+
+    [RelayCommand]
+    private async Task DismissRirHintAsync()
+    {
+        ShowRirHint = false;
+        var settings = await db.GetAppSettingsAsync();
+        settings.HasSeenRirHint = true;
+        await db.SaveAppSettingsAsync(settings);
+    }
 
     [RelayCommand]
     private async Task AddExerciseAsync()
@@ -621,7 +645,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         });
     }
 
-    public async Task CommitFinishAsync(string notes)
+    public async Task CommitFinishAsync(string notes, int? pumpRating = null, int? sorenessRating = null, int? performanceRating = null)
     {
         if (_session is null) return;
         WorkoutSession committed = _session;
@@ -629,6 +653,9 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         {
             committed.CompletedAt = DateTime.Now;
             committed.Notes = notes;
+            committed.PumpRating = pumpRating;
+            committed.SorenessRating = sorenessRating;
+            committed.PerformanceRating = performanceRating;
             await db.SaveSessionAsync(committed);
             await ApplyProgressionAsync();
         }

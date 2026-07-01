@@ -409,6 +409,17 @@
     <value>{0} veckor i rad med minst ett pass.</value>
   </data>
 
+  <!-- RP coach-chips: deload + volume-advice -->
+  <data name="CoachChip_Deload_Text" xml:space="preserve"><value>Kör en lätt vecka nu</value></data>
+  <data name="CoachChip_Deload_Header" xml:space="preserve"><value>Recovery-signalen är negativ</value></data>
+  <data name="CoachChip_Deload_Body" xml:space="preserve"><value>Dina senaste pass visar hög ömhet och sjunkande prestation. En vecka med ~50 % volym och lättare vikter brukar återställa det.</value></data>
+  <data name="CoachChip_VolumeUp_Text_Format" xml:space="preserve"><value>Lägg till 1 set för {0}</value></data>
+  <data name="CoachChip_VolumeUp_Header_Format" xml:space="preserve"><value>Utrymme för mer {0}-volym</value></data>
+  <data name="CoachChip_VolumeUp_Body_Format" xml:space="preserve"><value>Låg pump och ingen ömhet på senaste passen — du har utrymme att öka {0}-volymen nästa vecka.</value></data>
+  <data name="CoachChip_VolumeDown_Text_Format" xml:space="preserve"><value>Minska sets för {0}</value></data>
+  <data name="CoachChip_VolumeDown_Header_Format" xml:space="preserve"><value>{0} är överbelastad</value></data>
+  <data name="CoachChip_VolumeDown_Body_Format" xml:space="preserve"><value>Hög ömhet och sjunkande prestation för {0} — dra ner en eller två sets nästa vecka.</value></data>
+
   <!-- Hem — Sparkline accessibility -->
   <data name="Hem_Sparkline_Steps" xml:space="preserve"><value>Stegtrend senaste 7 dagar</value></data>
   <data name="Hem_Sparkline_Calories" xml:space="preserve"><value>Kalorietrend senaste 7 dagar</value></data>
@@ -491,6 +502,14 @@
   <data name="PostWorkout_MuscleGroups" xml:space="preserve"><value>MUSKELGRUPPER</value></data>
   <data name="PostWorkout_Notes" xml:space="preserve"><value>ANTECKNINGAR</value></data>
   <data name="PostWorkout_Notes_Placeholder" xml:space="preserve"><value>Hur gick passet? Anteckna trötthet, skador, tankar...</value></data>
+
+  <!-- RP recovery-feedback (pump / soreness / performance) -->
+  <data name="PostWorkout_Feedback_Header" xml:space="preserve"><value>ÅTERHÄMTNING</value></data>
+  <data name="PostWorkout_Pump_Question" xml:space="preserve"><value>Hur var pumpen?</value></data>
+  <data name="PostWorkout_Soreness_Question" xml:space="preserve"><value>Hur öm är du inför nästa pass?</value></data>
+  <data name="PostWorkout_Performance_Question" xml:space="preserve"><value>Hur presterade du?</value></data>
+  <data name="PostWorkout_Scale_Low" xml:space="preserve"><value>Låg</value></data>
+  <data name="PostWorkout_Scale_High" xml:space="preserve"><value>Hög</value></data>
   <data name="PostWorkout_NewAchievements" xml:space="preserve"><value>NYA ACHIEVEMENTS</value></data>
   <data name="PostWorkout_Achievement_Unlocked" xml:space="preserve"><value>ACHIEVEMENT UPPLÅST</value></data>
   <data name="PostWorkout_Photos" xml:space="preserve"><value>FOTON</value></data>
@@ -616,6 +635,15 @@
   <data name="ActiveWorkout_PR_Message_Format" xml:space="preserve"><value>Nytt PR — {0}&#10;{1} kg × {2} reps · Est. 1RM {3} kg</value></data>
   <data name="ActiveWorkout_AutoProgress_WeightUp_Format" xml:space="preserve"><value>Nästa {0}-pass: {1} kg × {2} reps</value></data>
   <data name="ActiveWorkout_AutoProgress_RepsUp_Format" xml:space="preserve"><value>Bra jobbat! Nästa mål: {0} reps @ {1} kg</value></data>
+
+  <!-- RP RIR-terminologi hint (visas första gången ett pass loggas) -->
+  <data name="Rir_Hint_Text" xml:space="preserve"><value>RIR = Reps in Reserve — hur många reps du hade kvar innan failure</value></data>
+  <data name="Rir_Hint_Dismiss" xml:space="preserve"><value>OK</value></data>
+
+  <!-- RP vikt-progression -->
+  <data name="WeightSuggestion_Reason_HitAllReps" xml:space="preserve"><value>Alla reps nådda med minst 1 RIR kvar — dags att öka</value></data>
+  <data name="WeightSuggestion_Reason_MaintainWeight" xml:space="preserve"><value>Alla reps nådda men RIR = 0 — behåll vikten, öka reps först</value></data>
+  <data name="WeightSuggestion_Reason_MissedReps" xml:space="preserve"><value>Reps-mål inte nått — behåll vikten till formen sitter</value></data>
   <data name="ActiveWorkout_FinishConfirm_Title" xml:space="preserve"><value>Avsluta pass</value></data>
   <data name="ActiveWorkout_FinishConfirm_Body" xml:space="preserve"><value>Är du klar med passet?</value></data>
   <data name="ActiveWorkout_FinishConfirm_Yes" xml:space="preserve"><value>Ja, avsluta</value></data>

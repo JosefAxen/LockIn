@@ -162,6 +162,29 @@
                     </Grid>
                 </Border>
 
+                <!-- RIR-hint (första gången i appen) -->
+                <Border IsVisible="{Binding ShowRirHint}"
+                        BackgroundColor="{StaticResource ForgeSurface2}"
+                        StrokeThickness="1"
+                        Stroke="{StaticResource ForgeSurface3}"
+                        StrokeShape="RoundRectangle 12"
+                        Padding="14,12">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                        <Label Grid.Column="0" Text="{loc:Localize Rir_Hint_Text}"
+                               FontFamily="DMSansRegular" FontSize="12"
+                               TextColor="{StaticResource ForgeText}"
+                               LineBreakMode="WordWrap"
+                               VerticalOptions="Center"/>
+                        <Button Grid.Column="1" Text="{loc:Localize Rir_Hint_Dismiss}"
+                                Command="{Binding DismissRirHintCommand}"
+                                BackgroundColor="Transparent"
+                                TextColor="{StaticResource ForgeAccent}"
+                                FontFamily="DMSansMedium" FontSize="12"
+                                Padding="12,6"
+                                MinimumHeightRequest="44"/>
+                    </Grid>
+                </Border>
+
                 <!-- Exercise sections � one card per exercise -->
                 <StackLayout x:Name="ExercisesLayout" BindableLayout.ItemsSource="{Binding Exercises}" Spacing="14">
                     <BindableLayout.ItemTemplate>
@@ -205,6 +228,11 @@
                                                    FontFamily="DMSansRegular" FontSize="11"
                                                    TextColor="{StaticResource ForgeMuted}"
                                                    LineBreakMode="TailTruncation"/>
+                                            <Label Text="{Binding WeightSuggestionReason}"
+                                                   IsVisible="{Binding HasWeightSuggestionReason}"
+                                                   FontFamily="DMSansRegular" FontSize="11"
+                                                   TextColor="{StaticResource ForgeAccent}"
+                                                   LineBreakMode="WordWrap"/>
                                         </VerticalStackLayout>
 
                                         <!-- Info button � only visible when description exists -->

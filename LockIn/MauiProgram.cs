@@ -37,6 +37,8 @@ public static class MauiProgram
         builder.Services.AddTransient<ProgressReportService>();
         builder.Services.AddSingleton<ExportService>();
         builder.Services.AddSingleton<PRService>();
+        builder.Services.AddSingleton<IWeightProgressionService, WeightProgressionService>();
+        builder.Services.AddSingleton<ISetProgressionEngine, SetProgressionEngine>();
         builder.Services.AddSingleton<RestTimerService>();
         builder.Services.AddSingleton<ActiveWorkoutStateService>();
         builder.Services.AddSingleton<NotificationService>();

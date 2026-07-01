@@ -149,6 +149,215 @@
                     </StackLayout>
                 </Border>
 
+                <!-- RP recovery-feedback: pump / soreness / performance (1-4 skala) -->
+                <Label Text="{loc:Localize PostWorkout_Feedback_Header}" Style="{StaticResource SectionLabel}"/>
+                <Border Style="{StaticResource CardFrame}" Padding="16,14">
+                    <StackLayout Spacing="16">
+
+                        <!-- Pump -->
+                        <StackLayout Spacing="8">
+                            <Label Text="{loc:Localize PostWorkout_Pump_Question}"
+                                   TextColor="{StaticResource ForgeText}"
+                                   FontFamily="DMSansMedium" FontSize="14"/>
+                            <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="8">
+                                <Border Grid.Column="0" StrokeShape="RoundRectangle 10" StrokeThickness="1"
+                                        Stroke="{StaticResource ForgeSurface3}" BackgroundColor="{StaticResource ForgeSurface2}" HeightRequest="44">
+                                    <Border.Triggers>
+                                        <DataTrigger TargetType="Border" Binding="{Binding IsPump1}" Value="True">
+                                            <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccent}"/>
+                                        </DataTrigger>
+                                    </Border.Triggers>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding SetPumpCommand}" CommandParameter="1"/>
+                                    </Border.GestureRecognizers>
+                                    <Label Text="1" HorizontalOptions="Center" VerticalOptions="Center"
+                                           FontFamily="BebasNeue" FontSize="20" TextColor="{StaticResource ForgeText}"/>
+                                </Border>
+                                <Border Grid.Column="1" StrokeShape="RoundRectangle 10" StrokeThickness="1"
+                                        Stroke="{StaticResource ForgeSurface3}" BackgroundColor="{StaticResource ForgeSurface2}" HeightRequest="44">
+                                    <Border.Triggers>
+                                        <DataTrigger TargetType="Border" Binding="{Binding IsPump2}" Value="True">
+                                            <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccent}"/>
+                                        </DataTrigger>
+                                    </Border.Triggers>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding SetPumpCommand}" CommandParameter="2"/>
+                                    </Border.GestureRecognizers>
+                                    <Label Text="2" HorizontalOptions="Center" VerticalOptions="Center"
+                                           FontFamily="BebasNeue" FontSize="20" TextColor="{StaticResource ForgeText}"/>
+                                </Border>
+                                <Border Grid.Column="2" StrokeShape="RoundRectangle 10" StrokeThickness="1"
+                                        Stroke="{StaticResource ForgeSurface3}" BackgroundColor="{StaticResource ForgeSurface2}" HeightRequest="44">
+                                    <Border.Triggers>
+                                        <DataTrigger TargetType="Border" Binding="{Binding IsPump3}" Value="True">
+                                            <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccent}"/>
+                                        </DataTrigger>
+                                    </Border.Triggers>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding SetPumpCommand}" CommandParameter="3"/>
+                                    </Border.GestureRecognizers>
+                                    <Label Text="3" HorizontalOptions="Center" VerticalOptions="Center"
+                                           FontFamily="BebasNeue" FontSize="20" TextColor="{StaticResource ForgeText}"/>
+                                </Border>
+                                <Border Grid.Column="3" StrokeShape="RoundRectangle 10" StrokeThickness="1"
+                                        Stroke="{StaticResource ForgeSurface3}" BackgroundColor="{StaticResource ForgeSurface2}" HeightRequest="44">
+                                    <Border.Triggers>
+                                        <DataTrigger TargetType="Border" Binding="{Binding IsPump4}" Value="True">
+                                            <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccent}"/>
+                                        </DataTrigger>
+                                    </Border.Triggers>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding SetPumpCommand}" CommandParameter="4"/>
+                                    </Border.GestureRecognizers>
+                                    <Label Text="4" HorizontalOptions="Center" VerticalOptions="Center"
+                                           FontFamily="BebasNeue" FontSize="20" TextColor="{StaticResource ForgeText}"/>
+                                </Border>
+                            </Grid>
+                            <Grid ColumnDefinitions="*,*">
+                                <Label Grid.Column="0" Text="{loc:Localize PostWorkout_Scale_Low}"
+                                       Style="{StaticResource MutedLabel}" FontSize="11" HorizontalOptions="Start"/>
+                                <Label Grid.Column="1" Text="{loc:Localize PostWorkout_Scale_High}"
+                                       Style="{StaticResource MutedLabel}" FontSize="11" HorizontalOptions="End"/>
+                            </Grid>
+                        </StackLayout>
+
+                        <!-- Soreness -->
+                        <StackLayout Spacing="8">
+                            <Label Text="{loc:Localize PostWorkout_Soreness_Question}"
+                                   TextColor="{StaticResource ForgeText}"
+                                   FontFamily="DMSansMedium" FontSize="14"/>
+                            <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="8">
+                                <Border Grid.Column="0" StrokeShape="RoundRectangle 10" StrokeThickness="1"
+                                        Stroke="{StaticResource ForgeSurface3}" BackgroundColor="{StaticResource ForgeSurface2}" HeightRequest="44">
+                                    <Border.Triggers>
+                                        <DataTrigger TargetType="Border" Binding="{Binding IsSoreness1}" Value="True">
+                                            <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccent}"/>
+                                        </DataTrigger>
+                                    </Border.Triggers>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding SetSorenessCommand}" CommandParameter="1"/>
+                                    </Border.GestureRecognizers>
+                                    <Label Text="1" HorizontalOptions="Center" VerticalOptions="Center"
+                                           FontFamily="BebasNeue" FontSize="20" TextColor="{StaticResource ForgeText}"/>
+                                </Border>
+                                <Border Grid.Column="1" StrokeShape="RoundRectangle 10" StrokeThickness="1"
+                                        Stroke="{StaticResource ForgeSurface3}" BackgroundColor="{StaticResource ForgeSurface2}" HeightRequest="44">
+                                    <Border.Triggers>
+                                        <DataTrigger TargetType="Border" Binding="{Binding IsSoreness2}" Value="True">
+                                            <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccent}"/>
+                                        </DataTrigger>
+                                    </Border.Triggers>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding SetSorenessCommand}" CommandParameter="2"/>
+                                    </Border.GestureRecognizers>
+                                    <Label Text="2" HorizontalOptions="Center" VerticalOptions="Center"
+                                           FontFamily="BebasNeue" FontSize="20" TextColor="{StaticResource ForgeText}"/>
+                                </Border>
+                                <Border Grid.Column="2" StrokeShape="RoundRectangle 10" StrokeThickness="1"
+                                        Stroke="{StaticResource ForgeSurface3}" BackgroundColor="{StaticResource ForgeSurface2}" HeightRequest="44">
+                                    <Border.Triggers>
+                                        <DataTrigger TargetType="Border" Binding="{Binding IsSoreness3}" Value="True">
+                                            <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccent}"/>
+                                        </DataTrigger>
+                                    </Border.Triggers>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding SetSorenessCommand}" CommandParameter="3"/>
+                                    </Border.GestureRecognizers>
+                                    <Label Text="3" HorizontalOptions="Center" VerticalOptions="Center"
+                                           FontFamily="BebasNeue" FontSize="20" TextColor="{StaticResource ForgeText}"/>
+                                </Border>
+                                <Border Grid.Column="3" StrokeShape="RoundRectangle 10" StrokeThickness="1"
+                                        Stroke="{StaticResource ForgeSurface3}" BackgroundColor="{StaticResource ForgeSurface2}" HeightRequest="44">
+                                    <Border.Triggers>
+                                        <DataTrigger TargetType="Border" Binding="{Binding IsSoreness4}" Value="True">
+                                            <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccent}"/>
+                                        </DataTrigger>
+                                    </Border.Triggers>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding SetSorenessCommand}" CommandParameter="4"/>
+                                    </Border.GestureRecognizers>
+                                    <Label Text="4" HorizontalOptions="Center" VerticalOptions="Center"
+                                           FontFamily="BebasNeue" FontSize="20" TextColor="{StaticResource ForgeText}"/>
+                                </Border>
+                            </Grid>
+                            <Grid ColumnDefinitions="*,*">
+                                <Label Grid.Column="0" Text="{loc:Localize PostWorkout_Scale_Low}"
+                                       Style="{StaticResource MutedLabel}" FontSize="11" HorizontalOptions="Start"/>
+                                <Label Grid.Column="1" Text="{loc:Localize PostWorkout_Scale_High}"
+                                       Style="{StaticResource MutedLabel}" FontSize="11" HorizontalOptions="End"/>
+                            </Grid>
+                        </StackLayout>
+
+                        <!-- Performance -->
+                        <StackLayout Spacing="8">
+                            <Label Text="{loc:Localize PostWorkout_Performance_Question}"
+                                   TextColor="{StaticResource ForgeText}"
+                                   FontFamily="DMSansMedium" FontSize="14"/>
+                            <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="8">
+                                <Border Grid.Column="0" StrokeShape="RoundRectangle 10" StrokeThickness="1"
+                                        Stroke="{StaticResource ForgeSurface3}" BackgroundColor="{StaticResource ForgeSurface2}" HeightRequest="44">
+                                    <Border.Triggers>
+                                        <DataTrigger TargetType="Border" Binding="{Binding IsPerformance1}" Value="True">
+                                            <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccent}"/>
+                                        </DataTrigger>
+                                    </Border.Triggers>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding SetPerformanceCommand}" CommandParameter="1"/>
+                                    </Border.GestureRecognizers>
+                                    <Label Text="1" HorizontalOptions="Center" VerticalOptions="Center"
+                                           FontFamily="BebasNeue" FontSize="20" TextColor="{StaticResource ForgeText}"/>
+                                </Border>
+                                <Border Grid.Column="1" StrokeShape="RoundRectangle 10" StrokeThickness="1"
+                                        Stroke="{StaticResource ForgeSurface3}" BackgroundColor="{StaticResource ForgeSurface2}" HeightRequest="44">
+                                    <Border.Triggers>
+                                        <DataTrigger TargetType="Border" Binding="{Binding IsPerformance2}" Value="True">
+                                            <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccent}"/>
+                                        </DataTrigger>
+                                    </Border.Triggers>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding SetPerformanceCommand}" CommandParameter="2"/>
+                                    </Border.GestureRecognizers>
+                                    <Label Text="2" HorizontalOptions="Center" VerticalOptions="Center"
+                                           FontFamily="BebasNeue" FontSize="20" TextColor="{StaticResource ForgeText}"/>
+                                </Border>
+                                <Border Grid.Column="2" StrokeShape="RoundRectangle 10" StrokeThickness="1"
+                                        Stroke="{StaticResource ForgeSurface3}" BackgroundColor="{StaticResource ForgeSurface2}" HeightRequest="44">
+                                    <Border.Triggers>
+                                        <DataTrigger TargetType="Border" Binding="{Binding IsPerformance3}" Value="True">
+                                            <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccent}"/>
+                                        </DataTrigger>
+                                    </Border.Triggers>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding SetPerformanceCommand}" CommandParameter="3"/>
+                                    </Border.GestureRecognizers>
+                                    <Label Text="3" HorizontalOptions="Center" VerticalOptions="Center"
+                                           FontFamily="BebasNeue" FontSize="20" TextColor="{StaticResource ForgeText}"/>
+                                </Border>
+                                <Border Grid.Column="3" StrokeShape="RoundRectangle 10" StrokeThickness="1"
+                                        Stroke="{StaticResource ForgeSurface3}" BackgroundColor="{StaticResource ForgeSurface2}" HeightRequest="44">
+                                    <Border.Triggers>
+                                        <DataTrigger TargetType="Border" Binding="{Binding IsPerformance4}" Value="True">
+                                            <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccent}"/>
+                                        </DataTrigger>
+                                    </Border.Triggers>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding SetPerformanceCommand}" CommandParameter="4"/>
+                                    </Border.GestureRecognizers>
+                                    <Label Text="4" HorizontalOptions="Center" VerticalOptions="Center"
+                                           FontFamily="BebasNeue" FontSize="20" TextColor="{StaticResource ForgeText}"/>
+                                </Border>
+                            </Grid>
+                            <Grid ColumnDefinitions="*,*">
+                                <Label Grid.Column="0" Text="{loc:Localize PostWorkout_Scale_Low}"
+                                       Style="{StaticResource MutedLabel}" FontSize="11" HorizontalOptions="Start"/>
+                                <Label Grid.Column="1" Text="{loc:Localize PostWorkout_Scale_High}"
+                                       Style="{StaticResource MutedLabel}" FontSize="11" HorizontalOptions="End"/>
+                            </Grid>
+                        </StackLayout>
+
+                    </StackLayout>
+                </Border>
+
                 <!-- Session notes -->
                 <Label Text="{loc:Localize PostWorkout_Notes}" Style="{StaticResource SectionLabel}"/>
                 <Border Style="{StaticResource CardFrame}" Padding="4,2">

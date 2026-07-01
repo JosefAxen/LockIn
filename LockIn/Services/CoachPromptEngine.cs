@@ -21,6 +21,17 @@ public static class CoachPromptEngine
     {
         var candidates = new List<(int Priority, CoachChip Chip, TimeSpan Cooldown)>();
 
+        // ── Chip 0: Deload-rekommendation (högst prio) ───────────────────
+        if (ctx.DeloadAdvice is not null)
+        {
+            var chip = new CoachChip(
+                PromptId: "deload-recommendation",
+                ChipText: AppResources.CoachChip_Deload_Text,
+                DetailHeader: AppResources.CoachChip_Deload_Header,
+                DetailBody: AppResources.CoachChip_Deload_Body);
+            candidates.Add((0, chip, TimeSpan.FromDays(7)));
+        }
+
         // ── Chip 1: PR-proximity ─────────────────────────────────────────
         if (ctx.NearestPRGapKg is > 0 and <= 10 && ctx.NearestPRExerciseName is not null)
         {
@@ -53,6 +64,34 @@ public static class CoachPromptEngine
                 DetailBody: string.Format(AppResources.Hem_Chip_MuscleGap_Body, muscleName));
             candidates.Add((2, chip, TimeSpan.FromHours(48)));
             break; // bara en muskelgap-chip
+        }
+
+        // ── Chip 1.5: Volume-advice per muskelgrupp ──────────────────────
+        foreach (var advice in ctx.VolumeAdvices)
+        {
+            var muscleName = MuscleDisplayName(advice.Muscle);
+            if (string.IsNullOrEmpty(muscleName)) continue;
+
+            string chipText, header, body;
+            if (advice.SetDelta > 0)
+            {
+                chipText = string.Format(AppResources.CoachChip_VolumeUp_Text_Format, muscleName);
+                header   = string.Format(AppResources.CoachChip_VolumeUp_Header_Format, muscleName);
+                body     = string.Format(AppResources.CoachChip_VolumeUp_Body_Format, muscleName);
+            }
+            else
+            {
+                chipText = string.Format(AppResources.CoachChip_VolumeDown_Text_Format, muscleName);
+                header   = string.Format(AppResources.CoachChip_VolumeDown_Header_Format, muscleName);
+                body     = string.Format(AppResources.CoachChip_VolumeDown_Body_Format, muscleName);
+            }
+
+            var chip = new CoachChip(
+                PromptId: $"volume-advice-{advice.Muscle.ToString().ToLowerInvariant()}-{(advice.SetDelta > 0 ? "up" : "down")}",
+                ChipText: chipText,
+                DetailHeader: header,
+                DetailBody: body);
+            candidates.Add((2, chip, TimeSpan.FromDays(5)));
         }
 
         // ── Chip 3: Volymtrend ───────────────────────────────────────────

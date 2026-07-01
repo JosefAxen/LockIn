@@ -351,6 +351,34 @@ public static class AppResources
     public static string ActiveWorkout_PR_Message_Format             => Get(nameof(ActiveWorkout_PR_Message_Format));
     public static string ActiveWorkout_AutoProgress_WeightUp_Format  => Get(nameof(ActiveWorkout_AutoProgress_WeightUp_Format));
     public static string ActiveWorkout_AutoProgress_RepsUp_Format    => Get(nameof(ActiveWorkout_AutoProgress_RepsUp_Format));
+
+    // ── RP RIR-hint ─────────────────────────────────────────────────────
+    public static string Rir_Hint_Text                               => Get(nameof(Rir_Hint_Text));
+    public static string Rir_Hint_Dismiss                            => Get(nameof(Rir_Hint_Dismiss));
+
+    // ── RP vikt-progression ─────────────────────────────────────────────
+    public static string WeightSuggestion_Reason_HitAllReps          => Get(nameof(WeightSuggestion_Reason_HitAllReps));
+    public static string WeightSuggestion_Reason_MaintainWeight      => Get(nameof(WeightSuggestion_Reason_MaintainWeight));
+    public static string WeightSuggestion_Reason_MissedReps          => Get(nameof(WeightSuggestion_Reason_MissedReps));
+
+    // ── PostWorkout RP recovery-feedback ─────────────────────────────────
+    public static string PostWorkout_Feedback_Header                 => Get(nameof(PostWorkout_Feedback_Header));
+    public static string PostWorkout_Pump_Question                   => Get(nameof(PostWorkout_Pump_Question));
+    public static string PostWorkout_Soreness_Question               => Get(nameof(PostWorkout_Soreness_Question));
+    public static string PostWorkout_Performance_Question            => Get(nameof(PostWorkout_Performance_Question));
+    public static string PostWorkout_Scale_Low                       => Get(nameof(PostWorkout_Scale_Low));
+    public static string PostWorkout_Scale_High                      => Get(nameof(PostWorkout_Scale_High));
+
+    // ── RP coach-chips ─────────────────────────────────────────────────
+    public static string CoachChip_Deload_Text                       => Get(nameof(CoachChip_Deload_Text));
+    public static string CoachChip_Deload_Header                     => Get(nameof(CoachChip_Deload_Header));
+    public static string CoachChip_Deload_Body                       => Get(nameof(CoachChip_Deload_Body));
+    public static string CoachChip_VolumeUp_Text_Format              => Get(nameof(CoachChip_VolumeUp_Text_Format));
+    public static string CoachChip_VolumeUp_Header_Format            => Get(nameof(CoachChip_VolumeUp_Header_Format));
+    public static string CoachChip_VolumeUp_Body_Format              => Get(nameof(CoachChip_VolumeUp_Body_Format));
+    public static string CoachChip_VolumeDown_Text_Format            => Get(nameof(CoachChip_VolumeDown_Text_Format));
+    public static string CoachChip_VolumeDown_Header_Format          => Get(nameof(CoachChip_VolumeDown_Header_Format));
+    public static string CoachChip_VolumeDown_Body_Format            => Get(nameof(CoachChip_VolumeDown_Body_Format));
     public static string ActiveWorkout_FinishConfirm_Title           => Get(nameof(ActiveWorkout_FinishConfirm_Title));
     public static string ActiveWorkout_FinishConfirm_Body            => Get(nameof(ActiveWorkout_FinishConfirm_Body));
     public static string ActiveWorkout_FinishConfirm_Yes             => Get(nameof(ActiveWorkout_FinishConfirm_Yes));

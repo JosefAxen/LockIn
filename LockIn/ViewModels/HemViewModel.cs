@@ -6,7 +6,7 @@ using LockIn.Services;
 
 namespace LockIn.ViewModels;
 
-public partial class HemViewModel(DatabaseService db, IHealthService health) : ObservableObject
+public partial class HemViewModel(DatabaseService db, IHealthService health, ISetProgressionEngine setProgression) : ObservableObject
 {
     private static bool _permissionsRequested;
 
@@ -322,9 +322,11 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
             var nearestPRTask        = db.GetNearestPRGapAsync(recentCutoff);
             var weekStreakTask        = db.GetCurrentWeekStreakAsync();
             var muscleScoresTask     = db.GetMuscleScoresAsync();
+            var setProgressionTask   = setProgression.AnalyzeAsync();
 
             await Task.WhenAll(prevWeekSessionsTask, thisWeekVolumeTask,
-                               prevWeekVolumeTask, nearestPRTask, weekStreakTask, muscleScoresTask);
+                               prevWeekVolumeTask, nearestPRTask, weekStreakTask, muscleScoresTask,
+                               setProgressionTask);
 
             var prResult = nearestPRTask.Result;
             var lastSession = recentSessions
@@ -348,7 +350,9 @@ public partial class HemViewModel(DatabaseService db, IHealthService health) : O
                 DaysSinceLastWorkout:  daysSinceLast,
                 ThisWeekVolumeKg:      thisWeekVolumeTask.Result,
                 PrevWeekVolumeKg:      prevWeekVolumeTask.Result,
-                WeekStreak:            weekStreakTask.Result
+                WeekStreak:            weekStreakTask.Result,
+                VolumeAdvices:         setProgressionTask.Result.VolumeAdvices,
+                DeloadAdvice:          setProgressionTask.Result.DeloadAdvice
             );
 
             var chips = CoachPromptEngine.Evaluate(ctx);

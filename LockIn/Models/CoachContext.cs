@@ -1,3 +1,5 @@
+using LockIn.Services;
+
 namespace LockIn.Models;
 
 public record CoachContext(
@@ -13,5 +15,7 @@ public record CoachContext(
     int DaysSinceLastWorkout,
     double ThisWeekVolumeKg,
     double PrevWeekVolumeKg,
-    int WeekStreak
+    int WeekStreak,
+    IReadOnlyList<VolumeAdvice> VolumeAdvices,
+    DeloadAdvice? DeloadAdvice
 );

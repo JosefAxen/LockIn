@@ -25,6 +25,30 @@ public partial class PostWorkoutViewModel(
     [ObservableProperty] private bool _isLoading;
     [ObservableProperty] private bool _isSharing;
 
+    // RP recovery-markörer (1-4 skala, null = ej ifyllt)
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsPump1), nameof(IsPump2), nameof(IsPump3), nameof(IsPump4))]
+    private int? _pump;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsSoreness1), nameof(IsSoreness2), nameof(IsSoreness3), nameof(IsSoreness4))]
+    private int? _soreness;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsPerformance1), nameof(IsPerformance2), nameof(IsPerformance3), nameof(IsPerformance4))]
+    private int? _performance;
+
+    public bool IsPump1 => Pump == 1;
+    public bool IsPump2 => Pump == 2;
+    public bool IsPump3 => Pump == 3;
+    public bool IsPump4 => Pump == 4;
+    public bool IsSoreness1 => Soreness == 1;
+    public bool IsSoreness2 => Soreness == 2;
+    public bool IsSoreness3 => Soreness == 3;
+    public bool IsSoreness4 => Soreness == 4;
+    public bool IsPerformance1 => Performance == 1;
+    public bool IsPerformance2 => Performance == 2;
+    public bool IsPerformance3 => Performance == 3;
+    public bool IsPerformance4 => Performance == 4;
+
     private bool _committed;
     private WorkoutSession? _loadedSession;
 
@@ -48,6 +72,9 @@ public partial class PostWorkoutViewModel(
 
         _loadedSession = session;
         Notes = session.Notes ?? "";
+        Pump = session.PumpRating;
+        Soreness = session.SorenessRating;
+        Performance = session.PerformanceRating;
 
         var templates = await db.GetTemplatesAsync();
         TemplateName = templates.FirstOrDefault(t => t.Id == session.TemplateId)?.Name ?? "";
@@ -278,6 +305,15 @@ public partial class PostWorkoutViewModel(
     }
 
     [RelayCommand]
+    private void SetPump(string value) => Pump = int.TryParse(value, out var v) ? v : (int?)null;
+
+    [RelayCommand]
+    private void SetSoreness(string value) => Soreness = int.TryParse(value, out var v) ? v : (int?)null;
+
+    [RelayCommand]
+    private void SetPerformance(string value) => Performance = int.TryParse(value, out var v) ? v : (int?)null;
+
+    [RelayCommand]
     private async Task UndoFinishAsync()
     {
         _committed = true;  // markera som "hanterad" — ingen commit
@@ -290,7 +326,7 @@ public partial class PostWorkoutViewModel(
     {
         if (_committed) return;
         _committed = true;
-        await activeWorkout.CommitFinishAsync(Notes);
+        await activeWorkout.CommitFinishAsync(Notes, Pump, Soreness, Performance);
 
         // Sync till Apple Health efter commit — CompletedAt är nu satt.
         if (_loadedSession is not null &&
@@ -312,7 +348,7 @@ public partial class PostWorkoutViewModel(
     {
         if (_committed) return;
         _committed = true;
-        await activeWorkout.CommitFinishAsync(Notes);
+        await activeWorkout.CommitFinishAsync(Notes, Pump, Soreness, Performance);
     }
 
     private static string MuscleGroupName(MuscleGroup mg) => mg switch

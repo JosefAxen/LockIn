@@ -115,6 +115,18 @@ public class DatabaseService
         try { await _db.ExecuteAsync("ALTER TABLE Exercises ADD COLUMN SwedishName TEXT NOT NULL DEFAULT ''"); }
         catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
 
+        // Fas 7: RP autoreglering — post-workout feedback (pump/soreness/performance på 1-4-skala, null = ej ifyllt)
+        try { await _db.ExecuteAsync("ALTER TABLE WorkoutSessions ADD COLUMN PumpRating INTEGER NULL"); }
+        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
+        try { await _db.ExecuteAsync("ALTER TABLE WorkoutSessions ADD COLUMN SorenessRating INTEGER NULL"); }
+        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
+        try { await _db.ExecuteAsync("ALTER TABLE WorkoutSessions ADD COLUMN PerformanceRating INTEGER NULL"); }
+        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
+
+        // RP onboarding-flaggor
+        try { await _db.ExecuteAsync("ALTER TABLE AppSettings ADD COLUMN HasSeenRirHint INTEGER NOT NULL DEFAULT 0"); }
+        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
+
         await SeedAsync();
         await SeedExerciseDescriptionsAsync();
         await SeedForearmExercisesAsync();
