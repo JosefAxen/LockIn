@@ -96,7 +96,7 @@ public class DatabaseService
         await SeedExerciseDbAsync();
         await SeedSwedishNamesAsync();
         await SeedMuscleVolumeLandmarksAsync();
-        // Task 14 lägger till SeedTemplateLibraryAsync()
+        await SeedTemplateLibraryAsync();
     }
 
     private async Task SeedMuscleVolumeLandmarksAsync()
@@ -121,6 +121,51 @@ public class DatabaseService
         };
         foreach (var (g, mev, mrv) in defaults)
             await _db.InsertAsync(new MuscleVolumeLandmarks { MuscleGroup = g, MEV = mev, MRV = mrv });
+    }
+
+    private async Task SeedTemplateLibraryAsync()
+    {
+        var count = await _db.ExecuteScalarAsync<int>(
+            "SELECT COUNT(*) FROM WorkoutTemplates WHERE IsCustom = 0");
+        if (count > 0) return;
+
+        foreach (var def in Data.TemplateLibrary.All)
+        {
+            var template = new WorkoutTemplate
+            {
+                Name = def.Name,
+                IsCustom = false,
+                DefaultDaysPerWeek = def.DaysPerWeek,
+                CreatedAt = DateTime.Now,
+            };
+            await _db.InsertAsync(template);
+
+            for (int i = 0; i < def.Days.Count; i++)
+            {
+                var d = def.Days[i];
+                var day = new TemplateDay
+                {
+                    TemplateId = template.Id,
+                    DayIndex = i,
+                    Label = d.Label,
+                    DefaultDayOfWeek = d.DefaultDayOfWeek,
+                };
+                await _db.InsertAsync(day);
+
+                for (int j = 0; j < d.Muscles.Count; j++)
+                {
+                    var slot = new TemplateMuscleSlot
+                    {
+                        TemplateDayId = day.Id,
+                        MuscleGroupValue = (int)d.Muscles[j],
+                        SortOrder = j,
+                    };
+                    await _db.InsertAsync(slot);
+                    // Ingen exercise-tilldelning här — det görs vid StartFromTemplateAsync
+                    // med ExerciseRecommendationService.
+                }
+            }
+        }
     }
 
     public async Task<List<MuscleVolumeLandmarks>> GetMuscleVolumeLandmarksAsync()
