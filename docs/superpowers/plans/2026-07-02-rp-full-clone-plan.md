@@ -89,6 +89,343 @@ Research-rapport: [docs/research/2026-06-30-rp-hypertrophy-research.md](../../re
 
 ---
 
+# RP-metodikens algoritmer och uträkningar
+
+Alla siffror och formler kommer från [docs/research/2026-06-30-rp-hypertrophy-research.md](../../research/2026-06-30-rp-hypertrophy-research.md) och RP Strength primärkällor. Detta är den kanoniska referensen för alla implementations-tasks — Task 5, 9, 10, 11, 12 hänvisar hit istället för att duplicera formlerna.
+
+## A. MEV / MAV / MRV / MV per muskelgrupp
+
+**Volymlandmärken (sets per vecka), RP:s illustrativa startpunkter:**
+
+| Muskelgrupp | MV (Maintenance) | MEV (Min Effective) | MRV (Max Recoverable) |
+|---|---|---|---|
+| Chest       | 6 | 10 | 20 |
+| Back        | 6 | 12 | 22 |
+| Shoulders   | 6 | 10 | 20 |
+| Biceps      | 6 |  8 | 17 |
+| Triceps     | 6 |  8 | 17 |
+| Quads       | 6 | 10 | 20 |
+| Hamstrings  | 6 |  8 | 18 |
+| Glutes      | 6 |  8 | 16 |
+| Calves      | 6 |  8 | 16 |
+| Traps       | 6 |  6 | 14 |
+| Forearms    | 4 |  6 | 14 |
+| Abs         | 4 |  8 | 18 |
+
+**Källa:** RP Strength — [Training Volume Landmarks for Muscle Growth](https://rpstrength.com/blogs/articles/training-volume-landmarks-muscle-growth). Värdena är individuella startpunkter, inte universella — användaren kan justera via `MuscleVolumeLandmarks`-tabellen.
+
+**MAV (Maximum Adaptive Volume):** Ligger mellan MEV och MRV. Räknas inte explicit — används i UI-zonklassificering.
+
+## B. RIR-progression per cykelvecka
+
+**Formel** — givet `weekIndex` (0-indexerad) och `totalWeeks` (inklusive deload):
+
+```
+IF weekIndex == totalWeeks - 1:     # Deload-vecka
+    targetRir = 4
+ELIF totalWeeks - 1 == 1:            # Bara en accumulation-vecka
+    targetRir = 3
+ELSE:
+    accumulationWeeks = totalWeeks - 1
+    progress = weekIndex / (accumulationWeeks - 1)   # 0.0 → 1.0
+    raw = 4.0 - (progress * 3.0)                     # 4.0 → 1.0
+    targetRir = max(1, round(raw))
+```
+
+**Exempel** (5-veckors cykel, 4 accumulation + 1 deload):
+- Vecka 1 (idx 0): RIR **4**
+- Vecka 2 (idx 1): RIR **3**
+- Vecka 3 (idx 2): RIR **2**
+- Vecka 4 (idx 3): RIR **1**
+- Vecka 5 (idx 4, deload): RIR **4**
+
+**Placering:** `CycleContextService.ComputeTargetRir()` (finns redan från Fas 2 Task 8 — verifiera formeln behålls). Skickas till `LoggedSetRow.TargetRir` som visas som placeholder `"3 RIR"` i reps-fältet (Task 24).
+
+## C. Vikt-progression per set/pass
+
+**Regel** — givet föregående sessions sets för en övning:
+
+```
+lastSet = senaste working-setet från föregående session
+targetReps = TemplateExercise.TargetRepsMin (eller TargetReps om single-value)
+mechanic = Exercise.Mechanic  (Compound / Isolation)
+increment = 2.5 kg (Compound) eller 1.25 kg (Isolation)
+
+hitAllReps = alla working-sets ≥ targetReps
+lastRir = lastSet.RIR
+
+IF hitAllReps AND lastRir >= 1:
+    nextWeight = round(lastSet.WeightKg + increment, increment)
+    reason = "Alla reps nådda med minst 1 RIR kvar — dags att öka"
+ELIF hitAllReps AND lastRir == 0:
+    nextWeight = lastSet.WeightKg
+    reason = "Alla reps nådda men RIR = 0 — behåll vikten, öka reps först"
+ELSE:
+    nextWeight = lastSet.WeightKg
+    reason = "Reps-mål inte nått — behåll vikten till formen sitter"
+```
+
+**Deload-vecka override** (från MesocycleWeek.IsDeload):
+```
+IF isDeloadWeek:
+    nextWeight = peak_last_meso_week × 0.80
+    increment = 0    # ingen progression under deload
+    targetRir = 4
+```
+
+**Placering:** `WeightProgressionService.SuggestNextWeightAsync()` (Task 12).
+
+**Källa:** RP:s "Progressing for Hypertrophy" — hit all reps + ≥1 RIR = ökning.
+
+## D. Volym-progression per muskelprioritet (per vecka)
+
+**Formel** — givet muskel, weekIndex, prio, MEV, MRV:
+
+```
+IF weekIndex == totalWeeks - 1:           # Deload
+    plannedSets = max(2, floor(peakSetsLastWeek × 0.5))
+    RETURN
+ELIF prio == Maintain:
+    plannedSets = MV                       # fast 6 sets
+    RETURN
+ELIF prio == Emphasize:
+    startSets = MEV
+    increment = 2                          # +2 sets/vecka
+ELIF prio == Grow:
+    startSets = MEV
+    increment = 1                          # +1 set/vecka
+
+targetSets = startSets + (weekIndex × increment)
+plannedSets = min(targetSets, MRV)         # cappa vid MRV
+```
+
+**Exempel** (Bröst, 5-veckors cykel, Emphasize, MEV=10, MRV=20):
+- Vecka 1: 10 sets
+- Vecka 2: 12 sets
+- Vecka 3: 14 sets
+- Vecka 4: 16 sets
+- Vecka 5 (deload): max(2, floor(16 × 0.5)) = **8 sets**
+
+**Exempel** (Bröst, samma cykel, Grow):
+- Vecka 1-4: 10, 11, 12, 13 sets
+- Vecka 5: 6-7 sets
+
+**Placering:** `VolumeProgressionService.GetPlannedVolumeForMesocycleAsync()` (Task 11).
+
+## E. Set-progression baserat på post-workout-feedback
+
+**Trigger-matris** (från docs/research avsnitt 7) — läser senaste 2 pass som tränat samma muskelgrupp och deras `SessionMuscleFeedback`:
+
+```
+lastTwo = [senaste 2 pass som tränat denna muskelgrupp med feedback]
+
+# Deload-signal (per session, alla muskler):
+IF senaste_session har ANY muskel med VolumeLevel == TooMuch:
+    → Trigger DeloadAdvice (severity=2, "Kör en lätt vecka nu")
+ELIF båda_senaste har ≥ 1 muskel med VolumeLevel == PushedLimits AND JointPain ≥ Moderate:
+    → Trigger DeloadAdvice (severity=1)
+
+# Volume-advice per muskelgrupp:
+FOR muskel IN muskler_tränade_i_båda_senaste:
+    pumpBoth  = båda passen har Pump för denna muskel
+    volBoth   = båda passen har Volume för denna muskel
+
+    IF båda Pump == Amazing AND båda Volume ∈ {JustRight, PushedLimits}:
+        → VolumeAdvice(muskel, +2 sets)   # perfekt zon, öka
+    ELIF båda Pump ≥ Moderate AND båda Volume == JustRight:
+        → VolumeAdvice(muskel, +1 set)
+    ELIF båda Pump == Low OR båda Volume == NotEnough:
+        → VolumeAdvice(muskel, +1 set)    # för lite stimulus
+    ELIF båda Volume == PushedLimits AND ANY JointPain ≥ Moderate:
+        → VolumeAdvice(muskel, -1 set)    # skada-risk
+    ELIF båda Volume == TooMuch:
+        → VolumeAdvice(muskel, -2 sets)
+    ELSE:
+        → Ingen advice
+```
+
+**Cooldown:** DeloadAdvice = 7 dagar (via `Preferences`). VolumeAdvice per muskel = 5 dagar. Kalenderbaserad deload (från MesocycleWeek.IsDeload) = 3 dagar cooldown.
+
+**Placering:** `SetProgressionEngine.AnalyzeAsync()` (Task 12).
+
+## F. Muskelgrupp-till-dag-fördelning per Meso Builder
+
+**Standard splits baserat på DaysPerWeek:**
+
+**2 dagar — Full Body A/B:**
+- Day 1 (Mon): Chest, Back, Shoulders, Biceps, Triceps, Abs
+- Day 2 (Thu): Quads, Hamstrings, Glutes, Calves, Back, Chest
+
+**3 dagar — Full Body × 3 med olika muskel-fokus:**
+- Day 1 (Mon): Chest, Back, Shoulders, Triceps, Biceps
+- Day 2 (Wed): Quads, Hamstrings, Glutes, Calves, Abs
+- Day 3 (Fri): Chest, Back, Shoulders, Biceps, Triceps
+
+**4 dagar — Upper/Lower × 2:**
+- Day 1 (Mon) Upper A: Chest, Back, Shoulders, Biceps, Triceps
+- Day 2 (Tue) Lower A: Quads, Hamstrings, Glutes, Calves, Abs
+- Day 3 (Thu) Upper B: Chest, Back, Shoulders, Triceps, Biceps
+- Day 4 (Fri) Lower B: Quads, Hamstrings, Glutes, Calves
+
+**5 dagar — PPL + Upper/Lower:**
+- Day 1 (Mon) Push: Chest, Shoulders, Triceps
+- Day 2 (Tue) Pull: Back, Biceps, Traps
+- Day 3 (Wed) Legs: Quads, Hamstrings, Glutes, Calves
+- Day 4 (Fri) Upper: Chest, Back, Shoulders, Biceps, Triceps
+- Day 5 (Sat) Lower: Quads, Hamstrings, Glutes, Calves, Abs
+
+**6 dagar — PPL × 2:**
+- Day 1 (Mon) Push A: Chest, Shoulders, Triceps
+- Day 2 (Tue) Pull A: Back, Biceps, Traps
+- Day 3 (Wed) Legs A: Quads, Hamstrings, Glutes, Calves
+- Day 4 (Thu) Push B: Chest, Shoulders, Triceps
+- Day 5 (Fri) Pull B: Back, Biceps, Traps
+- Day 6 (Sat) Legs B: Quads, Hamstrings, Glutes, Calves, Abs
+
+**Prioritetsjustering:** Efter split-tilldelning — för varje muskel med `PriorityLevel == Emphasize`, addera muskeln till 1 extra dag om möjligt (t.ex. Push A + Push B för Emphasize:d bröst). För `Maintain`, minska frekvens till max 1x/vecka.
+
+**Placering:** `MesoBuilderServiceV2.BuildAsync()` (Task 10). Split-lookup implementeras som statisk data i `Data/SplitTemplates.cs`.
+
+## G. Exercise Recommendation-prioritering
+
+**Rank-algoritm** för att välja övning per `TemplateMuscleSlot`:
+
+```
+kandidater = SELECT * FROM Exercises
+             WHERE MuscleGroup == slot.MuscleGroup
+             AND Equipment ∈ preferredEquipment
+             AND Id NOT IN excludedIds
+
+# Rank-poäng (högre = bättre val):
+FOR ex IN kandidater:
+    poäng = 0
+    IF ex.Mechanic == Compound: poäng += 100
+    IF ex.Level ∈ {Beginner, Intermediate}: poäng += 50
+    IF ex.Equipment == user.primaryEquipment: poäng += 30
+    IF ex.IsCustom == false: poäng += 10     # föredra RP:s egna
+    poäng += hash(mesocycleId × slot.Id × ex.Id) % 20   # deterministic tie-break
+
+sortera fallande på poäng
+
+# Retur baserat på prio:
+IF prio == Emphasize:
+    retur = första 2-3 (compound-first, sen isolation)
+ELIF prio == Grow:
+    retur = första 1-2
+ELIF prio == Maintain:
+    retur = första 1
+```
+
+**Placering:** `ExerciseRecommendationService.RecommendForMuscleAsync()` (Task 9).
+
+## H. Weekly volume calculation
+
+**Formel** för `WeeklyVolumeService.GetCurrentWeekVolumeAsync`:
+
+```
+weekStart = närmaste_måndag(DateTime.Today)   # ISO-vecka
+weekEnd   = weekStart + 7 dagar
+
+sessions = SELECT * FROM WorkoutSessions
+           WHERE CompletedAt IS NOT NULL
+           AND CompletedAt BETWEEN weekStart AND weekEnd
+
+setsByMuscle = {}
+FOR session IN sessions:
+    FOR sessionExercise IN session.Exercises:
+        IF sessionExercise.IsSkipped: CONTINUE
+        muscle = sessionExercise.MuscleGroup   # primär, cachad
+        FOR loggedSet IN sessionExercise.Sets:
+            IF loggedSet.SetType == Warmup: CONTINUE
+            IF loggedSet.WeightKg == 0 AND loggedSet.Reps == 0: CONTINUE  # inte loggat
+            setsByMuscle[muscle] += 1
+
+# Zone-classification per muskelgrupp:
+FOR muscle IN alla:
+    sets = setsByMuscle.get(muscle, 0)
+    lm = landmarks[muscle]
+    IF sets < lm.MEV:
+        zone = UnderMEV
+    ELIF sets > lm.MRV:
+        zone = OverMRV
+    ELSE:
+        nearThreshold = lm.MEV + round((lm.MRV - lm.MEV) × 0.8)
+        IF sets >= nearThreshold: zone = NearMRV
+        ELSE:                     zone = InMAV
+```
+
+**Regler:**
+- Warmup-sets räknas EJ
+- Skipp:ade sets räknas EJ
+- Tomma sets (utan vikt+reps) räknas EJ
+- Sekundärmusklar räknas EJ (chinup = bara Back, inte Biceps) — sekundär-viktning är framtida arbete
+- Bara pass med `CompletedAt IS NOT NULL` räknas
+
+**Placering:** `WeeklyVolumeService.GetCurrentWeekVolumeAsync()` (Task 13).
+
+## I. Deload-vecka format
+
+**Från MesoBuilderService när cykel genereras:**
+- Sista veckan i cykeln: `IsDeload = true`, `IntensityPercent = 50`
+- Sets per muskel: floor(peakSets × 0.5), min 2
+
+**Under passet:**
+- ActiveWorkoutViewModel visar deload-banner om `activeCycle.CurrentWeek.IsDeload`
+- WeightProgressionService reducerar suggestion till 80% av peak-vikt (se sektion C ovan)
+- CycleContextService sätter `TargetRir = 4` (se sektion B ovan)
+
+## J. Startvikt-vägledning (första passet i vecka 1)
+
+**Info-banner-text** (svenska, från Task 24):
+```
+"Välj en vikt du kan lyfta i {targetReps} reps och sluta med 3 RIR (≈ 3 reps kvar
+innan failure). Är du osäker, ta 60 % av din 1RM. Nästa pass justeras vikten
+automatiskt baserat på RIR du hade kvar."
+```
+
+**Visning:** Blå banner ovanför set-tabellen på ActiveWorkoutPage. Visas ENDAST när:
+1. `MesocycleWeek.WeekNumber == 1` OCH
+2. `AppSettings.HasSeenStartWeightHint == false` OCH
+3. Ingen tidigare `LoggedSet` finns för samma `ExerciseId`
+
+Efter tapp "OK, förstått" → `HasSeenStartWeightHint = true`, banner försvinner permanent.
+
+## K. Data-driven vs kalender-baserad deload — kombinerad logik
+
+```
+# Vid varje session-start:
+mesoCurrentWeek = MesocycleService.GetCurrentWeekAsync()
+IF mesoCurrentWeek?.IsDeload:
+    → visa deload-banner + sätt targetRir=4 + WeightProgressionService override
+    → CoachChip "Deload-vecka" med cooldown 3 dagar
+
+# Vid varje pass-avslut (efter feedback):
+analysis = SetProgressionEngine.AnalyzeAsync()
+IF analysis.DeloadAdvice != null AND !mesoCurrentWeek?.IsDeload:
+    → CoachChip "Kör en lätt vecka" (data-driven, prio 0)
+    → Kan trigga TIDIG deload (innan cykelns slut)
+```
+
+## L. Muscle Priority-visning (III / II / I)
+
+**Symbolik (matchar RP:s app IMG_0936):**
+- **Emphasize** — tre fyllda staplar (▮▮▮)
+- **Grow** — två fyllda staplar (▮▮○)
+- **Maintain** — en fylld stapel (▮○○)
+
+**Färg per muskelgrupp** (från befintlig `WorkoutExerciseSection.AccentColor`):
+- Chest: `#FB7185` (rosa/rött)
+- Back: `#38BDF8` (blå)
+- Shoulders: `#A78BFA` (lila)
+- Biceps: `#4ADE80` (grön)
+- Triceps: `#FBBF24` (gul)
+- Quads/Hamstrings/Glutes/Calves: `#F97316` (orange)
+- Traps/Forearms/Abs: `#EC4899` (pink)/gray
+
+**Placering:** `Controls/MusclePriorityPill.cs` — ny SkiaSharp- eller ren XAML-kontroll (Task 23).
+
+---
+
 # ETAPP 1 — Data-modell + Services (15 tasks)
 
 Målet med Etapp 1 är att bygga hela den nya arkitekturen på back-end innan UI:t rörs. Under denna etapp bräker UI:t (LibraryPage, TemplateEditPage, ActiveWorkoutPage, PeriodizationPage m.fl.) eftersom de pratar med gamla modellen. **Detta är accepterat** — appen ska inte köras publikt under övergången.
@@ -532,7 +869,7 @@ private async Task InitCoreAsync()
 }
 ```
 
-- [ ] **Steg 3:** Uppdatera `SeedMuscleVolumeLandmarksAsync` med de nya muskelgrupperna (Quads, Hamstrings, Glutes, Calves, Traps, Abs). Standardvärden (från research):
+- [ ] **Steg 3:** Uppdatera `SeedMuscleVolumeLandmarksAsync` med de nya muskelgrupperna (Quads, Hamstrings, Glutes, Calves, Traps, Abs). **Standardvärden hämtas från sektion A "MEV/MAV/MRV/MV per muskelgrupp"** ovan (den enda källan för alla tal — ändra där om något justeras):
 
 ```csharp
 var defaults = new (MuscleGroup Group, int Mev, int Mrv)[]
@@ -551,6 +888,8 @@ var defaults = new (MuscleGroup Group, int Mev, int Mrv)[]
     (MuscleGroup.Abs,         8, 18),
 };
 ```
+
+MV (Maintenance Volume) hardcodas separat i `VolumeProgressionService` till 6 sets/vecka per muskel (undantag: Forearms/Abs = 4). Se sektion A + D.
 
 - [ ] **Steg 4:** Ta bort alla gamla metoder i `DatabaseService.cs` som pratar med raderade tabeller:
   - `GetTemplatesAsync`, `GetTemplateExercisesAsync`, `SaveTemplateAsync`, `DeleteTemplateAsync`
@@ -701,12 +1040,9 @@ public interface IExerciseRecommendationService
 
 - [ ] **Steg 1:** Läs `AppSettings.PreferredEquipmentJson` (JSON-array av EquipmentType-int). Fallback: alla equipment.
 
-- [ ] **Steg 2:** Query `Exercises WHERE MuscleGroup = ? AND Equipment IN (...) AND Id NOT IN (excluded)`. Sortera:
-  - `Mechanic = Compound` före `Isolation`
-  - `Level = Beginner/Intermediate` före `Expert`
-  - Slumpa inom samma kategori (deterministic seed = mesocycle-Id + slot-Id)
+- [ ] **Steg 2:** Implementera exakt enligt **sektion G "Exercise Recommendation-prioritering"** ovan — rank-poäng med Compound (+100) / Level (+50) / PrimaryEquipment (+30) / IsCustom=false (+10) + deterministic hash-tie-break.
 
-- [ ] **Steg 3:** För `Emphasize`-prio: returnera 2-3 övningar (compound + isolation-varians). För `Grow`: 1-2 övningar. För `Maintain`: 1 övning.
+- [ ] **Steg 3:** Returnera antal enligt prio (sektion G): Emphasize → 2-3 övningar (compound-first), Grow → 1-2, Maintain → 1.
 
 - [ ] **Steg 4:** Registrera i `MauiProgram.cs`.
 
@@ -742,13 +1078,16 @@ public interface IMesoBuilderService
 }
 ```
 
-- [ ] **Steg 1:** `BuildAsync`:
+- [ ] **Steg 1:** Skapa `Data/SplitTemplates.cs` med statisk lookup från `DaysPerWeek → List<TemplateDayDef>` **enligt sektion F "Muskelgrupp-till-dag-fördelning per Meso Builder"** (alla splits för 2/3/4/5/6 dagar).
+
+- [ ] **Steg 2:** `BuildAsync`:
   1. Skapa ny `WorkoutTemplate { IsCustom=true, Name="{mesocycleName} template" }`
-  2. Skapa `TemplateDay[]` — DayIndex 0..DaysPerWeek-1, DefaultDayOfWeek fördelad jämnt (t.ex. Mon/Wed/Fri för 3 dagar)
-  3. Fördela muskelgrupperna över dagarna enligt prioritet. Emphasize-muskler får plats i flera dagar; Maintain i färre. Använd standard-split-mönster (PPL/ULP/FullBody) baserat på dags-antal.
-  4. För varje `TemplateMuscleSlot`: anropa `ExerciseRecommendationService.RecommendForMuscleAsync` — skapa `TemplateExercise[]` med default `TargetRepsMin/Max` (8-12 för compound, 12-15 för isolation).
-  5. Skapa `Mesocycle` + `MesocyclePriority[]` från spec.
-  6. Skapa `MesocycleWeek[]` — accumulation 70–90% linjärt, sista veckan Deload=true, 50%.
+  2. Hämta split från `SplitTemplates` baserat på `spec.DaysPerWeek`
+  3. **Applicera prioritetsjustering** (sektion F sista stycke): Emphasize-muskler → försök addera till 1 extra dag. Maintain → max 1x/vecka.
+  4. Skapa `TemplateDay[]` + `TemplateMuscleSlot[]` baserat på justerad split
+  5. För varje `TemplateMuscleSlot`: anropa `ExerciseRecommendationService.RecommendForMuscleAsync` (sektion G) — skapa `TemplateExercise[]` med default `TargetRepsMin=8, TargetRepsMax=12` för compound, `TargetRepsMin=12, TargetRepsMax=15` för isolation.
+  6. Skapa `Mesocycle` + `MesocyclePriority[]` från spec.
+  7. Skapa `MesocycleWeek[]` — accumulation 70–90% linjärt, sista veckan `IsDeload=true, IntensityPercent=50` (sektion I).
 
 - [ ] **Steg 2:** `StartFromTemplateAsync`: skippar template-generering, skapar bara ny Mesocycle + Priorities + Weeks kopplade till en befintlig template.
 
@@ -778,14 +1117,18 @@ public interface IVolumeProgressionService
 }
 ```
 
-- [ ] **Steg 1:** Algoritm för `GetPlannedVolumeForMesocycleAsync`:
-  - Hämta mesocycle, priorities, weeks
-  - Hämta MEV/MRV per muskelgrupp
-  - För varje muskel + varje vecka (utom deload):
-    - **Emphasize:** Start = MEV. Öka +2 sets/vecka mot MRV. Cap vid MRV.
-    - **Grow:** Start = MEV. Öka +1 set/vecka. Cap vid MRV.
-    - **Maintain:** Fast vid ~MV (6-8 sets, hämtas från AppSettings eller default 6).
-  - Deload-vecka: 50% av accumulation-veckans sista sets, avrundat nedåt, min 2.
+- [ ] **Steg 1:** Implementera exakt enligt **sektion D "Volym-progression per muskelprioritet"** ovan — pseudokod i sektion D är den enda källan för formeln.
+
+  MV-tabell (hardcodad i service, för `Maintain`-prio):
+  ```csharp
+  private static readonly Dictionary<MuscleGroup, int> MV = new()
+  {
+      { MuscleGroup.Chest, 6 }, { MuscleGroup.Back, 6 }, { MuscleGroup.Shoulders, 6 },
+      { MuscleGroup.Biceps, 6 }, { MuscleGroup.Triceps, 6 }, { MuscleGroup.Quads, 6 },
+      { MuscleGroup.Hamstrings, 6 }, { MuscleGroup.Glutes, 6 }, { MuscleGroup.Calves, 6 },
+      { MuscleGroup.Traps, 6 }, { MuscleGroup.Forearms, 4 }, { MuscleGroup.Abs, 4 },
+  };
+  ```
 
 - [ ] **Steg 2:** `GetTargetSetsForCurrentWeekAsync` returnerar värdet för aktuell vecka baserat på `MesocycleService.GetCurrentWeekAsync`.
 
@@ -807,16 +1150,14 @@ public interface IVolumeProgressionService
 - Consumes: nya modeller
 - Produces: samma publika interface men internt uppdaterade
 
-- [ ] **Steg 1:** `WeightProgressionService.SuggestNextWeightAsync` — samma logik, men jämför mot `LoggedSet.RIR` från senaste `SessionExercise` med samma `ExerciseId`. Använd `WorkoutSession.CompletedAt IS NOT NULL` som filter.
+- [ ] **Steg 1:** `WeightProgressionService.SuggestNextWeightAsync` — implementera exakt enligt **sektion C "Vikt-progression per set/pass"**. Deload-override (`IsDeloadWeek → peakWeight × 0.80`) från sektion C.
 
-- [ ] **Steg 2:** `SetProgressionEngine.AnalyzeAsync`:
-  - Ersätt läsning av `WorkoutSession.PumpRating` etc. med query mot `SessionMuscleFeedback` för senaste 2-3 pass som tränat samma muskel.
-  - Deload-trigger: senaste passets `SessionMuscleFeedback` visar `VolumeLevel=TooMuch` på flera muskler.
-  - Volym-advice: två pass i rad med `VolumeLevel=NotEnough` för muskel → +1 set. `PushedLimits + JointPain=Moderate+` → -1 set.
+- [ ] **Steg 2:** `SetProgressionEngine.AnalyzeAsync` — implementera exakt enligt **sektion E "Set-progression baserat på post-workout-feedback"**. Alla trigger-regler och cooldown-tider är där.
 
 - [ ] **Steg 3:** `CycleContextService.GetCurrentAsync`:
   - Hämta aktiv Mesocycle via `MesocycleService.GetActiveAsync`
-  - Hämta `MesocycleWeek` från vecka-beräkning
+  - Hämta `MesocycleWeek` från vecka-beräkning (dagar mellan `StartDate` och `Today` / 7)
+  - Beräkna `TargetRir` enligt **sektion B "RIR-progression per cykelvecka"** (formeln finns redan i befintlig `CycleContextService.ComputeTargetRir` från Fas 2 — verifiera att den matchar sektion B exakt)
   - Behåll `CycleContext`-recorden men uppdatera fälten (byt `TrainingCycle` → `Mesocycle`, `CycleWeek` → `MesocycleWeek`).
 
 - [ ] **Steg 4:** Bygg. Fixa alla kompilfel i services (inte ViewModels).
@@ -846,9 +1187,9 @@ public sealed record WeeklyVolumeReport(
     VolumeZone Zone);
 ```
 
-- [ ] **Steg 2:** Byt `_db.GetCompletedSessionsInRangeAsync` mot ny motsvarighet, byt `GetSessionVolumeByMuscleGroupAsync` mot ny query som räknar sets från nya `SessionExercise.MuscleGroupValue`.
+- [ ] **Steg 2:** Implementera set-räkning + zonklassificering exakt enligt **sektion H "Weekly volume calculation"** (regler för warmup/skipp/tomma/sekundär + zone-formel).
 
-- [ ] **Steg 3:** Om aktiv mesocycle finns → hämta `PlannedSets` från `IVolumeProgressionService`. Annars = 0.
+- [ ] **Steg 3:** Om aktiv mesocycle finns → hämta `PlannedSets` från `IVolumeProgressionService.GetTargetSetsForCurrentWeekAsync(muscle)`. Annars = 0.
 
 - [ ] **Steg 4:** Bygg. Commit: `feat(rp-clone): Task 13 — WeeklyVolumeService använder nya modellen`
 
@@ -1124,7 +1465,7 @@ public ObservableCollection<MusclePriorityRow> Priorities { get; }
 
 - [ ] **Steg 2:** XAML-header: stort "WEEK 1 DAY 1", subtext "Monday · Push A". Kalender-ikon till höger (öppnar `MesocycleStatsPage`) + kebab-meny.
 
-- [ ] **Steg 3:** `MusclePriorityPill` custom control: visar 3 vertikala staplar. Emphasize = 3 fyllda, Grow = 2, Maintain = 1. Färgat efter muskelgrupp.
+- [ ] **Steg 3:** `MusclePriorityPill` custom control: implementera enligt **sektion L "Muscle Priority-visning"** ovan (symbolik + färg per muskel). Läser `PriorityLevel` från `MesocyclePriority` för aktiv cykel.
 
 - [ ] **Steg 4:** Muskelgrupp-sektionsheader (ovan varje övningsblock): `[Pill] CHEST` i versaler. `MuscleGroup` cachas på `WorkoutExerciseSection`.
 
@@ -1150,7 +1491,7 @@ public ObservableCollection<MusclePriorityRow> Priorities { get; }
 
 - [ ] **Steg 4:** Log-checkbox till höger — tap:ar för att markera setet som loggat. Om weight+reps är tomma → toast "Ange vikt och reps".
 
-- [ ] **Steg 5:** Blå tap:bar info-banner "How to choose your starting weight" ovanför set-tabellen — visas ENDAST i vecka 1 och om `AppSettings.HasSeenStartWeightHint = false`. Tap → bottomsheet med RP-liknande vägledning + "Ok, got it" som sätter flaggan.
+- [ ] **Steg 5:** Blå tap:bar info-banner "How to choose your starting weight" enligt **sektion J "Startvikt-vägledning"** (visning-villkor och exakt text finns där).
 
 - [ ] **Steg 6:** Bygg + test. Commit.
 
@@ -1356,6 +1697,22 @@ Etapp 1 (Task 1-15) är en enda logisk enhet — den ska mergas i sin helhet inn
 ---
 
 # Self-review
+
+**Algoritm-täckning (research-baserad):**
+- ✓ Sektion A — MEV/MRV/MV per muskelgrupp (12 muskler med exakta tal)
+- ✓ Sektion B — RIR-progression per cykelvecka (formel med exempel)
+- ✓ Sektion C — Vikt-progression per set/pass (compound/isolation increment + deload-override)
+- ✓ Sektion D — Volym-progression per prioritet (Emphasize +2, Grow +1, Maintain=MV, deload 50%)
+- ✓ Sektion E — Set-progression feedback-heuristik (deload-trigger + volume-advice per muskel)
+- ✓ Sektion F — Muskel-till-dag-fördelning för 2/3/4/5/6 dagar + prioritetsjustering
+- ✓ Sektion G — Exercise recommendation-prioritering (rank-poäng + retur per prio)
+- ✓ Sektion H — Weekly volume-calculation (regler för warmup/skipp/tomma + zone-formel)
+- ✓ Sektion I — Deload-vecka format
+- ✓ Sektion J — Startvikt-vägledning (villkor + exakt banner-text)
+- ✓ Sektion K — Deload-triggers (kalender + data-driven kombinerad)
+- ✓ Sektion L — Muscle Priority-visning (symbolik + färg per muskel)
+
+Alla Tasks (5, 9, 10, 11, 12, 13, 23, 24) hänvisar till respektive algoritm-sektion istället för att duplicera formler. Om en formel behöver justeras finns den på ett enda ställe.
 
 **Spec coverage:**
 - ✓ Template-arkitektur helt om-arkitekturerad (Task 2, 6, 17, 18)
