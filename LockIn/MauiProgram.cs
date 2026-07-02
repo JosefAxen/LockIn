@@ -42,6 +42,8 @@ public static class MauiProgram
         builder.Services.AddSingleton<IWeeklyVolumeService, WeeklyVolumeService>();
         builder.Services.AddSingleton<ICycleContextService, CycleContextService>();
         builder.Services.AddSingleton<IMesoBuilderService, MesoBuilderService>();
+        builder.Services.AddSingleton<ITemplateService, TemplateService>();
+        builder.Services.AddSingleton<IMesocycleService, MesocycleService>();
         builder.Services.AddSingleton<RestTimerService>();
         builder.Services.AddSingleton<ActiveWorkoutStateService>();
         builder.Services.AddSingleton<NotificationService>();

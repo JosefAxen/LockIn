@@ -1143,6 +1143,284 @@ public class DatabaseService
         return await _db.DeleteAsync(photo);
     }
 
+    // ── Templates ─────────────────────────────────────────────────────────────
+
+    public async Task<List<WorkoutTemplate>> GetTemplatesAsync()
+    {
+        await InitAsync();
+        return await _db.Table<WorkoutTemplate>().OrderByDescending(t => t.CreatedAt).ToListAsync();
+    }
+
+    public async Task<WorkoutTemplate?> GetTemplateAsync(int id)
+    {
+        await InitAsync();
+        return await _db.Table<WorkoutTemplate>().Where(t => t.Id == id).FirstOrDefaultAsync();
+    }
+
+    public async Task<List<TemplateDay>> GetTemplateDaysAsync(int templateId)
+    {
+        await InitAsync();
+        return await _db.Table<TemplateDay>()
+            .Where(d => d.TemplateId == templateId)
+            .OrderBy(d => d.DayIndex)
+            .ToListAsync();
+    }
+
+    public async Task<List<TemplateMuscleSlot>> GetTemplateMuscleSlotsAsync(int templateDayId)
+    {
+        await InitAsync();
+        return await _db.Table<TemplateMuscleSlot>()
+            .Where(s => s.TemplateDayId == templateDayId)
+            .OrderBy(s => s.SortOrder)
+            .ToListAsync();
+    }
+
+    public async Task<List<TemplateExercise>> GetTemplateExercisesForSlotAsync(int templateMuscleSlotId)
+    {
+        await InitAsync();
+        return await _db.Table<TemplateExercise>()
+            .Where(e => e.TemplateMuscleSlotId == templateMuscleSlotId)
+            .OrderBy(e => e.SortOrder)
+            .ToListAsync();
+    }
+
+    public async Task<int> SaveTemplateWithChildrenAsync(
+        WorkoutTemplate template,
+        List<TemplateDay> days,
+        Dictionary<int, List<TemplateMuscleSlot>> slotsByDayIndex,
+        Dictionary<(int dayIndex, int slotSortOrder), List<TemplateExercise>> exercisesBySlot)
+    {
+        await InitAsync();
+        int templateId = template.Id;
+        await _db.RunInTransactionAsync(db =>
+        {
+            if (template.Id == 0)
+                db.Insert(template);
+            else
+                db.Update(template);
+            templateId = template.Id;
+
+            // Rensa gamla children
+            db.Execute("DELETE FROM TemplateExercises WHERE TemplateMuscleSlotId IN (SELECT Id FROM TemplateMuscleSlots WHERE TemplateDayId IN (SELECT Id FROM TemplateDays WHERE TemplateId = ?))", templateId);
+            db.Execute("DELETE FROM TemplateMuscleSlots WHERE TemplateDayId IN (SELECT Id FROM TemplateDays WHERE TemplateId = ?)", templateId);
+            db.Execute("DELETE FROM TemplateDays WHERE TemplateId = ?", templateId);
+
+            // Skapa nya
+            foreach (var day in days)
+            {
+                day.Id = 0;
+                day.TemplateId = templateId;
+                db.Insert(day);
+
+                if (slotsByDayIndex.TryGetValue(day.DayIndex, out var slots))
+                {
+                    foreach (var slot in slots)
+                    {
+                        slot.Id = 0;
+                        slot.TemplateDayId = day.Id;
+                        db.Insert(slot);
+
+                        if (exercisesBySlot.TryGetValue((day.DayIndex, slot.SortOrder), out var exs))
+                        {
+                            foreach (var ex in exs)
+                            {
+                                ex.Id = 0;
+                                ex.TemplateMuscleSlotId = slot.Id;
+                                db.Insert(ex);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        return templateId;
+    }
+
+    public async Task DeleteTemplateAsync(int templateId)
+    {
+        await InitAsync();
+        await _db.RunInTransactionAsync(db =>
+        {
+            db.Execute("DELETE FROM TemplateExercises WHERE TemplateMuscleSlotId IN (SELECT Id FROM TemplateMuscleSlots WHERE TemplateDayId IN (SELECT Id FROM TemplateDays WHERE TemplateId = ?))", templateId);
+            db.Execute("DELETE FROM TemplateMuscleSlots WHERE TemplateDayId IN (SELECT Id FROM TemplateDays WHERE TemplateId = ?)", templateId);
+            db.Execute("DELETE FROM TemplateDays WHERE TemplateId = ?", templateId);
+            db.Execute("DELETE FROM WorkoutTemplates WHERE Id = ?", templateId);
+        });
+    }
+
+    // ── Mesocycles ────────────────────────────────────────────────────────────
+
+    public async Task<List<Mesocycle>> GetMesocyclesAsync()
+    {
+        await InitAsync();
+        return await _db.Table<Mesocycle>().OrderByDescending(m => m.CreatedAt).ToListAsync();
+    }
+
+    public async Task<Mesocycle?> GetActiveMesocycleAsync()
+    {
+        await InitAsync();
+        return await _db.Table<Mesocycle>().Where(m => m.IsActive).FirstOrDefaultAsync();
+    }
+
+    public async Task<Mesocycle?> GetMesocycleAsync(int id)
+    {
+        await InitAsync();
+        return await _db.Table<Mesocycle>().Where(m => m.Id == id).FirstOrDefaultAsync();
+    }
+
+    public async Task<List<MesocyclePriority>> GetMesocyclePrioritiesAsync(int mesocycleId)
+    {
+        await InitAsync();
+        return await _db.Table<MesocyclePriority>()
+            .Where(p => p.MesocycleId == mesocycleId)
+            .ToListAsync();
+    }
+
+    public async Task<List<MesocycleWeek>> GetMesocycleWeeksAsync(int mesocycleId)
+    {
+        await InitAsync();
+        return await _db.Table<MesocycleWeek>()
+            .Where(w => w.MesocycleId == mesocycleId)
+            .OrderBy(w => w.WeekNumber)
+            .ToListAsync();
+    }
+
+    public async Task<int> SaveMesocycleAsync(
+        Mesocycle meso,
+        List<MesocyclePriority> priorities,
+        List<MesocycleWeek> weeks)
+    {
+        await InitAsync();
+        int mesoId = meso.Id;
+        await _db.RunInTransactionAsync(db =>
+        {
+            if (meso.Id == 0) db.Insert(meso);
+            else db.Update(meso);
+            mesoId = meso.Id;
+
+            db.Execute("DELETE FROM MesocyclePriorities WHERE MesocycleId = ?", mesoId);
+            db.Execute("DELETE FROM MesocycleWeeks WHERE MesocycleId = ?", mesoId);
+
+            foreach (var p in priorities)
+            {
+                p.Id = 0;
+                p.MesocycleId = mesoId;
+                db.Insert(p);
+            }
+            foreach (var w in weeks)
+            {
+                w.Id = 0;
+                w.MesocycleId = mesoId;
+                db.Insert(w);
+            }
+        });
+        return mesoId;
+    }
+
+    public async Task ActivateMesocycleAsync(int mesocycleId)
+    {
+        await InitAsync();
+        await _db.ExecuteAsync("UPDATE Mesocycles SET IsActive = 0");
+        await _db.ExecuteAsync("UPDATE Mesocycles SET IsActive = 1 WHERE Id = ?", mesocycleId);
+    }
+
+    public async Task DeleteMesocycleAsync(int mesocycleId)
+    {
+        await InitAsync();
+        await _db.RunInTransactionAsync(db =>
+        {
+            db.Execute("DELETE FROM MesocyclePriorities WHERE MesocycleId = ?", mesocycleId);
+            db.Execute("DELETE FROM MesocycleWeeks WHERE MesocycleId = ?", mesocycleId);
+            db.Execute("DELETE FROM Mesocycles WHERE Id = ?", mesocycleId);
+        });
+    }
+
+    // Session-CRUD (nya schemat)
+    public async Task<int> SaveWorkoutSessionAsync(WorkoutSession session)
+    {
+        await InitAsync();
+        return session.Id == 0 ? await _db.InsertAsync(session) : await _db.UpdateAsync(session);
+    }
+
+    public async Task<WorkoutSession?> GetWorkoutSessionAsync(int id)
+    {
+        await InitAsync();
+        return await _db.Table<WorkoutSession>().Where(s => s.Id == id).FirstOrDefaultAsync();
+    }
+
+    public async Task<List<WorkoutSession>> GetSessionsAsync()
+    {
+        await InitAsync();
+        return await _db.Table<WorkoutSession>().OrderByDescending(s => s.StartedAt).ToListAsync();
+    }
+
+    public async Task<List<WorkoutSession>> GetSessionsForMesocycleAsync(int mesocycleId)
+    {
+        await InitAsync();
+        return await _db.QueryAsync<WorkoutSession>(
+            @"SELECT ws.* FROM WorkoutSessions ws
+              JOIN MesocycleWeeks mw ON mw.Id = ws.MesocycleWeekId
+              WHERE mw.MesocycleId = ?
+              ORDER BY ws.StartedAt DESC", mesocycleId);
+    }
+
+    public async Task<int> SaveSessionExerciseAsync(SessionExercise se)
+    {
+        await InitAsync();
+        return se.Id == 0 ? await _db.InsertAsync(se) : await _db.UpdateAsync(se);
+    }
+
+    public async Task<List<SessionExercise>> GetSessionExercisesAsync(int sessionId)
+    {
+        await InitAsync();
+        return await _db.Table<SessionExercise>()
+            .Where(se => se.SessionId == sessionId)
+            .OrderBy(se => se.OrderIndex)
+            .ToListAsync();
+    }
+
+    public async Task DeleteSessionExerciseWithSetsAsync(int sessionExerciseId)
+    {
+        await InitAsync();
+        await _db.ExecuteAsync("DELETE FROM LoggedSets WHERE SessionExerciseId = ?", sessionExerciseId);
+        await _db.ExecuteAsync("DELETE FROM SessionExercises WHERE Id = ?", sessionExerciseId);
+    }
+
+    // Feedback CRUD
+    public async Task<int> SaveSessionMuscleFeedbackAsync(SessionMuscleFeedback fb)
+    {
+        await InitAsync();
+        return fb.Id == 0 ? await _db.InsertAsync(fb) : await _db.UpdateAsync(fb);
+    }
+
+    public async Task<List<SessionMuscleFeedback>> GetSessionMuscleFeedbackAsync(int sessionId)
+    {
+        await InitAsync();
+        return await _db.Table<SessionMuscleFeedback>()
+            .Where(f => f.SessionId == sessionId).ToListAsync();
+    }
+
+    public async Task<int> SaveSessionExerciseFeedbackAsync(SessionExerciseFeedback fb)
+    {
+        await InitAsync();
+        return fb.Id == 0 ? await _db.InsertAsync(fb) : await _db.UpdateAsync(fb);
+    }
+
+    public async Task<SessionExerciseFeedback?> GetSessionExerciseFeedbackAsync(int sessionExerciseId)
+    {
+        await InitAsync();
+        return await _db.Table<SessionExerciseFeedback>()
+            .Where(f => f.SessionExerciseId == sessionExerciseId).FirstOrDefaultAsync();
+    }
+
+    // ── LoggedSet save ────────────────────────────────────────────────────────
+
+    public async Task<int> SaveLoggedSetAsync(LoggedSet set)
+    {
+        await InitAsync();
+        return set.Id == 0 ? await _db.InsertAsync(set) : await _db.UpdateAsync(set);
+    }
+
     // ── Export ─────────────────────────────────────────────────────────────────
 
     internal class ExportSessionRow
