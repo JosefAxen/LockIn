@@ -41,7 +41,9 @@ public static class MauiProgram
         builder.Services.AddSingleton<ISetProgressionEngine, SetProgressionEngine>();
         builder.Services.AddSingleton<IWeeklyVolumeService, WeeklyVolumeService>();
         builder.Services.AddSingleton<ICycleContextService, CycleContextService>();
-        builder.Services.AddSingleton<IMesoBuilderService, MesoBuilderService>();
+        builder.Services.AddSingleton<IExerciseRecommendationService, ExerciseRecommendationService>();
+        builder.Services.AddSingleton<IMesoBuilderService, MesoBuilderServiceV2>();
+        builder.Services.AddSingleton<IVolumeProgressionService, VolumeProgressionService>();
         builder.Services.AddSingleton<ITemplateService, TemplateService>();
         builder.Services.AddSingleton<IMesocycleService, MesocycleService>();
         builder.Services.AddSingleton<RestTimerService>();
