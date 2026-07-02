@@ -31,4 +31,9 @@ public class AppSettings
     // RP onboarding-flaggor
     public bool HasSeenRirHint { get; set; } = false;
     public bool HasSeenMesoBuilderTip { get; set; } = false;
+
+    // RP full-klon (Task 5)
+    public string PreferredEquipmentJson { get; set; } = "";
+    public bool HasSeenStartWeightHint { get; set; } = false;
+    public int OnboardingStep { get; set; } = 0;
 }

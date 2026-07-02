@@ -25,115 +25,69 @@ public class DatabaseService
         _db = new SQLiteAsyncConnection(dbPath,
             SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache);
 
+        // RP-clone reset: droppa gamla RP-relaterade tabeller (appen har inga
+        // riktiga användare än — historik offras för att kunna bygga om schemat)
+        await _db.ExecuteAsync("DROP TABLE IF EXISTS WorkoutTemplates");
+        await _db.ExecuteAsync("DROP TABLE IF EXISTS TemplateExercises");
+        await _db.ExecuteAsync("DROP TABLE IF EXISTS TrainingCycles");
+        await _db.ExecuteAsync("DROP TABLE IF EXISTS CycleWeeks");
+        await _db.ExecuteAsync("DROP TABLE IF EXISTS CycleSessions");
+        await _db.ExecuteAsync("DROP TABLE IF EXISTS WorkoutSessions");
+        await _db.ExecuteAsync("DROP TABLE IF EXISTS SessionExercises");
+        await _db.ExecuteAsync("DROP TABLE IF EXISTS LoggedSets");
+        await _db.ExecuteAsync("DROP TABLE IF EXISTS MuscleVolumeLandmarks");
+
+        // Ny schema
         await _db.CreateTableAsync<Exercise>();
         await _db.CreateTableAsync<WorkoutTemplate>();
+        await _db.CreateTableAsync<TemplateDay>();
+        await _db.CreateTableAsync<TemplateMuscleSlot>();
         await _db.CreateTableAsync<TemplateExercise>();
+        await _db.CreateTableAsync<Mesocycle>();
+        await _db.CreateTableAsync<MesocyclePriority>();
+        await _db.CreateTableAsync<MesocycleWeek>();
         await _db.CreateTableAsync<WorkoutSession>();
         await _db.CreateTableAsync<SessionExercise>();
         await _db.CreateTableAsync<LoggedSet>();
+        await _db.CreateTableAsync<SessionMuscleFeedback>();
+        await _db.CreateTableAsync<SessionExerciseFeedback>();
+        await _db.CreateTableAsync<MuscleVolumeLandmarks>();
         await _db.CreateTableAsync<AppSettings>();
         await _db.CreateTableAsync<BodyWeightEntry>();
         await _db.CreateTableAsync<BodyCompositionEntry>();
         await _db.CreateTableAsync<UserAchievement>();
         await _db.CreateTableAsync<WorkoutPhoto>();
         await _db.CreateTableAsync<CardioSession>();
-        await _db.CreateTableAsync<TrainingCycle>();
-        await _db.CreateTableAsync<CycleWeek>();
-        await _db.CreateTableAsync<CycleSession>();
-        await _db.CreateTableAsync<MuscleVolumeLandmarks>();
 
-        try { await _db.ExecuteAsync("ALTER TABLE WorkoutTemplates ADD COLUMN ProgramId TEXT NULL"); }
-        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
-        try { await _db.ExecuteAsync("ALTER TABLE Exercises ADD COLUMN Description TEXT NOT NULL DEFAULT ''"); }
-        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
-
-        // Plan 3: SetType migrations (idempotent — only swallows duplicate-column errors)
-        try { await _db.ExecuteAsync("ALTER TABLE LoggedSets ADD COLUMN SetType INTEGER NOT NULL DEFAULT 0"); }
-        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
-        try { await _db.ExecuteAsync("ALTER TABLE LoggedSets ADD COLUMN DurationSeconds INTEGER NOT NULL DEFAULT 0"); }
-        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
-        // Backfill NULLs from schema versions that lacked DEFAULT constraints
-        await _db.ExecuteAsync("UPDATE LoggedSets SET SetType = 0 WHERE SetType IS NULL");
-        await _db.ExecuteAsync("UPDATE LoggedSets SET DurationSeconds = 0 WHERE DurationSeconds IS NULL");
-
+        // AppSettings-migreringar (endast nya fält — idempotent via try-catch)
         try { await _db.ExecuteAsync("ALTER TABLE AppSettings ADD COLUMN WeeklyWorkoutGoal INTEGER NOT NULL DEFAULT 4"); }
         catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
-
         try { await _db.ExecuteAsync("ALTER TABLE AppSettings ADD COLUMN UserName TEXT NOT NULL DEFAULT ''"); }
         catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
-
         try { await _db.ExecuteAsync("ALTER TABLE AppSettings ADD COLUMN HasCompletedOnboarding INTEGER NOT NULL DEFAULT 0"); }
         catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
-
         try { await _db.ExecuteAsync("ALTER TABLE AppSettings ADD COLUMN MorningRecoveryDate TEXT NOT NULL DEFAULT ''"); }
         catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
         try { await _db.ExecuteAsync("ALTER TABLE AppSettings ADD COLUMN MorningRecoveryPct REAL NOT NULL DEFAULT 0"); }
         catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
-
         try { await _db.ExecuteAsync("ALTER TABLE AppSettings ADD COLUMN HeightCm INTEGER NOT NULL DEFAULT 0"); }
         catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
-
         try { await _db.ExecuteAsync("ALTER TABLE AppSettings ADD COLUMN ReminderDays INTEGER NOT NULL DEFAULT 0"); }
         catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
         try { await _db.ExecuteAsync("ALTER TABLE AppSettings ADD COLUMN ReminderTimeMinutes INTEGER NOT NULL DEFAULT 0"); }
         catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
         try { await _db.ExecuteAsync("ALTER TABLE AppSettings ADD COLUMN ReminderLabels TEXT NOT NULL DEFAULT ''"); }
         catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
-
-        // Fas 2: Auto-progression per övning
-        try { await _db.ExecuteAsync("ALTER TABLE TemplateExercises ADD COLUMN TargetRepsMin INTEGER NOT NULL DEFAULT 0"); }
-        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
-        try { await _db.ExecuteAsync("ALTER TABLE TemplateExercises ADD COLUMN TargetRepsMax INTEGER NOT NULL DEFAULT 0"); }
-        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
-        try { await _db.ExecuteAsync("ALTER TABLE TemplateExercises ADD COLUMN WeightIncrementKg REAL NOT NULL DEFAULT 2.5"); }
-        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
-        try { await _db.ExecuteAsync("ALTER TABLE TemplateExercises ADD COLUMN AutoProgressMode INTEGER NOT NULL DEFAULT 0"); }
-        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
-
-        // Fas 3: Superset
-        try { await _db.ExecuteAsync("ALTER TABLE TemplateExercises ADD COLUMN SupersetGroupId INTEGER NULL"); }
-        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
-        try { await _db.ExecuteAsync("ALTER TABLE SessionExercises ADD COLUMN SupersetGroupId INTEGER NULL"); }
-        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
-
-        // Fas 4: RIR explicit column (äldre rader kan ha NULL utan denna migration)
-        try { await _db.ExecuteAsync("ALTER TABLE LoggedSets ADD COLUMN RIR INTEGER NOT NULL DEFAULT 0"); }
-        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
-
-        // Fas 5: Exercise metadata från free-exercise-db
-        try { await _db.ExecuteAsync("ALTER TABLE Exercises ADD COLUMN Equipment INTEGER NOT NULL DEFAULT 0"); }
-        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
-        try { await _db.ExecuteAsync("ALTER TABLE Exercises ADD COLUMN SecondaryMuscles TEXT NOT NULL DEFAULT ''"); }
-        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
-        try { await _db.ExecuteAsync("ALTER TABLE Exercises ADD COLUMN Force INTEGER NOT NULL DEFAULT 0"); }
-        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
-        try { await _db.ExecuteAsync("ALTER TABLE Exercises ADD COLUMN Level INTEGER NOT NULL DEFAULT 0"); }
-        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
-        try { await _db.ExecuteAsync("ALTER TABLE Exercises ADD COLUMN Mechanic INTEGER NOT NULL DEFAULT 0"); }
-        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
-
-        // Fas 6: Svenskt namn för sökning
-        try { await _db.ExecuteAsync("ALTER TABLE Exercises ADD COLUMN SwedishName TEXT NOT NULL DEFAULT ''"); }
-        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
-
-        // Fas 7: RP autoreglering — post-workout feedback (pump/soreness/performance på 1-4-skala, null = ej ifyllt)
-        try { await _db.ExecuteAsync("ALTER TABLE WorkoutSessions ADD COLUMN PumpRating INTEGER NULL"); }
-        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
-        try { await _db.ExecuteAsync("ALTER TABLE WorkoutSessions ADD COLUMN SorenessRating INTEGER NULL"); }
-        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
-        try { await _db.ExecuteAsync("ALTER TABLE WorkoutSessions ADD COLUMN PerformanceRating INTEGER NULL"); }
-        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
-
-        // RP onboarding-flaggor
         try { await _db.ExecuteAsync("ALTER TABLE AppSettings ADD COLUMN HasSeenRirHint INTEGER NOT NULL DEFAULT 0"); }
         catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
-
-        // Fas 8: WorkoutSession-koppling till aktiv cykel-vecka
-        try { await _db.ExecuteAsync("ALTER TABLE WorkoutSessions ADD COLUMN CycleWeekId INTEGER NULL"); }
-        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
-
-        // Fas 9: Meso Builder onboarding-flagga
         try { await _db.ExecuteAsync("ALTER TABLE AppSettings ADD COLUMN HasSeenMesoBuilderTip INTEGER NOT NULL DEFAULT 0"); }
+        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
+        // Nya RP-clone-fält (Task 5)
+        try { await _db.ExecuteAsync("ALTER TABLE AppSettings ADD COLUMN PreferredEquipmentJson TEXT NOT NULL DEFAULT ''"); }
+        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
+        try { await _db.ExecuteAsync("ALTER TABLE AppSettings ADD COLUMN HasSeenStartWeightHint INTEGER NOT NULL DEFAULT 0"); }
+        catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
+        try { await _db.ExecuteAsync("ALTER TABLE AppSettings ADD COLUMN OnboardingStep INTEGER NOT NULL DEFAULT 0"); }
         catch (SQLiteException ex) when (ex.Message.Contains("duplicate column", StringComparison.OrdinalIgnoreCase)) { }
 
         await SeedAsync();
@@ -142,9 +96,9 @@ public class DatabaseService
         await SeedExerciseDbAsync();
         await SeedSwedishNamesAsync();
         await SeedMuscleVolumeLandmarksAsync();
+        // Task 14 lägger till SeedTemplateLibraryAsync()
     }
 
-    // Illustrativa RP-defaultvärden (docs/research avsnitt 2) — användaren kan justera per muskelgrupp
     private async Task SeedMuscleVolumeLandmarksAsync()
     {
         var count = await _db.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM MuscleVolumeLandmarks");
@@ -152,14 +106,18 @@ public class DatabaseService
 
         var defaults = new (MuscleGroup Group, int Mev, int Mrv)[]
         {
-            (MuscleGroup.Chest,     10, 20),
-            (MuscleGroup.Back,      12, 22),
-            (MuscleGroup.Shoulders, 10, 20),
-            (MuscleGroup.Biceps,     8, 17),
-            (MuscleGroup.Triceps,    8, 17),
-            (MuscleGroup.Legs,      10, 20),
-            (MuscleGroup.Core,       8, 18),
-            (MuscleGroup.Forearms,   6, 14),
+            (MuscleGroup.Chest,      10, 20),
+            (MuscleGroup.Back,       12, 22),
+            (MuscleGroup.Shoulders,  10, 20),
+            (MuscleGroup.Biceps,      8, 17),
+            (MuscleGroup.Triceps,     8, 17),
+            (MuscleGroup.Quads,      10, 20),
+            (MuscleGroup.Hamstrings,  8, 18),
+            (MuscleGroup.Glutes,      8, 16),
+            (MuscleGroup.Calves,      8, 16),
+            (MuscleGroup.Traps,       6, 14),
+            (MuscleGroup.Forearms,    6, 14),
+            (MuscleGroup.Abs,         8, 18),
         };
         foreach (var (g, mev, mrv) in defaults)
             await _db.InsertAsync(new MuscleVolumeLandmarks { MuscleGroup = g, MEV = mev, MRV = mrv });
@@ -483,148 +441,7 @@ public class DatabaseService
         return await _db.DeleteAsync(exercise);
     }
 
-    // ── Templates ──────────────────────────────────────────────────────────
-
-    public async Task<List<WorkoutTemplate>> GetTemplatesAsync()
-    {
-        await InitAsync();
-        return await _db.Table<WorkoutTemplate>().ToListAsync();
-    }
-
-    public async Task<int> SaveTemplateAsync(WorkoutTemplate template)
-    {
-        await InitAsync();
-        return template.Id == 0 ? await _db.InsertAsync(template) : await _db.UpdateAsync(template);
-    }
-
-    public async Task<int> DeleteTemplateAsync(WorkoutTemplate template)
-    {
-        await InitAsync();
-        return await _db.DeleteAsync(template);
-    }
-
-    public async Task<int> DuplicateTemplateAsync(WorkoutTemplate source, string newName)
-    {
-        await InitAsync();
-        var copy = new WorkoutTemplate { Name = newName };
-        await _db.InsertAsync(copy);
-
-        var sourceExercises = await GetTemplateExercisesAsync(source.Id);
-        var copies = sourceExercises.Select(te => new TemplateExercise
-        {
-            TemplateId         = copy.Id,
-            ExerciseId         = te.ExerciseId,
-            OrderIndex         = te.OrderIndex,
-            Sets               = te.Sets,
-            Reps               = te.Reps,
-            TargetWeight       = te.TargetWeight,
-            DefaultRestSeconds = te.DefaultRestSeconds,
-            TargetRepsMin      = te.TargetRepsMin,
-            TargetRepsMax      = te.TargetRepsMax,
-            WeightIncrementKg  = te.WeightIncrementKg,
-            AutoProgressMode   = te.AutoProgressMode,
-            SupersetGroupId    = te.SupersetGroupId,
-        }).ToList();
-
-        await ReplaceTemplateExercisesAsync(copy.Id, copies);
-        return copy.Id;
-    }
-
-    public async Task<Dictionary<int, DateTime>> GetLastSessionDatePerTemplateAsync()
-    {
-        await InitAsync();
-        var rows = await _db.QueryAsync<TemplateLastUsedRow>(
-            "SELECT TemplateId, MAX(CompletedAt) as LastUsedAt FROM WorkoutSessions WHERE CompletedAt IS NOT NULL AND TemplateId > 0 GROUP BY TemplateId");
-        return rows.ToDictionary(r => r.TemplateId, r => r.LastUsedAt);
-    }
-
-    private class TemplateLastUsedRow
-    {
-        public int TemplateId { get; set; }
-        public DateTime LastUsedAt { get; set; }
-    }
-
-    public async Task<List<TemplateExercise>> GetTemplateExercisesAsync(int templateId)
-    {
-        await InitAsync();
-        return await _db.Table<TemplateExercise>()
-            .Where(te => te.TemplateId == templateId)
-            .OrderBy(te => te.OrderIndex)
-            .ToListAsync();
-    }
-
-    public async Task<int> SaveTemplateExerciseAsync(TemplateExercise te)
-    {
-        await InitAsync();
-        return te.Id == 0 ? await _db.InsertAsync(te) : await _db.UpdateAsync(te);
-    }
-
-    public async Task<int> DeleteTemplateExerciseAsync(TemplateExercise te)
-    {
-        await InitAsync();
-        return await _db.DeleteAsync(te);
-    }
-
-    public async Task ReplaceTemplateExercisesAsync(int templateId, List<TemplateExercise> exercises)
-    {
-        await InitAsync();
-        await _db.RunInTransactionAsync(db =>
-        {
-            db.Execute("DELETE FROM TemplateExercises WHERE TemplateId = ?", templateId);
-            foreach (var te in exercises)
-                db.Insert(te);
-        });
-    }
-
-    // ── Sessions ───────────────────────────────────────────────────────────
-
-    public async Task<int> SaveSessionAsync(WorkoutSession session)
-    {
-        await InitAsync();
-        return session.Id == 0 ? await _db.InsertAsync(session) : await _db.UpdateAsync(session);
-    }
-
-    public async Task<WorkoutSession?> GetSessionAsync(int id)
-    {
-        await InitAsync();
-        return await _db.Table<WorkoutSession>().Where(s => s.Id == id).FirstOrDefaultAsync();
-    }
-
-    public async Task<List<WorkoutSession>> GetSessionsAsync()
-    {
-        await InitAsync();
-        return await _db.Table<WorkoutSession>().OrderByDescending(s => s.StartedAt).ToListAsync();
-    }
-
-    public async Task<int> SaveSessionExerciseAsync(SessionExercise se)
-    {
-        await InitAsync();
-        return se.Id == 0 ? await _db.InsertAsync(se) : await _db.UpdateAsync(se);
-    }
-
-    public async Task<List<SessionExercise>> GetSessionExercisesAsync(int sessionId)
-    {
-        await InitAsync();
-        return await _db.Table<SessionExercise>()
-            .Where(se => se.SessionId == sessionId)
-            .OrderBy(se => se.OrderIndex)
-            .ToListAsync();
-    }
-
-    public async Task DeleteSessionExerciseWithSetsAsync(int sessionExerciseId)
-    {
-        await InitAsync();
-        await _db.ExecuteAsync("DELETE FROM LoggedSets WHERE SessionExerciseId = ?", sessionExerciseId);
-        await _db.ExecuteAsync("DELETE FROM SessionExercises WHERE Id = ?", sessionExerciseId);
-    }
-
     // ── Logged Sets ────────────────────────────────────────────────────────
-
-    public async Task<int> SaveLoggedSetAsync(LoggedSet set)
-    {
-        await InitAsync();
-        return set.Id == 0 ? await _db.InsertAsync(set) : await _db.UpdateAsync(set);
-    }
 
     public async Task<List<LoggedSet>> GetSetsForSessionExerciseAsync(int sessionExerciseId)
     {
@@ -815,12 +632,11 @@ public class DatabaseService
         await InitAsync();
         return await _db.QueryAsync<SessionSummaryRow>(
             @"SELECT ws.Id, ws.StartedAt, ws.CompletedAt, ws.Notes,
-                     COALESCE(wt.Name, 'Fritt pass') as TemplateName,
+                     '' as TemplateName,
                      COALESCE(SUM(ls.WeightKg * ls.Reps), 0) as TotalVolume,
                      COUNT(ls.Id) as TotalSets,
                      SUM(CASE WHEN ls.IsPR = 1 THEN 1 ELSE 0 END) as PRCount
               FROM WorkoutSessions ws
-              LEFT JOIN WorkoutTemplates wt ON wt.Id = ws.TemplateId
               LEFT JOIN SessionExercises se ON se.SessionId = ws.Id
               LEFT JOIN LoggedSets ls ON ls.SessionExerciseId = se.Id
               WHERE ws.CompletedAt IS NOT NULL
@@ -1327,50 +1143,6 @@ public class DatabaseService
         return await _db.DeleteAsync(photo);
     }
 
-    // ── Program activation ─────────────────────────────────────────────────
-
-    public async Task ActivateProgramAsync(Data.WorkoutProgram program)
-    {
-        await InitAsync();
-        var allExercises = await GetExercisesAsync();
-        var exerciseMap  = allExercises.ToDictionary(e => e.Name.ToLowerInvariant(), e => e);
-
-        foreach (var day in program.Days)
-        {
-            var template = new Models.WorkoutTemplate { Name = day.Label, ProgramId = program.Id };
-            await SaveTemplateAsync(template);
-
-            for (int i = 0; i < day.Exercises.Count; i++)
-            {
-                var pe  = day.Exercises[i];
-                var key = pe.ExerciseName.ToLowerInvariant();
-
-                if (!exerciseMap.TryGetValue(key, out var exercise))
-                {
-                    exercise = new Models.Exercise
-                    {
-                        Name               = pe.ExerciseName,
-                        IsCustom           = true,
-                        DefaultRestSeconds = pe.RestSeconds,
-                        MuscleGroup        = Models.MuscleGroup.Other
-                    };
-                    await SaveExerciseAsync(exercise);
-                    exerciseMap[key] = exercise;
-                }
-
-                await SaveTemplateExerciseAsync(new Models.TemplateExercise
-                {
-                    TemplateId         = template.Id,
-                    ExerciseId         = exercise.Id,
-                    OrderIndex         = i,
-                    Sets               = pe.Sets,
-                    Reps               = pe.Reps,
-                    DefaultRestSeconds = pe.RestSeconds
-                });
-            }
-        }
-    }
-
     // ── Export ─────────────────────────────────────────────────────────────────
 
     internal class ExportSessionRow
@@ -1410,13 +1182,12 @@ public class DatabaseService
                 ws.Id                                                    AS SessionId,
                 ws.StartedAt,
                 ws.CompletedAt,
-                COALESCE(wt.Name, '')                                    AS TemplateName,
+                ''                                                       AS TemplateName,
                 ws.Notes,
                 COUNT(ls.Id)                                             AS TotalSets,
                 COALESCE(SUM(CAST(ls.WeightKg AS REAL) * ls.Reps), 0.0) AS TotalVolumeKg,
                 COALESCE(SUM(ls.IsPR), 0)                                AS PRCount
             FROM WorkoutSessions ws
-            LEFT JOIN WorkoutTemplates wt ON wt.Id = ws.TemplateId
             LEFT JOIN SessionExercises se ON se.SessionId = ws.Id
             LEFT JOIN LoggedSets ls ON ls.SessionExerciseId = se.Id
             WHERE ws.CompletedAt IS NOT NULL
@@ -1447,93 +1218,4 @@ public class DatabaseService
         return (sessions, sets);
     }
 
-    // ── Periodisering ──────────────────────────────────────────────────────────
-
-    public async Task<List<TrainingCycle>> GetCyclesAsync()
-    {
-        await InitAsync();
-        return await _db.Table<TrainingCycle>()
-            .OrderByDescending(c => c.StartDate)
-            .ToListAsync();
-    }
-
-    public async Task<List<CycleWeek>> GetCycleWeeksAsync(int cycleId)
-    {
-        await InitAsync();
-        return await _db.Table<CycleWeek>()
-            .Where(w => w.CycleId == cycleId)
-            .OrderBy(w => w.WeekNumber)
-            .ToListAsync();
-    }
-
-    public async Task<List<CycleSession>> GetCycleSessionsAsync(int cycleWeekId)
-    {
-        await InitAsync();
-        return await _db.Table<CycleSession>()
-            .Where(s => s.CycleWeekId == cycleWeekId)
-            .OrderBy(s => s.DayOfWeek)
-            .ToListAsync();
-    }
-
-    public async Task<int> SaveCycleAsync(
-        TrainingCycle cycle,
-        List<CycleWeek> weeks,
-        List<List<CycleSession>> sessionsByWeek)
-    {
-        await InitAsync();
-        await _db.RunInTransactionAsync(conn =>
-        {
-            if (cycle.Id == 0)
-                conn.Insert(cycle);
-            else
-                conn.Update(cycle);
-
-            var oldWeeks = conn.Table<CycleWeek>()
-                .Where(w => w.CycleId == cycle.Id).ToList();
-            foreach (var w in oldWeeks)
-            {
-                conn.Table<CycleSession>().Delete(s => s.CycleWeekId == w.Id);
-                conn.Delete(w);
-            }
-
-            for (int i = 0; i < weeks.Count; i++)
-            {
-                var week = weeks[i];
-                week.CycleId = cycle.Id;
-                conn.Insert(week);
-
-                var sessions = sessionsByWeek[i];
-                foreach (var s in sessions)
-                {
-                    s.CycleWeekId = week.Id;
-                    conn.Insert(s);
-                }
-            }
-        });
-        return cycle.Id;
-    }
-
-    public async Task DeleteCycleAsync(int cycleId)
-    {
-        await InitAsync();
-        await _db.RunInTransactionAsync(conn =>
-        {
-            var weeks = conn.Table<CycleWeek>()
-                .Where(w => w.CycleId == cycleId).ToList();
-            foreach (var w in weeks)
-                conn.Table<CycleSession>().Delete(s => s.CycleWeekId == w.Id);
-            conn.Table<CycleWeek>().Delete(w => w.CycleId == cycleId);
-            conn.Table<TrainingCycle>().Delete(c => c.Id == cycleId);
-        });
-    }
-
-    public async Task SetActiveCycleAsync(int cycleId)
-    {
-        await InitAsync();
-        await _db.RunInTransactionAsync(conn =>
-        {
-            conn.Execute("UPDATE TrainingCycles SET IsActive = 0");
-            conn.Execute("UPDATE TrainingCycles SET IsActive = 1 WHERE Id = ?", cycleId);
-        });
-    }
 }
