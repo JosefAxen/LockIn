@@ -29,6 +29,7 @@ public partial class OnboardingPage : ContentPage
             2 => Step2,
             3 => Step3,
             4 => Step4,
+            5 => Step5,
             _ => null
         };
         if (target is null) return;

@@ -988,6 +988,19 @@
   <data name="CycleDetail_Delete_Title" xml:space="preserve"><value>Ta bort cykel</value></data>
   <data name="CycleDetail_Delete_Body_Format" xml:space="preserve"><value>Ta bort {0}?</value></data>
 
+  <!-- Equipment types -->
+  <data name="Onboarding_Equipment_Title" xml:space="preserve"><value>Vilken utrustning har du?</value></data>
+  <data name="Onboarding_Equipment_Subtitle" xml:space="preserve"><value>Vi visar övningar för det du kan använda</value></data>
+  <data name="Equipment_Barbell" xml:space="preserve"><value>Skivstång</value></data>
+  <data name="Equipment_Dumbbell" xml:space="preserve"><value>Hantel</value></data>
+  <data name="Equipment_Cable" xml:space="preserve"><value>Kabel</value></data>
+  <data name="Equipment_Machine" xml:space="preserve"><value>Maskin</value></data>
+  <data name="Equipment_BodyOnly" xml:space="preserve"><value>Kroppsvikt</value></data>
+  <data name="Equipment_EZBar" xml:space="preserve"><value>EZ-stång</value></data>
+  <data name="Equipment_Kettlebell" xml:space="preserve"><value>Kettlebell</value></data>
+  <data name="Equipment_Bands" xml:space="preserve"><value>Band</value></data>
+  <data name="Equipment_Other" xml:space="preserve"><value>Övrigt</value></data>
+
   <!-- Weekdays (Day_0 through Day_6) — Monday to Sunday -->
   <data name="Day_0" xml:space="preserve"><value>Måndag</value></data>
   <data name="Day_1" xml:space="preserve"><value>Tisdag</value></data>

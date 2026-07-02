@@ -1,9 +1,11 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn.Data;
+using LockIn.Models;
 using LockIn.Resources.Strings;
 using LockIn.Services;
 using Microsoft.Extensions.DependencyInjection;
+using System.Text.Json;
 using LockIn;
 
 namespace LockIn.ViewModels;
@@ -16,6 +18,17 @@ public partial class OnboardingViewModel(DatabaseService db, IHealthService heal
     [ObservableProperty] private int    _selectedExperience = -1;
     [ObservableProperty] private int    _selectedGoal       = -1;
 
+    // ── Equipment (Step 5) ─────────────────────────────────────────────────
+    [ObservableProperty] private bool _hasEquipmentBarbell    = true;
+    [ObservableProperty] private bool _hasEquipmentDumbbell   = true;
+    [ObservableProperty] private bool _hasEquipmentCable      = true;
+    [ObservableProperty] private bool _hasEquipmentMachine    = true;
+    [ObservableProperty] private bool _hasEquipmentBodyOnly   = true;
+    [ObservableProperty] private bool _hasEquipmentEZBar      = true;
+    [ObservableProperty] private bool _hasEquipmentKettlebell = true;
+    [ObservableProperty] private bool _hasEquipmentBands      = true;
+    [ObservableProperty] private bool _hasEquipmentOther      = true;
+
     // ── Step visibility ────────────────────────────────────────────────────
 
     public bool IsStep0 => CurrentStep == 0;
@@ -23,6 +36,7 @@ public partial class OnboardingViewModel(DatabaseService db, IHealthService heal
     public bool IsStep2 => CurrentStep == 2;
     public bool IsStep3 => CurrentStep == 3;
     public bool IsStep4 => CurrentStep == 4;
+    public bool IsStep5 => CurrentStep == 5;
 
     partial void OnCurrentStepChanged(int value)
     {
@@ -31,8 +45,10 @@ public partial class OnboardingViewModel(DatabaseService db, IHealthService heal
         OnPropertyChanged(nameof(IsStep2));
         OnPropertyChanged(nameof(IsStep3));
         OnPropertyChanged(nameof(IsStep4));
+        OnPropertyChanged(nameof(IsStep5));
         OnPropertyChanged(nameof(CanGoNext));
         OnPropertyChanged(nameof(ShowBackButton));
+        OnPropertyChanged(nameof(ShowBottomCta));
     }
 
     partial void OnUserNameInputChanged(string value) => OnPropertyChanged(nameof(CanGoNext));
@@ -53,7 +69,10 @@ public partial class OnboardingViewModel(DatabaseService db, IHealthService heal
 
     // ── Navigation ─────────────────────────────────────────────────────────
 
-    public bool ShowBackButton => CurrentStep > 0;
+    public bool ShowBackButton  => CurrentStep > 0;
+
+    // Bottom CTA visas bara steg 0–3 (inte steg 4 = rekommendation, inte steg 5 = equipment)
+    public bool ShowBottomCta   => CurrentStep < 4;
 
     public bool CanGoNext => CurrentStep switch
     {
@@ -61,13 +80,15 @@ public partial class OnboardingViewModel(DatabaseService db, IHealthService heal
         1 => SelectedWeeklyGoal >= 2,
         2 => SelectedExperience >= 0,
         3 => SelectedGoal >= 0,
+        4 => true,   // Step 4 = Rekommendation — alltid möjligt att gå vidare
+        5 => true,   // Step 5 = Equipment — alltid möjligt (minst 0 val = "allt")
         _ => false
     };
 
     [RelayCommand]
     private void Next()
     {
-        if (CanGoNext && CurrentStep < 4)
+        if (CanGoNext && CurrentStep < 5)
             CurrentStep++;
     }
 
@@ -107,10 +128,10 @@ public partial class OnboardingViewModel(DatabaseService db, IHealthService heal
 
     private async Task AutoAdvanceAsync()
     {
-        if (!CanGoNext || CurrentStep >= 4) return;
+        if (!CanGoNext || CurrentStep >= 5) return;
         // Liten paus så användaren ser sitt val markeras innan vi byter steg
         await Task.Delay(220);
-        if (CanGoNext && CurrentStep < 4)
+        if (CanGoNext && CurrentStep < 5)
             CurrentStep++;
     }
 
@@ -126,6 +147,43 @@ public partial class OnboardingViewModel(DatabaseService db, IHealthService heal
             AppResources.Common_Cancel);
         if (!ok) return;
         await FinishOnboardingAsync(activateProgram: false);
+    }
+
+    // ── Equipment commands ─────────────────────────────────────────────────
+
+    [RelayCommand]
+    private void ToggleEquipment(int equipmentTypeInt)
+    {
+        switch ((EquipmentType)equipmentTypeInt)
+        {
+            case EquipmentType.Barbell:    HasEquipmentBarbell    = !HasEquipmentBarbell;    break;
+            case EquipmentType.Dumbbell:   HasEquipmentDumbbell   = !HasEquipmentDumbbell;   break;
+            case EquipmentType.Cable:      HasEquipmentCable      = !HasEquipmentCable;      break;
+            case EquipmentType.Machine:    HasEquipmentMachine    = !HasEquipmentMachine;    break;
+            case EquipmentType.BodyOnly:   HasEquipmentBodyOnly   = !HasEquipmentBodyOnly;   break;
+            case EquipmentType.EZBar:      HasEquipmentEZBar      = !HasEquipmentEZBar;      break;
+            case EquipmentType.Kettlebell: HasEquipmentKettlebell = !HasEquipmentKettlebell; break;
+            case EquipmentType.Bands:      HasEquipmentBands      = !HasEquipmentBands;      break;
+            case EquipmentType.Other:      HasEquipmentOther      = !HasEquipmentOther;      break;
+        }
+    }
+
+    private async Task SaveEquipmentAsync()
+    {
+        var selected = new List<int>();
+        if (HasEquipmentBarbell)    selected.Add((int)EquipmentType.Barbell);
+        if (HasEquipmentDumbbell)   selected.Add((int)EquipmentType.Dumbbell);
+        if (HasEquipmentCable)      selected.Add((int)EquipmentType.Cable);
+        if (HasEquipmentMachine)    selected.Add((int)EquipmentType.Machine);
+        if (HasEquipmentBodyOnly)   selected.Add((int)EquipmentType.BodyOnly);
+        if (HasEquipmentEZBar)      selected.Add((int)EquipmentType.EZBar);
+        if (HasEquipmentKettlebell) selected.Add((int)EquipmentType.Kettlebell);
+        if (HasEquipmentBands)      selected.Add((int)EquipmentType.Bands);
+        if (HasEquipmentOther)      selected.Add((int)EquipmentType.Other);
+
+        var settings = await db.GetAppSettingsAsync();
+        settings.PreferredEquipmentJson = JsonSerializer.Serialize(selected);
+        await db.SaveAppSettingsAsync(settings);
     }
 
     // ── Recommendation ─────────────────────────────────────────────────────
@@ -156,20 +214,34 @@ public partial class OnboardingViewModel(DatabaseService db, IHealthService heal
 
     // ── Completion ─────────────────────────────────────────────────────────
 
+    // Steg 4 → steg 5 (equipment) och minns om program ska aktiveras
+    private bool _pendingActivateProgram = false;
+
     [RelayCommand]
-    private async Task ActivateProgramAsync()
+    private void ActivateProgramAsync()
     {
-        await FinishOnboardingAsync(activateProgram: true);
+        _pendingActivateProgram = true;
+        CurrentStep = 5;
     }
 
     [RelayCommand]
-    private async Task SkipProgramAsync()
+    private void SkipProgramAsync()
     {
-        await FinishOnboardingAsync(activateProgram: false);
+        _pendingActivateProgram = false;
+        CurrentStep = 5;
+    }
+
+    // Steg 5: Klar-knapp
+    [RelayCommand]
+    private async Task FinishAsync()
+    {
+        await FinishOnboardingAsync(_pendingActivateProgram);
     }
 
     private async Task FinishOnboardingAsync(bool activateProgram)
     {
+        await SaveEquipmentAsync();
+
         var settings = await db.GetAppSettingsAsync();
         settings.UserName               = UserNameInput.Trim();
         settings.WeeklyWorkoutGoal      = SelectedWeeklyGoal;

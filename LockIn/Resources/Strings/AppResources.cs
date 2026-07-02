@@ -803,4 +803,17 @@ public static class AppResources
     public static string Program_531bbb_Day1_Label          => Get(nameof(Program_531bbb_Day1_Label));
     public static string Program_531bbb_Day2_Label          => Get(nameof(Program_531bbb_Day2_Label));
     public static string Program_531bbb_Day3_Label          => Get(nameof(Program_531bbb_Day3_Label));
+
+    // ── Equipment (Onboarding step 5) ─────────────────────────────────────
+    public static string Onboarding_Equipment_Title    => Get(nameof(Onboarding_Equipment_Title));
+    public static string Onboarding_Equipment_Subtitle => Get(nameof(Onboarding_Equipment_Subtitle));
+    public static string Equipment_Barbell             => Get(nameof(Equipment_Barbell));
+    public static string Equipment_Dumbbell            => Get(nameof(Equipment_Dumbbell));
+    public static string Equipment_Cable               => Get(nameof(Equipment_Cable));
+    public static string Equipment_Machine             => Get(nameof(Equipment_Machine));
+    public static string Equipment_BodyOnly            => Get(nameof(Equipment_BodyOnly));
+    public static string Equipment_EZBar               => Get(nameof(Equipment_EZBar));
+    public static string Equipment_Kettlebell          => Get(nameof(Equipment_Kettlebell));
+    public static string Equipment_Bands               => Get(nameof(Equipment_Bands));
+    public static string Equipment_Other               => Get(nameof(Equipment_Other));
 }

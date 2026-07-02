@@ -56,6 +56,9 @@
                 <BoxView WidthRequest="{Binding IsStep4, Converter={x:Static vm:DotWidthConverter.Instance}}"
                          HeightRequest="6" CornerRadius="3"
                          BackgroundColor="{Binding IsStep4, Converter={x:Static vm:DotColorConverter.Instance}}"/>
+                <BoxView WidthRequest="{Binding IsStep5, Converter={x:Static vm:DotWidthConverter.Instance}}"
+                         HeightRequest="6" CornerRadius="3"
+                         BackgroundColor="{Binding IsStep5, Converter={x:Static vm:DotColorConverter.Instance}}"/>
             </HorizontalStackLayout>
 
             <!-- Skip link � synlig p� alla steg s� erfarna lyftare kan bail n�r som helst -->
@@ -274,7 +277,7 @@
                     </Border>
                 </VerticalStackLayout>
 
-                <!-- Steg 4: Rekommendation -->
+                <!-- Steg 4: Rekommendation — nu utan Activate/Skip som avslutar; de går till steg 5 -->
                 <VerticalStackLayout x:Name="Step4" IsVisible="{Binding IsStep4}" Spacing="0">
                     <Label Text="{loc:Localize Onboarding_Step4_Title}"
                            FontFamily="BebasNeue" FontSize="44" CharacterSpacing="2"
@@ -329,12 +332,134 @@
                     </Label>
                 </VerticalStackLayout>
 
+                <!-- Steg 5: Utrustning -->
+                <VerticalStackLayout x:Name="Step5" IsVisible="{Binding IsStep5}" Spacing="10">
+                    <Label Text="{loc:Localize Onboarding_Equipment_Title}"
+                           FontFamily="BebasNeue" FontSize="44" CharacterSpacing="2"
+                           TextColor="{StaticResource ForgeAccent}"
+                           Margin="0,0,0,4"/>
+                    <Label Text="{loc:Localize Onboarding_Equipment_Subtitle}"
+                           FontFamily="DMSansRegular" FontSize="15"
+                           TextColor="{StaticResource ForgeMuted}"
+                           Margin="0,0,0,20"/>
+
+                    <!-- Skivstång (Barbell=1) -->
+                    <Border Style="{StaticResource StepCard}" BackgroundColor="{StaticResource ForgeSurface}">
+                        <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                            <Label Grid.Column="0" Text="{loc:Localize Equipment_Barbell}" FontFamily="DMSansMedium" FontSize="16" TextColor="{StaticResource ForgeText}" VerticalOptions="Center"/>
+                            <Label Grid.Column="1" Text="&#x2713;" FontFamily="DMSansMedium" FontSize="20" TextColor="{StaticResource ForgeAccent}" VerticalOptions="Center" IsVisible="{Binding HasEquipmentBarbell}"/>
+                        </Grid>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ToggleEquipmentCommand}" CommandParameter="{x:Int32 1}"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <!-- Hantel (Dumbbell=2) -->
+                    <Border Style="{StaticResource StepCard}" BackgroundColor="{StaticResource ForgeSurface}">
+                        <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                            <Label Grid.Column="0" Text="{loc:Localize Equipment_Dumbbell}" FontFamily="DMSansMedium" FontSize="16" TextColor="{StaticResource ForgeText}" VerticalOptions="Center"/>
+                            <Label Grid.Column="1" Text="&#x2713;" FontFamily="DMSansMedium" FontSize="20" TextColor="{StaticResource ForgeAccent}" VerticalOptions="Center" IsVisible="{Binding HasEquipmentDumbbell}"/>
+                        </Grid>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ToggleEquipmentCommand}" CommandParameter="{x:Int32 2}"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <!-- Kabel (Cable=3) -->
+                    <Border Style="{StaticResource StepCard}" BackgroundColor="{StaticResource ForgeSurface}">
+                        <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                            <Label Grid.Column="0" Text="{loc:Localize Equipment_Cable}" FontFamily="DMSansMedium" FontSize="16" TextColor="{StaticResource ForgeText}" VerticalOptions="Center"/>
+                            <Label Grid.Column="1" Text="&#x2713;" FontFamily="DMSansMedium" FontSize="20" TextColor="{StaticResource ForgeAccent}" VerticalOptions="Center" IsVisible="{Binding HasEquipmentCable}"/>
+                        </Grid>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ToggleEquipmentCommand}" CommandParameter="{x:Int32 3}"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <!-- Maskin (Machine=4) -->
+                    <Border Style="{StaticResource StepCard}" BackgroundColor="{StaticResource ForgeSurface}">
+                        <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                            <Label Grid.Column="0" Text="{loc:Localize Equipment_Machine}" FontFamily="DMSansMedium" FontSize="16" TextColor="{StaticResource ForgeText}" VerticalOptions="Center"/>
+                            <Label Grid.Column="1" Text="&#x2713;" FontFamily="DMSansMedium" FontSize="20" TextColor="{StaticResource ForgeAccent}" VerticalOptions="Center" IsVisible="{Binding HasEquipmentMachine}"/>
+                        </Grid>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ToggleEquipmentCommand}" CommandParameter="{x:Int32 4}"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <!-- Kroppsvikt (BodyOnly=5) -->
+                    <Border Style="{StaticResource StepCard}" BackgroundColor="{StaticResource ForgeSurface}">
+                        <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                            <Label Grid.Column="0" Text="{loc:Localize Equipment_BodyOnly}" FontFamily="DMSansMedium" FontSize="16" TextColor="{StaticResource ForgeText}" VerticalOptions="Center"/>
+                            <Label Grid.Column="1" Text="&#x2713;" FontFamily="DMSansMedium" FontSize="20" TextColor="{StaticResource ForgeAccent}" VerticalOptions="Center" IsVisible="{Binding HasEquipmentBodyOnly}"/>
+                        </Grid>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ToggleEquipmentCommand}" CommandParameter="{x:Int32 5}"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <!-- EZ-stång (EZBar=6) -->
+                    <Border Style="{StaticResource StepCard}" BackgroundColor="{StaticResource ForgeSurface}">
+                        <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                            <Label Grid.Column="0" Text="{loc:Localize Equipment_EZBar}" FontFamily="DMSansMedium" FontSize="16" TextColor="{StaticResource ForgeText}" VerticalOptions="Center"/>
+                            <Label Grid.Column="1" Text="&#x2713;" FontFamily="DMSansMedium" FontSize="20" TextColor="{StaticResource ForgeAccent}" VerticalOptions="Center" IsVisible="{Binding HasEquipmentEZBar}"/>
+                        </Grid>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ToggleEquipmentCommand}" CommandParameter="{x:Int32 6}"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <!-- Kettlebell (Kettlebell=7) -->
+                    <Border Style="{StaticResource StepCard}" BackgroundColor="{StaticResource ForgeSurface}">
+                        <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                            <Label Grid.Column="0" Text="{loc:Localize Equipment_Kettlebell}" FontFamily="DMSansMedium" FontSize="16" TextColor="{StaticResource ForgeText}" VerticalOptions="Center"/>
+                            <Label Grid.Column="1" Text="&#x2713;" FontFamily="DMSansMedium" FontSize="20" TextColor="{StaticResource ForgeAccent}" VerticalOptions="Center" IsVisible="{Binding HasEquipmentKettlebell}"/>
+                        </Grid>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ToggleEquipmentCommand}" CommandParameter="{x:Int32 7}"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <!-- Band (Bands=8) -->
+                    <Border Style="{StaticResource StepCard}" BackgroundColor="{StaticResource ForgeSurface}">
+                        <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                            <Label Grid.Column="0" Text="{loc:Localize Equipment_Bands}" FontFamily="DMSansMedium" FontSize="16" TextColor="{StaticResource ForgeText}" VerticalOptions="Center"/>
+                            <Label Grid.Column="1" Text="&#x2713;" FontFamily="DMSansMedium" FontSize="20" TextColor="{StaticResource ForgeAccent}" VerticalOptions="Center" IsVisible="{Binding HasEquipmentBands}"/>
+                        </Grid>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ToggleEquipmentCommand}" CommandParameter="{x:Int32 8}"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <!-- Övrigt (Other=0) -->
+                    <Border Style="{StaticResource StepCard}" BackgroundColor="{StaticResource ForgeSurface}">
+                        <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                            <Label Grid.Column="0" Text="{loc:Localize Equipment_Other}" FontFamily="DMSansMedium" FontSize="16" TextColor="{StaticResource ForgeText}" VerticalOptions="Center"/>
+                            <Label Grid.Column="1" Text="&#x2713;" FontFamily="DMSansMedium" FontSize="20" TextColor="{StaticResource ForgeAccent}" VerticalOptions="Center" IsVisible="{Binding HasEquipmentOther}"/>
+                        </Grid>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ToggleEquipmentCommand}" CommandParameter="{x:Int32 0}"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <!-- Klar-knapp längst ner i steg 5 -->
+                    <Button Text="{loc:Localize Common_Done}"
+                            Style="{StaticResource PrimaryButton}"
+                            BackgroundColor="{StaticResource ForgeAccent}"
+                            TextColor="{StaticResource ForgeBackground}"
+                            FontFamily="BebasNeue" FontSize="17" CharacterSpacing="1"
+                            HeightRequest="54"
+                            Margin="0,12,0,0"
+                            Command="{Binding FinishCommand}"/>
+
+                </VerticalStackLayout>
+
             </VerticalStackLayout>
         </ScrollView>
 
         <!-- Bottom CTA (visible steps 0�3) -->
         <Grid Grid.Row="2"
-              IsVisible="{Binding IsStep4, Converter={x:Static vm:InverseBoolConverter.Instance}}"
+              IsVisible="{Binding ShowBottomCta}"
               Padding="24,12,24,44">
             <Button Text="{loc:Localize Onboarding_Continue}"
                     Style="{StaticResource PrimaryButton}"
