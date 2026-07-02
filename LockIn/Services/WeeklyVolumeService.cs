@@ -7,6 +7,7 @@ public enum VolumeZone { UnderMEV, InMAV, NearMRV, OverMRV }
 public sealed record WeeklyVolumeReport(
     MuscleGroup Muscle,
     int SetsThisWeek,
+    int PlannedSets,
     int MEV,
     int MRV,
     VolumeZone Zone);
@@ -17,12 +18,18 @@ public interface IWeeklyVolumeService
 }
 
 // Räknar sets per muskelgrupp för aktuell ISO-vecka (mån–sön) och jämför mot MEV/MRV.
-// Sekundärmuskelviktning (chinup som rygg + biceps) skippas medvetet — se plan-fil.
+// Implementerar plan sektion H med korrekt filtrering (ej warmup, ej skippade, ej tomma).
+// PlannedSets hämtas från VolumeProgressionService om aktiv mesocykel finns.
 public class WeeklyVolumeService : IWeeklyVolumeService
 {
     private readonly DatabaseService _db;
+    private readonly IVolumeProgressionService _volumeProgression;
 
-    public WeeklyVolumeService(DatabaseService db) => _db = db;
+    public WeeklyVolumeService(DatabaseService db, IVolumeProgressionService volumeProgression)
+    {
+        _db = db;
+        _volumeProgression = volumeProgression;
+    }
 
     public async Task<IReadOnlyList<WeeklyVolumeReport>> GetCurrentWeekVolumeAsync()
     {
@@ -31,16 +38,28 @@ public class WeeklyVolumeService : IWeeklyVolumeService
         var landmarks = await _db.GetMuscleVolumeLandmarksAsync();
         var landmarkByMuscle = landmarks.ToDictionary(l => l.MuscleGroup);
 
-        // Aggregera sets per muskelgrupp för denna vecka
+        // Aggregera sets per muskelgrupp via direkta SQL-joins för korrekt filtrering
+        // (IsSkipped, SetType, tomma sets) enligt plan sektion H
         var sessions = await _db.GetCompletedSessionsInRangeAsync(weekStart, weekEnd);
         var setsByMuscle = new Dictionary<MuscleGroup, int>();
-        foreach (var s in sessions)
+
+        foreach (var session in sessions)
         {
-            var volumes = await _db.GetSessionVolumeByMuscleGroupAsync(s.Id);
-            foreach (var kv in volumes)
+            var exercises = await _db.GetSessionExercisesAsync(session.Id);
+            foreach (var se in exercises)
             {
-                setsByMuscle.TryGetValue(kv.Key, out var existing);
-                setsByMuscle[kv.Key] = existing + kv.Value.Sets;
+                if (se.IsSkipped) continue;
+                var muscle = se.MuscleGroup;
+
+                var sets = await _db.GetLoggedSetsForSessionExerciseAsync(se.Id);
+                foreach (var ls in sets)
+                {
+                    if (ls.SetType == SetType.Warmup) continue;
+                    if (ls.WeightKg == 0 && ls.Reps == 0) continue; // inte loggat
+
+                    setsByMuscle.TryGetValue(muscle, out var current);
+                    setsByMuscle[muscle] = current + 1;
+                }
             }
         }
 
@@ -50,14 +69,16 @@ public class WeeklyVolumeService : IWeeklyVolumeService
             MuscleGroup.Biceps, MuscleGroup.Triceps, MuscleGroup.Legs,
             MuscleGroup.Core, MuscleGroup.Forearms,
         };
+
         var reports = new List<WeeklyVolumeReport>(order.Length);
         foreach (var mg in order)
         {
             setsByMuscle.TryGetValue(mg, out var sets);
             var mev = landmarkByMuscle.TryGetValue(mg, out var lm) ? lm.MEV : 8;
             var mrv = landmarkByMuscle.TryGetValue(mg, out var lm2) ? lm2.MRV : 18;
+            var planned = await _volumeProgression.GetTargetSetsForCurrentWeekAsync(mg);
             var zone = ClassifyZone(sets, mev, mrv);
-            reports.Add(new WeeklyVolumeReport(mg, sets, mev, mrv, zone));
+            reports.Add(new WeeklyVolumeReport(mg, sets, planned, mev, mrv, zone));
         }
         return reports;
     }

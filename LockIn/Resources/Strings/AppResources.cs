@@ -402,6 +402,7 @@ public static class AppResources
     public static string WeightSuggestion_Reason_HitAllReps          => Get(nameof(WeightSuggestion_Reason_HitAllReps));
     public static string WeightSuggestion_Reason_MaintainWeight      => Get(nameof(WeightSuggestion_Reason_MaintainWeight));
     public static string WeightSuggestion_Reason_MissedReps          => Get(nameof(WeightSuggestion_Reason_MissedReps));
+    public static string WeightSuggestion_Reason_Deload              => Get(nameof(WeightSuggestion_Reason_Deload));
 
     // ── PostWorkout RP recovery-feedback ─────────────────────────────────
     public static string PostWorkout_Feedback_Header                 => Get(nameof(PostWorkout_Feedback_Header));

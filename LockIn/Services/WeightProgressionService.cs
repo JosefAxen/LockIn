@@ -10,15 +10,21 @@ public interface IWeightProgressionService
     Task<WeightSuggestion?> SuggestNextWeightAsync(int exerciseId, int currentSessionId, int targetReps);
 }
 
-// RP-baserad vikt-progression (see docs/research/2026-06-30-rp-hypertrophy-research.md avsnitt 4):
+// RP-baserad vikt-progression (plan sektion C):
 //  - Alla reps nådda + sista sets RIR ≥ 1 → +2.5 kg compound / +1.25 kg isolation
 //  - Alla reps nådda men RIR = 0 → behåll vikt (extra rep först)
 //  - Ej alla reps nådda → behåll vikt
+//  - Deload-vecka override: peak × 0.80, RIR-target 4
 public class WeightProgressionService : IWeightProgressionService
 {
     private readonly DatabaseService _db;
+    private readonly IMesocycleService _mesocycles;
 
-    public WeightProgressionService(DatabaseService db) => _db = db;
+    public WeightProgressionService(DatabaseService db, IMesocycleService mesocycles)
+    {
+        _db = db;
+        _mesocycles = mesocycles;
+    }
 
     public async Task<WeightSuggestion?> SuggestNextWeightAsync(int exerciseId, int currentSessionId, int targetReps)
     {
@@ -28,6 +34,15 @@ public class WeightProgressionService : IWeightProgressionService
             .OrderBy(s => s.SetNumber)
             .ToList();
         if (working.Count == 0) return null;
+
+        // Deload-override: om aktiv mesocykel-vecka är deload → 80 % av peak
+        var currentWeek = await _mesocycles.GetCurrentWeekAsync();
+        if (currentWeek?.IsDeload == true)
+        {
+            var peakWeight = working.Max(s => s.WeightKg);
+            var deloadWeight = Math.Round(peakWeight * 0.80m, 2);
+            return new WeightSuggestion(deloadWeight, AppResources.WeightSuggestion_Reason_Deload);
+        }
 
         var exercise = await _db.GetExerciseAsync(exerciseId);
         var isIsolation = exercise?.Mechanic == ExerciseMechanic.Isolation;

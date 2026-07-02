@@ -352,9 +352,9 @@ public partial class HemViewModel(DatabaseService db, IHealthService health, ISe
                 ThisWeekVolumeKg:      thisWeekVolumeTask.Result,
                 PrevWeekVolumeKg:      prevWeekVolumeTask.Result,
                 WeekStreak:            weekStreakTask.Result,
-                VolumeAdvices:         setProgressionTask.Result.VolumeAdvices,
-                DeloadAdvice:          setProgressionTask.Result.DeloadAdvice,
-                IsCycleDeloadWeek:     cycleContextTask.Result?.IsDeloadWeek ?? false
+                VolumeAdvices:         setProgressionTask.Result.Volume,
+                DeloadAdvice:          setProgressionTask.Result.Deload,
+                IsCycleDeloadWeek:     cycleContextTask.Result?.IsDeload ?? false
             );
 
             var chips = CoachPromptEngine.Evaluate(ctx);

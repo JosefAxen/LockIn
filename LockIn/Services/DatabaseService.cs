@@ -862,6 +862,25 @@ public class DatabaseService
             from, to);
     }
 
+    public async Task<List<WorkoutSession>> GetRecentCompletedSessionsAsync(int limit)
+    {
+        await InitAsync();
+        return await _db.Table<WorkoutSession>()
+            .Where(s => s.CompletedAt != null)
+            .OrderByDescending(s => s.CompletedAt)
+            .Take(limit)
+            .ToListAsync();
+    }
+
+    public async Task<List<LoggedSet>> GetLoggedSetsForSessionExerciseAsync(int sessionExerciseId)
+    {
+        await InitAsync();
+        return await _db.Table<LoggedSet>()
+            .Where(ls => ls.SessionExerciseId == sessionExerciseId)
+            .OrderBy(ls => ls.SetNumber)
+            .ToListAsync();
+    }
+
     // ── Cardio sessions ───────────────────────────────────────────────────
 
     public async Task SaveCardioSessionAsync(CardioSession session)

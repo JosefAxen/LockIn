@@ -694,6 +694,7 @@
   <data name="WeightSuggestion_Reason_HitAllReps" xml:space="preserve"><value>Alla reps nådda med minst 1 RIR kvar — dags att öka</value></data>
   <data name="WeightSuggestion_Reason_MaintainWeight" xml:space="preserve"><value>Alla reps nådda men RIR = 0 — behåll vikten, öka reps först</value></data>
   <data name="WeightSuggestion_Reason_MissedReps" xml:space="preserve"><value>Reps-mål inte nått — behåll vikten till formen sitter</value></data>
+  <data name="WeightSuggestion_Reason_Deload" xml:space="preserve"><value>Deload-vecka — kör 80 % av toppvikten, sikta på RIR 4</value></data>
   <data name="ActiveWorkout_FinishConfirm_Title" xml:space="preserve"><value>Avsluta pass</value></data>
   <data name="ActiveWorkout_FinishConfirm_Body" xml:space="preserve"><value>Är du klar med passet?</value></data>
   <data name="ActiveWorkout_FinishConfirm_Yes" xml:space="preserve"><value>Ja, avsluta</value></data>
