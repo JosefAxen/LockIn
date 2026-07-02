@@ -53,7 +53,7 @@ public partial class LibraryViewModel(DatabaseService db) : ObservableObject
         OnPropertyChanged(nameof(Tab2Bg)); OnPropertyChanged(nameof(Tab2Fg));
         OnPropertyChanged(nameof(Tab3Bg)); OnPropertyChanged(nameof(Tab3Fg));
         if (value == 1) _ = LoadTemplatesAsync();
-        if (value == 3) _ = LoadCyclesAsync();
+        // Cycles-tab (index 3) stubbad tills Etapp 2 Task 19 (PeriodizationPage om-design)
     }
 
     [RelayCommand]
@@ -334,25 +334,8 @@ public partial class LibraryViewModel(DatabaseService db) : ObservableObject
         });
     }
 
-    // ── Cycles tab ─────────────────────────────────────────────────────────
-
-    public ObservableCollection<TrainingCycle> Cycles { get; } = new();
-
-    private async Task LoadCyclesAsync()
-    {
-        var cycles = await db.GetCyclesAsync();
-        Cycles.Clear();
-        foreach (var c in cycles) Cycles.Add(c);
-    }
-
-    [RelayCommand]
-    private async Task OpenCycleAsync(TrainingCycle cycle)
-    {
-        await Shell.Current.GoToAsync("cycledetail", new Dictionary<string, object>
-        {
-            { "CycleId", cycle.Id }
-        });
-    }
+    // ── Cycles tab: stubbad efter RP full-klon Task 3 (TrainingCycle raderad).
+    //     Byggs om i Etapp 2 Task 19 (PeriodizationPage → mesocykel-hub).
 
     // ── Helpers ────────────────────────────────────────────────────────────
 

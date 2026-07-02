@@ -1,27 +1,11 @@
-using LockIn.ViewModels;
-
 namespace LockIn.Views;
 
+// STUB: gamla PeriodizationViewModel raderad i RP full-klon Task 3.
+// Sidan byggs om i Etapp 2 Task 19 (mesocykel-hub).
 public partial class PeriodizationPage : ContentPage
 {
-    public PeriodizationPage(PeriodizationViewModel vm)
+    public PeriodizationPage()
     {
         InitializeComponent();
-        BindingContext = vm;
     }
-
-    protected override async void OnAppearing()
-    {
-        base.OnAppearing();
-        this.Opacity = 0;
-        this.TranslationY = 20;
-        if (BindingContext is PeriodizationViewModel vm)
-            await vm.LoadAsync();
-        await Task.WhenAll(
-            this.FadeTo(1, 200),
-            this.TranslateTo(0, 0, 200, Easing.CubicOut));
-    }
-
-    private async void OnMesoBuilderClicked(object? sender, EventArgs e)
-        => await Shell.Current.GoToAsync(nameof(MesoBuilderPage));
 }
