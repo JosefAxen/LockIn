@@ -600,59 +600,16 @@
                         </Border>
                     </Grid>
                 </Border>
-                <!-- Cykel-lista -->
-                <StackLayout BindableLayout.ItemsSource="{Binding Cycles}" Spacing="0">
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate x:DataType="models:TrainingCycle">
-                            <Border Margin="16,0,16,8"
-                                    BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
-                                    StrokeShape="RoundRectangle 18"
-                                    StrokeThickness="0"
-                                    Padding="18,14">
-                                <Border.Shadow>
-                                    <Shadow Brush="Black" Offset="0,2" Radius="10" Opacity="0.18"/>
-                                </Border.Shadow>
-                                <Border.GestureRecognizers>
-                                    <TapGestureRecognizer
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}}, Path=OpenCycleCommand}"
-                                        CommandParameter="{Binding .}"/>
-                                </Border.GestureRecognizers>
-                                <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" RowSpacing="4">
-                                    <Label Grid.Column="0" Grid.Row="0"
-                                           Text="{Binding Name}"
-                                           FontFamily="BebasNeue" FontSize="22" CharacterSpacing="1"
-                                           TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
-                                           VerticalOptions="Center"/>
-                                    <Border Grid.Column="1" Grid.Row="0"
-                                            IsVisible="{Binding IsActive}"
-                                            BackgroundColor="{StaticResource ForgeAccentBlueDim}"
-                                            StrokeShape="RoundRectangle 8"
-                                            StrokeThickness="0" Padding="10,5"
-                                            VerticalOptions="Center">
-                                        <Label Text="{loc:Localize Periodization_Active_Badge}"
-                                               TextColor="{StaticResource ForgeAccentBlue}"
-                                               FontFamily="BebasNeue" FontSize="11" CharacterSpacing="1"/>
-                                    </Border>
-                                    <Label Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"
-                                           Text="{Binding WeekCountText}"
-                                           FontFamily="DMSansRegular" FontSize="13"
-                                           TextColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"/>
-                                </Grid>
-                            </Border>
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
-                    <BindableLayout.EmptyView>
-                        <StackLayout Padding="24,40" Spacing="8">
-                            <Label Text="{loc:Localize Periodization_NoCycles_Title}"
-                                   Style="{StaticResource DisplayLabel}"
-                                   FontSize="22"
-                                   HorizontalOptions="Center"
-                                   TextColor="{StaticResource ForgeMuted}"/>
-                            <Label Text="{loc:Localize Periodization_NoCycles_Body}"
-                                   Style="{StaticResource MutedLabel}"
-                                   HorizontalTextAlignment="Center"/>
-                        </StackLayout>
-                    </BindableLayout.EmptyView>
+                <!-- Cykel-lista — byggs om i Task 19/PeriodizationPage om-design -->
+                <StackLayout Padding="24,40" Spacing="8">
+                    <Label Text="{loc:Localize Periodization_NoCycles_Title}"
+                           Style="{StaticResource DisplayLabel}"
+                           FontSize="22"
+                           HorizontalOptions="Center"
+                           TextColor="{StaticResource ForgeMuted}"/>
+                    <Label Text="{loc:Localize Periodization_NoCycles_Body}"
+                           Style="{StaticResource MutedLabel}"
+                           HorizontalTextAlignment="Center"/>
                 </StackLayout>
             </VerticalStackLayout>
         </ScrollView>

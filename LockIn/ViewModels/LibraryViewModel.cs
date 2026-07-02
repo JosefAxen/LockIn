@@ -10,7 +10,7 @@ using System.Collections.ObjectModel;
 
 namespace LockIn.ViewModels;
 
-public partial class LibraryViewModel(DatabaseService db) : ObservableObject
+public partial class LibraryViewModel(DatabaseService db, ITemplateService templates) : ObservableObject
 {
     // ── Tab control ────────────────────────────────────────────────────────
 
@@ -265,39 +265,26 @@ public partial class LibraryViewModel(DatabaseService db) : ObservableObject
 
     private async Task LoadTemplatesAsync()
     {
-        var templates = await db.GetTemplatesAsync();
+        var list = await templates.ListAsync();
         Templates.Clear();
-        foreach (var t in templates) Templates.Add(t);
+        foreach (var t in list) Templates.Add(t);
     }
 
     [RelayCommand]
     private async Task NewTemplateAsync()
-    {
-        await Shell.Current.GoToAsync(nameof(TemplateEditPage), new Dictionary<string, object>
-        {
-            { "TemplateId", 0 }
-        });
-    }
+        => await Shell.Current.GoToAsync("templateplanningboard");
 
     [RelayCommand]
     private async Task EditTemplateAsync(WorkoutTemplate template)
-    {
-        await Shell.Current.GoToAsync(nameof(TemplateEditPage), new Dictionary<string, object>
-        {
-            { "TemplateId", template.Id }
-        });
-    }
+        => await Shell.Current.GoToAsync($"templateplanningboard?templateId={template.Id}");
 
     [RelayCommand]
     private async Task DuplicateTemplateAsync(WorkoutTemplate template)
     {
         var newName = $"{AppResources.Library_DuplicateTemplate_NamePrefix} {template.Name}";
-        var newId = await db.DuplicateTemplateAsync(template, newName);
+        var newId = await templates.CloneAsync(template.Id, newName);
         await LoadTemplatesAsync();
-        await Shell.Current.GoToAsync(nameof(TemplateEditPage), new Dictionary<string, object>
-        {
-            { "TemplateId", newId }
-        });
+        await Shell.Current.GoToAsync($"templateplanningboard?templateId={newId}");
     }
 
     [RelayCommand]
@@ -317,7 +304,7 @@ public partial class LibraryViewModel(DatabaseService db) : ObservableObject
             string.Format(AppResources.Library_DeleteTemplate_Body_Format, template.Name),
             AppResources.Common_Delete, AppResources.Common_Cancel);
         if (!confirmed) return;
-        await db.DeleteTemplateAsync(template);
+        await templates.DeleteAsync(template.Id);
         Templates.Remove(template);
     }
 
