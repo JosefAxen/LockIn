@@ -21,7 +21,6 @@ public static class AppRoutes
     // ─────── Tabs (absoluta routes) ───────
     public const string HemTab = "//HemPage";
     public const string TrainTab = "//TrainPage";
-    public const string TrainTabLegacy = "//train"; // OBS: används i PostWorkoutViewModel — case-mismatch mot AppShell.xaml (Route="TrainPage")
     public const string HistoryTab = "//HistoryPage";
     public const string LibraryTab = "//LibraryPage";
     public const string KroppTab = "//KroppPage";
@@ -44,7 +43,6 @@ public static class AppRoutes
     public const string MuscleVolume = "MuscleVolumePage";
     public const string WeeklyVolume = "WeeklyVolumePage";
     public const string MesoBuilder = "MesoBuilderPage";
-    public const string MesoBuilderLegacy = "mesobuilder"; // OBS: används i PeriodizationViewModel — case-mismatch mot registreringen "MesoBuilderPage"
 
     // ─────── Lowercase-routes (explicit registrerade så i AppShell.xaml.cs) ───────
     public const string TemplatePlanningBoard = "templateplanningboard";

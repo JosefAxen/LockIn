@@ -315,7 +315,7 @@ public partial class PostWorkoutViewModel(
         }
 
         await Shell.Current.Navigation.PopToRootAsync(false);
-        await Shell.Current.GoToAsync(AppRoutes.TrainTabLegacy);
+        await Shell.Current.GoToAsync(AppRoutes.TrainTab);
     }
 
     public async Task CommitIfNotDoneAsync()

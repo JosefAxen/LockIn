@@ -69,7 +69,7 @@ public partial class PeriodizationViewModel : ObservableObject
 
     [RelayCommand]
     private async Task OpenMesoBuilderAsync()
-        => await Shell.Current.GoToAsync(AppRoutes.MesoBuilderLegacy);
+        => await Shell.Current.GoToAsync(AppRoutes.MesoBuilder);
 
     [RelayCommand]
     private async Task OpenTemplatePickerAsync()
