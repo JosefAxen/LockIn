@@ -126,13 +126,20 @@ public static class DesignTokens
     // ─── Per-muscle-group sparkline colors ───────────────────────────────────
     public static Color MuscleColor(MuscleGroup mg) => mg switch
     {
-        MuscleGroup.Chest     => AccentCoral,
-        MuscleGroup.Back      => AccentBlue,
-        MuscleGroup.Shoulders => AccentAmber,
-        MuscleGroup.Biceps    => AccentPurple,
-        MuscleGroup.Triceps   => AccentOrange,
-        MuscleGroup.Legs      => AccentGreen,
-        MuscleGroup.Core      => AccentTeal,
-        _                     => Accent,
+        MuscleGroup.Chest      => AccentCoral,
+        MuscleGroup.Back       => AccentBlue,
+        MuscleGroup.Shoulders  => AccentAmber,
+        MuscleGroup.Biceps     => AccentPurple,
+        MuscleGroup.Triceps    => AccentOrange,
+        MuscleGroup.Legs       => AccentGreen,
+        MuscleGroup.Core       => AccentTeal,
+        MuscleGroup.Quads      => AccentGreen,
+        MuscleGroup.Hamstrings => AccentGreen,
+        MuscleGroup.Glutes     => AccentGreen,
+        MuscleGroup.Calves     => AccentGreen,
+        MuscleGroup.Traps      => AccentBlue,
+        MuscleGroup.Abs        => AccentTeal,
+        MuscleGroup.Forearms   => AccentPurple,
+        _                      => Accent,
     };
 }

@@ -71,8 +71,6 @@ public static class MauiProgram
         builder.Services.AddTransient<KroppViewModel>();
 
         // Navigation pages
-        builder.Services.AddTransient<TemplateEditPage>();
-        builder.Services.AddTransient<TemplateEditViewModel>();
         builder.Services.AddTransient<TemplatePlanningBoardPage>();
         builder.Services.AddTransient<TemplatePlanningBoardViewModel>();
         builder.Services.AddTransient<ExercisePickerPage>();
@@ -111,7 +109,6 @@ public static class MauiProgram
         builder.Services.AddTransient<PeriodizationViewModel>();
         builder.Services.AddTransient<TemplatePickerPage>();
         builder.Services.AddTransient<TemplatePickerViewModel>();
-        builder.Services.AddTransient<CycleDetailPage>();
         builder.Services.AddTransient<MesocycleStatsPage>();
         builder.Services.AddTransient<MesocycleStatsViewModel>();
         builder.Services.AddTransient<JointPainSheetViewModel>();

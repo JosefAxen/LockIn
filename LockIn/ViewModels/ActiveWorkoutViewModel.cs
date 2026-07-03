@@ -195,20 +195,11 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             TargetRir = _activeCycle?.TargetRir ?? -1,
         };
 
-        // Priority-tag från mesocykeln (III=Emphasize, II=Grow/default, I=Maintain)
+        // Priority-tag från mesocykeln (Emphasize/Grow/Maintain)
         if (_activeCycle is not null)
         {
             var prio = await mesocycles.GetPriorityAsync(_activeCycle.MesocycleId, exercise.MuscleGroup);
-            section.PriorityTag = prio?.PriorityLevel switch
-            {
-                MusclePriorityLevel.Emphasize => "III",
-                MusclePriorityLevel.Maintain  => "I",
-                _                             => "II",
-            };
-        }
-        else
-        {
-            section.PriorityTag = "II";
+            section.Priority = prio?.PriorityLevel ?? MusclePriorityLevel.Grow;
         }
 
         // Rekommenderat-RIR-hint under set-raderna

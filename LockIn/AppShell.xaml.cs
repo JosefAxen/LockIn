@@ -8,7 +8,6 @@ public partial class AppShell : Shell
     {
         InitializeComponent();
 
-        Routing.RegisterRoute(nameof(TemplateEditPage), typeof(TemplateEditPage));
         Routing.RegisterRoute("templateplanningboard", typeof(TemplatePlanningBoardPage));
         Routing.RegisterRoute(nameof(ExercisePickerPage), typeof(ExercisePickerPage));
         Routing.RegisterRoute(nameof(ActiveWorkoutPage), typeof(ActiveWorkoutPage));
@@ -24,7 +23,6 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(CreateExercisePage), typeof(CreateExercisePage));
         Routing.RegisterRoute(nameof(CardioPage), typeof(CardioPage));
         Routing.RegisterRoute(nameof(PeriodizationPage), typeof(PeriodizationPage));
-        Routing.RegisterRoute("cycledetail", typeof(CycleDetailPage));
         Routing.RegisterRoute(nameof(MuscleVolumePage), typeof(MuscleVolumePage));
         Routing.RegisterRoute(nameof(WeeklyVolumePage), typeof(WeeklyVolumePage));
         Routing.RegisterRoute(nameof(MesoBuilderPage), typeof(MesoBuilderPage));

@@ -28,7 +28,7 @@ public class ExerciseRecommendationService : IExerciseRecommendationService
     {
         var all = await _db.GetExercisesAsync();
         var settings = await _db.GetAppSettingsAsync();
-        var preferredEquipment = ParsePreferredEquipment(settings?.PreferredEquipmentJson);
+        var preferredEquipment = settings.ParsePreferredEquipment();
 
         // Filter: rätt muskel + inte exkluderad + equipment tillåtet (om preferred finns)
         var candidates = all
@@ -80,13 +80,4 @@ public class ExerciseRecommendationService : IExerciseRecommendationService
         return result;
     }
 
-    private static List<int> ParsePreferredEquipment(string? json)
-    {
-        if (string.IsNullOrWhiteSpace(json)) return new List<int>();
-        try
-        {
-            return JsonSerializer.Deserialize<List<int>>(json) ?? new List<int>();
-        }
-        catch { return new List<int>(); }
-    }
 }

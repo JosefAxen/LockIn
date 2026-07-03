@@ -37,7 +37,7 @@ public class CycleContextService : ICycleContextService
     // RIR-target per vecka. Deload-vecka = 4. Övriga: linjär nedtrappning 4 → 1
     // över accumulation-veckorna (vecka 1 till (totalWeeks - 1)).
     // Formel: plan sektion B.
-    private static int ComputeTargetRir(int weekIndex, int totalWeeks)
+    public static int ComputeTargetRir(int weekIndex, int totalWeeks)
     {
         if (totalWeeks <= 1) return 3;
         if (weekIndex == totalWeeks - 1) return 4; // deload (fallback om IsDeload inte satts)

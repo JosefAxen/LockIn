@@ -143,7 +143,7 @@ public partial class MesocycleStatsViewModel : ObservableObject, IQueryAttributa
                 VolumeBars.Add(new VolumeBarRow
                 {
                     Muscle = v.Muscle,
-                    MuscleName = MuscleGroupLabel(v.Muscle),
+                    MuscleName = v.Muscle.ToLocalizedLabel(),
                     SetsThisWeek = v.SetsThisWeek,
                     PlannedSets = v.PlannedSets,
                     MEV = v.MEV,
@@ -158,7 +158,7 @@ public partial class MesocycleStatsViewModel : ObservableObject, IQueryAttributa
             {
                 var weekEntry = detail.Weeks.FirstOrDefault(w => w.WeekNumber == wk);
                 var isDeloadWeek = weekEntry?.IsDeload ?? false;
-                int rir = isDeloadWeek ? 4 : ComputeTargetRir(wk - 1, meso.WeekCount);
+                int rir = isDeloadWeek ? 4 : CycleContextService.ComputeTargetRir(wk - 1, meso.WeekCount);
                 RirProgression.Add(new RirPoint
                 {
                     WeekNumber = wk,
@@ -200,31 +200,6 @@ public partial class MesocycleStatsViewModel : ObservableObject, IQueryAttributa
     private async Task OpenPeriodizationAsync()
         => await Shell.Current.GoToAsync("//" + nameof(Views.PeriodizationPage));
 
-    // Sektion B — RIR-progression: 4 → 1 linjärt över accumulation, 4 vid deload.
-    private static int ComputeTargetRir(int weekIndex, int totalWeeks)
-    {
-        if (totalWeeks <= 1) return 3;
-        if (weekIndex == totalWeeks - 1) return 4; // (fallback — deload hanteras utanför)
-        var accumulationWeeks = totalWeeks - 1;
-        if (accumulationWeeks <= 1) return 3;
-        var progress = (double)weekIndex / (accumulationWeeks - 1);
-        var raw = 4.0 - progress * 3.0;
-        return Math.Max(1, (int)Math.Round(raw));
-    }
-
-    private static string MuscleGroupLabel(MuscleGroup mg) => mg switch
-    {
-        MuscleGroup.Chest     => AppResources.Library_Muscle_Chest,
-        MuscleGroup.Back      => AppResources.Library_Muscle_Back,
-        MuscleGroup.Shoulders => AppResources.Library_Muscle_Shoulders,
-        MuscleGroup.Biceps    => AppResources.Library_Muscle_Biceps,
-        MuscleGroup.Triceps   => AppResources.Library_Muscle_Triceps,
-        MuscleGroup.Forearms  => AppResources.Library_Muscle_Forearms,
-        MuscleGroup.Legs      => AppResources.Library_Muscle_Legs,
-        MuscleGroup.Core      => AppResources.Library_Muscle_Core,
-        MuscleGroup.FullBody  => AppResources.Library_Muscle_FullBody,
-        _                     => AppResources.Library_Muscle_Other,
-    };
 }
 
 public partial class WeekTile : ObservableObject

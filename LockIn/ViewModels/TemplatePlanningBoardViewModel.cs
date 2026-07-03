@@ -98,8 +98,6 @@ public partial class TemplatePlanningBoardViewModel : ObservableObject, IQueryAt
                         {
                             Muscle = s.MuscleGroup,
                             SortOrder = s.SortOrder,
-                            MuscleLabel = MuscleLabelFor(s.MuscleGroup),
-                            PriorityTag = "II",
                         };
 
                         if (detail.ExercisesBySlotId.TryGetValue(s.Id, out var exs))
@@ -184,7 +182,7 @@ public partial class TemplatePlanningBoardViewModel : ObservableObject, IQueryAt
         day ??= SelectedDay;
         if (day is null) return;
 
-        var options = _allMuscles.Select(MuscleLabelFor).ToArray();
+        var options = _allMuscles.Select(m => m.ToLocalizedLabel()).ToArray();
         var choice = await Shell.Current.CurrentPage.DisplayActionSheet(
             AppResources.TemplateBoard_AddMuscle_Title,
             AppResources.Common_Cancel,
@@ -201,8 +199,6 @@ public partial class TemplatePlanningBoardViewModel : ObservableObject, IQueryAt
         {
             Muscle = muscle,
             SortOrder = nextSort,
-            MuscleLabel = MuscleLabelFor(muscle),
-            PriorityTag = "II",
         });
     }
 
@@ -406,26 +402,6 @@ public partial class TemplatePlanningBoardViewModel : ObservableObject, IQueryAt
         MuscleGroup.Other,
     };
 
-    internal static string MuscleLabelFor(MuscleGroup m) => m switch
-    {
-        MuscleGroup.Chest      => AppResources.Library_Muscle_Chest,
-        MuscleGroup.Back       => AppResources.Library_Muscle_Back,
-        MuscleGroup.Shoulders  => AppResources.Library_Muscle_Shoulders,
-        MuscleGroup.Biceps     => AppResources.Library_Muscle_Biceps,
-        MuscleGroup.Triceps    => AppResources.Library_Muscle_Triceps,
-        MuscleGroup.Forearms   => AppResources.Library_Muscle_Forearms,
-        MuscleGroup.Legs       => AppResources.Library_Muscle_Legs,
-        MuscleGroup.Core       => AppResources.Library_Muscle_Core,
-        MuscleGroup.FullBody   => AppResources.Library_Muscle_FullBody,
-        MuscleGroup.Other      => AppResources.Library_Muscle_Other,
-        MuscleGroup.Quads      => AppResources.Muscle_Quads,
-        MuscleGroup.Hamstrings => AppResources.Muscle_Hamstrings,
-        MuscleGroup.Glutes     => AppResources.Muscle_Glutes,
-        MuscleGroup.Calves     => AppResources.Muscle_Calves,
-        MuscleGroup.Traps      => AppResources.Muscle_Traps,
-        MuscleGroup.Abs        => AppResources.Muscle_Abs,
-        _ => m.ToString(),
-    };
 }
 
 // ── Nested VMs (deklareras i samma fil för att hålla ihop scope) ─────
@@ -441,8 +417,14 @@ public partial class MuscleSlotViewModel : ObservableObject
 {
     public MuscleGroup Muscle { get; set; }
     public int SortOrder { get; set; }
-    [ObservableProperty] private string _muscleLabel = "";
-    [ObservableProperty] private string _priorityTag = "II";
+    public string MuscleLabel => Muscle.ToLocalizedLabel();
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(PriorityTag))]
+    private MusclePriorityLevel _priority = MusclePriorityLevel.Grow;
+
+    public string PriorityTag => Priority.ToRomanNumeral();
+
     public ObservableCollection<ExerciseRowViewModel> Exercises { get; } = new();
 }
 

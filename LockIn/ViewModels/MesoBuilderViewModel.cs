@@ -193,7 +193,7 @@ public partial class MesoBuilderViewModel : ObservableObject
             foreach (var row in Maintain) priorities[row.Muscle] = MusclePriorityLevel.Maintain;
 
             var settings = await _db.GetAppSettingsAsync();
-            var equipment = ParsePreferredEquipment(settings?.PreferredEquipmentJson);
+            var equipment = settings.ParsePreferredEquipment();
 
             var spec = new MesoBuilderSpec(
                 MesocycleName: MesocycleName.Trim(),
@@ -224,37 +224,25 @@ public partial class MesoBuilderViewModel : ObservableObject
         Grow.Clear();
         Maintain.Clear();
 
-        var muscles = new (MuscleGroup Muscle, string Label)[]
+        var muscles = new[]
         {
-            (MuscleGroup.Chest,      AppResources.Muscle_Chest),
-            (MuscleGroup.Back,       AppResources.Muscle_Back),
-            (MuscleGroup.Shoulders,  AppResources.Muscle_Shoulders),
-            (MuscleGroup.Biceps,     AppResources.Muscle_Biceps),
-            (MuscleGroup.Triceps,    AppResources.Muscle_Triceps),
-            (MuscleGroup.Quads,      AppResources.Muscle_Quads),
-            (MuscleGroup.Hamstrings, AppResources.Muscle_Hamstrings),
-            (MuscleGroup.Glutes,     AppResources.Muscle_Glutes),
-            (MuscleGroup.Calves,     AppResources.Muscle_Calves),
-            (MuscleGroup.Abs,        AppResources.Muscle_Abs),
+            MuscleGroup.Chest, MuscleGroup.Back, MuscleGroup.Shoulders,
+            MuscleGroup.Biceps, MuscleGroup.Triceps,
+            MuscleGroup.Quads, MuscleGroup.Hamstrings, MuscleGroup.Glutes,
+            MuscleGroup.Calves, MuscleGroup.Abs,
         };
 
-        foreach (var (m, label) in muscles)
+        foreach (var m in muscles)
         {
             Grow.Add(new MusclePriorityRow
             {
                 Muscle = m,
-                Label = label,
+                Label = m.ToLocalizedLabel(),
                 Priority = MusclePriorityLevel.Grow,
             });
         }
     }
 
-    private static List<int> ParsePreferredEquipment(string? json)
-    {
-        if (string.IsNullOrWhiteSpace(json)) return new List<int>();
-        try { return System.Text.Json.JsonSerializer.Deserialize<List<int>>(json) ?? new List<int>(); }
-        catch { return new List<int>(); }
-    }
 }
 
 public partial class MusclePriorityRow : ObservableObject

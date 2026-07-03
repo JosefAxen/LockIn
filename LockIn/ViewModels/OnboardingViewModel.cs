@@ -146,7 +146,7 @@ public partial class OnboardingViewModel(DatabaseService db, IHealthService heal
             AppResources.Onboarding_SkipLink,
             AppResources.Common_Cancel);
         if (!ok) return;
-        await FinishOnboardingAsync(activateProgram: false);
+        await FinishAsync();
     }
 
     // ── Equipment commands ─────────────────────────────────────────────────
@@ -214,31 +214,16 @@ public partial class OnboardingViewModel(DatabaseService db, IHealthService heal
 
     // ── Completion ─────────────────────────────────────────────────────────
 
-    // Steg 4 → steg 5 (equipment) och minns om program ska aktiveras
-    private bool _pendingActivateProgram = false;
+    // Steg 4 → steg 5 (equipment). Program-koncept ersatt av template-flöde (Task 21).
+    [RelayCommand]
+    private void ActivateProgram() => CurrentStep = 5;
 
     [RelayCommand]
-    private void ActivateProgram()
-    {
-        _pendingActivateProgram = true;
-        CurrentStep = 5;
-    }
-
-    [RelayCommand]
-    private void SkipProgram()
-    {
-        _pendingActivateProgram = false;
-        CurrentStep = 5;
-    }
+    private void SkipProgram() => CurrentStep = 5;
 
     // Steg 5: Klar-knapp
     [RelayCommand]
     private async Task FinishAsync()
-    {
-        await FinishOnboardingAsync(_pendingActivateProgram);
-    }
-
-    private async Task FinishOnboardingAsync(bool activateProgram)
     {
         await SaveEquipmentAsync();
 
@@ -247,11 +232,6 @@ public partial class OnboardingViewModel(DatabaseService db, IHealthService heal
         settings.WeeklyWorkoutGoal      = SelectedWeeklyGoal;
         settings.HasCompletedOnboarding = true;
         await db.SaveAppSettingsAsync(settings);
-
-        // TODO: RP-clone — program-koncept ersätts av template-koncept i Task 21.
-        // if (activateProgram && RecommendedProgram is { } program)
-        //     await db.ActivateProgramAsync(program);
-        _ = activateProgram;
 
         var granted = await health.RequestPermissionsAsync();
         if (granted)

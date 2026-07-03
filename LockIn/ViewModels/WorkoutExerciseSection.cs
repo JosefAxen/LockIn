@@ -31,48 +31,17 @@ public partial class WorkoutExerciseSection : ObservableObject
     public bool IsInSuperset => SupersetGroupId.HasValue;
     public MuscleGroup MuscleGroup { get; set; }
 
-    public Color AccentColor => MuscleGroup switch
-    {
-        MuscleGroup.Chest     => Color.FromArgb("#FB7185"),
-        MuscleGroup.Back      => Color.FromArgb("#38BDF8"),
-        MuscleGroup.Shoulders => Color.FromArgb("#A78BFA"),
-        MuscleGroup.Biceps    => Color.FromArgb("#4ADE80"),
-        MuscleGroup.Triceps   => Color.FromArgb("#FBBF24"),
-        MuscleGroup.Legs      => Color.FromArgb("#F97316"),
-        MuscleGroup.Core      => Color.FromArgb("#EC4899"),
-        MuscleGroup.FullBody  => Color.FromArgb("#EF4444"),
-        _                     => Color.FromArgb("#52525E"),
-    };
-
+    public Color AccentColor => DesignTokens.MuscleColor(MuscleGroup);
     public SolidColorBrush AccentBrush => new(AccentColor);
-
-    public string ExerciseMuscleUpper => MuscleGroupLabel(MuscleGroup).ToUpperInvariant();
-
-    private static string MuscleGroupLabel(MuscleGroup g) => g switch
-    {
-        MuscleGroup.Chest     => "Bröst",
-        MuscleGroup.Back      => "Rygg",
-        MuscleGroup.Shoulders => "Axlar",
-        MuscleGroup.Biceps    => "Biceps",
-        MuscleGroup.Triceps   => "Triceps",
-        MuscleGroup.Legs      => "Ben",
-        MuscleGroup.Core      => "Mage",
-        MuscleGroup.FullBody  => "Helkropp",
-        MuscleGroup.Forearms  => "Underarmar",
-        _                     => "Övrigt",
-    };
+    public string ExerciseMuscleUpper => MuscleGroup.ToLocalizedLabel().ToUpperInvariant();
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(PriorityTag))]
     [NotifyPropertyChangedFor(nameof(PriorityTagColor))]
-    private string _priorityTag = "II";
+    private MusclePriorityLevel _priority = MusclePriorityLevel.Grow;
 
-    public Color PriorityTagColor => PriorityTag switch
-    {
-        "III" => Color.FromArgb("#FF5A1F"),
-        "II"  => Color.FromArgb("#71717A"),
-        "I"   => Color.FromArgb("#52525B"),
-        _     => Color.FromArgb("#52525B"),
-    };
+    public string PriorityTag => Priority.ToRomanNumeral();
+    public Color PriorityTagColor => Priority.ToTagColor();
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasNotes))]
