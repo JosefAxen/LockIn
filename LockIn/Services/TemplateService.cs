@@ -1,3 +1,4 @@
+using LockIn.Data.Repositories;
 using LockIn.Models;
 
 namespace LockIn.Services;
@@ -22,41 +23,32 @@ public interface ITemplateService
 
 public class TemplateService : ITemplateService
 {
-    private readonly DatabaseService _db;
-    public TemplateService(DatabaseService db) => _db = db;
+    private readonly ITemplateRepository _templates;
+    public TemplateService(ITemplateRepository templates) => _templates = templates;
 
-    public Task<List<WorkoutTemplate>> ListAsync() => _db.GetTemplatesAsync();
-    public Task<WorkoutTemplate?> GetAsync(int id) => _db.GetTemplateAsync(id);
+    public Task<List<WorkoutTemplate>> ListAsync() => _templates.GetAllAsync();
+    public Task<WorkoutTemplate?> GetAsync(int id) => _templates.GetAsync(id);
 
+    // ADR-001 PR 4: nu batch (3 queries) istället för N+1 foreach — löser efficiency-finding #8.
     public async Task<TemplateDetail?> GetDetailAsync(int templateId)
     {
-        var template = await _db.GetTemplateAsync(templateId);
-        if (template is null) return null;
+        var s = await _templates.GetStructureAsync(templateId);
+        if (s is null) return null;
 
-        var days = await _db.GetTemplateDaysAsync(templateId);
-        var slotsByDayId = new Dictionary<int, IReadOnlyList<TemplateMuscleSlot>>();
-        var exercisesBySlotId = new Dictionary<int, IReadOnlyList<TemplateExercise>>();
+        var slotsByDayId = s.SlotsByDayId
+            .ToDictionary(kv => kv.Key, kv => (IReadOnlyList<TemplateMuscleSlot>)kv.Value);
+        var exercisesBySlotId = s.ExercisesBySlotId
+            .ToDictionary(kv => kv.Key, kv => (IReadOnlyList<TemplateExercise>)kv.Value);
 
-        foreach (var day in days)
-        {
-            var slots = await _db.GetTemplateMuscleSlotsAsync(day.Id);
-            slotsByDayId[day.Id] = slots;
-            foreach (var slot in slots)
-            {
-                var exs = await _db.GetTemplateExercisesForSlotAsync(slot.Id);
-                exercisesBySlotId[slot.Id] = exs;
-            }
-        }
-
-        return new TemplateDetail(template, days, slotsByDayId, exercisesBySlotId);
+        return new TemplateDetail(s.Template, s.Days, slotsByDayId, exercisesBySlotId);
     }
 
     public Task<int> SaveAsync(WorkoutTemplate template, List<TemplateDay> days,
         Dictionary<int, List<TemplateMuscleSlot>> slotsByDayIndex,
         Dictionary<(int dayIndex, int slotSortOrder), List<TemplateExercise>> exercisesBySlot)
-        => _db.SaveTemplateWithChildrenAsync(template, days, slotsByDayIndex, exercisesBySlot);
+        => _templates.SaveWithChildrenAsync(template, days, slotsByDayIndex, exercisesBySlot);
 
-    public Task DeleteAsync(int templateId) => _db.DeleteTemplateAsync(templateId);
+    public Task DeleteAsync(int templateId) => _templates.DeleteAsync(templateId);
 
     public async Task<int> CloneAsync(int sourceTemplateId, string newName)
     {

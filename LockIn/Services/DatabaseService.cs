@@ -1234,18 +1234,23 @@ public class DatabaseService
 
     // ── Templates ─────────────────────────────────────────────────────────────
 
+    // ADR-001: flyttas till ITemplateRepository. Kvar tills alla callers migrerat.
+
+    [Obsolete("Använd ITemplateRepository.GetAllAsync — ADR-001 PR 4")]
     public async Task<List<WorkoutTemplate>> GetTemplatesAsync()
     {
         await InitAsync();
         return await _db.Table<WorkoutTemplate>().OrderByDescending(t => t.CreatedAt).ToListAsync();
     }
 
+    [Obsolete("Använd ITemplateRepository.GetAsync — ADR-001 PR 4")]
     public async Task<WorkoutTemplate?> GetTemplateAsync(int id)
     {
         await InitAsync();
         return await _db.Table<WorkoutTemplate>().Where(t => t.Id == id).FirstOrDefaultAsync();
     }
 
+    [Obsolete("Använd ITemplateRepository.GetDaysAsync — ADR-001 PR 4")]
     public async Task<List<TemplateDay>> GetTemplateDaysAsync(int templateId)
     {
         await InitAsync();
@@ -1255,6 +1260,7 @@ public class DatabaseService
             .ToListAsync();
     }
 
+    [Obsolete("Använd ITemplateRepository.GetMuscleSlotsAsync — ADR-001 PR 4")]
     public async Task<List<TemplateMuscleSlot>> GetTemplateMuscleSlotsAsync(int templateDayId)
     {
         await InitAsync();
@@ -1264,6 +1270,7 @@ public class DatabaseService
             .ToListAsync();
     }
 
+    [Obsolete("Använd ITemplateRepository.GetExercisesForSlotAsync — ADR-001 PR 4")]
     public async Task<List<TemplateExercise>> GetTemplateExercisesForSlotAsync(int templateMuscleSlotId)
     {
         await InitAsync();
@@ -1273,6 +1280,38 @@ public class DatabaseService
             .ToListAsync();
     }
 
+    /// <summary>
+    /// Batch-hämtning av template-struktur i 3 queries (istället för N+1 foreach-await).
+    /// Löser efficiency-review-finding #8. Del av ADR-001 PR 4.
+    /// </summary>
+    public async Task<(WorkoutTemplate? Template, List<TemplateDay> Days, List<TemplateMuscleSlot> Slots, List<TemplateExercise> Exercises)>
+        GetTemplateStructureAsync(int templateId)
+    {
+        await InitAsync();
+        var template = await _db.Table<WorkoutTemplate>().Where(t => t.Id == templateId).FirstOrDefaultAsync();
+        if (template is null) return (null, new(), new(), new());
+
+        var days = await _db.Table<TemplateDay>()
+            .Where(d => d.TemplateId == templateId)
+            .OrderBy(d => d.DayIndex)
+            .ToListAsync();
+        if (days.Count == 0) return (template, new(), new(), new());
+
+        var dayIds = days.Select(d => d.Id).ToList();
+        var dayIdsCsv = string.Join(",", dayIds);
+        var slots = await _db.QueryAsync<TemplateMuscleSlot>(
+            $"SELECT * FROM TemplateMuscleSlots WHERE TemplateDayId IN ({dayIdsCsv}) ORDER BY SortOrder");
+        if (slots.Count == 0) return (template, days, new(), new());
+
+        var slotIds = slots.Select(s => s.Id).ToList();
+        var slotIdsCsv = string.Join(",", slotIds);
+        var exercises = await _db.QueryAsync<TemplateExercise>(
+            $"SELECT * FROM TemplateExercises WHERE TemplateMuscleSlotId IN ({slotIdsCsv}) ORDER BY SortOrder");
+
+        return (template, days, slots, exercises);
+    }
+
+    [Obsolete("Använd ITemplateRepository.SaveWithChildrenAsync — ADR-001 PR 4")]
     public async Task<int> SaveTemplateWithChildrenAsync(
         WorkoutTemplate template,
         List<TemplateDay> days,
@@ -1325,6 +1364,7 @@ public class DatabaseService
         return templateId;
     }
 
+    [Obsolete("Använd ITemplateRepository.DeleteAsync — ADR-001 PR 4")]
     public async Task DeleteTemplateAsync(int templateId)
     {
         await InitAsync();

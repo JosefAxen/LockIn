@@ -13,7 +13,7 @@ using System.Globalization;
 
 namespace LockIn.ViewModels;
 
-public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, RestTimerService timer, ISoundService sound, ActiveWorkoutStateService state, NotificationService notifications, IWeightProgressionService weightProgression, ICycleContextService cycleContext, IMesocycleService mesocycles, ISettingsRepository settingsRepo, IExerciseRepository exerciseRepo)
+public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, RestTimerService timer, ISoundService sound, ActiveWorkoutStateService state, NotificationService notifications, IWeightProgressionService weightProgression, ICycleContextService cycleContext, IMesocycleService mesocycles, ISettingsRepository settingsRepo, IExerciseRepository exerciseRepo, ITemplateRepository templateRepo)
     : ObservableObject, IQueryAttributable
 {
     private WorkoutSession? _session;
@@ -81,8 +81,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
 
             if (templateId != 0)
             {
-                var templates = await db.GetTemplatesAsync();
-                var template = templates.FirstOrDefault(t => t.Id == templateId);
+                var template = await templateRepo.GetAsync(templateId);
                 TemplateName = template?.Name ?? AppResources.ActiveWorkout_FreeWorkout;
             }
 
@@ -111,24 +110,26 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
 
             if (templateId != 0)
             {
-                // TODO Task 18: läs via ITemplateService.GetDetailAsync och bygg sektioner per TemplateDay
-                // Tills dess: ladda exercises via legacy-flöde (platt lista ur alla slots)
-                var detail = await db.GetTemplateDaysAsync(templateId);
-                int sortIndex = 0;
-                foreach (var day in detail)
+                // ADR-001 PR 4: batch-hämta hela template-strukturen i 3 queries (löser N+1).
+                var structure = await templateRepo.GetStructureAsync(templateId);
+                if (structure is not null)
                 {
-                    var slots = await db.GetTemplateMuscleSlotsAsync(day.Id);
-                    foreach (var slot in slots)
+                    int sortIndex = 0;
+                    foreach (var day in structure.Days)
                     {
-                        var exs = await db.GetTemplateExercisesForSlotAsync(slot.Id);
-                        foreach (var te in exs)
+                        if (!structure.SlotsByDayId.TryGetValue(day.Id, out var slots)) continue;
+                        foreach (var slot in slots)
                         {
-                            var exercise = await exerciseRepo.GetAsync(te.ExerciseId);
-                            if (exercise is null) continue;
-                            await AddExerciseSectionAsync(exercise, sortIndex++, 3, te.TargetRepsMin,
-                                0m, te.DefaultRestSeconds,
-                                te.TargetRepsMin, te.TargetRepsMax, 2.5m,
-                                0, null, te.Id);
+                            if (!structure.ExercisesBySlotId.TryGetValue(slot.Id, out var exs)) continue;
+                            foreach (var te in exs)
+                            {
+                                var exercise = await exerciseRepo.GetAsync(te.ExerciseId);
+                                if (exercise is null) continue;
+                                await AddExerciseSectionAsync(exercise, sortIndex++, 3, te.TargetRepsMin,
+                                    0m, te.DefaultRestSeconds,
+                                    te.TargetRepsMin, te.TargetRepsMax, 2.5m,
+                                    0, null, te.Id);
+                            }
                         }
                     }
                 }

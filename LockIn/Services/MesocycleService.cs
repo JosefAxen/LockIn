@@ -1,3 +1,4 @@
+using LockIn.Data.Repositories;
 using LockIn.Models;
 
 namespace LockIn.Services;
@@ -23,7 +24,12 @@ public interface IMesocycleService
 public class MesocycleService : IMesocycleService
 {
     private readonly DatabaseService _db;
-    public MesocycleService(DatabaseService db) => _db = db;
+    private readonly ITemplateRepository _templates;
+    public MesocycleService(DatabaseService db, ITemplateRepository templates)
+    {
+        _db = db;
+        _templates = templates;
+    }
 
     public Task<List<Mesocycle>> ListAsync() => _db.GetMesocyclesAsync();
     public Task<Mesocycle?> GetActiveAsync() => _db.GetActiveMesocycleAsync();
@@ -32,7 +38,7 @@ public class MesocycleService : IMesocycleService
     {
         var meso = await _db.GetMesocycleAsync(mesocycleId);
         if (meso is null) return null;
-        var template = await _db.GetTemplateAsync(meso.TemplateId);
+        var template = await _templates.GetAsync(meso.TemplateId);
         var weeks = await _db.GetMesocycleWeeksAsync(mesocycleId);
         var priorities = await _db.GetMesocyclePrioritiesAsync(mesocycleId);
         return new MesocycleDetail(meso, template, weeks, priorities);

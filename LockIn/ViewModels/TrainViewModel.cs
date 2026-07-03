@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn.Data;
+using LockIn.Data.Repositories;
 using LockIn.Models;
 using LockIn.Resources.Strings;
 using LockIn.Services;
@@ -10,7 +11,7 @@ using LockIn;
 
 namespace LockIn.ViewModels;
 
-public partial class TrainViewModel(DatabaseService db, ActiveWorkoutStateService state) : ObservableObject
+public partial class TrainViewModel(DatabaseService db, ActiveWorkoutStateService state, ITemplateRepository templateRepo) : ObservableObject
 {
     public ObservableCollection<ProgramGroup> ProgramGroups { get; } = new();
     public ObservableCollection<WorkoutTemplate> FreeTemplates { get; } = new();
@@ -27,7 +28,7 @@ public partial class TrainViewModel(DatabaseService db, ActiveWorkoutStateServic
     public async Task LoadAsync()
     {
         IsLoading = true;
-        var templates = await db.GetTemplatesAsync();
+        var templates = await templateRepo.GetAllAsync();
         // TODO: RP-clone — last-used-map ersätts i Task 19.
         var lastUsedMap = new Dictionary<int, DateTime?>();
         foreach (var t in templates)
@@ -180,7 +181,7 @@ public partial class TrainViewModel(DatabaseService db, ActiveWorkoutStateServic
             string.Format(AppResources.Train_DeleteTemplate_Body_Format, template.Name),
             AppResources.Common_Delete, AppResources.Common_Cancel);
         if (!confirmed) return;
-        await db.DeleteTemplateAsync(template.Id);
+        await templateRepo.DeleteAsync(template.Id);
         FreeTemplates.Remove(template);
         foreach (var pg in ProgramGroups)
             pg.Templates.Remove(template);
