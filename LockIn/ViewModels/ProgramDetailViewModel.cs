@@ -50,7 +50,9 @@ public partial class ProgramDetailViewModel(DatabaseService db) : ObservableObje
         if (!confirmed) return;
 
         IsActivating = true;
-        await db.ActivateProgramAsync(_program);
+        // TODO: RP-clone — program-koncept ersätts av template-koncept i Task 21.
+        // await db.ActivateProgramAsync(_program);
+        await Task.Yield();
         IsActivating = false;
 
         await Toast.Make(string.Format(AppResources.ProgramDetail_Toast_Created_Format, _program.Days.Count), ToastDuration.Long).Show();

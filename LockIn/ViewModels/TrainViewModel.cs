@@ -28,15 +28,17 @@ public partial class TrainViewModel(DatabaseService db, ActiveWorkoutStateServic
     {
         IsLoading = true;
         var templates = await db.GetTemplatesAsync();
-        var lastUsedMap = await db.GetLastSessionDatePerTemplateAsync();
+        // TODO: RP-clone — last-used-map ersätts i Task 19.
+        var lastUsedMap = new Dictionary<int, DateTime?>();
         foreach (var t in templates)
             if (lastUsedMap.TryGetValue(t.Id, out var dt))
                 t.LastUsedAt = dt;
 
         ProgramGroups.Clear();
+        // TODO: RP-clone — WorkoutTemplate.ProgramId borttagen, gruppera aldrig på program.
         var grouped = templates
-            .Where(t => t.ProgramId != null)
-            .GroupBy(t => t.ProgramId!);
+            .Where(t => false)
+            .GroupBy(t => "");
 
         foreach (var group in grouped)
         {
@@ -51,7 +53,8 @@ public partial class TrainViewModel(DatabaseService db, ActiveWorkoutStateServic
         }
 
         FreeTemplates.Clear();
-        foreach (var t in templates.Where(t => t.ProgramId == null))
+        // TODO: RP-clone — WorkoutTemplate.ProgramId borttagen; alla templates är "free".
+        foreach (var t in templates)
             FreeTemplates.Add(t);
 
         HasProgramGroups = ProgramGroups.Count > 0;
@@ -177,7 +180,7 @@ public partial class TrainViewModel(DatabaseService db, ActiveWorkoutStateServic
             string.Format(AppResources.Train_DeleteTemplate_Body_Format, template.Name),
             AppResources.Common_Delete, AppResources.Common_Cancel);
         if (!confirmed) return;
-        await db.DeleteTemplateAsync(template);
+        await db.DeleteTemplateAsync(template.Id);
         FreeTemplates.Remove(template);
         foreach (var pg in ProgramGroups)
             pg.Templates.Remove(template);

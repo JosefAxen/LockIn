@@ -1,15 +1,10 @@
-using LockIn.ViewModels;
-
 namespace LockIn.Views;
 
+// TODO: RP-clone Task 20 — ersätts av MesoBuilderPageV2.
 public partial class MesoBuilderPage : ContentPage
 {
-    public MesoBuilderPage(MesoBuilderViewModel vm)
+    public MesoBuilderPage()
     {
         InitializeComponent();
-        BindingContext = vm;
     }
-
-    private async void OnBackTapped(object? sender, EventArgs e)
-        => await Shell.Current.GoToAsync("..");
 }

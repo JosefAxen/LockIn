@@ -248,8 +248,10 @@ public partial class OnboardingViewModel(DatabaseService db, IHealthService heal
         settings.HasCompletedOnboarding = true;
         await db.SaveAppSettingsAsync(settings);
 
-        if (activateProgram && RecommendedProgram is { } program)
-            await db.ActivateProgramAsync(program);
+        // TODO: RP-clone — program-koncept ersätts av template-koncept i Task 21.
+        // if (activateProgram && RecommendedProgram is { } program)
+        //     await db.ActivateProgramAsync(program);
+        _ = activateProgram;
 
         var granted = await health.RequestPermissionsAsync();
         if (granted)
