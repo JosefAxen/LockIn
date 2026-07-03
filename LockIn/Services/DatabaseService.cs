@@ -749,19 +749,23 @@ public class DatabaseService
     }
 
     // ── Body weight ────────────────────────────────────────────────────────
+    // ADR-001: flyttas till IBodyRepository. Kvar tills alla callers migrerat.
 
+    [Obsolete("Använd IBodyRepository.GetWeightEntriesAsync — ADR-001 PR 2")]
     public async Task<List<BodyWeightEntry>> GetBodyWeightEntriesAsync()
     {
         await InitAsync();
         return await _db.Table<BodyWeightEntry>().OrderByDescending(e => e.LoggedAt).ToListAsync();
     }
 
+    [Obsolete("Använd IBodyRepository.SaveWeightEntryAsync — ADR-001 PR 2")]
     public async Task<int> SaveBodyWeightEntryAsync(BodyWeightEntry entry)
     {
         await InitAsync();
         return entry.Id == 0 ? await _db.InsertAsync(entry) : await _db.UpdateAsync(entry);
     }
 
+    [Obsolete("Använd IBodyRepository.DeleteWeightEntryAsync — ADR-001 PR 2")]
     public async Task<int> DeleteBodyWeightEntryAsync(BodyWeightEntry entry)
     {
         await InitAsync();
@@ -956,19 +960,23 @@ public class DatabaseService
     }
 
     // ── Body composition ───────────────────────────────────────────────────
+    // ADR-001: flyttas till IBodyRepository. Kvar tills alla callers migrerat.
 
+    [Obsolete("Använd IBodyRepository.GetCompositionEntriesAsync — ADR-001 PR 2")]
     public async Task<List<BodyCompositionEntry>> GetBodyCompositionEntriesAsync()
     {
         await InitAsync();
         return await _db.Table<BodyCompositionEntry>().OrderByDescending(e => e.LoggedAt).ToListAsync();
     }
 
+    [Obsolete("Använd IBodyRepository.SaveCompositionEntryAsync — ADR-001 PR 2")]
     public async Task<int> SaveBodyCompositionEntryAsync(BodyCompositionEntry entry)
     {
         await InitAsync();
         return entry.Id == 0 ? await _db.InsertAsync(entry) : await _db.UpdateAsync(entry);
     }
 
+    [Obsolete("Använd IBodyRepository.DeleteCompositionEntryAsync — ADR-001 PR 2")]
     public async Task<int> DeleteBodyCompositionEntryAsync(BodyCompositionEntry entry)
     {
         await InitAsync();
@@ -1184,7 +1192,9 @@ public class DatabaseService
     }
 
     // ── Photos ─────────────────────────────────────────────────────────────
+    // ADR-001: flyttas till IBodyRepository. Kvar tills alla callers migrerat.
 
+    [Obsolete("Använd IBodyRepository.GetPhotosForSessionAsync — ADR-001 PR 2")]
     public async Task<List<WorkoutPhoto>> GetPhotosForSessionAsync(int sessionId)
     {
         await InitAsync();
@@ -1194,18 +1204,21 @@ public class DatabaseService
             .ToListAsync();
     }
 
+    [Obsolete("Använd IBodyRepository.GetAllPhotosAsync — ADR-001 PR 2")]
     public async Task<List<WorkoutPhoto>> GetAllPhotosAsync()
     {
         await InitAsync();
         return await _db.Table<WorkoutPhoto>().OrderByDescending(p => p.TakenAt).ToListAsync();
     }
 
+    [Obsolete("Använd IBodyRepository.SavePhotoAsync — ADR-001 PR 2")]
     public async Task<int> SavePhotoAsync(WorkoutPhoto photo)
     {
         await InitAsync();
         return photo.Id == 0 ? await _db.InsertAsync(photo) : await _db.UpdateAsync(photo);
     }
 
+    [Obsolete("Använd IBodyRepository.DeletePhotoAsync — ADR-001 PR 2")]
     public async Task<int> DeletePhotoAsync(WorkoutPhoto photo)
     {
         await InitAsync();

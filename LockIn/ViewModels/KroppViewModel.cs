@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn;
+using LockIn.Data.Repositories;
 using LockIn.Models;
 using LockIn.Resources.Strings;
 using LockIn.Services;
@@ -9,7 +10,7 @@ using System.Collections.ObjectModel;
 
 namespace LockIn.ViewModels;
 
-public partial class KroppViewModel(DatabaseService db) : ObservableObject
+public partial class KroppViewModel(DatabaseService db, IBodyRepository bodyRepo) : ObservableObject
 {
     [ObservableProperty] private int _selectedTab = 0;
     [ObservableProperty] private bool _isLoading;
@@ -81,7 +82,7 @@ public partial class KroppViewModel(DatabaseService db) : ObservableObject
 
     private async Task LoadWeightDataAsync()
     {
-        var entries = await db.GetBodyWeightEntriesAsync();
+        var entries = await bodyRepo.GetWeightEntriesAsync();
         HasWeightData = entries.Count > 0;
 
         WeightEntries.Clear();
@@ -101,7 +102,7 @@ public partial class KroppViewModel(DatabaseService db) : ObservableObject
 
     private async Task LoadCompositionDataAsync()
     {
-        var entries = await db.GetBodyCompositionEntriesAsync();
+        var entries = await bodyRepo.GetCompositionEntriesAsync();
         HasCompositionData = entries.Count > 0;
 
         CompositionEntries.Clear();
@@ -161,7 +162,7 @@ public partial class KroppViewModel(DatabaseService db) : ObservableObject
             System.Globalization.NumberStyles.Any,
             System.Globalization.CultureInfo.InvariantCulture, out var kg) || kg <= 0) return;
 
-        await db.SaveBodyWeightEntryAsync(new BodyWeightEntry { WeightKg = kg, LoggedAt = DateTime.Now });
+        await bodyRepo.SaveWeightEntryAsync(new BodyWeightEntry { WeightKg = kg, LoggedAt = DateTime.Now });
         await LoadWeightDataAsync();
     }
 
@@ -173,7 +174,7 @@ public partial class KroppViewModel(DatabaseService db) : ObservableObject
             string.Format(AppResources.Kropp_DeleteWeight_Body_Format, $"{entry.WeightKg} kg", entry.LoggedAt.ToString("d MMM")),
             AppResources.Common_Delete, AppResources.Common_Cancel);
         if (!confirmed) return;
-        await db.DeleteBodyWeightEntryAsync(entry);
+        await bodyRepo.DeleteWeightEntryAsync(entry);
         await LoadWeightDataAsync();
     }
 
@@ -205,7 +206,7 @@ public partial class KroppViewModel(DatabaseService db) : ObservableObject
         if (entry.WaistCm.HasValue || entry.ChestCm.HasValue || entry.HipCm.HasValue
             || entry.ArmCm.HasValue || entry.ThighCm.HasValue)
         {
-            await db.SaveBodyCompositionEntryAsync(entry);
+            await bodyRepo.SaveCompositionEntryAsync(entry);
             await LoadCompositionDataAsync();
         }
     }
@@ -218,7 +219,7 @@ public partial class KroppViewModel(DatabaseService db) : ObservableObject
             string.Format(AppResources.Kropp_DeleteMeasurement_Body_Format, entry.LoggedAt.ToString("d MMM yyyy")),
             AppResources.Common_Delete, AppResources.Common_Cancel);
         if (!confirmed) return;
-        await db.DeleteBodyCompositionEntryAsync(entry);
+        await bodyRepo.DeleteCompositionEntryAsync(entry);
         await LoadCompositionDataAsync();
     }
 

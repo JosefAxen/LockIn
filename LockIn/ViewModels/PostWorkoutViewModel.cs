@@ -15,7 +15,8 @@ public partial class PostWorkoutViewModel(
     PhotoService photos,
     ActiveWorkoutViewModel activeWorkout,
     WorkoutShareService share,
-    ISettingsRepository settingsRepo) : ObservableObject
+    ISettingsRepository settingsRepo,
+    IBodyRepository bodyRepo) : ObservableObject
 {
     [ObservableProperty] private int _sessionId;
     [ObservableProperty] private string _templateName = "";
@@ -184,7 +185,7 @@ public partial class PostWorkoutViewModel(
     private async Task RefreshPhotosAsync()
     {
         if (_loadedSession is null) return;
-        var photos = await db.GetPhotosForSessionAsync(_loadedSession.Id);
+        var photos = await bodyRepo.GetPhotosForSessionAsync(_loadedSession.Id);
         Photos.Clear();
         foreach (var p in photos)
             Photos.Add(new PhotoRow(p));
@@ -234,7 +235,7 @@ public partial class PostWorkoutViewModel(
             AppResources.Common_Delete,
             AppResources.Common_Cancel);
         if (!confirmed) return;
-        await db.DeletePhotoAsync(row.Photo);
+        await bodyRepo.DeletePhotoAsync(row.Photo);
         Photos.Remove(row);
     }
 

@@ -1,8 +1,9 @@
+using LockIn.Data.Repositories;
 using LockIn.Models;
 
 namespace LockIn.Services;
 
-public class PhotoService(DatabaseService db)
+public class PhotoService(DatabaseService db, IBodyRepository bodyRepo)
 {
     public async Task SaveAsync(FileResult file, int sessionId, string dir)
     {
@@ -12,7 +13,7 @@ public class PhotoService(DatabaseService db)
         await stream.CopyToAsync(dest);
         try
         {
-            await db.SavePhotoAsync(new WorkoutPhoto
+            await bodyRepo.SavePhotoAsync(new WorkoutPhoto
             {
                 SessionId = sessionId,
                 FilePath = destPath,

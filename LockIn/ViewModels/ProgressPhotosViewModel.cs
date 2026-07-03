@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using LockIn.Data.Repositories;
 using LockIn.Models;
 using LockIn.Resources.Strings;
 using LockIn.Services;
@@ -7,7 +8,7 @@ using System.Collections.ObjectModel;
 
 namespace LockIn.ViewModels;
 
-public partial class ProgressPhotosViewModel(DatabaseService db) : ObservableObject
+public partial class ProgressPhotosViewModel(DatabaseService db, IBodyRepository bodyRepo) : ObservableObject
 {
     public ObservableCollection<PhotoRow> Photos { get; } = new();
     public ObservableCollection<PhotoGroup> PhotoGroups { get; } = new();
@@ -17,7 +18,7 @@ public partial class ProgressPhotosViewModel(DatabaseService db) : ObservableObj
     public async Task LoadAsync()
     {
         IsLoading = true;
-        var all = await db.GetAllPhotosAsync();
+        var all = await bodyRepo.GetAllPhotosAsync();
         Photos.Clear();
         PhotoGroups.Clear();
 
@@ -50,7 +51,7 @@ public partial class ProgressPhotosViewModel(DatabaseService db) : ObservableObj
             AppResources.Common_Delete,
             AppResources.Common_Cancel);
         if (!confirmed) return;
-        await db.DeletePhotoAsync(row.Photo);
+        await bodyRepo.DeletePhotoAsync(row.Photo);
         Photos.Remove(row);
         var group = PhotoGroups.FirstOrDefault(g => g.Contains(row));
         if (group != null)

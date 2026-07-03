@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using LockIn.Data.Repositories;
 using LockIn.Models;
 using LockIn.Resources.Strings;
 using LockIn.Services;
@@ -8,7 +9,7 @@ using static LockIn.Services.DatabaseService;
 
 namespace LockIn.ViewModels;
 
-public partial class SessionDetailViewModel(DatabaseService db, PhotoService photos) : ObservableObject, IQueryAttributable
+public partial class SessionDetailViewModel(DatabaseService db, PhotoService photos, IBodyRepository bodyRepo) : ObservableObject, IQueryAttributable
 {
     public ObservableCollection<SessionExerciseGroup> ExerciseGroups { get; } = new();
     public ObservableCollection<PhotoRow> Photos { get; } = new();
@@ -65,7 +66,7 @@ public partial class SessionDetailViewModel(DatabaseService db, PhotoService pho
 
     private async Task RefreshPhotosAsync()
     {
-        var photos = await db.GetPhotosForSessionAsync(_sessionId);
+        var photos = await bodyRepo.GetPhotosForSessionAsync(_sessionId);
         Photos.Clear();
         foreach (var p in photos)
             Photos.Add(new PhotoRow(p));
@@ -107,7 +108,7 @@ public partial class SessionDetailViewModel(DatabaseService db, PhotoService pho
     {
         var confirmed = await Shell.Current.DisplayAlertAsync(AppResources.SessionDetail_DeletePhoto_Title, AppResources.SessionDetail_DeletePhoto_Body, AppResources.Common_Delete, AppResources.Common_Cancel);
         if (!confirmed) return;
-        await db.DeletePhotoAsync(row.Photo);
+        await bodyRepo.DeletePhotoAsync(row.Photo);
         Photos.Remove(row);
     }
 

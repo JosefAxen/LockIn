@@ -9,7 +9,7 @@ using System.Globalization;
 
 namespace LockIn.ViewModels;
 
-public partial class BodyWeightViewModel(DatabaseService db, IHealthService health, ISettingsRepository settingsRepo) : ObservableObject
+public partial class BodyWeightViewModel(DatabaseService db, IHealthService health, ISettingsRepository settingsRepo, IBodyRepository bodyRepo) : ObservableObject
 {
     private const int PageSize = 10;
     private List<BodyWeightEntry> _allEntries = [];
@@ -32,7 +32,7 @@ public partial class BodyWeightViewModel(DatabaseService db, IHealthService heal
     public async Task LoadAsync()
     {
         IsLoading = true;
-        _allEntries = await db.GetBodyWeightEntriesAsync();
+        _allEntries = await bodyRepo.GetWeightEntriesAsync();
         HasData = _allEntries.Count > 0;
 
         if (HasData)
@@ -127,7 +127,7 @@ public partial class BodyWeightViewModel(DatabaseService db, IHealthService heal
             System.Globalization.CultureInfo.InvariantCulture, out var kg) || kg <= 0) return;
 
         var loggedAt = DateTime.Now;
-        await db.SaveBodyWeightEntryAsync(new BodyWeightEntry { LoggedAt = loggedAt, WeightKg = kg });
+        await bodyRepo.SaveWeightEntryAsync(new BodyWeightEntry { LoggedAt = loggedAt, WeightKg = kg });
         try { await health.SaveBodyMassAsync(kg, loggedAt); }
         catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"[BodyWeight] HealthKit sync misslyckades: {ex.Message}"); }
         await LoadAsync();
@@ -142,7 +142,7 @@ public partial class BodyWeightViewModel(DatabaseService db, IHealthService heal
             AppResources.Common_Delete, body,
             AppResources.Common_Delete, AppResources.Common_Cancel);
         if (!confirmed) return;
-        await db.DeleteBodyWeightEntryAsync(entry);
+        await bodyRepo.DeleteWeightEntryAsync(entry);
         await LoadAsync();
     }
 
