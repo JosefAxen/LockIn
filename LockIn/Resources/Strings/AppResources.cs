@@ -804,6 +804,32 @@ public static class AppResources
     public static string Program_531bbb_Day2_Label          => Get(nameof(Program_531bbb_Day2_Label));
     public static string Program_531bbb_Day3_Label          => Get(nameof(Program_531bbb_Day3_Label));
 
+    // ── TemplatePlanningBoard (RP-clone Task 18) ────────────────────────
+    public static string TemplateBoard_Title                => Get(nameof(TemplateBoard_Title));
+    public static string TemplateBoard_NamePlaceholder      => Get(nameof(TemplateBoard_NamePlaceholder));
+    public static string TemplateBoard_Save                 => Get(nameof(TemplateBoard_Save));
+    public static string TemplateBoard_AddMuscle            => Get(nameof(TemplateBoard_AddMuscle));
+    public static string TemplateBoard_AutoFillAll          => Get(nameof(TemplateBoard_AutoFillAll));
+    public static string TemplateBoard_AddExercise          => Get(nameof(TemplateBoard_AddExercise));
+    public static string TemplateBoard_AutoFill             => Get(nameof(TemplateBoard_AutoFill));
+    public static string TemplateBoard_RemoveSlot_Confirm   => Get(nameof(TemplateBoard_RemoveSlot_Confirm));
+    public static string TemplateBoard_RemoveDay_Confirm    => Get(nameof(TemplateBoard_RemoveDay_Confirm));
+    public static string TemplateBoard_ExerciseMenu_MoveUp  => Get(nameof(TemplateBoard_ExerciseMenu_MoveUp));
+    public static string TemplateBoard_ExerciseMenu_MoveDown => Get(nameof(TemplateBoard_ExerciseMenu_MoveDown));
+    public static string TemplateBoard_ExerciseMenu_Remove  => Get(nameof(TemplateBoard_ExerciseMenu_Remove));
+    public static string TemplateBoard_ExerciseMenu_Title   => Get(nameof(TemplateBoard_ExerciseMenu_Title));
+    public static string TemplateBoard_AddMuscle_Title      => Get(nameof(TemplateBoard_AddMuscle_Title));
+    public static string TemplateBoard_AddDay               => Get(nameof(TemplateBoard_AddDay));
+    public static string Template_Saved_Toast               => Get(nameof(Template_Saved_Toast));
+
+    // Muscle labels (extras utöver Library_Muscle_*)
+    public static string Muscle_Quads       => Get(nameof(Muscle_Quads));
+    public static string Muscle_Hamstrings  => Get(nameof(Muscle_Hamstrings));
+    public static string Muscle_Glutes      => Get(nameof(Muscle_Glutes));
+    public static string Muscle_Calves      => Get(nameof(Muscle_Calves));
+    public static string Muscle_Traps       => Get(nameof(Muscle_Traps));
+    public static string Muscle_Abs         => Get(nameof(Muscle_Abs));
+
     // ── Equipment (Onboarding step 5) ─────────────────────────────────────
     public static string Onboarding_Equipment_Title    => Get(nameof(Onboarding_Equipment_Title));
     public static string Onboarding_Equipment_Subtitle => Get(nameof(Onboarding_Equipment_Subtitle));

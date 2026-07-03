@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:LockIn.ViewModels"
+             xmlns:controls="clr-namespace:LockIn.Controls"
+             xmlns:loc="clr-namespace:LockIn.Resources.Strings"
+             xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+             x:Class="LockIn.Views.TemplatePlanningBoardPage"
+             x:DataType="vm:TemplatePlanningBoardViewModel"
+             Shell.NavBarIsVisible="False"
+             ios:Page.UseSafeArea="False"
+             BackgroundColor="Transparent">
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto" SafeAreaEdges="None">
+
+        <!-- Atmosfärisk bakgrund -->
+        <controls:AtmosphericBackgroundView Grid.RowSpan="4" InputTransparent="True"/>
+
+        <!-- Header: back + name entry + save -->
+        <Grid Grid.Row="0" Padding="16,56,16,10" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+            <!-- Back -->
+            <Border Grid.Column="0"
+                    WidthRequest="36" HeightRequest="36"
+                    StrokeShape="Ellipse"
+                    BackgroundColor="{StaticResource ForgeOverlayWeak}"
+                    Stroke="{StaticResource ForgeOverlayStroke}"
+                    StrokeThickness="0.5"
+                    VerticalOptions="Center">
+                <Path Style="{StaticResource BackChevron}"/>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding GoBackCommand}"/>
+                </Border.GestureRecognizers>
+            </Border>
+
+            <!-- Name entry -->
+            <Border Grid.Column="1"
+                    BackgroundColor="{StaticResource ForgeSurface2}"
+                    Stroke="{StaticResource ForgeBorder}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 14"
+                    Padding="12,0"
+                    HeightRequest="44"
+                    VerticalOptions="Center">
+                <Entry Text="{Binding TemplateName}"
+                       Placeholder="{loc:Localize TemplateBoard_NamePlaceholder}"
+                       FontFamily="DMSansMedium"
+                       FontSize="15"
+                       BackgroundColor="Transparent"
+                       VerticalOptions="Center"/>
+            </Border>
+
+            <!-- Save -->
+            <Border Grid.Column="2"
+                    BackgroundColor="{StaticResource ForgePrimary}"
+                    StrokeShape="RoundRectangle 14"
+                    StrokeThickness="0"
+                    HeightRequest="44"
+                    Padding="18,0"
+                    VerticalOptions="Center">
+                <Label Text="{loc:Localize TemplateBoard_Save}"
+                       FontFamily="BebasNeue"
+                       FontSize="16"
+                       CharacterSpacing="2.5"
+                       TextColor="{StaticResource ForgePrimaryForeground}"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Center"/>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding SaveCommand}"/>
+                </Border.GestureRecognizers>
+            </Border>
+        </Grid>
+
+        <!-- Day tab-bar -->
+        <ScrollView Grid.Row="1"
+                    Orientation="Horizontal"
+                    HorizontalScrollBarVisibility="Never"
+                    Padding="16,4,16,10">
+            <HorizontalStackLayout Spacing="8" BindableLayout.ItemsSource="{Binding Days}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="vm:TemplateDayViewModel">
+                        <Border StrokeShape="RoundRectangle 20"
+                                StrokeThickness="1"
+                                Padding="14,8"
+                                HeightRequest="40"
+                                BackgroundColor="{StaticResource ForgeSurface2}"
+                                Stroke="{StaticResource ForgeBorder}">
+                            <Border.Triggers>
+                                <DataTrigger TargetType="Border"
+                                             Binding="{Binding Source={RelativeSource AncestorType={x:Type vm:TemplatePlanningBoardViewModel}}, Path=SelectedDay}"
+                                             Value="{Binding .}">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccent}"/>
+                                    <Setter Property="Stroke" Value="{StaticResource ForgeAccent}"/>
+                                </DataTrigger>
+                            </Border.Triggers>
+                            <Label Text="{Binding Label}"
+                                   FontFamily="DMSansMedium"
+                                   FontSize="13"
+                                   VerticalOptions="Center"
+                                   HorizontalOptions="Center"
+                                   TextColor="{StaticResource ForgeText}"/>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TemplatePlanningBoardViewModel}}, Path=SelectDayCommand}"
+                                    CommandParameter="{Binding .}"/>
+                            </Border.GestureRecognizers>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </HorizontalStackLayout>
+        </ScrollView>
+
+        <!-- Content: slots for selected day + add day inline -->
+        <ScrollView Grid.Row="2" VerticalScrollBarVisibility="Never">
+            <VerticalStackLayout Padding="16,4,16,24" Spacing="12"
+                                 BindableLayout.ItemsSource="{Binding SelectedDay.Slots}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="vm:MuscleSlotViewModel">
+                        <Border Style="{StaticResource CardFrame}" Padding="14,12,14,12">
+                            <VerticalStackLayout Spacing="10">
+                                <!-- Slot header: muscle pill + prio + trash -->
+                                <Grid ColumnDefinitions="Auto,Auto,*,Auto" ColumnSpacing="8">
+                                    <Border Grid.Column="0"
+                                            BackgroundColor="{StaticResource ForgeAccent}"
+                                            StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 12"
+                                            Padding="10,4">
+                                        <Label Text="{Binding MuscleLabel}"
+                                               FontFamily="DMSansMedium"
+                                               FontSize="12"
+                                               TextColor="{StaticResource ForgeFabForeground}"
+                                               VerticalOptions="Center"/>
+                                    </Border>
+                                    <Label Grid.Column="1"
+                                           Text="{Binding PriorityTag}"
+                                           FontFamily="BebasNeue"
+                                           FontSize="12"
+                                           CharacterSpacing="2"
+                                           TextColor="{StaticResource ForgeMuted}"
+                                           VerticalOptions="Center"/>
+                                    <Border Grid.Column="3"
+                                            WidthRequest="32" HeightRequest="32"
+                                            BackgroundColor="{StaticResource ForgeSurface2}"
+                                            StrokeShape="Ellipse"
+                                            StrokeThickness="0"
+                                            VerticalOptions="Center">
+                                        <Label Text="×"
+                                               FontFamily="DMSansMedium"
+                                               FontSize="20"
+                                               TextColor="{StaticResource ForgeMuted}"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"/>
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TemplatePlanningBoardViewModel}}, Path=RemoveSlotCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                        </Border.GestureRecognizers>
+                                    </Border>
+                                </Grid>
+
+                                <!-- Exercise rows -->
+                                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Exercises}" Spacing="6">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate x:DataType="vm:ExerciseRowViewModel">
+                                            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8" Padding="0,4">
+                                                <Label Grid.Column="0"
+                                                       Text="{Binding ExerciseName}"
+                                                       FontFamily="DMSansMedium"
+                                                       FontSize="14"
+                                                       TextColor="{StaticResource ForgeText}"
+                                                       VerticalOptions="Center"
+                                                       LineBreakMode="TailTruncation"/>
+                                                <Label Grid.Column="1"
+                                                       Text="{Binding RepsDisplay}"
+                                                       FontFamily="DMSansRegular"
+                                                       FontSize="12"
+                                                       TextColor="{StaticResource ForgeMuted}"
+                                                       VerticalOptions="Center"
+                                                       Margin="0,0,4,0"/>
+                                                <Border Grid.Column="2"
+                                                        WidthRequest="28" HeightRequest="28"
+                                                        StrokeThickness="0"
+                                                        BackgroundColor="Transparent"
+                                                        VerticalOptions="Center">
+                                                    <Label Text="⋯"
+                                                           FontFamily="DMSansMedium"
+                                                           FontSize="18"
+                                                           TextColor="{StaticResource ForgeMuted}"
+                                                           HorizontalOptions="Center"
+                                                           VerticalOptions="Center"/>
+                                                    <Border.GestureRecognizers>
+                                                        <TapGestureRecognizer Tapped="OnExerciseMenuTapped"/>
+                                                    </Border.GestureRecognizers>
+                                                </Border>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </VerticalStackLayout>
+
+                                <!-- Slot actions -->
+                                <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                                    <Border Grid.Column="0"
+                                            BackgroundColor="{StaticResource ForgeSurface2}"
+                                            StrokeShape="RoundRectangle 12"
+                                            StrokeThickness="0"
+                                            HeightRequest="40">
+                                        <Label Text="{loc:Localize TemplateBoard_AddExercise}"
+                                               FontFamily="DMSansMedium"
+                                               FontSize="13"
+                                               TextColor="{StaticResource ForgeText}"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"/>
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TemplatePlanningBoardViewModel}}, Path=AddExerciseCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                        </Border.GestureRecognizers>
+                                    </Border>
+                                    <Border Grid.Column="1"
+                                            BackgroundColor="Transparent"
+                                            Stroke="{StaticResource ForgeAccent}"
+                                            StrokeThickness="1"
+                                            StrokeShape="RoundRectangle 12"
+                                            HeightRequest="40">
+                                        <Label Text="{loc:Localize TemplateBoard_AutoFill}"
+                                               FontFamily="DMSansMedium"
+                                               FontSize="13"
+                                               TextColor="{StaticResource ForgeAccent}"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"/>
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TemplatePlanningBoardViewModel}}, Path=AutoFillSlotCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                        </Border.GestureRecognizers>
+                                    </Border>
+                                </Grid>
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Bottom actions -->
+        <VerticalStackLayout Grid.Row="3" Padding="16,8,16,24" Spacing="8">
+            <Border BackgroundColor="{StaticResource ForgeAccent}"
+                    StrokeShape="RoundRectangle 22"
+                    StrokeThickness="0"
+                    HeightRequest="52">
+                <Label Text="{loc:Localize TemplateBoard_AddMuscle}"
+                       FontFamily="BebasNeue"
+                       FontSize="18"
+                       CharacterSpacing="2.5"
+                       TextColor="{StaticResource ForgeFabForeground}"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"/>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding AddMuscleSlotCommand}"
+                                          CommandParameter="{Binding SelectedDay}"/>
+                </Border.GestureRecognizers>
+            </Border>
+            <Border BackgroundColor="Transparent"
+                    Stroke="{StaticResource ForgeBorder}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 20"
+                    HeightRequest="44">
+                <Label Text="{loc:Localize TemplateBoard_AutoFillAll}"
+                       FontFamily="DMSansMedium"
+                       FontSize="13"
+                       TextColor="{StaticResource ForgeMuted}"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"/>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding AutoFillAllEmptyCommand}"/>
+                </Border.GestureRecognizers>
+            </Border>
+            <Border BackgroundColor="Transparent"
+                    StrokeThickness="0"
+                    HeightRequest="32">
+                <Label Text="{loc:Localize TemplateBoard_AddDay}"
+                       FontFamily="DMSansMedium"
+                       FontSize="12"
+                       TextColor="{StaticResource ForgeMuted}"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"/>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding AddDayCommand}"/>
+                </Border.GestureRecognizers>
+            </Border>
+        </VerticalStackLayout>
+
+    </Grid>
+</ContentPage>

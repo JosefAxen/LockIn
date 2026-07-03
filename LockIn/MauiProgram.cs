@@ -73,6 +73,8 @@ public static class MauiProgram
         // Navigation pages
         builder.Services.AddTransient<TemplateEditPage>();
         builder.Services.AddTransient<TemplateEditViewModel>();
+        builder.Services.AddTransient<TemplatePlanningBoardPage>();
+        builder.Services.AddTransient<TemplatePlanningBoardViewModel>();
         builder.Services.AddTransient<ExercisePickerPage>();
         builder.Services.AddTransient<ExercisePickerViewModel>();
         builder.Services.AddTransient<ActiveWorkoutPage>();

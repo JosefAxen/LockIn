@@ -1014,4 +1014,29 @@
   <data name="Day_5" xml:space="preserve"><value>Lördag</value></data>
   <data name="Day_6" xml:space="preserve"><value>Söndag</value></data>
 
+  <!-- TemplatePlanningBoard (RP-clone Task 18) -->
+  <data name="TemplateBoard_Title" xml:space="preserve"><value>Planera template</value></data>
+  <data name="TemplateBoard_NamePlaceholder" xml:space="preserve"><value>Namn på template</value></data>
+  <data name="TemplateBoard_Save" xml:space="preserve"><value>Spara</value></data>
+  <data name="TemplateBoard_AddMuscle" xml:space="preserve"><value>+ Lägg till muskel</value></data>
+  <data name="TemplateBoard_AutoFillAll" xml:space="preserve"><value>Auto-fyll alla tomma slots</value></data>
+  <data name="TemplateBoard_AddExercise" xml:space="preserve"><value>+ Lägg till övning</value></data>
+  <data name="TemplateBoard_AutoFill" xml:space="preserve"><value>Auto-fyll</value></data>
+  <data name="TemplateBoard_RemoveSlot_Confirm" xml:space="preserve"><value>Ta bort {0} från {1}?</value></data>
+  <data name="TemplateBoard_RemoveDay_Confirm" xml:space="preserve"><value>Ta bort {0}?</value></data>
+  <data name="TemplateBoard_ExerciseMenu_MoveUp" xml:space="preserve"><value>Flytta upp</value></data>
+  <data name="TemplateBoard_ExerciseMenu_MoveDown" xml:space="preserve"><value>Flytta ned</value></data>
+  <data name="TemplateBoard_ExerciseMenu_Remove" xml:space="preserve"><value>Ta bort</value></data>
+  <data name="TemplateBoard_ExerciseMenu_Title" xml:space="preserve"><value>Vad vill du göra?</value></data>
+  <data name="TemplateBoard_AddMuscle_Title" xml:space="preserve"><value>Vilken muskelgrupp?</value></data>
+  <data name="TemplateBoard_AddDay" xml:space="preserve"><value>+ Ny dag</value></data>
+  <data name="Template_Saved_Toast" xml:space="preserve"><value>Template sparad</value></data>
+
+  <!-- Muscle labels (utöver Library_Muscle_*) -->
+  <data name="Muscle_Quads" xml:space="preserve"><value>Quads</value></data>
+  <data name="Muscle_Hamstrings" xml:space="preserve"><value>Hamstrings</value></data>
+  <data name="Muscle_Glutes" xml:space="preserve"><value>Glutes</value></data>
+  <data name="Muscle_Calves" xml:space="preserve"><value>Vader</value></data>
+  <data name="Muscle_Traps" xml:space="preserve"><value>Traps</value></data>
+  <data name="Muscle_Abs" xml:space="preserve"><value>Mage</value></data>
 </root>
