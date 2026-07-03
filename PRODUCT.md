@@ -17,11 +17,18 @@ product
 - Lever lokalt på enheten. Ingen cloud-lock, inga abonnemangsrisker.
 
 **Vad den medvetet inte gör ännu:**
-- Ingen full mesocykel-motor (RP-nivå med deload-beräkning, MRV/MEV per muskelgrupp).
 - Ingen AI-chat eller naturlig språkcoach.
 - Inga sociala funktioner, challenges, leaderboards.
 - Ingen web-app eller Android-version.
 - Inga integrationer utöver HealthKit.
+- Ingen "Copy a mesocycle" (repetera tidigare cykel som ny).
+- Ingen delning av templates mellan användare.
+
+**Vad den nu gör (RP-motor komplett efter juli 2026):**
+- Full mesocykel-motor: MEV/MAV/MRV per muskelgrupp, RIR-progression per vecka, deload-beräkning.
+- Meso Builder-wizard: frekvens → prio (Emphasize/Grow/Maintain) → veckor → automatisk template-generering med rankade övningar.
+- Post-set feedback (pump/volume/joint pain) styr nästa veckas volym.
+- Volym-tracking mot MEV/MRV med färgkodade zoner.
 
 **Filtern.** Innan varje ny funktion: *Löser den kilen, eller är det bara kul?*
 Kilen = autoreglering tillgänglig för svenska lyftare till ett pris de faktiskt betalar.
