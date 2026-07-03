@@ -3,6 +3,7 @@ using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn.Data;
+using LockIn.Navigation;
 using LockIn.Resources.Strings;
 using LockIn.Services;
 
@@ -57,6 +58,6 @@ public partial class ProgramDetailViewModel(DatabaseService db) : ObservableObje
 
         await Toast.Make(string.Format(AppResources.ProgramDetail_Toast_Created_Format, _program.Days.Count), ToastDuration.Long).Show();
 
-        await Shell.Current.GoToAsync("..");
+        await Shell.Current.GoToAsync(AppRoutes.Back);
     }
 }

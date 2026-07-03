@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using LockIn.Navigation;
 using LockIn.Resources.Strings;
 using LockIn.Services;
 
@@ -68,17 +69,17 @@ public partial class PeriodizationViewModel : ObservableObject
 
     [RelayCommand]
     private async Task OpenMesoBuilderAsync()
-        => await Shell.Current.GoToAsync("mesobuilder");
+        => await Shell.Current.GoToAsync(AppRoutes.MesoBuilderLegacy);
 
     [RelayCommand]
     private async Task OpenTemplatePickerAsync()
-        => await Shell.Current.GoToAsync("templatepicker");
+        => await Shell.Current.GoToAsync(AppRoutes.TemplatePicker);
 
     [RelayCommand]
     private async Task OpenMesocycleAsync(MesocycleRow row)
     {
         if (row is null) return;
-        await Shell.Current.GoToAsync($"mesocyclestats?mesocycleId={row.Id}");
+        await Shell.Current.GoToAsync(AppRoutes.MesocycleStatsFor(row.Id));
     }
 
     [RelayCommand]

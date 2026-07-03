@@ -1,3 +1,4 @@
+using LockIn.Navigation;
 using LockIn.ViewModels;
 using Microsoft.Maui.Devices;
 
@@ -61,7 +62,7 @@ public partial class ActiveWorkoutPage : ContentPage
         // (state.IsActive == true), så användaren kan återgå via
         // "PASS PÅGÅR"-bannern eller genom att navigera till Träna-fliken.
         // För att avsluta passet på riktigt — använd "AVSLUTA PASS"-knappen.
-        await Shell.Current.GoToAsync("..");
+        await Shell.Current.GoToAsync(AppRoutes.Back);
     }
 
     protected override async void OnAppearing()

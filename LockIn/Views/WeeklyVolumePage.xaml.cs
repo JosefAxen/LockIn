@@ -1,3 +1,4 @@
+using LockIn.Navigation;
 using LockIn.ViewModels;
 
 namespace LockIn.Views;
@@ -20,5 +21,5 @@ public partial class WeeklyVolumePage : ContentPage
     }
 
     private async void OnBackTapped(object? sender, EventArgs e)
-        => await Shell.Current.GoToAsync("..");
+        => await Shell.Current.GoToAsync(AppRoutes.Back);
 }

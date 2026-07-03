@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn.Data.Repositories;
 using LockIn.Models;
+using LockIn.Navigation;
 using LockIn.Resources.Strings;
 using LockIn.Services;
 
@@ -157,14 +158,14 @@ public partial class CreateExerciseViewModel : ObservableObject
         if (_state.IsActive)
         {
             await _activeVm.AddExerciseFromPickerAsync(exercise);
-            await Shell.Current.GoToAsync("../..");
+            await Shell.Current.GoToAsync(AppRoutes.BackTwoLevels);
         }
         else
         {
-            await Shell.Current.GoToAsync("..");
+            await Shell.Current.GoToAsync(AppRoutes.Back);
         }
     }
 
     [RelayCommand]
-    private static async Task CancelAsync() => await Shell.Current.GoToAsync("..");
+    private static async Task CancelAsync() => await Shell.Current.GoToAsync(AppRoutes.Back);
 }

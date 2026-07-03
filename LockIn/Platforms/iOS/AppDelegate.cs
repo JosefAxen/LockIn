@@ -1,4 +1,5 @@
 ﻿using Foundation;
+using LockIn.Navigation;
 using UIKit;
 
 namespace LockIn;
@@ -70,13 +71,13 @@ public class AppDelegate : MauiUIApplicationDelegate
 			switch (type)
 			{
 				case "com.josefaxen.lockin.startfreeworkout":
-					await Shell.Current.GoToAsync("//TrainPage");
+					await Shell.Current.GoToAsync(AppRoutes.TrainTab);
 					break;
 				case "com.josefaxen.lockin.logweight":
-					await Shell.Current.GoToAsync("BodyWeightPage");
+					await Shell.Current.GoToAsync(AppRoutes.BodyWeight);
 					break;
 				case "com.josefaxen.lockin.history":
-					await Shell.Current.GoToAsync("//HistoryPage");
+					await Shell.Current.GoToAsync(AppRoutes.HistoryTab);
 					break;
 			}
 		});

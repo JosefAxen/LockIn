@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn.Data.Repositories;
 using LockIn.Models;
+using LockIn.Navigation;
 using LockIn.Resources.Strings;
 using LockIn.Services;
 
@@ -66,7 +67,7 @@ public partial class CardioViewModel(ISessionRepository sessionRepo, IHealthServ
             session.CaloriesBurned,
             session.DistanceKm * 1000.0);
 
-        await Shell.Current.GoToAsync("..");
+        await Shell.Current.GoToAsync(AppRoutes.Back);
     }
 
     private static string ActivityTypeLabel(CardioActivityType t) => t switch

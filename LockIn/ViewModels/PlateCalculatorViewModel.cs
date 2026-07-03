@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using LockIn.Navigation;
 using LockIn.Resources.Strings;
 using System.Globalization;
 
@@ -85,5 +86,5 @@ public partial class PlateCalculatorViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task GoBackAsync() => await Shell.Current.GoToAsync("..");
+    private async Task GoBackAsync() => await Shell.Current.GoToAsync(AppRoutes.Back);
 }

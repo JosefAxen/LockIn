@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn.Data.Repositories;
 using LockIn.Models;
+using LockIn.Navigation;
 using LockIn.Resources.Strings;
 using LockIn.Services;
 using System.Collections.ObjectModel;
@@ -284,14 +285,14 @@ public partial class PostWorkoutViewModel(
 
     [RelayCommand]
     private async Task ViewMesocycleStatsAsync()
-        => await Shell.Current.GoToAsync("mesocyclestats");
+        => await Shell.Current.GoToAsync(AppRoutes.MesocycleStats);
 
     [RelayCommand]
     private async Task UndoFinishAsync()
     {
         _committed = true;  // markera som "hanterad" — ingen commit
         activeWorkout.ResumeFromPostWorkout();
-        await Shell.Current.GoToAsync("..");
+        await Shell.Current.GoToAsync(AppRoutes.Back);
     }
 
     [RelayCommand]
@@ -314,7 +315,7 @@ public partial class PostWorkoutViewModel(
         }
 
         await Shell.Current.Navigation.PopToRootAsync(false);
-        await Shell.Current.GoToAsync("//train");
+        await Shell.Current.GoToAsync(AppRoutes.TrainTabLegacy);
     }
 
     public async Task CommitIfNotDoneAsync()

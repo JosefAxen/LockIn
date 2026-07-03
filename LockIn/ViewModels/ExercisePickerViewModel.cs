@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using LockIn;
 using LockIn.Data.Repositories;
 using LockIn.Models;
+using LockIn.Navigation;
 using LockIn.Resources.Strings;
 using LockIn.Services;
 using System.Collections.ObjectModel;
@@ -113,7 +114,7 @@ public partial class ExercisePickerViewModel(IExerciseRepository exerciseRepo, I
         var picked = top3.FirstOrDefault(e => e.Name == choice);
         if (picked is null) return;
         CallbackAction?.Invoke(picked);
-        await Shell.Current!.GoToAsync("..");
+        await Shell.Current!.GoToAsync(AppRoutes.Back);
     }
 
     [RelayCommand]
@@ -174,7 +175,7 @@ public partial class ExercisePickerViewModel(IExerciseRepository exerciseRepo, I
     private async Task SelectExerciseAsync(ExercisePickerRow row)
     {
         CallbackAction?.Invoke(row.Exercise);
-        await Shell.Current.GoToAsync("..");
+        await Shell.Current.GoToAsync(AppRoutes.Back);
     }
 
     private static string MuscleGroupLabel(MuscleGroup mg) => mg switch

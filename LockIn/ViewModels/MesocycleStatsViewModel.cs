@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn.Models;
+using LockIn.Navigation;
 using LockIn.Resources.Strings;
 using LockIn.Services;
 
@@ -194,11 +195,11 @@ public partial class MesocycleStatsViewModel : ObservableObject, IQueryAttributa
     }
 
     [RelayCommand]
-    private async Task GoBackAsync() => await Shell.Current.GoToAsync("..");
+    private async Task GoBackAsync() => await Shell.Current.GoToAsync(AppRoutes.Back);
 
     [RelayCommand]
     private async Task OpenPeriodizationAsync()
-        => await Shell.Current.GoToAsync("//" + nameof(Views.PeriodizationPage));
+        => await Shell.Current.GoToAsync("//" + AppRoutes.Periodization);
 
 }
 

@@ -1,3 +1,4 @@
+using LockIn.Navigation;
 using LockIn.ViewModels;
 using Microsoft.Maui.Devices;
 
@@ -20,12 +21,12 @@ public partial class ExercisePickerPage : ContentPage
     }
 
     private async void OnBackClicked(object sender, EventArgs e) =>
-        await Shell.Current.GoToAsync("..");
+        await Shell.Current.GoToAsync(AppRoutes.Back);
 
     private async void OnAddCustomExerciseTapped(object sender, TappedEventArgs e)
     {
         await AnimationHelper.PressAsync(sender);
-        await Shell.Current.GoToAsync(nameof(CreateExercisePage));
+        await Shell.Current.GoToAsync(AppRoutes.CreateExercise);
     }
 
     private static async void OnExercisePointerPressed(object? sender, PointerEventArgs e)

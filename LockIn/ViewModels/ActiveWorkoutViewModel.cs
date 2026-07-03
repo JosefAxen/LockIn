@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn.Data.Repositories;
 using LockIn.Models;
+using LockIn.Navigation;
 using LockIn.Resources.Strings;
 using LockIn.Services;
 using LockIn.Views;
@@ -291,7 +292,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
     [RelayCommand]
     private async Task AddExerciseAsync()
     {
-        await Shell.Current.GoToAsync(nameof(ExercisePickerPage), new Dictionary<string, object>
+        await Shell.Current.GoToAsync(AppRoutes.ExercisePicker, new Dictionary<string, object>
         {
             { "CallbackAction", new Action<Exercise>(async ex =>
             {
@@ -727,7 +728,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
 
     [RelayCommand]
     private async Task OpenMesocycleStatsAsync() =>
-        await Shell.Current.GoToAsync("mesocyclestats");
+        await Shell.Current.GoToAsync(AppRoutes.MesocycleStats);
 
     [RelayCommand]
     private async Task ShowStartWeightGuideAsync()
@@ -802,8 +803,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
 
     private async Task ReplaceExerciseAsync(WorkoutExerciseSection section)
     {
-        var muscleQuery = section.MuscleGroup.ToString();
-        await Shell.Current.GoToAsync($"{nameof(ExercisePickerPage)}?muscle={muscleQuery}", new Dictionary<string, object>
+        await Shell.Current.GoToAsync(AppRoutes.ExercisePickerForMuscle(section.MuscleGroup), new Dictionary<string, object>
         {
             { "CallbackAction", new Action<Exercise>(async ex =>
             {
@@ -855,7 +855,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
 
     [RelayCommand]
     private async Task OpenPlateCalculatorAsync() =>
-        await Shell.Current.GoToAsync(nameof(PlateCalculatorPage));
+        await Shell.Current.GoToAsync(AppRoutes.PlateCalculator);
 
     [RelayCommand]
     private async Task ShowExerciseInfoAsync(WorkoutExerciseSection section)
@@ -906,7 +906,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         var sessionId = _session.Id;
         state.Deactivate();   // döljer bannern men lämnar _session och Exercises intakta
 
-        await Shell.Current.GoToAsync(nameof(PostWorkoutPage), new Dictionary<string, object>
+        await Shell.Current.GoToAsync(AppRoutes.PostWorkout, new Dictionary<string, object>
         {
             { "SessionId", sessionId }
         });

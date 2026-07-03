@@ -4,6 +4,7 @@ using LockIn;
 using LockIn.Data;
 using LockIn.Data.Repositories;
 using LockIn.Models;
+using LockIn.Navigation;
 using LockIn.Resources.Strings;
 using LockIn.Services;
 using LockIn.Views;
@@ -65,7 +66,7 @@ public partial class LibraryViewModel(IExerciseRepository exerciseRepo, ITemplat
     {
         if (SelectedTab == 0) await AddCustomExerciseAsync();
         else if (SelectedTab == 1) await NewTemplateAsync();
-        else if (SelectedTab == 3) await Shell.Current.GoToAsync(nameof(PeriodizationPage));
+        else if (SelectedTab == 3) await Shell.Current.GoToAsync(AppRoutes.Periodization);
     }
 
     // ── Exercises tab ──────────────────────────────────────────────────────
@@ -250,7 +251,7 @@ public partial class LibraryViewModel(IExerciseRepository exerciseRepo, ITemplat
     [RelayCommand]
     private async Task OpenExerciseProgressAsync(Exercise exercise)
     {
-        await Shell.Current.GoToAsync(nameof(ExerciseProgressPage), new Dictionary<string, object>
+        await Shell.Current.GoToAsync(AppRoutes.ExerciseProgress, new Dictionary<string, object>
         {
             { "ExerciseId", exercise.Id }
         });
@@ -258,7 +259,7 @@ public partial class LibraryViewModel(IExerciseRepository exerciseRepo, ITemplat
 
     [RelayCommand]
     private async Task AddCustomExerciseAsync()
-        => await Shell.Current.GoToAsync(nameof(CreateExercisePage));
+        => await Shell.Current.GoToAsync(AppRoutes.CreateExercise);
 
     // ── Templates tab ──────────────────────────────────────────────────────
 
@@ -273,11 +274,11 @@ public partial class LibraryViewModel(IExerciseRepository exerciseRepo, ITemplat
 
     [RelayCommand]
     private async Task NewTemplateAsync()
-        => await Shell.Current.GoToAsync("templateplanningboard");
+        => await Shell.Current.GoToAsync(AppRoutes.TemplatePlanningBoard);
 
     [RelayCommand]
     private async Task EditTemplateAsync(WorkoutTemplate template)
-        => await Shell.Current.GoToAsync($"templateplanningboard?templateId={template.Id}");
+        => await Shell.Current.GoToAsync(AppRoutes.TemplatePlanningBoardEdit(template.Id));
 
     [RelayCommand]
     private async Task DuplicateTemplateAsync(WorkoutTemplate template)
@@ -285,13 +286,13 @@ public partial class LibraryViewModel(IExerciseRepository exerciseRepo, ITemplat
         var newName = $"{AppResources.Library_DuplicateTemplate_NamePrefix} {template.Name}";
         var newId = await templates.CloneAsync(template.Id, newName);
         await LoadTemplatesAsync();
-        await Shell.Current.GoToAsync($"templateplanningboard?templateId={newId}");
+        await Shell.Current.GoToAsync(AppRoutes.TemplatePlanningBoardEdit(newId));
     }
 
     [RelayCommand]
     private async Task StartFromTemplateAsync(WorkoutTemplate template)
     {
-        await Shell.Current.GoToAsync(nameof(ActiveWorkoutPage), new Dictionary<string, object>
+        await Shell.Current.GoToAsync(AppRoutes.ActiveWorkout, new Dictionary<string, object>
         {
             { "TemplateId", template.Id }
         });
@@ -316,7 +317,7 @@ public partial class LibraryViewModel(IExerciseRepository exerciseRepo, ITemplat
     [RelayCommand]
     private async Task OpenProgramAsync(WorkoutProgram program)
     {
-        await Shell.Current.GoToAsync(nameof(ProgramDetailPage), new Dictionary<string, object>
+        await Shell.Current.GoToAsync(AppRoutes.ProgramDetail, new Dictionary<string, object>
         {
             { "ProgramId", program.Id }
         });

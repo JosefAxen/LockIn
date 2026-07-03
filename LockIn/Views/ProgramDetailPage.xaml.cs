@@ -1,3 +1,4 @@
+using LockIn.Navigation;
 using LockIn.ViewModels;
 
 namespace LockIn.Views;
@@ -21,5 +22,5 @@ public partial class ProgramDetailPage : ContentPage
         => StickyHeader.Opacity = Math.Clamp((e.ScrollY - 80.0) / 40.0, 0, 1);
 
     private async void OnBackClicked(object sender, EventArgs e) =>
-        await Shell.Current.GoToAsync("..");
+        await Shell.Current.GoToAsync(AppRoutes.Back);
 }

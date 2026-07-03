@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using LockIn.Data;
 using LockIn.Data.Repositories;
 using LockIn.Models;
+using LockIn.Navigation;
 using LockIn.Resources.Strings;
 using LockIn.Services;
 using LockIn.Views;
@@ -142,10 +143,10 @@ public partial class TrainViewModel(DatabaseService db, ActiveWorkoutStateServic
                 AppResources.Train_ActiveSession_Title,
                 AppResources.Train_ActiveSession_Body,
                 AppResources.Train_ActiveSession_GoTo, AppResources.Common_Cancel);
-            if (go) await Shell.Current.GoToAsync(nameof(ActiveWorkoutPage));
+            if (go) await Shell.Current.GoToAsync(AppRoutes.ActiveWorkout);
             return;
         }
-        await Shell.Current.GoToAsync(nameof(ActiveWorkoutPage), new Dictionary<string, object>
+        await Shell.Current.GoToAsync(AppRoutes.ActiveWorkout, new Dictionary<string, object>
         {
             { "TemplateId", template.Id }
         });
@@ -160,10 +161,10 @@ public partial class TrainViewModel(DatabaseService db, ActiveWorkoutStateServic
                 AppResources.Train_ActiveSession_Title,
                 AppResources.Train_ActiveSession_Body,
                 AppResources.Train_ActiveSession_GoTo, AppResources.Common_Cancel);
-            if (go) await Shell.Current.GoToAsync(nameof(ActiveWorkoutPage));
+            if (go) await Shell.Current.GoToAsync(AppRoutes.ActiveWorkout);
             return;
         }
-        await Shell.Current.GoToAsync(nameof(ActiveWorkoutPage), new Dictionary<string, object>
+        await Shell.Current.GoToAsync(AppRoutes.ActiveWorkout, new Dictionary<string, object>
         {
             { "TemplateId", 0 }
         });
@@ -171,7 +172,7 @@ public partial class TrainViewModel(DatabaseService db, ActiveWorkoutStateServic
 
     [RelayCommand]
     private async Task OpenCardioAsync()
-        => await Shell.Current.GoToAsync(nameof(CardioPage));
+        => await Shell.Current.GoToAsync(AppRoutes.Cardio);
 
     [RelayCommand]
     private async Task DeleteTemplateAsync(WorkoutTemplate template)

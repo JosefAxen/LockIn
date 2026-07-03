@@ -1,3 +1,4 @@
+using LockIn.Navigation;
 using LockIn.Views;
 
 namespace LockIn;
@@ -8,25 +9,25 @@ public partial class AppShell : Shell
     {
         InitializeComponent();
 
-        Routing.RegisterRoute("templateplanningboard", typeof(TemplatePlanningBoardPage));
-        Routing.RegisterRoute(nameof(ExercisePickerPage), typeof(ExercisePickerPage));
-        Routing.RegisterRoute(nameof(ActiveWorkoutPage), typeof(ActiveWorkoutPage));
-        Routing.RegisterRoute(nameof(PostWorkoutPage), typeof(PostWorkoutPage));
-        Routing.RegisterRoute(nameof(SessionDetailPage), typeof(SessionDetailPage));
-        Routing.RegisterRoute(nameof(ExerciseProgressPage), typeof(ExerciseProgressPage));
-        Routing.RegisterRoute(nameof(ProgramDetailPage), typeof(ProgramDetailPage));
-        Routing.RegisterRoute(nameof(BodyWeightPage), typeof(BodyWeightPage));
-        Routing.RegisterRoute(nameof(PlateCalculatorPage), typeof(PlateCalculatorPage));
-        Routing.RegisterRoute(nameof(SettingsPage), typeof(SettingsPage));
-        Routing.RegisterRoute(nameof(AchievementsPage), typeof(AchievementsPage));
-        Routing.RegisterRoute(nameof(ProgressPhotosPage), typeof(ProgressPhotosPage));
-        Routing.RegisterRoute(nameof(CreateExercisePage), typeof(CreateExercisePage));
-        Routing.RegisterRoute(nameof(CardioPage), typeof(CardioPage));
-        Routing.RegisterRoute(nameof(PeriodizationPage), typeof(PeriodizationPage));
-        Routing.RegisterRoute(nameof(MuscleVolumePage), typeof(MuscleVolumePage));
-        Routing.RegisterRoute(nameof(WeeklyVolumePage), typeof(WeeklyVolumePage));
-        Routing.RegisterRoute(nameof(MesoBuilderPage), typeof(MesoBuilderPage));
-        Routing.RegisterRoute("templatepicker", typeof(TemplatePickerPage));
-        Routing.RegisterRoute("mesocyclestats", typeof(MesocycleStatsPage));
+        Routing.RegisterRoute(AppRoutes.TemplatePlanningBoard, typeof(TemplatePlanningBoardPage));
+        Routing.RegisterRoute(AppRoutes.ExercisePicker,        typeof(ExercisePickerPage));
+        Routing.RegisterRoute(AppRoutes.ActiveWorkout,         typeof(ActiveWorkoutPage));
+        Routing.RegisterRoute(AppRoutes.PostWorkout,           typeof(PostWorkoutPage));
+        Routing.RegisterRoute(AppRoutes.SessionDetail,         typeof(SessionDetailPage));
+        Routing.RegisterRoute(AppRoutes.ExerciseProgress,      typeof(ExerciseProgressPage));
+        Routing.RegisterRoute(AppRoutes.ProgramDetail,         typeof(ProgramDetailPage));
+        Routing.RegisterRoute(AppRoutes.BodyWeight,            typeof(BodyWeightPage));
+        Routing.RegisterRoute(AppRoutes.PlateCalculator,       typeof(PlateCalculatorPage));
+        Routing.RegisterRoute(AppRoutes.Settings,              typeof(SettingsPage));
+        Routing.RegisterRoute(AppRoutes.Achievements,          typeof(AchievementsPage));
+        Routing.RegisterRoute(AppRoutes.ProgressPhotos,        typeof(ProgressPhotosPage));
+        Routing.RegisterRoute(AppRoutes.CreateExercise,        typeof(CreateExercisePage));
+        Routing.RegisterRoute(AppRoutes.Cardio,                typeof(CardioPage));
+        Routing.RegisterRoute(AppRoutes.Periodization,         typeof(PeriodizationPage));
+        Routing.RegisterRoute(AppRoutes.MuscleVolume,          typeof(MuscleVolumePage));
+        Routing.RegisterRoute(AppRoutes.WeeklyVolume,          typeof(WeeklyVolumePage));
+        Routing.RegisterRoute(AppRoutes.MesoBuilder,           typeof(MesoBuilderPage));
+        Routing.RegisterRoute(AppRoutes.TemplatePicker,        typeof(TemplatePickerPage));
+        Routing.RegisterRoute(AppRoutes.MesocycleStats,        typeof(MesocycleStatsPage));
     }
 }

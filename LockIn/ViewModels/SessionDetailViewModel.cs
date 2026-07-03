@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn.Data.Repositories;
 using LockIn.Models;
+using LockIn.Navigation;
 using LockIn.Resources.Strings;
 using LockIn.Services;
 using System.Collections.ObjectModel;
@@ -113,7 +114,7 @@ public partial class SessionDetailViewModel(ISessionRepository sessionRepo, Phot
     }
 
     [RelayCommand]
-    private async Task GoBackAsync() => await Shell.Current.GoToAsync("..");
+    private async Task GoBackAsync() => await Shell.Current.GoToAsync(AppRoutes.Back);
 }
 
 public class SessionExerciseGroup(string exerciseName) : ObservableCollection<SessionExerciseDetailRow>

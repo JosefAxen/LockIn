@@ -1,3 +1,4 @@
+using LockIn.Navigation;
 using LockIn.ViewModels;
 
 namespace LockIn.Views;
@@ -22,7 +23,7 @@ public partial class CardioPage : ContentPage
     }
 
     private async void OnBackClicked(object sender, EventArgs e)
-        => await Shell.Current.GoToAsync("..");
+        => await Shell.Current.GoToAsync(AppRoutes.Back);
 
     private static async void OnBackPointerPressed(object? sender, PointerEventArgs e)
     {

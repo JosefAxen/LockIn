@@ -1,3 +1,4 @@
+using LockIn.Navigation;
 using LockIn.Services;
 using LockIn.ViewModels;
 
@@ -34,10 +35,10 @@ public partial class SettingsPage : ContentPage
         => StickyHeader.Opacity = Math.Clamp((e.ScrollY - 80.0) / 40.0, 0, 1);
 
     private async void OnBackClicked(object sender, EventArgs e)
-        => await Shell.Current.GoToAsync("..");
+        => await Shell.Current.GoToAsync(AppRoutes.Back);
 
     private async void OnMuscleVolumeTapped(object sender, TappedEventArgs e)
-        => await Shell.Current.GoToAsync(nameof(MuscleVolumePage));
+        => await Shell.Current.GoToAsync(AppRoutes.MuscleVolume);
 
     private static async void OnBackPointerPressed(object? sender, PointerEventArgs e)
     {
@@ -52,7 +53,7 @@ public partial class SettingsPage : ContentPage
     }
 
     private async void OnWorkoutBannerTapped(object sender, TappedEventArgs e)
-        => await Shell.Current.GoToAsync(nameof(ActiveWorkoutPage));
+        => await Shell.Current.GoToAsync(AppRoutes.ActiveWorkout);
 
     protected override void OnDisappearing()
     {

@@ -1,3 +1,4 @@
+using LockIn.Navigation;
 using LockIn.Services;
 using LockIn.ViewModels;
 using Microsoft.Maui.Devices;
@@ -19,7 +20,7 @@ public partial class KroppPage : ContentPage
     }
 
     private async void OnWeeklyVolumeTapped(object? sender, EventArgs e)
-        => await Shell.Current.GoToAsync(nameof(WeeklyVolumePage));
+        => await Shell.Current.GoToAsync(AppRoutes.WeeklyVolume);
 
     protected override async void OnAppearing()
     {
@@ -81,7 +82,7 @@ public partial class KroppPage : ContentPage
     }
 
     private async void OnWorkoutBannerTapped(object sender, TappedEventArgs e)
-        => await Shell.Current.GoToAsync(nameof(ActiveWorkoutPage));
+        => await Shell.Current.GoToAsync(AppRoutes.ActiveWorkout);
 
     private double _tabColumnWidth;
 

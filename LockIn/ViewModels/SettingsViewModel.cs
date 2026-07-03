@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using LockIn;
 using LockIn.Data.Repositories;
 using LockIn.Models;
+using LockIn.Navigation;
 using LockIn.Resources.Strings;
 using LockIn.Services;
 using LockIn.Views;
@@ -280,11 +281,11 @@ public partial class SettingsViewModel(DatabaseService db, IHealthService health
 
     [RelayCommand]
     private async Task OpenBodyWeightAsync() =>
-        await Shell.Current.GoToAsync(nameof(BodyWeightPage));
+        await Shell.Current.GoToAsync(AppRoutes.BodyWeight);
 
     [RelayCommand]
     private async Task OpenProgressPhotosAsync() =>
-        await Shell.Current.GoToAsync(nameof(ProgressPhotosPage));
+        await Shell.Current.GoToAsync(AppRoutes.ProgressPhotos);
 
     [RelayCommand]
     private async Task ClearAllDataAsync()

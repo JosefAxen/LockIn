@@ -1,4 +1,5 @@
 using LockIn;
+using LockIn.Navigation;
 using LockIn.Services;
 using LockIn.ViewModels;
 
@@ -231,5 +232,5 @@ public partial class HistoryPage : ContentPage
 
 
     private async void OnWorkoutBannerTapped(object sender, TappedEventArgs e)
-        => await Shell.Current.GoToAsync(nameof(ActiveWorkoutPage));
+        => await Shell.Current.GoToAsync(AppRoutes.ActiveWorkout);
 }

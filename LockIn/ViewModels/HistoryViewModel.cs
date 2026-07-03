@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn.Data.Repositories;
 using LockIn.Models;
+using LockIn.Navigation;
 using LockIn.Resources.Strings;
 using LockIn.Services;
 using LockIn.Views;
@@ -94,7 +95,7 @@ public partial class HistoryViewModel(DatabaseService db, ISessionRepository ses
 
     [RelayCommand]
     private async Task OpenAchievementsAsync() =>
-        await Shell.Current.GoToAsync(nameof(AchievementsPage));
+        await Shell.Current.GoToAsync(AppRoutes.Achievements);
 
     public async Task LoadAsync()
     {
@@ -206,7 +207,7 @@ public partial class HistoryViewModel(DatabaseService db, ISessionRepository ses
     [RelayCommand]
     private async Task OpenSessionAsync(SessionSummaryRow session)
     {
-        await Shell.Current.GoToAsync(nameof(SessionDetailPage), new Dictionary<string, object>
+        await Shell.Current.GoToAsync(AppRoutes.SessionDetail, new Dictionary<string, object>
         {
             { "Session", session }
         });

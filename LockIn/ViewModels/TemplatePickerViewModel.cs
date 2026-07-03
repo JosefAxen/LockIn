@@ -3,6 +3,7 @@ using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn.Models;
+using LockIn.Navigation;
 using LockIn.Resources.Strings;
 using LockIn.Services;
 
@@ -158,7 +159,7 @@ public partial class TemplatePickerViewModel : ObservableObject
 
             await Toast.Make(AppResources.TemplatePicker_Created_Toast).Show();
             SelectedTemplate = null;
-            await Shell.Current.GoToAsync("..");
+            await Shell.Current.GoToAsync(AppRoutes.Back);
         }
         catch (Exception ex)
         {

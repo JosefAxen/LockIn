@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn.Data.Repositories;
 using LockIn.Models;
+using LockIn.Navigation;
 using LockIn.Resources.Strings;
 using LockIn.Services;
 using System.Collections.ObjectModel;
@@ -41,7 +42,7 @@ public partial class AchievementsViewModel(ISettingsRepository settingsRepo) : O
     }
 
     [RelayCommand]
-    private async Task GoBackAsync() => await Shell.Current.GoToAsync("..");
+    private async Task GoBackAsync() => await Shell.Current.GoToAsync(AppRoutes.Back);
 }
 
 public class AchievementRow

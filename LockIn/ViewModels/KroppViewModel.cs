@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using LockIn;
 using LockIn.Data.Repositories;
 using LockIn.Models;
+using LockIn.Navigation;
 using LockIn.Resources.Strings;
 using LockIn.Services;
 using LockIn.Views;
@@ -225,7 +226,7 @@ public partial class KroppViewModel(DatabaseService db, IBodyRepository bodyRepo
 
     [RelayCommand]
     private async Task OpenSettingsAsync() =>
-        await Shell.Current.GoToAsync(nameof(SettingsPage));
+        await Shell.Current.GoToAsync(AppRoutes.Settings);
 }
 
 public class HeatmapTile

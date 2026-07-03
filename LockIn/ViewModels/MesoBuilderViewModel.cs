@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn.Data.Repositories;
 using LockIn.Models;
+using LockIn.Navigation;
 using LockIn.Resources.Strings;
 using LockIn.Services;
 
@@ -132,7 +133,7 @@ public partial class MesoBuilderViewModel : ObservableObject
     [RelayCommand]
     private async Task CancelAsync()
     {
-        await Shell.Current.GoToAsync("..");
+        await Shell.Current.GoToAsync(AppRoutes.Back);
     }
 
     [RelayCommand]
@@ -209,7 +210,7 @@ public partial class MesoBuilderViewModel : ObservableObject
 
             await _builder.BuildAsync(spec);
             await Toast.Make(AppResources.MesoBuilder_Created_Toast).Show();
-            await Shell.Current.GoToAsync("..");
+            await Shell.Current.GoToAsync(AppRoutes.Back);
         }
         catch (Exception ex)
         {

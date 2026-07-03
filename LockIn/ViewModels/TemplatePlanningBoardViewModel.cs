@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn.Data.Repositories;
 using LockIn.Models;
+using LockIn.Navigation;
 using LockIn.Resources.Strings;
 using LockIn.Services;
 
@@ -252,7 +253,7 @@ public partial class TemplatePlanningBoardViewModel : ObservableObject, IQueryAt
         // Task 22 implementerar exercisepicker med muscle-filter — stubb tills vidare.
         try
         {
-            await Shell.Current.GoToAsync($"exercisepicker?muscle={(int)slot.Muscle}");
+            await Shell.Current.GoToAsync(AppRoutes.ExercisePickerForMuscle((int)slot.Muscle));
         }
         catch
         {
@@ -381,7 +382,7 @@ public partial class TemplatePlanningBoardViewModel : ObservableObject, IQueryAt
 
             await _templates.SaveAsync(template, days, slotsByDayIndex, exercisesBySlot);
             await Toast.Make(AppResources.Template_Saved_Toast).Show();
-            await Shell.Current.GoToAsync("..");
+            await Shell.Current.GoToAsync(AppRoutes.Back);
         }
         finally
         {
@@ -390,7 +391,7 @@ public partial class TemplatePlanningBoardViewModel : ObservableObject, IQueryAt
     }
 
     [RelayCommand]
-    private async Task GoBackAsync() => await Shell.Current.GoToAsync("..");
+    private async Task GoBackAsync() => await Shell.Current.GoToAsync(AppRoutes.Back);
 
     // ── Muscle label ──────────────────────────────────────────────────
     private static readonly MuscleGroup[] _allMuscles = new[]
