@@ -1,12 +1,13 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using LockIn;
+using LockIn.Data.Repositories;
 using LockIn.Models;
 using LockIn.Resources.Strings;
 using LockIn.Services;
 
 namespace LockIn.ViewModels;
 
-public partial class HemViewModel(DatabaseService db, IHealthService health, ISetProgressionEngine setProgression, ICycleContextService cycleContext) : ObservableObject
+public partial class HemViewModel(DatabaseService db, IHealthService health, ISetProgressionEngine setProgression, ICycleContextService cycleContext, ISettingsRepository settingsRepo) : ObservableObject
 {
     private static bool _permissionsRequested;
 
@@ -96,7 +97,7 @@ public partial class HemViewModel(DatabaseService db, IHealthService health, ISe
             var weekSessionsTask   = db.GetCompletedSessionsInRangeAsync(weekStart, DateTime.Now);
             var recentSessionsTask = db.GetCompletedSessionsInRangeAsync(sevenAgo, DateTime.Now);
             var streakSessionsTask = db.GetCompletedSessionsInRangeAsync(fortyFiveAgo, DateTime.Now);
-            var settingsTask       = db.GetAppSettingsAsync();
+            var settingsTask       = settingsRepo.GetAsync();
             var stepsTask          = health.GetTodayStepsAsync();
             var caloriesTask       = health.GetTodayActiveCaloriesAsync();
             var heartRateTask      = health.GetTodayMaxHeartRateAsync();
@@ -260,7 +261,7 @@ public partial class HemViewModel(DatabaseService db, IHealthService health, ISe
             {
                 settings.MorningRecoveryDate = todayKey;
                 settings.MorningRecoveryPct  = recoveryPct;
-                await db.SaveAppSettingsAsync(settings);
+                await settingsRepo.SaveAsync(settings);
             }
             StrainTarget     = (float)(target / 100.0);
             StrainTargetText = string.Format(AppResources.Hem_StrainTarget_Format, (int)target);

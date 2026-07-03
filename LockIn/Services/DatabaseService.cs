@@ -884,13 +884,16 @@ public class DatabaseService
     }
 
     // ── App settings ──────────────────────────────────────────────────────
+    // ADR-001: flyttas till ISettingsRepository. Kvar tills alla callers migrerat.
 
+    [Obsolete("Använd ISettingsRepository.GetAsync — ADR-001 PR 1")]
     public async Task<AppSettings> GetAppSettingsAsync()
     {
         await InitAsync();
         return await _db.Table<AppSettings>().FirstOrDefaultAsync() ?? new AppSettings();
     }
 
+    [Obsolete("Använd ISettingsRepository.SaveAsync — ADR-001 PR 1")]
     public async Task SaveAppSettingsAsync(AppSettings settings)
     {
         await InitAsync();
@@ -1067,7 +1070,9 @@ public class DatabaseService
     }
 
     // ── Achievements ──────────────────────────────────────────────────────
+    // ADR-001: flyttas till ISettingsRepository. Kvar tills alla callers migrerat.
 
+    [Obsolete("Använd ISettingsRepository.GetUnlockedAchievementIdsAsync — ADR-001 PR 1")]
     public async Task<HashSet<int>> GetUnlockedAchievementIdsAsync()
     {
         await InitAsync();
@@ -1075,12 +1080,14 @@ public class DatabaseService
         return rows.Select(r => r.Id).ToHashSet();
     }
 
+    [Obsolete("Använd ISettingsRepository.GetUnlockedAchievementsAsync — ADR-001 PR 1")]
     public async Task<List<UserAchievement>> GetUnlockedAchievementsAsync()
     {
         await InitAsync();
         return await _db.Table<UserAchievement>().ToListAsync();
     }
 
+    [Obsolete("Använd ISettingsRepository.UnlockAchievementAsync — ADR-001 PR 1")]
     public async Task<bool> UnlockAchievementAsync(AchievementId id)
     {
         await InitAsync();

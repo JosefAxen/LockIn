@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using LockIn.Data.Repositories;
 using LockIn.Models;
 using LockIn.Resources.Strings;
 using LockIn.Services;
@@ -13,7 +14,8 @@ public partial class PostWorkoutViewModel(
     IHealthService health,
     PhotoService photos,
     ActiveWorkoutViewModel activeWorkout,
-    WorkoutShareService share) : ObservableObject
+    WorkoutShareService share,
+    ISettingsRepository settingsRepo) : ObservableObject
 {
     [ObservableProperty] private int _sessionId;
     [ObservableProperty] private string _templateName = "";
@@ -128,7 +130,7 @@ public partial class PostWorkoutViewModel(
 
         async Task TryUnlock(AchievementId id)
         {
-            if (await db.UnlockAchievementAsync(id))
+            if (await settingsRepo.UnlockAchievementAsync(id))
             {
                 var def = AchievementService.Get(id);
                 if (def is not null) newlyUnlocked.Add(def);

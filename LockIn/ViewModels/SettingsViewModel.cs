@@ -2,6 +2,7 @@ using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn;
+using LockIn.Data.Repositories;
 using LockIn.Models;
 using LockIn.Resources.Strings;
 using LockIn.Services;
@@ -9,7 +10,7 @@ using LockIn.Views;
 
 namespace LockIn.ViewModels;
 
-public partial class SettingsViewModel(DatabaseService db, IHealthService health, ExportService export, NotificationService notifications) : ObservableObject
+public partial class SettingsViewModel(DatabaseService db, IHealthService health, ExportService export, NotificationService notifications, ISettingsRepository settingsRepo) : ObservableObject
 {
     [ObservableProperty] private bool _useKg = true;
     [ObservableProperty] private string _appVersion = "";
@@ -92,7 +93,7 @@ public partial class SettingsViewModel(DatabaseService db, IHealthService health
 
     public async Task LoadAsync()
     {
-        var settings = await db.GetAppSettingsAsync();
+        var settings = await settingsRepo.GetAsync();
         UseKg      = settings.WeightUnit == WeightUnit.Kg;
         WeeklyGoal = settings.WeeklyWorkoutGoal > 0 ? settings.WeeklyWorkoutGoal : 4;
         HapticEnabled        = Preferences.Default.Get("haptic_enabled", true);
@@ -157,9 +158,9 @@ public partial class SettingsViewModel(DatabaseService db, IHealthService health
 
     private async Task SaveSettingsAsync()
     {
-        var settings = await db.GetAppSettingsAsync();
+        var settings = await settingsRepo.GetAsync();
         settings.WeightUnit = UseKg ? WeightUnit.Kg : WeightUnit.Lbs;
-        await db.SaveAppSettingsAsync(settings);
+        await settingsRepo.SaveAsync(settings);
     }
 
     [RelayCommand]
@@ -174,9 +175,9 @@ public partial class SettingsViewModel(DatabaseService db, IHealthService health
         var trimmed = result.Trim();
         if (trimmed.Length == 0) return;
         UserName = trimmed;
-        var settings = await db.GetAppSettingsAsync();
+        var settings = await settingsRepo.GetAsync();
         settings.UserName = trimmed;
-        await db.SaveAppSettingsAsync(settings);
+        await settingsRepo.SaveAsync(settings);
     }
 
     [RelayCommand]
@@ -190,9 +191,9 @@ public partial class SettingsViewModel(DatabaseService db, IHealthService health
             maxLength: 1);
         if (!int.TryParse(result, out var goal) || goal < 1 || goal > 7) return;
         WeeklyGoal = goal;
-        var settings = await db.GetAppSettingsAsync();
+        var settings = await settingsRepo.GetAsync();
         settings.WeeklyWorkoutGoal = goal;
-        await db.SaveAppSettingsAsync(settings);
+        await settingsRepo.SaveAsync(settings);
     }
 
     [RelayCommand]
@@ -206,9 +207,9 @@ public partial class SettingsViewModel(DatabaseService db, IHealthService health
             maxLength: 3);
         if (!int.TryParse(result, out var cm) || cm < 100 || cm > 250) return;
         HeightCm = cm;
-        var settings = await db.GetAppSettingsAsync();
+        var settings = await settingsRepo.GetAsync();
         settings.HeightCm = cm;
-        await db.SaveAppSettingsAsync(settings);
+        await settingsRepo.SaveAsync(settings);
     }
 
     [RelayCommand]
@@ -244,11 +245,11 @@ public partial class SettingsViewModel(DatabaseService db, IHealthService health
 
     private async Task SaveAndRescheduleAsync()
     {
-        var settings = await db.GetAppSettingsAsync();
+        var settings = await settingsRepo.GetAsync();
         settings.ReminderDays        = ReminderDays;
         settings.ReminderTimeMinutes = ReminderTimeMinutes;
         settings.ReminderLabels      = ReminderLabels;
-        await db.SaveAppSettingsAsync(settings);
+        await settingsRepo.SaveAsync(settings);
 
         var mins = ReminderTimeMinutes > 0 ? ReminderTimeMinutes : 480;
         if (ReminderDays == 0)

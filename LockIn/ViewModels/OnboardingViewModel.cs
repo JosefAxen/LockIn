@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn.Data;
+using LockIn.Data.Repositories;
 using LockIn.Models;
 using LockIn.Resources.Strings;
 using LockIn.Services;
@@ -10,7 +11,7 @@ using LockIn;
 
 namespace LockIn.ViewModels;
 
-public partial class OnboardingViewModel(DatabaseService db, IHealthService health) : ObservableObject
+public partial class OnboardingViewModel(DatabaseService db, IHealthService health, ISettingsRepository settingsRepo) : ObservableObject
 {
     [ObservableProperty] private int    _currentStep        = 0;
     [ObservableProperty] private string _userNameInput      = "";
@@ -181,9 +182,9 @@ public partial class OnboardingViewModel(DatabaseService db, IHealthService heal
         if (HasEquipmentBands)      selected.Add((int)EquipmentType.Bands);
         if (HasEquipmentOther)      selected.Add((int)EquipmentType.Other);
 
-        var settings = await db.GetAppSettingsAsync();
+        var settings = await settingsRepo.GetAsync();
         settings.PreferredEquipmentJson = JsonSerializer.Serialize(selected);
-        await db.SaveAppSettingsAsync(settings);
+        await settingsRepo.SaveAsync(settings);
     }
 
     // ── Recommendation ─────────────────────────────────────────────────────
@@ -227,11 +228,11 @@ public partial class OnboardingViewModel(DatabaseService db, IHealthService heal
     {
         await SaveEquipmentAsync();
 
-        var settings = await db.GetAppSettingsAsync();
+        var settings = await settingsRepo.GetAsync();
         settings.UserName               = UserNameInput.Trim();
         settings.WeeklyWorkoutGoal      = SelectedWeeklyGoal;
         settings.HasCompletedOnboarding = true;
-        await db.SaveAppSettingsAsync(settings);
+        await settingsRepo.SaveAsync(settings);
 
         var granted = await health.RequestPermissionsAsync();
         if (granted)

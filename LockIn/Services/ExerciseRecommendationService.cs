@@ -1,4 +1,5 @@
 using System.Text.Json;
+using LockIn.Data.Repositories;
 using LockIn.Models;
 
 namespace LockIn.Services;
@@ -16,8 +17,13 @@ public interface IExerciseRecommendationService
 public class ExerciseRecommendationService : IExerciseRecommendationService
 {
     private readonly DatabaseService _db;
+    private readonly ISettingsRepository _settingsRepo;
 
-    public ExerciseRecommendationService(DatabaseService db) => _db = db;
+    public ExerciseRecommendationService(DatabaseService db, ISettingsRepository settingsRepo)
+    {
+        _db = db;
+        _settingsRepo = settingsRepo;
+    }
 
     public async Task<List<Exercise>> RecommendForMuscleAsync(
         MuscleGroup muscle,
@@ -27,7 +33,7 @@ public class ExerciseRecommendationService : IExerciseRecommendationService
         int slotIdForTieBreak = 0)
     {
         var all = await _db.GetExercisesAsync();
-        var settings = await _db.GetAppSettingsAsync();
+        var settings = await _settingsRepo.GetAsync();
         var preferredEquipment = settings.ParsePreferredEquipment();
 
         // Filter: rätt muskel + inte exkluderad + equipment tillåtet (om preferred finns)

@@ -3,6 +3,7 @@ using CommunityToolkit.Maui.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using LockIn.Data.Repositories;
 using LockIn.Models;
 using LockIn.Resources.Strings;
 using LockIn.Services;
@@ -12,7 +13,7 @@ using System.Globalization;
 
 namespace LockIn.ViewModels;
 
-public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, RestTimerService timer, ISoundService sound, ActiveWorkoutStateService state, NotificationService notifications, IWeightProgressionService weightProgression, ICycleContextService cycleContext, IMesocycleService mesocycles)
+public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, RestTimerService timer, ISoundService sound, ActiveWorkoutStateService state, NotificationService notifications, IWeightProgressionService weightProgression, ICycleContextService cycleContext, IMesocycleService mesocycles, ISettingsRepository settingsRepo)
     : ObservableObject, IQueryAttributable
 {
     private WorkoutSession? _session;
@@ -71,7 +72,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             HasAutoProgress = false;
             AutoProgressMessage = "";
 
-            var settings = await db.GetAppSettingsAsync();
+            var settings = await settingsRepo.GetAsync();
             ShowRirHint = !settings.HasSeenRirHint;
 
             _activeCycle = await cycleContext.GetCurrentAsync();
@@ -281,9 +282,9 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
     private async Task DismissRirHintAsync()
     {
         ShowRirHint = false;
-        var settings = await db.GetAppSettingsAsync();
+        var settings = await settingsRepo.GetAsync();
         settings.HasSeenRirHint = true;
-        await db.SaveAppSettingsAsync(settings);
+        await settingsRepo.SaveAsync(settings);
     }
 
     [RelayCommand]
@@ -735,9 +736,9 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             AppResources.StartWeight_Guide_Body,
             AppResources.Common_OK);
         ShowStartWeightHint = false;
-        var settings = await db.GetAppSettingsAsync();
+        var settings = await settingsRepo.GetAsync();
         settings.HasSeenStartWeightHint = true;
-        await db.SaveAppSettingsAsync(settings);
+        await settingsRepo.SaveAsync(settings);
     }
 
     [RelayCommand]

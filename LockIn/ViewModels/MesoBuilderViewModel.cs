@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using LockIn.Data.Repositories;
 using LockIn.Models;
 using LockIn.Resources.Strings;
 using LockIn.Services;
@@ -12,11 +13,13 @@ public partial class MesoBuilderViewModel : ObservableObject
 {
     private readonly IMesoBuilderService _builder;
     private readonly DatabaseService _db;
+    private readonly ISettingsRepository _settingsRepo;
 
-    public MesoBuilderViewModel(IMesoBuilderService builder, DatabaseService db)
+    public MesoBuilderViewModel(IMesoBuilderService builder, DatabaseService db, ISettingsRepository settingsRepo)
     {
         _builder = builder;
         _db = db;
+        _settingsRepo = settingsRepo;
     }
 
     [ObservableProperty] private int _step = 0;
@@ -192,7 +195,7 @@ public partial class MesoBuilderViewModel : ObservableObject
             foreach (var row in Grow) priorities[row.Muscle] = MusclePriorityLevel.Grow;
             foreach (var row in Maintain) priorities[row.Muscle] = MusclePriorityLevel.Maintain;
 
-            var settings = await _db.GetAppSettingsAsync();
+            var settings = await _settingsRepo.GetAsync();
             var equipment = settings.ParsePreferredEquipment();
 
             var spec = new MesoBuilderSpec(

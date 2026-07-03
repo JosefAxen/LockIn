@@ -53,18 +53,19 @@ public partial class App : Application
     {
         var services = IPlatformApplication.Current!.Services;
         var db       = services.GetRequiredService<DatabaseService>();
+        var settingsRepo = services.GetRequiredService<Data.Repositories.ISettingsRepository>();
         var notifs   = services.GetRequiredService<NotificationService>();
 
         await db.InitAsync();
         _ = notifs.RequestPermissionAsync();
 
-        var settings = await db.GetAppSettingsAsync();
+        var settings = await settingsRepo.GetAsync();
 
         // Auto-complete onboarding for existing installs that already have data
         if (!settings.HasCompletedOnboarding && await db.HasAnyCompletedSessionsAsync())
         {
             settings.HasCompletedOnboarding = true;
-            await db.SaveAppSettingsAsync(settings);
+            await settingsRepo.SaveAsync(settings);
         }
 
         await MainThread.InvokeOnMainThreadAsync(() =>

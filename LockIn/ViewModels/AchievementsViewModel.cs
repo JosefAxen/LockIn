@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using LockIn.Data.Repositories;
 using LockIn.Models;
 using LockIn.Resources.Strings;
 using LockIn.Services;
@@ -7,7 +8,7 @@ using System.Collections.ObjectModel;
 
 namespace LockIn.ViewModels;
 
-public partial class AchievementsViewModel(DatabaseService db) : ObservableObject
+public partial class AchievementsViewModel(ISettingsRepository settingsRepo) : ObservableObject
 {
     public ObservableCollection<AchievementRow> Achievements { get; } = new();
 
@@ -17,7 +18,7 @@ public partial class AchievementsViewModel(DatabaseService db) : ObservableObjec
     public async Task LoadAsync()
     {
         IsLoading = true;
-        var unlocked = await db.GetUnlockedAchievementsAsync();
+        var unlocked = await settingsRepo.GetUnlockedAchievementsAsync();
         var unlockedIds = unlocked.ToDictionary(u => (AchievementId)u.Id, u => u.UnlockedAt);
 
         Achievements.Clear();

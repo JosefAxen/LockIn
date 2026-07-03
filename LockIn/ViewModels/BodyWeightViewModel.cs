@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using LockIn.Data.Repositories;
 using LockIn.Models;
 using LockIn.Resources.Strings;
 using LockIn.Services;
@@ -8,7 +9,7 @@ using System.Globalization;
 
 namespace LockIn.ViewModels;
 
-public partial class BodyWeightViewModel(DatabaseService db, IHealthService health) : ObservableObject
+public partial class BodyWeightViewModel(DatabaseService db, IHealthService health, ISettingsRepository settingsRepo) : ObservableObject
 {
     private const int PageSize = 10;
     private List<BodyWeightEntry> _allEntries = [];
@@ -47,7 +48,7 @@ public partial class BodyWeightViewModel(DatabaseService db, IHealthService heal
         }
 
         // BMI
-        var settings = await db.GetAppSettingsAsync();
+        var settings = await settingsRepo.GetAsync();
         if (settings.HeightCm > 0 && HasData)
         {
             var latestKg = (double)_allEntries[0].WeightKg;
