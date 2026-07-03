@@ -559,6 +559,15 @@ public static class AppResources
     public static string Periodization_Active_Badge         => Get(nameof(Periodization_Active_Badge));
     public static string Periodization_Weeks_Format         => Get(nameof(Periodization_Weeks_Format));
     public static string Periodization_Week_Label_Format    => Get(nameof(Periodization_Week_Label_Format));
+    public static string Periodization_TemplatePicker_Button => Get(nameof(Periodization_TemplatePicker_Button));
+    public static string Periodization_Empty_Title           => Get(nameof(Periodization_Empty_Title));
+    public static string Periodization_Empty_Body            => Get(nameof(Periodization_Empty_Body));
+    public static string Periodization_Week_Format           => Get(nameof(Periodization_Week_Format));
+    public static string Periodization_WeeksCount_Format     => Get(nameof(Periodization_WeeksCount_Format));
+    public static string Periodization_Delete_Confirm_Title  => Get(nameof(Periodization_Delete_Confirm_Title));
+    public static string Periodization_Delete_Confirm_Body_Format => Get(nameof(Periodization_Delete_Confirm_Body_Format));
+    public static string Periodization_Delete_Confirm_Yes    => Get(nameof(Periodization_Delete_Confirm_Yes));
+    public static string Periodization_Delete_Confirm_No     => Get(nameof(Periodization_Delete_Confirm_No));
 
     // ── CycleDetail ──────────────────────────────────────────────────────
     public static string CycleDetail_Title_New              => Get(nameof(CycleDetail_Title_New));

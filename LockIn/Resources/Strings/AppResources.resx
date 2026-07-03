@@ -976,6 +976,15 @@
   <data name="Periodization_Active_Badge" xml:space="preserve"><value>AKTIV</value></data>
   <data name="Periodization_Weeks_Format" xml:space="preserve"><value>{0} VECKOR</value></data>
   <data name="Periodization_Week_Label_Format" xml:space="preserve"><value>VECKA {0}</value></data>
+  <data name="Periodization_TemplatePicker_Button" xml:space="preserve"><value>Välj template</value></data>
+  <data name="Periodization_Empty_Title" xml:space="preserve"><value>Inga mesocykler ännu</value></data>
+  <data name="Periodization_Empty_Body" xml:space="preserve"><value>Starta en via Meso Builder eller en färdig template.</value></data>
+  <data name="Periodization_Week_Format" xml:space="preserve"><value>Vecka {0}/{1}</value></data>
+  <data name="Periodization_WeeksCount_Format" xml:space="preserve"><value>{0} veckor</value></data>
+  <data name="Periodization_Delete_Confirm_Title" xml:space="preserve"><value>Ta bort mesocykel</value></data>
+  <data name="Periodization_Delete_Confirm_Body_Format" xml:space="preserve"><value>Ta bort "{0}"? Detta kan inte ångras.</value></data>
+  <data name="Periodization_Delete_Confirm_Yes" xml:space="preserve"><value>Ta bort</value></data>
+  <data name="Periodization_Delete_Confirm_No" xml:space="preserve"><value>Avbryt</value></data>
 
   <!-- CycleDetail — cycle edit/create pages -->
   <data name="CycleDetail_Title_New" xml:space="preserve"><value>Ny cykel</value></data>

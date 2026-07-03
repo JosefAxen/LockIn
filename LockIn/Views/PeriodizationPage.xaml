@@ -2,27 +2,22 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:LockIn.ViewModels"
-             xmlns:models="clr-namespace:LockIn.Models"
-             xmlns:views="clr-namespace:LockIn.Views"
              xmlns:controls="clr-namespace:LockIn.Controls"
              xmlns:loc="clr-namespace:LockIn.Resources.Strings"
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+             ios:Page.UseSafeArea="False"
              x:Class="LockIn.Views.PeriodizationPage"
              x:DataType="vm:PeriodizationViewModel"
              Title="{loc:Localize Periodization_Title}"
              Shell.NavBarIsVisible="False"
              BackgroundColor="Transparent">
 
-    <ContentPage.Resources>
-        <views:BoolToColorConverter x:Key="BoolToColorConverter"/>
-    </ContentPage.Resources>
-
     <Grid SafeAreaEdges="None">
 
         <!-- Atmosfärisk bakgrund -->
         <controls:AtmosphericBackgroundView InputTransparent="True"/>
 
-        <!-- Permanent status bar gradient (alltid synlig, fyller Dynamic Island-zonen) -->
+        <!-- Permanent status bar gradient (Dynamic Island-zonen) -->
         <BoxView VerticalOptions="Start" HeightRequest="90" InputTransparent="True" ZIndex="19">
             <BoxView.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
@@ -32,9 +27,9 @@
             </BoxView.Background>
         </BoxView>
 
-        <!-- Loading indicator -->
-        <ActivityIndicator IsRunning="{Binding IsLoading}"
-                           IsVisible="{Binding IsLoading}"
+        <!-- Loader -->
+        <ActivityIndicator IsRunning="{Binding IsBusy}"
+                           IsVisible="{Binding IsBusy}"
                            Color="{StaticResource ForgeAccent}"
                            HorizontalOptions="Center"
                            VerticalOptions="Center"
@@ -45,98 +40,159 @@
             <VerticalStackLayout Spacing="0">
 
                 <!-- Header -->
-                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8" Padding="16,56,16,8">
-                    <Label Grid.Column="0"
-                           Text="{loc:Localize Periodization_Title}"
-                           FontFamily="BebasNeue" FontSize="34" CharacterSpacing="1"
+                <Grid Padding="20,56,20,10">
+                    <Label Text="MESOCYKLER"
+                           FontFamily="BebasNeue" FontSize="38" CharacterSpacing="1"
                            TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
                            VerticalOptions="Center"/>
-                    <Button Grid.Column="1"
-                            Text="{loc:Localize Periodization_MesoBuilder_Button}"
-                            Style="{StaticResource SecondaryButton}"
-                            Padding="12,8" HeightRequest="36"
-                            Clicked="OnMesoBuilderClicked"
-                            VerticalOptions="Center"/>
-                    <Button Grid.Column="2"
-                            Text="{loc:Localize Periodization_NewButton}"
-                            Style="{StaticResource SecondaryButton}"
-                            Padding="12,8" HeightRequest="36"
-                            Command="{Binding CreateCycleCommand}"
-                            VerticalOptions="Center"/>
                 </Grid>
 
-                <!-- Cycles lista -->
-                <StackLayout BindableLayout.ItemsSource="{Binding Cycles}" Spacing="0">
+                <!-- Två stora knappar -->
+                <Grid Padding="16,4,16,16" ColumnDefinitions="*,*" ColumnSpacing="10">
+
+                    <!-- Meso Builder (fylld) -->
+                    <Border Grid.Column="0"
+                            BackgroundColor="{StaticResource ForgeAccent}"
+                            StrokeShape="RoundRectangle 18"
+                            StrokeThickness="0"
+                            HeightRequest="86">
+                        <Border.Shadow>
+                            <Shadow Brush="Black" Offset="0,4" Radius="14" Opacity="0.28"/>
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="2" HorizontalOptions="Center" VerticalOptions="Center">
+                            <Label Text="+"
+                                   FontFamily="BebasNeue" FontSize="26"
+                                   TextColor="White"
+                                   HorizontalOptions="Center"/>
+                            <Label Text="MESO BUILDER"
+                                   FontFamily="BebasNeue" FontSize="18" CharacterSpacing="2"
+                                   TextColor="White"
+                                   HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding OpenMesoBuilderCommand}"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <!-- Välj template (outline) -->
+                    <Border Grid.Column="1"
+                            BackgroundColor="Transparent"
+                            Stroke="{StaticResource ForgeAccent}"
+                            StrokeThickness="1.5"
+                            StrokeShape="RoundRectangle 18"
+                            HeightRequest="86">
+                        <VerticalStackLayout Spacing="2" HorizontalOptions="Center" VerticalOptions="Center">
+                            <Label Text="✓"
+                                   FontFamily="BebasNeue" FontSize="24"
+                                   TextColor="{StaticResource ForgeAccent}"
+                                   HorizontalOptions="Center"/>
+                            <Label Text="{loc:Localize Periodization_TemplatePicker_Button}"
+                                   FontFamily="BebasNeue" FontSize="18" CharacterSpacing="2"
+                                   TextColor="{StaticResource ForgeAccent}"
+                                   HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding OpenTemplatePickerCommand}"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                </Grid>
+
+                <!-- Empty-state -->
+                <VerticalStackLayout IsVisible="{Binding HasNoCycles}"
+                                     Padding="32,60,32,40" Spacing="10">
+                    <Label Text="{loc:Localize Periodization_Empty_Title}"
+                           FontFamily="BebasNeue" FontSize="24" CharacterSpacing="1.5"
+                           HorizontalOptions="Center"
+                           TextColor="{StaticResource ForgeMuted}"/>
+                    <Label Text="{loc:Localize Periodization_Empty_Body}"
+                           FontFamily="DMSansRegular" FontSize="14"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center"
+                           LineBreakMode="WordWrap"
+                           TextColor="{StaticResource ForgeMuted}"/>
+                </VerticalStackLayout>
+
+                <!-- Cykel-lista -->
+                <StackLayout BindableLayout.ItemsSource="{Binding Rows}" Spacing="0" Padding="0,4,0,0">
                     <BindableLayout.ItemTemplate>
-                        <DataTemplate x:DataType="models:TrainingCycle">
-                            <SwipeView>
-                                <SwipeView.RightItems>
-                                    <SwipeItems>
-                                        <SwipeItem Text="{loc:Localize Common_Delete}"
-                                                   BackgroundColor="{StaticResource ForgeDestructive}"
-                                                   Command="{Binding Source={RelativeSource AncestorType={x:Type vm:PeriodizationViewModel}}, Path=DeleteCycleCommand}"
-                                                   CommandParameter="{Binding .}"/>
-                                    </SwipeItems>
-                                </SwipeView.RightItems>
-                                <Border Margin="16,0,16,8"
-                                        BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
-                                        StrokeShape="RoundRectangle 18"
-                                        StrokeThickness="0"
-                                        Padding="16,14">
-                                    <Border.Shadow>
-                                        <Shadow Brush="Black" Offset="0,2" Radius="10" Opacity="0.18"/>
-                                    </Border.Shadow>
-                                    <Border.GestureRecognizers>
-                                        <TapGestureRecognizer
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:PeriodizationViewModel}}, Path=OpenCycleCommand}"
-                                            CommandParameter="{Binding .}"/>
-                                    </Border.GestureRecognizers>
-                                    <Grid ColumnDefinitions="18,*,Auto" ColumnSpacing="10">
-                                        <!-- Aktiv-cirkel: grön om aktiv, annars mörk -->
-                                        <Ellipse Grid.Column="0"
-                                                 WidthRequest="10" HeightRequest="10"
-                                                 Fill="{Binding IsActive, Converter={StaticResource BoolToColorConverter}}"
-                                                 VerticalOptions="Center"/>
-                                        <!-- Namn + veckor -->
-                                        <VerticalStackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center">
-                                            <Label Text="{Binding Name}"
-                                                   FontFamily="BebasNeue" FontSize="22" CharacterSpacing="1"
-                                                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
-                                            <Label Text="{Binding WeekCountText}"
-                                                   FontFamily="DMSansRegular" FontSize="13"
-                                                   TextColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"/>
-                                        </VerticalStackLayout>
-                                        <!-- Aktiv-badge -->
-                                        <Border Grid.Column="2"
+                        <DataTemplate x:DataType="vm:MesocycleRow">
+                            <Border Margin="16,0,16,10"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
+                                    StrokeShape="RoundRectangle 18"
+                                    StrokeThickness="0"
+                                    Padding="18,16">
+                                <Border.Shadow>
+                                    <Shadow Brush="Black" Offset="0,3" Radius="12" Opacity="0.2"/>
+                                </Border.Shadow>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:PeriodizationViewModel}}, Path=OpenMesocycleCommand}"
+                                        CommandParameter="{Binding .}"/>
+                                </Border.GestureRecognizers>
+                                <VerticalStackLayout Spacing="10">
+
+                                    <!-- Header rad: Namn + Aktiv-badge -->
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                        <Label Grid.Column="0"
+                                               Text="{Binding Name}"
+                                               FontFamily="BebasNeue" FontSize="22" CharacterSpacing="1"
+                                               VerticalOptions="Center"
+                                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                                        <Border Grid.Column="1"
                                                 IsVisible="{Binding IsActive}"
                                                 BackgroundColor="{StaticResource ForgeAccentDim}"
                                                 StrokeShape="RoundRectangle 8"
                                                 StrokeThickness="0"
-                                                Padding="10,5"
+                                                Padding="10,4"
                                                 VerticalOptions="Center">
                                             <Label Text="{loc:Localize Periodization_Active_Badge}"
-                                                   TextColor="{StaticResource ForgeAccent}"
-                                                   FontFamily="BebasNeue" FontSize="11"
-                                                   CharacterSpacing="1"/>
+                                                   FontFamily="BebasNeue" FontSize="11" CharacterSpacing="1.5"
+                                                   TextColor="{StaticResource ForgeAccent}"/>
                                         </Border>
                                     </Grid>
-                                </Border>
-                            </SwipeView>
+
+                                    <!-- Sub-info -->
+                                    <HorizontalStackLayout Spacing="8">
+                                        <Label Text="{Binding WeeksDisplay}"
+                                               FontFamily="DMSansRegular" FontSize="13"
+                                               TextColor="{StaticResource ForgeMuted}"/>
+                                        <Label Text="·"
+                                               FontFamily="DMSansRegular" FontSize="13"
+                                               TextColor="{StaticResource ForgeMuted}"/>
+                                        <Label Text="{Binding StartDateDisplay}"
+                                               FontFamily="DMSansRegular" FontSize="13"
+                                               TextColor="{StaticResource ForgeMuted}"/>
+                                    </HorizontalStackLayout>
+
+                                    <!-- Progress för aktiva -->
+                                    <VerticalStackLayout IsVisible="{Binding IsActive}" Spacing="6">
+                                        <Label Text="{Binding ProgressDisplay}"
+                                               FontFamily="DMSansMedium" FontSize="13"
+                                               TextColor="{StaticResource ForgeAccent}"/>
+                                        <ProgressBar Progress="{Binding ProgressPercent}"
+                                                     ProgressColor="{StaticResource ForgeAccent}"
+                                                     HeightRequest="4"/>
+                                    </VerticalStackLayout>
+
+                                    <!-- Actions -->
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <BoxView Grid.Column="0" BackgroundColor="Transparent"/>
+                                        <Button Grid.Column="1"
+                                                Text="{loc:Localize Common_Delete}"
+                                                FontFamily="DMSansMedium" FontSize="12"
+                                                BackgroundColor="Transparent"
+                                                TextColor="{StaticResource ForgeDestructive}"
+                                                Padding="8,4"
+                                                HeightRequest="32"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:PeriodizationViewModel}}, Path=DeleteMesocycleCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                    </Grid>
+
+                                </VerticalStackLayout>
+                            </Border>
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>
-                    <BindableLayout.EmptyView>
-                        <StackLayout Padding="24,40" Spacing="8">
-                            <Label Text="{loc:Localize Periodization_NoCycles_Title}"
-                                   FontFamily="BebasNeue" FontSize="22" CharacterSpacing="1"
-                                   HorizontalOptions="Center"
-                                   TextColor="{StaticResource ForgeMuted}"/>
-                            <Label Text="{loc:Localize Periodization_NoCycles_Body}"
-                                   FontFamily="DMSansRegular" FontSize="14"
-                                   TextColor="{StaticResource ForgeMuted}"
-                                   HorizontalTextAlignment="Center"
-                                   LineBreakMode="WordWrap"/>
-                        </StackLayout>
-                    </BindableLayout.EmptyView>
                 </StackLayout>
 
                 <!-- Bottom padding -->
