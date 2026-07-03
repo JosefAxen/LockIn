@@ -1,8 +1,9 @@
+using LockIn.Data.Repositories;
 using LockIn.Models;
 
 namespace LockIn.Services;
 
-public class PRService(DatabaseService db)
+public class PRService(ISessionRepository sessionRepo)
 {
     public static double CalculateEpley1RM(decimal weightKg, int reps)
     {
@@ -13,7 +14,7 @@ public class PRService(DatabaseService db)
     public async Task<bool> IsPRAsync(int exerciseId, decimal weightKg, int reps, int excludeLoggedSetId = 0)
     {
         var newEstimate = CalculateEpley1RM(weightKg, reps);
-        var maxPrevious = await db.GetMaxEpley1RMAsync(exerciseId, excludeLoggedSetId);
+        var maxPrevious = await sessionRepo.GetMaxEpley1RMAsync(exerciseId, excludeLoggedSetId);
         return newEstimate > maxPrevious;
     }
 }

@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using LockIn.Data.Repositories;
 using LockIn.Models;
 using LockIn.Resources.Strings;
 using LockIn.Services;
@@ -10,7 +11,7 @@ using LockIn;
 
 namespace LockIn.ViewModels;
 
-public partial class HistoryViewModel(DatabaseService db) : ObservableObject
+public partial class HistoryViewModel(DatabaseService db, ISessionRepository sessionRepo) : ObservableObject
 {
     public ObservableCollection<SessionSummaryRow> Sessions { get; } = new();
 
@@ -98,8 +99,8 @@ public partial class HistoryViewModel(DatabaseService db) : ObservableObject
     public async Task LoadAsync()
     {
         IsLoading = true;
-        _allSessions = await db.GetCompletedSessionsAsync();
-        CardioSessions = (await db.GetCardioSessionsAsync(20)).AsReadOnly();
+        _allSessions = await sessionRepo.GetCompletedSummariesAsync();
+        CardioSessions = (await sessionRepo.GetCardioSessionsAsync(20)).AsReadOnly();
         await RefreshCalendarAsync();
         ApplyFilterSort();
         RefreshTabColors();

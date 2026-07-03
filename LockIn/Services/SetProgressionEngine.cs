@@ -1,3 +1,4 @@
+using LockIn.Data.Repositories;
 using LockIn.Models;
 
 namespace LockIn.Services;
@@ -19,21 +20,21 @@ public interface ISetProgressionEngine
 // Källa: plan sektion E "Set-progression baserat på post-workout-feedback".
 public class SetProgressionEngine : ISetProgressionEngine
 {
-    private readonly DatabaseService _db;
+    private readonly ISessionRepository _sessionRepo;
 
-    public SetProgressionEngine(DatabaseService db) => _db = db;
+    public SetProgressionEngine(ISessionRepository sessionRepo) => _sessionRepo = sessionRepo;
 
     public async Task<SetProgressionAnalysis> AnalyzeAsync()
     {
         // Hämta de 6 senaste avslutade sessionerna — räcker för att hitta 2 per muskelgrupp
-        var recent = await _db.GetRecentCompletedSessionsAsync(6);
+        var recent = await _sessionRepo.GetRecentCompletedAsync(6);
         if (recent.Count == 0)
             return new SetProgressionAnalysis(Array.Empty<VolumeAdvice>(), null);
 
         // Ladda muskel-feedback per session
         var feedbackBySession = new Dictionary<int, List<SessionMuscleFeedback>>();
         foreach (var s in recent)
-            feedbackBySession[s.Id] = await _db.GetSessionMuscleFeedbackAsync(s.Id);
+            feedbackBySession[s.Id] = await _sessionRepo.GetMuscleFeedbackAsync(s.Id);
 
         // ── Deload-signal ────────────────────────────────────────────────────────
         // Senaste session har NÅGON muskel med VolumeLevel == TooMuch → severity 2
@@ -128,10 +129,10 @@ public class SetProgressionEngine : ISetProgressionEngine
 
     private async Task<bool> HasModerateJointPainForSessionAsync(int sessionId)
     {
-        var exercises = await _db.GetSessionExercisesAsync(sessionId);
+        var exercises = await _sessionRepo.GetSessionExercisesAsync(sessionId);
         foreach (var se in exercises)
         {
-            var fb = await _db.GetSessionExerciseFeedbackAsync(se.Id);
+            var fb = await _sessionRepo.GetExerciseFeedbackAsync(se.Id);
             if (fb?.JointPain >= JointPainLevel.Moderate) return true;
         }
         return false;

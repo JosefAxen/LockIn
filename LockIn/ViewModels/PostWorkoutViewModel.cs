@@ -17,7 +17,8 @@ public partial class PostWorkoutViewModel(
     WorkoutShareService share,
     ISettingsRepository settingsRepo,
     IBodyRepository bodyRepo,
-    IExerciseRepository exerciseRepo) : ObservableObject
+    IExerciseRepository exerciseRepo,
+    ISessionRepository sessionRepo) : ObservableObject
 {
     [ObservableProperty] private int _sessionId;
     [ObservableProperty] private string _templateName = "";
@@ -47,7 +48,7 @@ public partial class PostWorkoutViewModel(
     {
         IsLoading = true;
 
-        var session = await db.GetWorkoutSessionAsync(sessionId);
+        var session = await sessionRepo.GetSessionAsync(sessionId);
         if (session is null) { IsLoading = false; return; }
 
         _loadedSession = session;
@@ -63,8 +64,8 @@ public partial class PostWorkoutViewModel(
             Duration = $"{(int)elapsed.TotalMinutes}m";
         }
 
-        var muscleTask = db.GetSessionVolumeByMuscleGroupAsync(sessionId);
-        var setsTask   = db.GetAllSetsForSessionAsync(sessionId);
+        var muscleTask = sessionRepo.GetSessionVolumeByMuscleGroupAsync(sessionId);
+        var setsTask   = sessionRepo.GetAllSetsForSessionAsync(sessionId);
         await Task.WhenAll(muscleTask, setsTask);
         var muscleVolume = muscleTask.Result;
         var allSets = setsTask.Result;
@@ -91,12 +92,12 @@ public partial class PostWorkoutViewModel(
             }
         }
 
-        var prSets = await db.GetPRsForSessionAsync(sessionId);
+        var prSets = await sessionRepo.GetPRsForSessionAsync(sessionId);
         PrCount = prSets.Count.ToString();
         PRs.Clear();
         if (prSets.Count > 0)
         {
-            var seTask  = db.GetSessionExercisesAsync(sessionId);
+            var seTask  = sessionRepo.GetSessionExercisesAsync(sessionId);
             var exTask  = exerciseRepo.GetAllAsync();
             await Task.WhenAll(seTask, exTask);
             var seById      = seTask.Result.ToDictionary(se => se.Id);
@@ -139,7 +140,7 @@ public partial class PostWorkoutViewModel(
             }
         }
 
-        var totalSessions = await db.GetTotalCompletedSessionCountAsync();
+        var totalSessions = await sessionRepo.GetTotalCompletedCountAsync();
         if (totalSessions >= 1)   await TryUnlock(AchievementId.FirstWorkout);
         if (totalSessions >= 5)   await TryUnlock(AchievementId.Sessions5);
         if (totalSessions >= 10)  await TryUnlock(AchievementId.Sessions10);

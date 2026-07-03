@@ -7,7 +7,7 @@ using LockIn.Services;
 
 namespace LockIn.ViewModels;
 
-public partial class HemViewModel(DatabaseService db, IHealthService health, ISetProgressionEngine setProgression, ICycleContextService cycleContext, ISettingsRepository settingsRepo) : ObservableObject
+public partial class HemViewModel(DatabaseService db, IHealthService health, ISetProgressionEngine setProgression, ICycleContextService cycleContext, ISettingsRepository settingsRepo, ISessionRepository sessionRepo) : ObservableObject
 {
     private static bool _permissionsRequested;
 
@@ -94,9 +94,9 @@ public partial class HemViewModel(DatabaseService db, IHealthService health, ISe
             var sevenAgo     = DateTime.Today.AddDays(-6);
             var fortyFiveAgo = DateTime.Today.AddDays(-45);
 
-            var weekSessionsTask   = db.GetCompletedSessionsInRangeAsync(weekStart, DateTime.Now);
-            var recentSessionsTask = db.GetCompletedSessionsInRangeAsync(sevenAgo, DateTime.Now);
-            var streakSessionsTask = db.GetCompletedSessionsInRangeAsync(fortyFiveAgo, DateTime.Now);
+            var weekSessionsTask   = sessionRepo.GetCompletedInRangeAsync(weekStart, DateTime.Now);
+            var recentSessionsTask = sessionRepo.GetCompletedInRangeAsync(sevenAgo, DateTime.Now);
+            var streakSessionsTask = sessionRepo.GetCompletedInRangeAsync(fortyFiveAgo, DateTime.Now);
             var settingsTask       = settingsRepo.GetAsync();
             var stepsTask          = health.GetTodayStepsAsync();
             var caloriesTask       = health.GetTodayActiveCaloriesAsync();
@@ -317,7 +317,7 @@ public partial class HemViewModel(DatabaseService db, IHealthService health, ISe
             var tomorrow      = DateTime.Today.AddDays(1);
             var recentCutoff  = DateTime.Now.AddDays(-30);
 
-            var prevWeekSessionsTask = db.GetCompletedSessionsInRangeAsync(prevWeekStart, prevWeekEnd);
+            var prevWeekSessionsTask = sessionRepo.GetCompletedInRangeAsync(prevWeekStart, prevWeekEnd);
             var thisWeekVolumeTask   = db.GetRawVolumeForRangeAsync(weekStart, tomorrow);
             var prevWeekVolumeTask   = db.GetRawVolumeForRangeAsync(prevWeekStart, weekStart);
             var nearestPRTask        = db.GetNearestPRGapAsync(recentCutoff);

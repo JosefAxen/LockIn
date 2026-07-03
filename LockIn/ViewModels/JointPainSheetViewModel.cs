@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using LockIn.Data.Repositories;
 using LockIn.Models;
 using LockIn.Resources.Strings;
 using LockIn.Services;
@@ -8,7 +9,7 @@ namespace LockIn.ViewModels;
 
 public partial class JointPainSheetViewModel : ObservableObject
 {
-    private readonly DatabaseService _db;
+    private readonly ISessionRepository _sessionRepo;
 
     public int SessionExerciseId { get; set; }
     public string ExerciseName { get; set; } = "";
@@ -31,9 +32,9 @@ public partial class JointPainSheetViewModel : ObservableObject
 
     public event EventHandler? CloseRequested;
 
-    public JointPainSheetViewModel(DatabaseService db)
+    public JointPainSheetViewModel(ISessionRepository sessionRepo)
     {
-        _db = db;
+        _sessionRepo = sessionRepo;
     }
 
     public void Reset()
@@ -52,7 +53,7 @@ public partial class JointPainSheetViewModel : ObservableObject
     private async Task SaveAsync()
     {
         if (Selected is null) return;
-        await _db.SaveSessionExerciseFeedbackAsync(new SessionExerciseFeedback
+        await _sessionRepo.SaveExerciseFeedbackAsync(new SessionExerciseFeedback
         {
             SessionExerciseId = SessionExerciseId,
             JointPainLevelValue = (int)Selected.Value,

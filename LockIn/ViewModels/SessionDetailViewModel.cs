@@ -9,7 +9,7 @@ using static LockIn.Services.DatabaseService;
 
 namespace LockIn.ViewModels;
 
-public partial class SessionDetailViewModel(DatabaseService db, PhotoService photos, IBodyRepository bodyRepo) : ObservableObject, IQueryAttributable
+public partial class SessionDetailViewModel(ISessionRepository sessionRepo, PhotoService photos, IBodyRepository bodyRepo) : ObservableObject, IQueryAttributable
 {
     public ObservableCollection<SessionExerciseGroup> ExerciseGroups { get; } = new();
     public ObservableCollection<PhotoRow> Photos { get; } = new();
@@ -50,7 +50,7 @@ public partial class SessionDetailViewModel(DatabaseService db, PhotoService pho
                 : $"{(int)dur.TotalMinutes}m";
         }
 
-        var rows = await db.GetSessionExerciseDetailsAsync(session.Id);
+        var rows = await sessionRepo.GetSessionExerciseDetailsAsync(session.Id);
         ExerciseGroups.Clear();
         foreach (var group in rows.GroupBy(r => r.ExerciseName))
         {

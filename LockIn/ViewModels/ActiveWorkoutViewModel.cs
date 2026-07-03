@@ -13,7 +13,7 @@ using System.Globalization;
 
 namespace LockIn.ViewModels;
 
-public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, RestTimerService timer, ISoundService sound, ActiveWorkoutStateService state, NotificationService notifications, IWeightProgressionService weightProgression, ICycleContextService cycleContext, IMesocycleService mesocycles, ISettingsRepository settingsRepo, IExerciseRepository exerciseRepo, ITemplateRepository templateRepo)
+public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, RestTimerService timer, ISoundService sound, ActiveWorkoutStateService state, NotificationService notifications, IWeightProgressionService weightProgression, ICycleContextService cycleContext, IMesocycleService mesocycles, ISettingsRepository settingsRepo, IExerciseRepository exerciseRepo, ITemplateRepository templateRepo, ISessionRepository sessionRepo)
     : ObservableObject, IQueryAttributable
 {
     private WorkoutSession? _session;
@@ -105,7 +105,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             {
                 StartedAt = DateTime.Now,
             };
-            await db.SaveWorkoutSessionAsync(_session);
+            await sessionRepo.SaveSessionAsync(_session);
             _startTime = _session.StartedAt;
 
             if (templateId != 0)
@@ -152,7 +152,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             if (_session is not null)
             {
                 _session.CompletedAt = DateTime.Now;
-                _ = db.SaveWorkoutSessionAsync(_session);
+                _ = sessionRepo.SaveSessionAsync(_session);
             }
             _session = null;
             Exercises.Clear();
@@ -176,7 +176,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             OrderIndex = orderIndex,
             SupersetGroupId = supersetGroupId
         };
-        await db.SaveSessionExerciseAsync(se);
+        await sessionRepo.SaveSessionExerciseAsync(se);
 
         var section = new WorkoutExerciseSection
         {
@@ -212,7 +212,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             section.ShowRecommendedRirHint = true;
         }
 
-        var prevSets = await db.GetLastSessionSetsAsync(exercise.Id, _session!.Id);
+        var prevSets = await sessionRepo.GetLastSessionSetsAsync(exercise.Id, _session!.Id);
 
         string prevSummary = "";
         if (prevSets.Count > 0)
@@ -312,7 +312,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             detail,
             AppResources.Common_Delete, AppResources.Common_Cancel);
         if (!ok) return;
-        await db.DeleteSessionExerciseWithSetsAsync(section.SessionExerciseId);
+        await sessionRepo.DeleteSessionExerciseWithSetsAsync(section.SessionExerciseId);
         Exercises.Remove(section);
     }
 
@@ -446,7 +446,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             SetType = set.SetType,
             DurationSeconds = durationSeconds
         };
-        await db.SaveLoggedSetAsync(loggedSet);
+        await sessionRepo.SaveLoggedSetAsync(loggedSet);
 
         set.IsCompleted = true;
         set.IsPR = isPR;
@@ -704,7 +704,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         {
             var s = _session;
             s.CompletedAt = DateTime.Now;
-            _ = db.SaveWorkoutSessionAsync(s);
+            _ = sessionRepo.SaveSessionAsync(s);
         }
         _session = null;
         notifications.CancelTimer();
@@ -789,7 +789,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             initialValue: section.Notes);
         if (note is null) return;
         section.Notes = note;
-        await db.SetSessionExerciseNotesAsync(section.SessionExerciseId, note);
+        await sessionRepo.SetSessionExerciseNotesAsync(section.SessionExerciseId, note);
     }
 
     private void MoveSection(WorkoutExerciseSection section, int delta)
@@ -807,7 +807,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         {
             { "CallbackAction", new Action<Exercise>(async ex =>
             {
-                await db.UpdateSessionExerciseExerciseIdAsync(section.SessionExerciseId, ex.Id);
+                await sessionRepo.UpdateSessionExerciseExerciseIdAsync(section.SessionExerciseId, ex.Id);
                 section.ExerciseId = ex.Id;
                 section.ExerciseName = ex.Name;
                 section.MuscleGroup = ex.MuscleGroup;
@@ -920,7 +920,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         {
             committed.CompletedAt = DateTime.Now;
             committed.Notes = notes;
-            await db.SaveWorkoutSessionAsync(committed);
+            await sessionRepo.SaveSessionAsync(committed);
             await ApplyProgressionAsync();
         }
         finally

@@ -23,13 +23,13 @@ public interface IWeeklyVolumeService
 // PlannedSets hämtas från VolumeProgressionService om aktiv mesocykel finns.
 public class WeeklyVolumeService : IWeeklyVolumeService
 {
-    private readonly DatabaseService _db;
+    private readonly ISessionRepository _sessionRepo;
     private readonly IMesocycleRepository _mesocyclesRepo;
     private readonly IVolumeProgressionService _volumeProgression;
 
-    public WeeklyVolumeService(DatabaseService db, IMesocycleRepository mesocyclesRepo, IVolumeProgressionService volumeProgression)
+    public WeeklyVolumeService(ISessionRepository sessionRepo, IMesocycleRepository mesocyclesRepo, IVolumeProgressionService volumeProgression)
     {
-        _db = db;
+        _sessionRepo = sessionRepo;
         _mesocyclesRepo = mesocyclesRepo;
         _volumeProgression = volumeProgression;
     }
@@ -43,18 +43,18 @@ public class WeeklyVolumeService : IWeeklyVolumeService
 
         // Aggregera sets per muskelgrupp via direkta SQL-joins för korrekt filtrering
         // (IsSkipped, SetType, tomma sets) enligt plan sektion H
-        var sessions = await _db.GetCompletedSessionsInRangeAsync(weekStart, weekEnd);
+        var sessions = await _sessionRepo.GetCompletedInRangeAsync(weekStart, weekEnd);
         var setsByMuscle = new Dictionary<MuscleGroup, int>();
 
         foreach (var session in sessions)
         {
-            var exercises = await _db.GetSessionExercisesAsync(session.Id);
+            var exercises = await _sessionRepo.GetSessionExercisesAsync(session.Id);
             foreach (var se in exercises)
             {
                 if (se.IsSkipped) continue;
                 var muscle = se.MuscleGroup;
 
-                var sets = await _db.GetLoggedSetsForSessionExerciseAsync(se.Id);
+                var sets = await _sessionRepo.GetLoggedSetsForSessionExerciseAsync(se.Id);
                 foreach (var ls in sets)
                 {
                     if (ls.SetType == SetType.Warmup) continue;

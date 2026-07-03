@@ -18,20 +18,20 @@ public interface IWeightProgressionService
 //  - Deload-vecka override: peak × 0.80, RIR-target 4
 public class WeightProgressionService : IWeightProgressionService
 {
-    private readonly DatabaseService _db;
+    private readonly ISessionRepository _sessionRepo;
     private readonly IExerciseRepository _exerciseRepo;
     private readonly IMesocycleService _mesocycles;
 
-    public WeightProgressionService(DatabaseService db, IExerciseRepository exerciseRepo, IMesocycleService mesocycles)
+    public WeightProgressionService(ISessionRepository sessionRepo, IExerciseRepository exerciseRepo, IMesocycleService mesocycles)
     {
-        _db = db;
+        _sessionRepo = sessionRepo;
         _exerciseRepo = exerciseRepo;
         _mesocycles = mesocycles;
     }
 
     public async Task<WeightSuggestion?> SuggestNextWeightAsync(int exerciseId, int currentSessionId, int targetReps)
     {
-        var prevSets = await _db.GetLastSessionSetsAsync(exerciseId, currentSessionId);
+        var prevSets = await _sessionRepo.GetLastSessionSetsAsync(exerciseId, currentSessionId);
         var working = prevSets
             .Where(s => s.SetType != SetType.Warmup && s.WeightKg > 0 && s.Reps > 0)
             .OrderBy(s => s.SetNumber)

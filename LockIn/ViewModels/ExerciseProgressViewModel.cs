@@ -7,7 +7,7 @@ using LockIn.Services;
 
 namespace LockIn.ViewModels;
 
-public partial class ExerciseProgressViewModel(DatabaseService db, IExerciseRepository exerciseRepo, ProgressReportService report) : ObservableObject, IQueryAttributable
+public partial class ExerciseProgressViewModel(ISessionRepository sessionRepo, IExerciseRepository exerciseRepo, ProgressReportService report) : ObservableObject, IQueryAttributable
 {
     [ObservableProperty] private string _exerciseName = "";
     [ObservableProperty] private string _muscleGroupName = "";
@@ -64,7 +64,7 @@ public partial class ExerciseProgressViewModel(DatabaseService db, IExerciseRepo
                                   || _exercise.Force != ExerciseForce.Other;
         }
 
-        var history = await db.GetBestSetPerSessionForExerciseAsync(exerciseId);
+        var history = await sessionRepo.GetBestSetPerSessionForExerciseAsync(exerciseId);
         HasData = history.Count > 0;
         _sessionCount = history.Count;
 

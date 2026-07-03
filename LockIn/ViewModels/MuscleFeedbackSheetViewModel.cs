@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using LockIn.Data.Repositories;
 using LockIn.Models;
 using LockIn.Resources.Strings;
 using LockIn.Services;
@@ -8,7 +9,7 @@ namespace LockIn.ViewModels;
 
 public partial class MuscleFeedbackSheetViewModel : ObservableObject
 {
-    private readonly DatabaseService _db;
+    private readonly ISessionRepository _sessionRepo;
 
     public int SessionId { get; set; }
     public MuscleGroup Muscle { get; set; }
@@ -58,9 +59,9 @@ public partial class MuscleFeedbackSheetViewModel : ObservableObject
 
     public event EventHandler? CloseRequested;
 
-    public MuscleFeedbackSheetViewModel(DatabaseService db)
+    public MuscleFeedbackSheetViewModel(ISessionRepository sessionRepo)
     {
-        _db = db;
+        _sessionRepo = sessionRepo;
     }
 
     public void Reset()
@@ -95,7 +96,7 @@ public partial class MuscleFeedbackSheetViewModel : ObservableObject
     private async Task SaveAsync()
     {
         if (Pump is null || Volume is null) return;
-        await _db.SaveSessionMuscleFeedbackAsync(new SessionMuscleFeedback
+        await _sessionRepo.SaveMuscleFeedbackAsync(new SessionMuscleFeedback
         {
             SessionId = SessionId,
             MuscleGroupValue = (int)Muscle,
@@ -104,7 +105,7 @@ public partial class MuscleFeedbackSheetViewModel : ObservableObject
         });
         if (JointPain is not null && LastSessionExerciseId > 0)
         {
-            await _db.SaveSessionExerciseFeedbackAsync(new SessionExerciseFeedback
+            await _sessionRepo.SaveExerciseFeedbackAsync(new SessionExerciseFeedback
             {
                 SessionExerciseId = LastSessionExerciseId,
                 JointPainLevelValue = (int)JointPain.Value,

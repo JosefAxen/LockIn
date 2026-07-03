@@ -38,6 +38,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<Data.Repositories.IExerciseRepository, Data.Repositories.ExerciseRepository>();
         builder.Services.AddSingleton<Data.Repositories.ITemplateRepository, Data.Repositories.TemplateRepository>();
         builder.Services.AddSingleton<Data.Repositories.IMesocycleRepository, Data.Repositories.MesocycleRepository>();
+        builder.Services.AddSingleton<Data.Repositories.ISessionRepository, Data.Repositories.SessionRepository>();
         builder.Services.AddTransient<PhotoService>();
         builder.Services.AddTransient<WorkoutShareService>();
         builder.Services.AddTransient<ProgressReportService>();

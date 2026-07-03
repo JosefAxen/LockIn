@@ -1,12 +1,13 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using LockIn.Data.Repositories;
 using LockIn.Models;
 using LockIn.Resources.Strings;
 using LockIn.Services;
 
 namespace LockIn.ViewModels;
 
-public partial class CardioViewModel(DatabaseService db, IHealthService health) : ObservableObject
+public partial class CardioViewModel(ISessionRepository sessionRepo, IHealthService health) : ObservableObject
 {
     public record ActivityOption(CardioActivityType Type, string Name);
 
@@ -54,7 +55,7 @@ public partial class CardioViewModel(DatabaseService db, IHealthService health) 
             Notes              = Notes,
         };
 
-        await db.SaveCardioSessionAsync(session);
+        await sessionRepo.SaveCardioSessionAsync(session);
 
         var hkStart = session.StartedAt;
         var hkEnd   = hkStart.AddMinutes(session.DurationMinutes > 0 ? session.DurationMinutes : 1);

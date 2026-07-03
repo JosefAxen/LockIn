@@ -495,6 +495,7 @@ public class DatabaseService
 
     // ── Logged Sets ────────────────────────────────────────────────────────
 
+    [Obsolete("Använd ISessionRepository.GetSetsForSessionExerciseAsync — ADR-001 PR 6")]
     public async Task<List<LoggedSet>> GetSetsForSessionExerciseAsync(int sessionExerciseId)
     {
         await InitAsync();
@@ -504,6 +505,7 @@ public class DatabaseService
             .ToListAsync();
     }
 
+    [Obsolete("Använd ISessionRepository.GetAllSetsForSessionAsync — ADR-001 PR 6")]
     public async Task<List<LoggedSet>> GetAllSetsForSessionAsync(int sessionId)
     {
         await InitAsync();
@@ -583,6 +585,7 @@ public class DatabaseService
         return (row.ExerciseName, row.GapKg, row.RecentMaxKg, row.AllTimeMaxKg);
     }
 
+    [Obsolete("Använd ISessionRepository.GetMaxEpley1RMAsync — ADR-001 PR 6")]
     public async Task<double> GetMaxEpley1RMAsync(int exerciseId, int excludeLoggedSetId = 0)
     {
         await InitAsync();
@@ -594,6 +597,7 @@ public class DatabaseService
             exerciseId, excludeLoggedSetId);
     }
 
+    [Obsolete("Använd ISessionRepository.GetAllSetsForExerciseAsync — ADR-001 PR 6")]
     public async Task<List<LoggedSet>> GetAllSetsForExerciseAsync(int exerciseId)
     {
         await InitAsync();
@@ -605,6 +609,7 @@ public class DatabaseService
               ORDER BY ls.LoggedAt DESC", exerciseId);
     }
 
+    [Obsolete("Använd ISessionRepository.GetLastSessionSetsAsync — ADR-001 PR 6")]
     public async Task<List<LoggedSet>> GetLastSessionSetsAsync(int exerciseId, int excludeSessionId)
     {
         await InitAsync();
@@ -623,6 +628,7 @@ public class DatabaseService
 
     // ── History ────────────────────────────────────────────────────────────
 
+    [Obsolete("Använd ISessionRepository.GetBestSetPerSessionForExerciseAsync — ADR-001 PR 6")]
     public async Task<List<(DateTime Date, decimal WeightKg, int Reps, double Epley1RM, bool IsPR)>> GetBestSetPerSessionForExerciseAsync(int exerciseId)
     {
         await InitAsync();
@@ -646,6 +652,7 @@ public class DatabaseService
             .ToList();
     }
 
+    [Obsolete("Använd ISessionRepository.GetSessionVolumeByMuscleGroupAsync — ADR-001 PR 6")]
     public async Task<Dictionary<MuscleGroup, (decimal Volume, int Sets)>> GetSessionVolumeByMuscleGroupAsync(int sessionId)
     {
         await InitAsync();
@@ -663,6 +670,7 @@ public class DatabaseService
                 g => (g.Sum(r => r.WeightKg * r.Reps), g.Count()));
     }
 
+    [Obsolete("Använd ISessionRepository.GetPRsForSessionAsync — ADR-001 PR 6")]
     public async Task<List<LoggedSet>> GetPRsForSessionAsync(int sessionId)
     {
         await InitAsync();
@@ -672,6 +680,7 @@ public class DatabaseService
               WHERE se.SessionId = ? AND ls.IsPR = 1", sessionId);
     }
 
+    [Obsolete("Använd ISessionRepository.HasAnyCompletedAsync — ADR-001 PR 6")]
     public async Task<bool> HasAnyCompletedSessionsAsync()
     {
         await InitAsync();
@@ -679,6 +688,7 @@ public class DatabaseService
             "SELECT COUNT(*) FROM WorkoutSessions WHERE CompletedAt IS NOT NULL") > 0;
     }
 
+    [Obsolete("Använd ISessionRepository.GetCompletedSummariesAsync — ADR-001 PR 6")]
     public async Task<List<SessionSummaryRow>> GetCompletedSessionsAsync()
     {
         await InitAsync();
@@ -696,6 +706,7 @@ public class DatabaseService
               ORDER BY ws.StartedAt DESC");
     }
 
+    [Obsolete("Använd ISessionRepository.GetSessionExerciseDetailsAsync — ADR-001 PR 6")]
     public async Task<List<SessionExerciseDetailRow>> GetSessionExerciseDetailsAsync(int sessionId)
     {
         await InitAsync();
@@ -711,6 +722,7 @@ public class DatabaseService
 
     // ── Train stats ────────────────────────────────────────────────────────
 
+    [Obsolete("Använd ISessionRepository.GetTotalCompletedCountAsync — ADR-001 PR 6")]
     public async Task<int> GetTotalCompletedSessionCountAsync()
     {
         await InitAsync();
@@ -718,6 +730,7 @@ public class DatabaseService
             "SELECT COUNT(*) FROM WorkoutSessions WHERE CompletedAt IS NOT NULL");
     }
 
+    [Obsolete("Använd ISessionRepository.GetCountThisWeekAsync — ADR-001 PR 6")]
     public async Task<int> GetSessionCountThisWeekAsync()
     {
         await InitAsync();
@@ -913,6 +926,7 @@ public class DatabaseService
 
     // ── Session range queries ─────────────────────────────────────────────
 
+    [Obsolete("Använd ISessionRepository.GetCompletedInRangeAsync — ADR-001 PR 6")]
     public async Task<List<WorkoutSession>> GetCompletedSessionsInRangeAsync(DateTime from, DateTime to)
     {
         await InitAsync();
@@ -921,6 +935,7 @@ public class DatabaseService
             from, to);
     }
 
+    [Obsolete("Använd ISessionRepository.GetRecentCompletedAsync — ADR-001 PR 6")]
     public async Task<List<WorkoutSession>> GetRecentCompletedSessionsAsync(int limit)
     {
         await InitAsync();
@@ -931,6 +946,7 @@ public class DatabaseService
             .ToListAsync();
     }
 
+    [Obsolete("Använd ISessionRepository.GetLoggedSetsForSessionExerciseAsync — ADR-001 PR 6")]
     public async Task<List<LoggedSet>> GetLoggedSetsForSessionExerciseAsync(int sessionExerciseId)
     {
         await InitAsync();
@@ -942,6 +958,7 @@ public class DatabaseService
 
     // ── Cardio sessions ───────────────────────────────────────────────────
 
+    [Obsolete("Använd ISessionRepository.SaveCardioSessionAsync — ADR-001 PR 6")]
     public async Task SaveCardioSessionAsync(CardioSession session)
     {
         await InitAsync();
@@ -951,6 +968,7 @@ public class DatabaseService
             await _db.UpdateAsync(session);
     }
 
+    [Obsolete("Använd ISessionRepository.GetCardioSessionsAsync — ADR-001 PR 6")]
     public async Task<List<CardioSession>> GetCardioSessionsAsync(int limit = 50)
     {
         await InitAsync();
@@ -960,6 +978,7 @@ public class DatabaseService
             .ToListAsync();
     }
 
+    [Obsolete("Använd ISessionRepository.DeleteCardioSessionAsync — ADR-001 PR 6")]
     public async Task DeleteCardioSessionAsync(int id)
     {
         await InitAsync();
@@ -1476,18 +1495,21 @@ public class DatabaseService
     }
 
     // Session-CRUD (nya schemat)
+    [Obsolete("Använd ISessionRepository.SaveSessionAsync — ADR-001 PR 6")]
     public async Task<int> SaveWorkoutSessionAsync(WorkoutSession session)
     {
         await InitAsync();
         return session.Id == 0 ? await _db.InsertAsync(session) : await _db.UpdateAsync(session);
     }
 
+    [Obsolete("Använd ISessionRepository.GetSessionAsync — ADR-001 PR 6")]
     public async Task<WorkoutSession?> GetWorkoutSessionAsync(int id)
     {
         await InitAsync();
         return await _db.Table<WorkoutSession>().Where(s => s.Id == id).FirstOrDefaultAsync();
     }
 
+    [Obsolete("Använd ISessionRepository.GetSessionsAsync — ADR-001 PR 6")]
     public async Task<List<WorkoutSession>> GetSessionsAsync()
     {
         await InitAsync();
@@ -1505,12 +1527,14 @@ public class DatabaseService
               ORDER BY ws.StartedAt DESC", mesocycleId);
     }
 
+    [Obsolete("Använd ISessionRepository.SaveSessionExerciseAsync — ADR-001 PR 6")]
     public async Task<int> SaveSessionExerciseAsync(SessionExercise se)
     {
         await InitAsync();
         return se.Id == 0 ? await _db.InsertAsync(se) : await _db.UpdateAsync(se);
     }
 
+    [Obsolete("Använd ISessionRepository.GetSessionExercisesAsync — ADR-001 PR 6")]
     public async Task<List<SessionExercise>> GetSessionExercisesAsync(int sessionId)
     {
         await InitAsync();
@@ -1520,6 +1544,7 @@ public class DatabaseService
             .ToListAsync();
     }
 
+    [Obsolete("Använd ISessionRepository.DeleteSessionExerciseWithSetsAsync — ADR-001 PR 6")]
     public async Task DeleteSessionExerciseWithSetsAsync(int sessionExerciseId)
     {
         await InitAsync();
@@ -1527,6 +1552,7 @@ public class DatabaseService
         await _db.ExecuteAsync("DELETE FROM SessionExercises WHERE Id = ?", sessionExerciseId);
     }
 
+    [Obsolete("Använd ISessionRepository.SetSessionExerciseNotesAsync — ADR-001 PR 6")]
     public async Task SetSessionExerciseNotesAsync(int sessionExerciseId, string notes)
     {
         await InitAsync();
@@ -1535,6 +1561,7 @@ public class DatabaseService
             notes ?? "", sessionExerciseId);
     }
 
+    [Obsolete("Använd ISessionRepository.UpdateSessionExerciseExerciseIdAsync — ADR-001 PR 6")]
     public async Task UpdateSessionExerciseExerciseIdAsync(int sessionExerciseId, int newExerciseId)
     {
         await InitAsync();
@@ -1544,12 +1571,14 @@ public class DatabaseService
     }
 
     // Feedback CRUD
+    [Obsolete("Använd ISessionRepository.SaveMuscleFeedbackAsync — ADR-001 PR 6")]
     public async Task<int> SaveSessionMuscleFeedbackAsync(SessionMuscleFeedback fb)
     {
         await InitAsync();
         return fb.Id == 0 ? await _db.InsertAsync(fb) : await _db.UpdateAsync(fb);
     }
 
+    [Obsolete("Använd ISessionRepository.GetMuscleFeedbackAsync — ADR-001 PR 6")]
     public async Task<List<SessionMuscleFeedback>> GetSessionMuscleFeedbackAsync(int sessionId)
     {
         await InitAsync();
@@ -1557,12 +1586,14 @@ public class DatabaseService
             .Where(f => f.SessionId == sessionId).ToListAsync();
     }
 
+    [Obsolete("Använd ISessionRepository.SaveExerciseFeedbackAsync — ADR-001 PR 6")]
     public async Task<int> SaveSessionExerciseFeedbackAsync(SessionExerciseFeedback fb)
     {
         await InitAsync();
         return fb.Id == 0 ? await _db.InsertAsync(fb) : await _db.UpdateAsync(fb);
     }
 
+    [Obsolete("Använd ISessionRepository.GetExerciseFeedbackAsync — ADR-001 PR 6")]
     public async Task<SessionExerciseFeedback?> GetSessionExerciseFeedbackAsync(int sessionExerciseId)
     {
         await InitAsync();
@@ -1572,6 +1603,7 @@ public class DatabaseService
 
     // ── LoggedSet save ────────────────────────────────────────────────────────
 
+    [Obsolete("Använd ISessionRepository.SaveLoggedSetAsync — ADR-001 PR 6")]
     public async Task<int> SaveLoggedSetAsync(LoggedSet set)
     {
         await InitAsync();

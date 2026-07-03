@@ -11,7 +11,7 @@ using LockIn;
 
 namespace LockIn.ViewModels;
 
-public partial class TrainViewModel(DatabaseService db, ActiveWorkoutStateService state, ITemplateRepository templateRepo) : ObservableObject
+public partial class TrainViewModel(DatabaseService db, ActiveWorkoutStateService state, ITemplateRepository templateRepo, ISessionRepository sessionRepo) : ObservableObject
 {
     public ObservableCollection<ProgramGroup> ProgramGroups { get; } = new();
     public ObservableCollection<WorkoutTemplate> FreeTemplates { get; } = new();
@@ -61,9 +61,9 @@ public partial class TrainViewModel(DatabaseService db, ActiveWorkoutStateServic
         HasProgramGroups = ProgramGroups.Count > 0;
         HasNoTemplates = ProgramGroups.Count == 0 && FreeTemplates.Count == 0;
 
-        WeekCount = await db.GetSessionCountThisWeekAsync();
+        WeekCount = await sessionRepo.GetCountThisWeekAsync();
         Streak = await db.GetCurrentStreakAsync();
-        TotalCount = await db.GetTotalCompletedSessionCountAsync();
+        TotalCount = await sessionRepo.GetTotalCompletedCountAsync();
 
         // Feature 5: Restday popup after 7+ consecutive training days
         if (Streak >= 7)
