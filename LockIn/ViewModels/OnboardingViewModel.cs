@@ -218,14 +218,14 @@ public partial class OnboardingViewModel(DatabaseService db, IHealthService heal
     private bool _pendingActivateProgram = false;
 
     [RelayCommand]
-    private void ActivateProgramAsync()
+    private void ActivateProgram()
     {
         _pendingActivateProgram = true;
         CurrentStep = 5;
     }
 
     [RelayCommand]
-    private void SkipProgramAsync()
+    private void SkipProgram()
     {
         _pendingActivateProgram = false;
         CurrentStep = 5;

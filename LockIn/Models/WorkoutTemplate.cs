@@ -16,4 +16,9 @@ public class WorkoutTemplate
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 
     [Ignore] public DateTime? LastUsedAt { get; set; }
+
+    [Ignore]
+    public string LastUsedText => LastUsedAt is DateTime d
+        ? $"Senast: {d:yyyy-MM-dd}"
+        : "Aldrig kort";
 }
