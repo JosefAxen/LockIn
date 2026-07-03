@@ -927,4 +927,26 @@
   <data name="Day_5" xml:space="preserve"><value>Saturday</value></data>
   <data name="Day_6" xml:space="preserve"><value>Sunday</value></data>
 
+  <!-- Feedback sheets (RP-clone Task 26) -->
+  <data name="Feedback_JointPain_Question_Format" xml:space="preserve"><value>How did your joints feel during {0}?</value></data>
+  <data name="Feedback_JointPain_None" xml:space="preserve"><value>No pain</value></data>
+  <data name="Feedback_JointPain_Low" xml:space="preserve"><value>Low pain</value></data>
+  <data name="Feedback_JointPain_Moderate" xml:space="preserve"><value>Moderate pain</value></data>
+  <data name="Feedback_JointPain_ALotOf" xml:space="preserve"><value>A lot of pain</value></data>
+  <data name="Feedback_JointPain_Save" xml:space="preserve"><value>Save</value></data>
+  <data name="Feedback_JointPain_Skip" xml:space="preserve"><value>Skip</value></data>
+  <data name="Feedback_Muscle_Question_Format" xml:space="preserve"><value>How was the workout for {0}?</value></data>
+  <data name="Feedback_Muscle_Pump_Title" xml:space="preserve"><value>PUMP</value></data>
+  <data name="Feedback_Muscle_Pump_Low" xml:space="preserve"><value>Low pump</value></data>
+  <data name="Feedback_Muscle_Pump_Moderate" xml:space="preserve"><value>Moderate pump</value></data>
+  <data name="Feedback_Muscle_Pump_Amazing" xml:space="preserve"><value>Amazing pump</value></data>
+  <data name="Feedback_Muscle_Volume_Title" xml:space="preserve"><value>VOLUME</value></data>
+  <data name="Feedback_Muscle_Volume_NotEnough" xml:space="preserve"><value>Not enough</value></data>
+  <data name="Feedback_Muscle_Volume_JustRight" xml:space="preserve"><value>Just right</value></data>
+  <data name="Feedback_Muscle_Volume_Pushed" xml:space="preserve"><value>Pushed my limits</value></data>
+  <data name="Feedback_Muscle_Volume_TooMuch" xml:space="preserve"><value>Too much</value></data>
+  <data name="Feedback_Muscle_JointPain_Title" xml:space="preserve"><value>JOINT PAIN</value></data>
+  <data name="Feedback_Muscle_Save" xml:space="preserve"><value>Save</value></data>
+  <data name="Feedback_Muscle_Skip" xml:space="preserve"><value>Skip</value></data>
+
 </root>

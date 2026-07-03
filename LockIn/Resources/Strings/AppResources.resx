@@ -1116,6 +1116,28 @@
   <data name="TemplateBoard_AddDay" xml:space="preserve"><value>+ Ny dag</value></data>
   <data name="Template_Saved_Toast" xml:space="preserve"><value>Template sparad</value></data>
 
+  <!-- Feedback sheets (RP-clone Task 26) -->
+  <data name="Feedback_JointPain_Question_Format" xml:space="preserve"><value>Hur kändes lederna under {0}?</value></data>
+  <data name="Feedback_JointPain_None" xml:space="preserve"><value>Ingen smärta</value></data>
+  <data name="Feedback_JointPain_Low" xml:space="preserve"><value>Låg smärta</value></data>
+  <data name="Feedback_JointPain_Moderate" xml:space="preserve"><value>Måttlig smärta</value></data>
+  <data name="Feedback_JointPain_ALotOf" xml:space="preserve"><value>Mycket smärta</value></data>
+  <data name="Feedback_JointPain_Save" xml:space="preserve"><value>Spara</value></data>
+  <data name="Feedback_JointPain_Skip" xml:space="preserve"><value>Hoppa över</value></data>
+  <data name="Feedback_Muscle_Question_Format" xml:space="preserve"><value>Hur var passet för {0}?</value></data>
+  <data name="Feedback_Muscle_Pump_Title" xml:space="preserve"><value>PUMP</value></data>
+  <data name="Feedback_Muscle_Pump_Low" xml:space="preserve"><value>Låg pump</value></data>
+  <data name="Feedback_Muscle_Pump_Moderate" xml:space="preserve"><value>Måttlig pump</value></data>
+  <data name="Feedback_Muscle_Pump_Amazing" xml:space="preserve"><value>Fantastisk pump</value></data>
+  <data name="Feedback_Muscle_Volume_Title" xml:space="preserve"><value>VOLYM</value></data>
+  <data name="Feedback_Muscle_Volume_NotEnough" xml:space="preserve"><value>Inte tillräckligt</value></data>
+  <data name="Feedback_Muscle_Volume_JustRight" xml:space="preserve"><value>Precis lagom</value></data>
+  <data name="Feedback_Muscle_Volume_Pushed" xml:space="preserve"><value>Pushade gränsen</value></data>
+  <data name="Feedback_Muscle_Volume_TooMuch" xml:space="preserve"><value>För mycket</value></data>
+  <data name="Feedback_Muscle_JointPain_Title" xml:space="preserve"><value>LEDSMÄRTA</value></data>
+  <data name="Feedback_Muscle_Save" xml:space="preserve"><value>Spara</value></data>
+  <data name="Feedback_Muscle_Skip" xml:space="preserve"><value>Hoppa över</value></data>
+
   <!-- Muscle labels (utöver Library_Muscle_*) -->
   <data name="Muscle_Quads" xml:space="preserve"><value>Quads</value></data>
   <data name="Muscle_Hamstrings" xml:space="preserve"><value>Hamstrings</value></data>

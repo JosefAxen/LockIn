@@ -1,4 +1,6 @@
 using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn.Models;
@@ -22,6 +24,8 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
     private CancellationTokenSource? _clockCts;
     private readonly Dictionary<int, HashSet<int>> _supersetRound = new();
     private readonly object _supersetLock = new();
+    private readonly HashSet<MuscleGroup> _feedbackShownFor = new();
+    private readonly HashSet<int> _jointPainReportedFor = new();
 
     [ObservableProperty] private string _templateName = AppResources.ActiveWorkout_FreeWorkout;
     [ObservableProperty] private string _elapsedTime = "0:00";
@@ -476,8 +480,63 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             var nextIdx = Exercises.IndexOf(completedSection) + 1;
             if (nextIdx < Exercises.Count)
                 ScrollToSectionRequested?.Invoke(this, Exercises[nextIdx].SessionExerciseId);
+
+            // RP-clone Task 26: trigga MuscleFeedbackSheet när sista övningen i muskelgruppen är klar
+            _ = MaybeShowMuscleFeedbackAsync(completedSection);
         }
     }
+
+    private async Task MaybeShowMuscleFeedbackAsync(WorkoutExerciseSection completedSection)
+    {
+        if (_session is null) return;
+        if (_feedbackShownFor.Contains(completedSection.MuscleGroup)) return;
+        if (completedSection.Sets.Count == 0) return;
+        if (completedSection.Sets.Any(s => !s.IsCompleted)) return;
+
+        // Finns senare övning med samma muskelgrupp?
+        var idx = Exercises.IndexOf(completedSection);
+        if (idx < 0) return;
+        var laterExists = Exercises.Skip(idx + 1).Any(e => e.MuscleGroup == completedSection.MuscleGroup);
+        if (laterExists) return;
+
+        _feedbackShownFor.Add(completedSection.MuscleGroup);
+
+        try
+        {
+            var services = Application.Current?.Windows.FirstOrDefault()?.Handler?.MauiContext?.Services;
+            if (services is null) return;
+            var vm = services.GetRequiredService<MuscleFeedbackSheetViewModel>();
+            vm.Reset();
+            vm.SessionId = _session.Id;
+            vm.Muscle = completedSection.MuscleGroup;
+            vm.MuscleName = MuscleGroupDisplayName(completedSection.MuscleGroup);
+            vm.LastSessionExerciseId = completedSection.SessionExerciseId;
+            vm.ShowJointPain = !_jointPainReportedFor.Contains(completedSection.SessionExerciseId);
+
+            var sheet = new MuscleFeedbackSheet(vm);
+            var page = Shell.Current?.CurrentPage;
+            if (page is null) return;
+            await page.ShowPopupAsync(sheet);
+        }
+        catch
+        {
+            // Sheet-fel ska inte krascha pass — silently ignorera
+        }
+    }
+
+    private static string MuscleGroupDisplayName(MuscleGroup g) => g switch
+    {
+        MuscleGroup.Chest     => AppResources.Muscle_Chest,
+        MuscleGroup.Back      => AppResources.Muscle_Back,
+        MuscleGroup.Shoulders => AppResources.Muscle_Shoulders,
+        MuscleGroup.Biceps    => AppResources.Muscle_Biceps,
+        MuscleGroup.Triceps   => AppResources.Muscle_Triceps,
+        MuscleGroup.Legs      => AppResources.Library_Muscle_Legs,
+        MuscleGroup.Core      => AppResources.Library_Muscle_Core,
+        MuscleGroup.FullBody  => AppResources.Library_Muscle_FullBody,
+        MuscleGroup.Forearms  => AppResources.Library_Muscle_Forearms,
+        _                     => AppResources.Library_Muscle_Other,
+    };
 
     private void HandlePostSetTimer(int sessionExerciseId)
     {
@@ -633,6 +692,8 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         state.Deactivate();
         Exercises.Clear();
         _supersetRound.Clear();
+        _feedbackShownFor.Clear();
+        _jointPainReportedFor.Clear();
         TemplateName = AppResources.ActiveWorkout_FreeWorkout;
         ElapsedTime = "0:00";
         HasPR = false;
@@ -764,8 +825,30 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
 
     private async Task OpenJointPainSheetAsync(WorkoutExerciseSection section)
     {
-        // TODO Task 26: fullständigt ledsmärta-flöde
-        await Toast.Make(AppResources.ExerciseMenu_JointPain_ComingSoon).Show();
+        try
+        {
+            var services = Application.Current?.Windows.FirstOrDefault()?.Handler?.MauiContext?.Services;
+            if (services is null) return;
+            var vm = services.GetRequiredService<JointPainSheetViewModel>();
+            var sheet = new JointPainSheet(vm, section.SessionExerciseId, section.ExerciseName);
+            // Om användaren stänger sheet:en (spara eller hoppa över) — markera övningen som besökt
+            // så att MuscleFeedbackSheet inte visar JointPain-fältet igen för samma exercise.
+            EventHandler? handler = null;
+            handler = (_, _) =>
+            {
+                _jointPainReportedFor.Add(section.SessionExerciseId);
+                vm.CloseRequested -= handler;
+            };
+            vm.CloseRequested += handler;
+
+            var page = Shell.Current?.CurrentPage;
+            if (page is null) return;
+            await page.ShowPopupAsync(sheet);
+        }
+        catch
+        {
+            // Sheet-fel ska inte krascha pass
+        }
     }
 
     private async Task SkipRemainingSetsAsync(WorkoutExerciseSection section)

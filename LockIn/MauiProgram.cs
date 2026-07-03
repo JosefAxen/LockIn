@@ -112,6 +112,8 @@ public static class MauiProgram
         builder.Services.AddTransient<TemplatePickerPage>();
         builder.Services.AddTransient<TemplatePickerViewModel>();
         builder.Services.AddTransient<CycleDetailPage>();
+        builder.Services.AddTransient<JointPainSheetViewModel>();
+        builder.Services.AddTransient<MuscleFeedbackSheetViewModel>();
         builder.Services.AddSingleton<AppShell>();
 
 #if DEBUG

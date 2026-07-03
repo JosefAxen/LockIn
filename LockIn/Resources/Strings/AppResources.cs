@@ -913,6 +913,28 @@ public static class AppResources
     public static string Muscle_Traps       => Get(nameof(Muscle_Traps));
     public static string Muscle_Abs         => Get(nameof(Muscle_Abs));
 
+    // ── Feedback sheets (RP-clone Task 26) ────────────────────────────────
+    public static string Feedback_JointPain_Question_Format => Get(nameof(Feedback_JointPain_Question_Format));
+    public static string Feedback_JointPain_None            => Get(nameof(Feedback_JointPain_None));
+    public static string Feedback_JointPain_Low             => Get(nameof(Feedback_JointPain_Low));
+    public static string Feedback_JointPain_Moderate        => Get(nameof(Feedback_JointPain_Moderate));
+    public static string Feedback_JointPain_ALotOf          => Get(nameof(Feedback_JointPain_ALotOf));
+    public static string Feedback_JointPain_Save            => Get(nameof(Feedback_JointPain_Save));
+    public static string Feedback_JointPain_Skip            => Get(nameof(Feedback_JointPain_Skip));
+    public static string Feedback_Muscle_Question_Format    => Get(nameof(Feedback_Muscle_Question_Format));
+    public static string Feedback_Muscle_Pump_Title         => Get(nameof(Feedback_Muscle_Pump_Title));
+    public static string Feedback_Muscle_Pump_Low           => Get(nameof(Feedback_Muscle_Pump_Low));
+    public static string Feedback_Muscle_Pump_Moderate      => Get(nameof(Feedback_Muscle_Pump_Moderate));
+    public static string Feedback_Muscle_Pump_Amazing       => Get(nameof(Feedback_Muscle_Pump_Amazing));
+    public static string Feedback_Muscle_Volume_Title       => Get(nameof(Feedback_Muscle_Volume_Title));
+    public static string Feedback_Muscle_Volume_NotEnough   => Get(nameof(Feedback_Muscle_Volume_NotEnough));
+    public static string Feedback_Muscle_Volume_JustRight   => Get(nameof(Feedback_Muscle_Volume_JustRight));
+    public static string Feedback_Muscle_Volume_Pushed      => Get(nameof(Feedback_Muscle_Volume_Pushed));
+    public static string Feedback_Muscle_Volume_TooMuch     => Get(nameof(Feedback_Muscle_Volume_TooMuch));
+    public static string Feedback_Muscle_JointPain_Title    => Get(nameof(Feedback_Muscle_JointPain_Title));
+    public static string Feedback_Muscle_Save               => Get(nameof(Feedback_Muscle_Save));
+    public static string Feedback_Muscle_Skip               => Get(nameof(Feedback_Muscle_Skip));
+
     // ── Equipment (Onboarding step 5) ─────────────────────────────────────
     public static string Onboarding_Equipment_Title    => Get(nameof(Onboarding_Equipment_Title));
     public static string Onboarding_Equipment_Subtitle => Get(nameof(Onboarding_Equipment_Subtitle));
