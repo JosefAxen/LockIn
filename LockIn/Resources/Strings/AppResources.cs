@@ -533,6 +533,11 @@ public static class AppResources
     public static string ExercisePicker_Title             => Get(nameof(ExercisePicker_Title));
     public static string ExercisePicker_SearchPlaceholder => Get(nameof(ExercisePicker_SearchPlaceholder));
     public static string ExercisePicker_CreateCustom      => Get(nameof(ExercisePicker_CreateCustom));
+    public static string ExercisePicker_Recommend_Button    => Get(nameof(ExercisePicker_Recommend_Button));
+    public static string ExercisePicker_Recommend_Title     => Get(nameof(ExercisePicker_Recommend_Title));
+    public static string ExercisePicker_Recommend_Cancel    => Get(nameof(ExercisePicker_Recommend_Cancel));
+    public static string ExercisePicker_Recommend_NoMuscle  => Get(nameof(ExercisePicker_Recommend_NoMuscle));
+    public static string ExercisePicker_Recommend_None      => Get(nameof(ExercisePicker_Recommend_None));
 
     // ── Library ─────────────────────────────────────────────────────────
     public static string Library_Title                      => Get(nameof(Library_Title));

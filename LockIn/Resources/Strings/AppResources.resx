@@ -569,6 +569,11 @@
   <data name="ExercisePicker_Title" xml:space="preserve"><value>VÄLJ ÖVNING</value></data>
   <data name="ExercisePicker_SearchPlaceholder" xml:space="preserve"><value>Sök övning...</value></data>
   <data name="ExercisePicker_CreateCustom" xml:space="preserve"><value>Lägg till custom övning</value></data>
+  <data name="ExercisePicker_Recommend_Button" xml:space="preserve"><value>Rekommendera</value></data>
+  <data name="ExercisePicker_Recommend_Title" xml:space="preserve"><value>Toppval</value></data>
+  <data name="ExercisePicker_Recommend_Cancel" xml:space="preserve"><value>Avbryt</value></data>
+  <data name="ExercisePicker_Recommend_NoMuscle" xml:space="preserve"><value>Välj en muskelgrupp först</value></data>
+  <data name="ExercisePicker_Recommend_None" xml:space="preserve"><value>Inga rekommendationer just nu</value></data>
 
   <!-- TemplateEdit — XAML labels -->
   <data name="TemplateEdit_PageTitle" xml:space="preserve"><value>MALL</value></data>

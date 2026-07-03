@@ -542,6 +542,11 @@
   <data name="ExercisePicker_Title" xml:space="preserve"><value>PICK EXERCISE</value></data>
   <data name="ExercisePicker_SearchPlaceholder" xml:space="preserve"><value>Search exercise...</value></data>
   <data name="ExercisePicker_CreateCustom" xml:space="preserve"><value>Create custom exercise</value></data>
+  <data name="ExercisePicker_Recommend_Button" xml:space="preserve"><value>Recommend</value></data>
+  <data name="ExercisePicker_Recommend_Title" xml:space="preserve"><value>Top picks</value></data>
+  <data name="ExercisePicker_Recommend_Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="ExercisePicker_Recommend_NoMuscle" xml:space="preserve"><value>Select a muscle group first</value></data>
+  <data name="ExercisePicker_Recommend_None" xml:space="preserve"><value>No recommendations right now</value></data>
 
   <!-- TemplateEdit — XAML labels -->
   <data name="TemplateEdit_PageTitle" xml:space="preserve"><value>TEMPLATE</value></data>

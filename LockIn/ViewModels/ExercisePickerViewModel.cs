@@ -9,11 +9,13 @@ using System.Collections.ObjectModel;
 namespace LockIn.ViewModels;
 
 [QueryProperty(nameof(CallbackAction), "CallbackAction")]
-public partial class ExercisePickerViewModel(DatabaseService db) : ObservableObject
+[QueryProperty(nameof(MuscleFilterQuery), "muscle")]
+public partial class ExercisePickerViewModel(DatabaseService db, IExerciseRecommendationService recommend) : ObservableObject
 {
     private List<Exercise> _allExercises = new();
 
     public Action<Exercise>? CallbackAction { get; set; }
+    public string? MuscleFilterQuery { get; set; }
 
     public ObservableCollection<ExercisePickerRow> FilteredExercises { get; } = new();
     public ObservableCollection<MuscleGroupChip> MuscleChips { get; } = new();
@@ -59,8 +61,58 @@ public partial class ExercisePickerViewModel(DatabaseService db) : ObservableObj
             EquipmentChips.Add(new EquipmentChip { Label = EquipmentTypeLabel(eq), Equipment = eq });
         }
 
+        ApplyMuscleQueryFilter();
         ApplyFilter();
         IsLoading = false;
+    }
+
+    private void ApplyMuscleQueryFilter()
+    {
+        if (string.IsNullOrEmpty(MuscleFilterQuery)) return;
+        MuscleGroup? target = null;
+        if (Enum.TryParse<MuscleGroup>(MuscleFilterQuery, out var byName)) target = byName;
+        else if (int.TryParse(MuscleFilterQuery, out var byInt) && Enum.IsDefined(typeof(MuscleGroup), byInt))
+            target = (MuscleGroup)byInt;
+        if (target is null) return;
+        var chip = MuscleChips.FirstOrDefault(c => c.MuscleGroup == target);
+        if (chip is null) return;
+        foreach (var c in MuscleChips) c.IsSelected = false;
+        chip.IsSelected = true;
+    }
+
+    [RelayCommand]
+    private async Task RecommendAsync()
+    {
+        var selectedMuscle = MuscleChips.FirstOrDefault(c => c.IsSelected)?.MuscleGroup;
+        if (selectedMuscle is null)
+        {
+            await CommunityToolkit.Maui.Alerts.Toast.Make(AppResources.ExercisePicker_Recommend_NoMuscle).Show();
+            return;
+        }
+        var picks = await recommend.RecommendForMuscleAsync(
+            selectedMuscle.Value,
+            MusclePriorityLevel.Grow,
+            new List<int>(),
+            0, 0);
+        if (picks.Count == 0)
+        {
+            await CommunityToolkit.Maui.Alerts.Toast.Make(AppResources.ExercisePicker_Recommend_None).Show();
+            return;
+        }
+        var top3 = picks.Take(3).ToList();
+        var options = top3.Select(e => e.Name).ToArray();
+        var page = Shell.Current?.CurrentPage;
+        if (page is null) return;
+        var choice = await page.DisplayActionSheet(
+            AppResources.ExercisePicker_Recommend_Title,
+            AppResources.ExercisePicker_Recommend_Cancel,
+            null,
+            options);
+        if (string.IsNullOrEmpty(choice) || choice == AppResources.ExercisePicker_Recommend_Cancel) return;
+        var picked = top3.FirstOrDefault(e => e.Name == choice);
+        if (picked is null) return;
+        CallbackAction?.Invoke(picked);
+        await Shell.Current!.GoToAsync("..");
     }
 
     [RelayCommand]
