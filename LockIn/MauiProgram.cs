@@ -109,6 +109,8 @@ public static class MauiProgram
         builder.Services.AddTransient<MesoBuilderViewModel>();
         builder.Services.AddTransient<PeriodizationPage>();
         builder.Services.AddTransient<PeriodizationViewModel>();
+        builder.Services.AddTransient<TemplatePickerPage>();
+        builder.Services.AddTransient<TemplatePickerViewModel>();
         builder.Services.AddTransient<CycleDetailPage>();
         builder.Services.AddSingleton<AppShell>();
 

@@ -592,6 +592,25 @@ public static class AppResources
     public static string Periodization_Delete_Confirm_Yes    => Get(nameof(Periodization_Delete_Confirm_Yes));
     public static string Periodization_Delete_Confirm_No     => Get(nameof(Periodization_Delete_Confirm_No));
 
+    // ── TemplatePicker (Task 21) ─────────────────────────────────────────
+    public static string TemplatePicker_Title               => Get(nameof(TemplatePicker_Title));
+    public static string TemplatePicker_Subtitle            => Get(nameof(TemplatePicker_Subtitle));
+    public static string TemplatePicker_DaysFormat          => Get(nameof(TemplatePicker_DaysFormat));
+    public static string TemplatePicker_Config_Title        => Get(nameof(TemplatePicker_Config_Title));
+    public static string TemplatePicker_Name_Placeholder    => Get(nameof(TemplatePicker_Name_Placeholder));
+    public static string TemplatePicker_StartDate_Label     => Get(nameof(TemplatePicker_StartDate_Label));
+    public static string TemplatePicker_Weeks_Label         => Get(nameof(TemplatePicker_Weeks_Label));
+    public static string TemplatePicker_Unit_Label          => Get(nameof(TemplatePicker_Unit_Label));
+    public static string TemplatePicker_Deload_Note         => Get(nameof(TemplatePicker_Deload_Note));
+    public static string TemplatePicker_Create              => Get(nameof(TemplatePicker_Create));
+    public static string TemplatePicker_Close               => Get(nameof(TemplatePicker_Close));
+    public static string TemplatePicker_Created_Toast       => Get(nameof(TemplatePicker_Created_Toast));
+    public static string TemplatePicker_Desc_PPL            => Get(nameof(TemplatePicker_Desc_PPL));
+    public static string TemplatePicker_Desc_UpperLower     => Get(nameof(TemplatePicker_Desc_UpperLower));
+    public static string TemplatePicker_Desc_FullBody       => Get(nameof(TemplatePicker_Desc_FullBody));
+    public static string TemplatePicker_Desc_Bro            => Get(nameof(TemplatePicker_Desc_Bro));
+    public static string TemplatePicker_Desc_Default        => Get(nameof(TemplatePicker_Desc_Default));
+
     // ── CycleDetail ──────────────────────────────────────────────────────
     public static string CycleDetail_Title_New              => Get(nameof(CycleDetail_Title_New));
     public static string CycleDetail_Title_Edit             => Get(nameof(CycleDetail_Title_Edit));

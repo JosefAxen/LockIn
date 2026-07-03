@@ -28,5 +28,6 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(MuscleVolumePage), typeof(MuscleVolumePage));
         Routing.RegisterRoute(nameof(WeeklyVolumePage), typeof(WeeklyVolumePage));
         Routing.RegisterRoute(nameof(MesoBuilderPage), typeof(MesoBuilderPage));
+        Routing.RegisterRoute("templatepicker", typeof(TemplatePickerPage));
     }
 }

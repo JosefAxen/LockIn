@@ -1014,6 +1014,25 @@
   <data name="Periodization_Delete_Confirm_Yes" xml:space="preserve"><value>Ta bort</value></data>
   <data name="Periodization_Delete_Confirm_No" xml:space="preserve"><value>Avbryt</value></data>
 
+  <!-- TemplatePicker — välj färdig template (Task 21) -->
+  <data name="TemplatePicker_Title" xml:space="preserve"><value>VÄLJ TEMPLATE</value></data>
+  <data name="TemplatePicker_Subtitle" xml:space="preserve"><value>Färdiga upplägg du kan starta direkt</value></data>
+  <data name="TemplatePicker_DaysFormat" xml:space="preserve"><value>{0} dagar/vecka</value></data>
+  <data name="TemplatePicker_Config_Title" xml:space="preserve"><value>Konfigurera din mesocykel</value></data>
+  <data name="TemplatePicker_Name_Placeholder" xml:space="preserve"><value>Namn på mesocykel</value></data>
+  <data name="TemplatePicker_StartDate_Label" xml:space="preserve"><value>Startdatum</value></data>
+  <data name="TemplatePicker_Weeks_Label" xml:space="preserve"><value>Veckor</value></data>
+  <data name="TemplatePicker_Unit_Label" xml:space="preserve"><value>Enhet</value></data>
+  <data name="TemplatePicker_Deload_Note" xml:space="preserve"><value>Deload räknas som sista veckan</value></data>
+  <data name="TemplatePicker_Create" xml:space="preserve"><value>SKAPA MESOCYKEL</value></data>
+  <data name="TemplatePicker_Close" xml:space="preserve"><value>Stäng</value></data>
+  <data name="TemplatePicker_Created_Toast" xml:space="preserve"><value>Mesocykel skapad</value></data>
+  <data name="TemplatePicker_Desc_PPL" xml:space="preserve"><value>Push, Pull, Legs — klassisk 6-dagars split</value></data>
+  <data name="TemplatePicker_Desc_UpperLower" xml:space="preserve"><value>Överkropp/Underkropp — balanserad 4-dagars</value></data>
+  <data name="TemplatePicker_Desc_FullBody" xml:space="preserve"><value>Hela kroppen varje pass — 3 dagar/vecka</value></data>
+  <data name="TemplatePicker_Desc_Bro" xml:space="preserve"><value>En muskelgrupp per dag</value></data>
+  <data name="TemplatePicker_Desc_Default" xml:space="preserve"><value>Färdig template</value></data>
+
   <!-- CycleDetail — cycle edit/create pages -->
   <data name="CycleDetail_Title_New" xml:space="preserve"><value>Ny cykel</value></data>
   <data name="CycleDetail_Title_Edit" xml:space="preserve"><value>Redigera cykel</value></data>
