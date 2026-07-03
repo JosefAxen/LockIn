@@ -1145,4 +1145,24 @@
   <data name="Muscle_Calves" xml:space="preserve"><value>Vader</value></data>
   <data name="Muscle_Traps" xml:space="preserve"><value>Traps</value></data>
   <data name="Muscle_Abs" xml:space="preserve"><value>Mage</value></data>
+
+  <!-- MesocycleStats (Task 28) -->
+  <data name="MesoStats_Title" xml:space="preserve"><value>MESOCYKEL-STATS</value></data>
+  <data name="MesoStats_Status_Active" xml:space="preserve"><value>AKTIV</value></data>
+  <data name="MesoStats_Status_Done" xml:space="preserve"><value>KLAR</value></data>
+  <data name="MesoStats_Status_Upcoming" xml:space="preserve"><value>KOMMANDE</value></data>
+  <data name="MesoStats_WeekProgress_Format" xml:space="preserve"><value>Vecka {0} av {1}</value></data>
+  <data name="MesoStats_Weeks_Section" xml:space="preserve"><value>VECKOR</value></data>
+  <data name="MesoStats_Volume_Section" xml:space="preserve"><value>VOLYM DENNA VECKA</value></data>
+  <data name="MesoStats_Volume_Legend" xml:space="preserve"><value>Grå=Under MEV · Grön=MAV · Gul=Nära MRV · Röd=Över MRV</value></data>
+  <data name="MesoStats_Rir_Section" xml:space="preserve"><value>RIR-MÅL PER VECKA</value></data>
+  <data name="MesoStats_Deload_Section" xml:space="preserve"><value>DELOAD-STATUS</value></data>
+  <data name="MesoStats_Deload_Active" xml:space="preserve"><value>Deload-vecka just nu — kör lätt</value></data>
+  <data name="MesoStats_Deload_Upcoming_Format" xml:space="preserve"><value>Deload om {0} veckor</value></data>
+  <data name="MesoStats_Deload_Passed" xml:space="preserve"><value>Deload passerad</value></data>
+  <data name="MesoStats_Empty_Title" xml:space="preserve"><value>Ingen aktiv mesocykel</value></data>
+  <data name="MesoStats_Empty_Body" xml:space="preserve"><value>Starta en cykel via Meso Builder eller en färdig template.</value></data>
+  <data name="MesoStats_Empty_Cta" xml:space="preserve"><value>Öppna mesocykler</value></data>
+  <data name="MesoStats_Week_Deload" xml:space="preserve"><value>Deload</value></data>
+  <data name="MesoStats_Week_Intensity_Format" xml:space="preserve"><value>{0}%</value></data>
 </root>

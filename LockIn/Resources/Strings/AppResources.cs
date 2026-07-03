@@ -947,4 +947,24 @@ public static class AppResources
     public static string Equipment_Kettlebell          => Get(nameof(Equipment_Kettlebell));
     public static string Equipment_Bands               => Get(nameof(Equipment_Bands));
     public static string Equipment_Other               => Get(nameof(Equipment_Other));
+
+    // ── MesocycleStats (Task 28) ────────────────────────────────────────
+    public static string MesoStats_Title                    => Get(nameof(MesoStats_Title));
+    public static string MesoStats_Status_Active            => Get(nameof(MesoStats_Status_Active));
+    public static string MesoStats_Status_Done              => Get(nameof(MesoStats_Status_Done));
+    public static string MesoStats_Status_Upcoming          => Get(nameof(MesoStats_Status_Upcoming));
+    public static string MesoStats_WeekProgress_Format      => Get(nameof(MesoStats_WeekProgress_Format));
+    public static string MesoStats_Weeks_Section            => Get(nameof(MesoStats_Weeks_Section));
+    public static string MesoStats_Volume_Section           => Get(nameof(MesoStats_Volume_Section));
+    public static string MesoStats_Volume_Legend            => Get(nameof(MesoStats_Volume_Legend));
+    public static string MesoStats_Rir_Section              => Get(nameof(MesoStats_Rir_Section));
+    public static string MesoStats_Deload_Section           => Get(nameof(MesoStats_Deload_Section));
+    public static string MesoStats_Deload_Active            => Get(nameof(MesoStats_Deload_Active));
+    public static string MesoStats_Deload_Upcoming_Format   => Get(nameof(MesoStats_Deload_Upcoming_Format));
+    public static string MesoStats_Deload_Passed            => Get(nameof(MesoStats_Deload_Passed));
+    public static string MesoStats_Empty_Title              => Get(nameof(MesoStats_Empty_Title));
+    public static string MesoStats_Empty_Body               => Get(nameof(MesoStats_Empty_Body));
+    public static string MesoStats_Empty_Cta                => Get(nameof(MesoStats_Empty_Cta));
+    public static string MesoStats_Week_Deload              => Get(nameof(MesoStats_Week_Deload));
+    public static string MesoStats_Week_Intensity_Format    => Get(nameof(MesoStats_Week_Intensity_Format));
 }

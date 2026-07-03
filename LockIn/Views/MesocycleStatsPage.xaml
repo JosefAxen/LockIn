@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:LockIn.ViewModels"
+             xmlns:controls="clr-namespace:LockIn.Controls"
+             xmlns:loc="clr-namespace:LockIn.Resources.Strings"
+             xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+             ios:Page.UseSafeArea="False"
+             x:Class="LockIn.Views.MesocycleStatsPage"
+             x:DataType="vm:MesocycleStatsViewModel"
+             Title="{loc:Localize MesoStats_Title}"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="Transparent">
+
+    <Grid SafeAreaEdges="None">
+
+        <!-- Atmosfärisk bakgrund -->
+        <controls:AtmosphericBackgroundView InputTransparent="True"/>
+
+        <!-- Permanent status bar gradient (Dynamic Island-zonen) -->
+        <BoxView VerticalOptions="Start" HeightRequest="90" InputTransparent="True" ZIndex="19">
+            <BoxView.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="{AppThemeBinding Light=#28FCFCFC, Dark=#28141418}" Offset="0.0"/>
+                    <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark=#00141418}" Offset="1.0"/>
+                </LinearGradientBrush>
+            </BoxView.Background>
+        </BoxView>
+
+        <!-- Loader -->
+        <ActivityIndicator IsRunning="{Binding IsBusy}"
+                           IsVisible="{Binding IsBusy}"
+                           Color="{StaticResource ForgeAccent}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           ZIndex="5"/>
+
+        <!-- Scroll-innehåll -->
+        <ScrollView VerticalScrollBarVisibility="Never">
+            <VerticalStackLayout Spacing="0">
+
+                <!-- Header -->
+                <Grid Padding="20,56,20,10" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+
+                    <!-- Tillbaka-pil -->
+                    <Border Grid.Column="0"
+                            BackgroundColor="Transparent"
+                            StrokeThickness="0"
+                            WidthRequest="40" HeightRequest="40"
+                            VerticalOptions="Center">
+                        <Label Text="‹"
+                               FontFamily="BebasNeue" FontSize="34"
+                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                               HorizontalOptions="Center" VerticalOptions="Center"/>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoBackCommand}"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <!-- Namn -->
+                    <Label Grid.Column="1"
+                           Text="{Binding MesocycleName}"
+                           FontFamily="BebasNeue" FontSize="30" CharacterSpacing="1"
+                           TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                           LineBreakMode="TailTruncation"
+                           VerticalOptions="Center"
+                           IsVisible="{Binding HasMesocycle}"/>
+
+                    <!-- Status-badge -->
+                    <Border Grid.Column="2"
+                            IsVisible="{Binding HasMesocycle}"
+                            BackgroundColor="{Binding StatusBadgeColor}"
+                            StrokeShape="RoundRectangle 10"
+                            StrokeThickness="0"
+                            Padding="12,5"
+                            VerticalOptions="Center">
+                        <Label Text="{Binding StatusBadge}"
+                               FontFamily="BebasNeue" FontSize="12" CharacterSpacing="2"
+                               TextColor="White"/>
+                    </Border>
+                </Grid>
+
+                <!-- Vecko-progress -->
+                <VerticalStackLayout Padding="20,4,20,20" Spacing="8"
+                                     IsVisible="{Binding HasMesocycle}">
+                    <Label Text="{Binding WeekProgressText}"
+                           FontFamily="BebasNeue" FontSize="18" CharacterSpacing="1.5"
+                           TextColor="{StaticResource ForgeAccent}"/>
+                    <ProgressBar Progress="{Binding WeekProgressPercent}"
+                                 ProgressColor="{StaticResource ForgeAccent}"
+                                 HeightRequest="5"/>
+                </VerticalStackLayout>
+
+                <!-- ══════════════════════════════════════════════════════════ -->
+                <!-- Sektion 1: VECKOR                                           -->
+                <!-- ══════════════════════════════════════════════════════════ -->
+                <VerticalStackLayout Padding="20,10,20,20" Spacing="12"
+                                     IsVisible="{Binding HasMesocycle}">
+                    <Label Text="{loc:Localize MesoStats_Weeks_Section}"
+                           FontFamily="BebasNeue" FontSize="14" CharacterSpacing="2.5"
+                           TextColor="{StaticResource ForgeMuted}"/>
+
+                    <ScrollView Orientation="Horizontal"
+                                HorizontalScrollBarVisibility="Never">
+                        <HorizontalStackLayout BindableLayout.ItemsSource="{Binding Weeks}"
+                                               Spacing="10">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="vm:WeekTile">
+                                    <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
+                                            StrokeShape="RoundRectangle 14"
+                                            StrokeThickness="0"
+                                            Padding="14,12"
+                                            WidthRequest="76" HeightRequest="90">
+                                        <Border.Triggers>
+                                            <DataTrigger TargetType="Border"
+                                                         Binding="{Binding IsActive}"
+                                                         Value="True">
+                                                <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccent}"/>
+                                            </DataTrigger>
+                                        </Border.Triggers>
+                                        <VerticalStackLayout Spacing="4"
+                                                             HorizontalOptions="Center"
+                                                             VerticalOptions="Center">
+                                            <Label Text="{Binding Label}"
+                                                   FontFamily="BebasNeue" FontSize="22" CharacterSpacing="1"
+                                                   HorizontalOptions="Center"
+                                                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}">
+                                                <Label.Triggers>
+                                                    <DataTrigger TargetType="Label"
+                                                                 Binding="{Binding IsActive}"
+                                                                 Value="True">
+                                                        <Setter Property="TextColor" Value="White"/>
+                                                    </DataTrigger>
+                                                </Label.Triggers>
+                                            </Label>
+                                            <Label Text="{Binding SubLabel}"
+                                                   FontFamily="DMSansMedium" FontSize="10"
+                                                   HorizontalOptions="Center"
+                                                   TextColor="{StaticResource ForgeMuted}">
+                                                <Label.Triggers>
+                                                    <DataTrigger TargetType="Label"
+                                                                 Binding="{Binding IsActive}"
+                                                                 Value="True">
+                                                        <Setter Property="TextColor" Value="#F5F5F5"/>
+                                                    </DataTrigger>
+                                                </Label.Triggers>
+                                            </Label>
+                                        </VerticalStackLayout>
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </HorizontalStackLayout>
+                    </ScrollView>
+                </VerticalStackLayout>
+
+                <!-- ══════════════════════════════════════════════════════════ -->
+                <!-- Sektion 2: VOLYM DENNA VECKA                                -->
+                <!-- ══════════════════════════════════════════════════════════ -->
+                <VerticalStackLayout Padding="20,10,20,20" Spacing="12"
+                                     IsVisible="{Binding HasMesocycle}">
+                    <Label Text="{loc:Localize MesoStats_Volume_Section}"
+                           FontFamily="BebasNeue" FontSize="14" CharacterSpacing="2.5"
+                           TextColor="{StaticResource ForgeMuted}"/>
+
+                    <StackLayout BindableLayout.ItemsSource="{Binding VolumeBars}"
+                                 Spacing="10">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="vm:VolumeBarRow">
+                                <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
+                                        StrokeShape="RoundRectangle 14"
+                                        StrokeThickness="0"
+                                        Padding="14,12">
+                                    <VerticalStackLayout Spacing="6">
+                                        <Grid ColumnDefinitions="*,Auto">
+                                            <Label Grid.Column="0"
+                                                   Text="{Binding MuscleName}"
+                                                   FontFamily="BebasNeue" FontSize="16" CharacterSpacing="1"
+                                                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                                            <Label Grid.Column="1"
+                                                   Text="{Binding SetsDisplay}"
+                                                   FontFamily="DMSansMedium" FontSize="12"
+                                                   TextColor="{StaticResource ForgeMuted}"
+                                                   VerticalOptions="Center"/>
+                                        </Grid>
+                                        <ProgressBar Progress="{Binding SetsProgress}"
+                                                     ProgressColor="{Binding ZoneColor}"
+                                                     HeightRequest="6"/>
+                                        <Label Text="{Binding LandmarksDisplay}"
+                                               FontFamily="DMSansRegular" FontSize="11"
+                                               TextColor="{StaticResource ForgeMuted}"
+                                               Opacity="0.75"/>
+                                    </VerticalStackLayout>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </StackLayout>
+
+                    <!-- Legend -->
+                    <Label Text="{loc:Localize MesoStats_Volume_Legend}"
+                           FontFamily="DMSansRegular" FontSize="10"
+                           TextColor="{StaticResource ForgeMuted}"
+                           Opacity="0.7"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center"
+                           LineBreakMode="WordWrap"/>
+                </VerticalStackLayout>
+
+                <!-- ══════════════════════════════════════════════════════════ -->
+                <!-- Sektion 3: RIR-MÅL PER VECKA                                -->
+                <!-- ══════════════════════════════════════════════════════════ -->
+                <VerticalStackLayout Padding="20,10,20,20" Spacing="12"
+                                     IsVisible="{Binding HasMesocycle}">
+                    <Label Text="{loc:Localize MesoStats_Rir_Section}"
+                           FontFamily="BebasNeue" FontSize="14" CharacterSpacing="2.5"
+                           TextColor="{StaticResource ForgeMuted}"/>
+
+                    <ScrollView Orientation="Horizontal"
+                                HorizontalScrollBarVisibility="Never">
+                        <HorizontalStackLayout BindableLayout.ItemsSource="{Binding RirProgression}"
+                                               Spacing="8">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="vm:RirPoint">
+                                    <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
+                                            Stroke="Transparent"
+                                            StrokeShape="RoundRectangle 12"
+                                            StrokeThickness="1.5"
+                                            Padding="10,10"
+                                            WidthRequest="62" HeightRequest="80">
+                                        <Border.Triggers>
+                                            <DataTrigger TargetType="Border"
+                                                         Binding="{Binding IsCurrent}"
+                                                         Value="True">
+                                                <Setter Property="Stroke" Value="{StaticResource ForgeAccent}"/>
+                                                <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccentDim}"/>
+                                            </DataTrigger>
+                                        </Border.Triggers>
+                                        <VerticalStackLayout Spacing="2"
+                                                             HorizontalOptions="Center"
+                                                             VerticalOptions="Center">
+                                            <Label Text="{Binding Label}"
+                                                   FontFamily="DMSansMedium" FontSize="10" CharacterSpacing="1.5"
+                                                   HorizontalOptions="Center"
+                                                   TextColor="{StaticResource ForgeMuted}"/>
+                                            <Label Text="{Binding RirDisplay}"
+                                                   FontFamily="BebasNeue" FontSize="28"
+                                                   HorizontalOptions="Center"
+                                                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                                            <Label Text="RIR"
+                                                   FontFamily="DMSansRegular" FontSize="9"
+                                                   HorizontalOptions="Center"
+                                                   TextColor="{StaticResource ForgeMuted}"
+                                                   Opacity="0.7"/>
+                                        </VerticalStackLayout>
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </HorizontalStackLayout>
+                    </ScrollView>
+                </VerticalStackLayout>
+
+                <!-- ══════════════════════════════════════════════════════════ -->
+                <!-- Sektion 4: DELOAD-STATUS                                    -->
+                <!-- ══════════════════════════════════════════════════════════ -->
+                <VerticalStackLayout Padding="20,10,20,20" Spacing="12"
+                                     IsVisible="{Binding HasDeload}">
+                    <Label Text="{loc:Localize MesoStats_Deload_Section}"
+                           FontFamily="BebasNeue" FontSize="14" CharacterSpacing="2.5"
+                           TextColor="{StaticResource ForgeMuted}"/>
+
+                    <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
+                            StrokeShape="RoundRectangle 14"
+                            StrokeThickness="0"
+                            Padding="16,14">
+                        <Grid ColumnDefinitions="4,*" ColumnSpacing="14">
+                            <BoxView Grid.Column="0"
+                                     Color="#FBBF24"
+                                     WidthRequest="4"
+                                     HorizontalOptions="Start"
+                                     VerticalOptions="Fill">
+                                <BoxView.Triggers>
+                                    <DataTrigger TargetType="BoxView"
+                                                 Binding="{Binding IsDeloadActive}"
+                                                 Value="True">
+                                        <Setter Property="Color" Value="{StaticResource ForgeAccent}"/>
+                                    </DataTrigger>
+                                </BoxView.Triggers>
+                            </BoxView>
+                            <Label Grid.Column="1"
+                                   Text="{Binding DeloadStatusText}"
+                                   FontFamily="DMSansMedium" FontSize="14"
+                                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                                   VerticalOptions="Center"/>
+                        </Grid>
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- ══════════════════════════════════════════════════════════ -->
+                <!-- Empty-state                                                 -->
+                <!-- ══════════════════════════════════════════════════════════ -->
+                <VerticalStackLayout IsVisible="{Binding HasNoMesocycle}"
+                                     Padding="32,60,32,40" Spacing="16">
+                    <Label Text="{loc:Localize MesoStats_Empty_Title}"
+                           FontFamily="BebasNeue" FontSize="24" CharacterSpacing="1.5"
+                           HorizontalOptions="Center"
+                           TextColor="{StaticResource ForgeMuted}"/>
+                    <Label Text="{loc:Localize MesoStats_Empty_Body}"
+                           FontFamily="DMSansRegular" FontSize="14"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center"
+                           LineBreakMode="WordWrap"
+                           TextColor="{StaticResource ForgeMuted}"/>
+                    <Border BackgroundColor="{StaticResource ForgeAccent}"
+                            StrokeShape="RoundRectangle 14"
+                            StrokeThickness="0"
+                            Padding="24,12"
+                            HorizontalOptions="Center">
+                        <Label Text="{loc:Localize MesoStats_Empty_Cta}"
+                               FontFamily="BebasNeue" FontSize="16" CharacterSpacing="2"
+                               TextColor="White"/>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding OpenPeriodizationCommand}"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Bottom padding -->
+                <BoxView HeightRequest="120" BackgroundColor="Transparent"/>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Bottom gradient fade -->
+        <BoxView InputTransparent="True" VerticalOptions="End" HeightRequest="150">
+            <BoxView.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark=#00141418}" Offset="0.0"/>
+                    <GradientStop Color="{AppThemeBinding Light=#38FCFCFC, Dark=#38141418}" Offset="0.35"/>
+                    <GradientStop Color="{AppThemeBinding Light=#90FCFCFC, Dark=#90141418}" Offset="0.65"/>
+                    <GradientStop Color="{AppThemeBinding Light=#FCFCFC, Dark=#141418}" Offset="1.0"/>
+                </LinearGradientBrush>
+            </BoxView.Background>
+        </BoxView>
+
+    </Grid>
+</ContentPage>

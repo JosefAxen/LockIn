@@ -949,4 +949,23 @@
   <data name="Feedback_Muscle_Save" xml:space="preserve"><value>Save</value></data>
   <data name="Feedback_Muscle_Skip" xml:space="preserve"><value>Skip</value></data>
 
+  <!-- MesocycleStats (Task 28) -->
+  <data name="MesoStats_Title" xml:space="preserve"><value>MESOCYCLE STATS</value></data>
+  <data name="MesoStats_Status_Active" xml:space="preserve"><value>ACTIVE</value></data>
+  <data name="MesoStats_Status_Done" xml:space="preserve"><value>DONE</value></data>
+  <data name="MesoStats_Status_Upcoming" xml:space="preserve"><value>UPCOMING</value></data>
+  <data name="MesoStats_WeekProgress_Format" xml:space="preserve"><value>Week {0} of {1}</value></data>
+  <data name="MesoStats_Weeks_Section" xml:space="preserve"><value>WEEKS</value></data>
+  <data name="MesoStats_Volume_Section" xml:space="preserve"><value>VOLUME THIS WEEK</value></data>
+  <data name="MesoStats_Volume_Legend" xml:space="preserve"><value>Gray=Under MEV · Green=MAV · Yellow=Near MRV · Red=Over MRV</value></data>
+  <data name="MesoStats_Rir_Section" xml:space="preserve"><value>RIR TARGET PER WEEK</value></data>
+  <data name="MesoStats_Deload_Section" xml:space="preserve"><value>DELOAD STATUS</value></data>
+  <data name="MesoStats_Deload_Active" xml:space="preserve"><value>Deload week now — take it easy</value></data>
+  <data name="MesoStats_Deload_Upcoming_Format" xml:space="preserve"><value>Deload in {0} weeks</value></data>
+  <data name="MesoStats_Deload_Passed" xml:space="preserve"><value>Deload passed</value></data>
+  <data name="MesoStats_Empty_Title" xml:space="preserve"><value>No active mesocycle</value></data>
+  <data name="MesoStats_Empty_Body" xml:space="preserve"><value>Start a cycle via Meso Builder or a prebuilt template.</value></data>
+  <data name="MesoStats_Empty_Cta" xml:space="preserve"><value>Open mesocycles</value></data>
+  <data name="MesoStats_Week_Deload" xml:space="preserve"><value>Deload</value></data>
+  <data name="MesoStats_Week_Intensity_Format" xml:space="preserve"><value>{0}%</value></data>
 </root>
