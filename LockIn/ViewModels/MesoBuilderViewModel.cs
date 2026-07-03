@@ -1,9 +1,276 @@
+using System.Collections.ObjectModel;
+using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using LockIn.Models;
+using LockIn.Resources.Strings;
+using LockIn.Services;
 
 namespace LockIn.ViewModels;
 
-// TODO: RP-clone Task 20 — ersätts av MesoBuilderViewModelV2.
-// Denna stub finns bara för att XAML/DI ska fortsätta kompilera tills den nya sidan byggs.
 public partial class MesoBuilderViewModel : ObservableObject
 {
+    private readonly IMesoBuilderService _builder;
+    private readonly DatabaseService _db;
+
+    public MesoBuilderViewModel(IMesoBuilderService builder, DatabaseService db)
+    {
+        _builder = builder;
+        _db = db;
+    }
+
+    [ObservableProperty] private int _step = 0;
+    [ObservableProperty] private int _daysPerWeek = 4;
+    [ObservableProperty] private string _mesocycleName = string.Empty;
+    [ObservableProperty] private int _weekCount = 5;
+    [ObservableProperty] private UnitSystem _unit = UnitSystem.Kg;
+    [ObservableProperty] private bool _isBusy;
+
+    public ObservableCollection<MusclePriorityRow> Emphasize { get; } = new();
+    public ObservableCollection<MusclePriorityRow> Grow { get; } = new();
+    public ObservableCollection<MusclePriorityRow> Maintain { get; } = new();
+
+    public bool IsStep0 => Step == 0;
+    public bool IsStep1 => Step == 1;
+    public bool IsStep2 => Step == 2;
+
+    public bool CanContinueStep0 => DaysPerWeek >= 2 && DaysPerWeek <= 6;
+    public bool CanContinueStep1 => true;
+    public bool CanCreate => !string.IsNullOrWhiteSpace(MesocycleName) && WeekCount >= 3 && !IsBusy;
+
+    public bool IsDays2 => DaysPerWeek == 2;
+    public bool IsDays3 => DaysPerWeek == 3;
+    public bool IsDays4 => DaysPerWeek == 4;
+    public bool IsDays5 => DaysPerWeek == 5;
+    public bool IsDays6 => DaysPerWeek == 6;
+
+    public bool IsWeeks4 => WeekCount == 4;
+    public bool IsWeeks5 => WeekCount == 5;
+    public bool IsWeeks6 => WeekCount == 6;
+    public bool IsWeeks7 => WeekCount == 7;
+    public bool IsWeeks8 => WeekCount == 8;
+
+    public bool IsUnitKg => Unit == UnitSystem.Kg;
+    public bool IsUnitLb => Unit == UnitSystem.Lb;
+
+    public string ProgressLabel => string.Format(AppResources.MesoBuilder_Progress_Format, Step + 1, 3);
+
+    partial void OnStepChanged(int value)
+    {
+        OnPropertyChanged(nameof(IsStep0));
+        OnPropertyChanged(nameof(IsStep1));
+        OnPropertyChanged(nameof(IsStep2));
+        OnPropertyChanged(nameof(ProgressLabel));
+    }
+
+    partial void OnDaysPerWeekChanged(int value)
+    {
+        OnPropertyChanged(nameof(IsDays2));
+        OnPropertyChanged(nameof(IsDays3));
+        OnPropertyChanged(nameof(IsDays4));
+        OnPropertyChanged(nameof(IsDays5));
+        OnPropertyChanged(nameof(IsDays6));
+        OnPropertyChanged(nameof(CanContinueStep0));
+    }
+
+    partial void OnWeekCountChanged(int value)
+    {
+        OnPropertyChanged(nameof(IsWeeks4));
+        OnPropertyChanged(nameof(IsWeeks5));
+        OnPropertyChanged(nameof(IsWeeks6));
+        OnPropertyChanged(nameof(IsWeeks7));
+        OnPropertyChanged(nameof(IsWeeks8));
+        OnPropertyChanged(nameof(CanCreate));
+    }
+
+    partial void OnUnitChanged(UnitSystem value)
+    {
+        OnPropertyChanged(nameof(IsUnitKg));
+        OnPropertyChanged(nameof(IsUnitLb));
+    }
+
+    partial void OnMesocycleNameChanged(string value)
+    {
+        OnPropertyChanged(nameof(CanCreate));
+    }
+
+    partial void OnIsBusyChanged(bool value)
+    {
+        OnPropertyChanged(nameof(CanCreate));
+    }
+
+    [RelayCommand]
+    private void SelectDays(string daysStr)
+    {
+        if (int.TryParse(daysStr, out var d) && d >= 2 && d <= 6)
+            DaysPerWeek = d;
+    }
+
+    [RelayCommand]
+    private void ContinueToPriorities()
+    {
+        if (Emphasize.Count == 0 && Grow.Count == 0 && Maintain.Count == 0)
+            InitializePriorityLists();
+        Step = 1;
+    }
+
+    [RelayCommand]
+    private void ContinueToFinalize()
+    {
+        Step = 2;
+    }
+
+    [RelayCommand]
+    private void BackToDays() => Step = 0;
+
+    [RelayCommand]
+    private void BackToPriorities() => Step = 1;
+
+    [RelayCommand]
+    private async Task CancelAsync()
+    {
+        await Shell.Current.GoToAsync("..");
+    }
+
+    [RelayCommand]
+    private void MoveToEmphasize(MusclePriorityRow row)
+    {
+        if (row is null) return;
+        RemoveFromAll(row);
+        row.Priority = MusclePriorityLevel.Emphasize;
+        Emphasize.Add(row);
+    }
+
+    [RelayCommand]
+    private void MoveToGrow(MusclePriorityRow row)
+    {
+        if (row is null) return;
+        RemoveFromAll(row);
+        row.Priority = MusclePriorityLevel.Grow;
+        Grow.Add(row);
+    }
+
+    [RelayCommand]
+    private void MoveToMaintain(MusclePriorityRow row)
+    {
+        if (row is null) return;
+        RemoveFromAll(row);
+        row.Priority = MusclePriorityLevel.Maintain;
+        Maintain.Add(row);
+    }
+
+    private void RemoveFromAll(MusclePriorityRow row)
+    {
+        Emphasize.Remove(row);
+        Grow.Remove(row);
+        Maintain.Remove(row);
+    }
+
+    [RelayCommand]
+    private void SetWeeks(string weeksStr)
+    {
+        if (int.TryParse(weeksStr, out var w) && w >= 3 && w <= 12)
+            WeekCount = w;
+    }
+
+    [RelayCommand]
+    private void SetUnitKg() => Unit = UnitSystem.Kg;
+
+    [RelayCommand]
+    private void SetUnitLb() => Unit = UnitSystem.Lb;
+
+    [RelayCommand]
+    private async Task CreateAsync()
+    {
+        if (!CanCreate) return;
+
+        IsBusy = true;
+        try
+        {
+            var priorities = new Dictionary<MuscleGroup, MusclePriorityLevel>();
+            foreach (var row in Emphasize) priorities[row.Muscle] = MusclePriorityLevel.Emphasize;
+            foreach (var row in Grow) priorities[row.Muscle] = MusclePriorityLevel.Grow;
+            foreach (var row in Maintain) priorities[row.Muscle] = MusclePriorityLevel.Maintain;
+
+            var settings = await _db.GetAppSettingsAsync();
+            var equipment = ParsePreferredEquipment(settings?.PreferredEquipmentJson);
+
+            var spec = new MesoBuilderSpec(
+                MesocycleName: MesocycleName.Trim(),
+                WeekCount: WeekCount,
+                UnitSystem: Unit,
+                DaysPerWeek: DaysPerWeek,
+                Priorities: priorities,
+                PreferredEquipment: equipment,
+                StartDate: DateTime.Today);
+
+            await _builder.BuildAsync(spec);
+            await Toast.Make(AppResources.MesoBuilder_Created_Toast).Show();
+            await Shell.Current.GoToAsync("..");
+        }
+        catch (Exception ex)
+        {
+            await Toast.Make($"Fel: {ex.Message}").Show();
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    private void InitializePriorityLists()
+    {
+        Emphasize.Clear();
+        Grow.Clear();
+        Maintain.Clear();
+
+        var muscles = new (MuscleGroup Muscle, string Label)[]
+        {
+            (MuscleGroup.Chest,      AppResources.Muscle_Chest),
+            (MuscleGroup.Back,       AppResources.Muscle_Back),
+            (MuscleGroup.Shoulders,  AppResources.Muscle_Shoulders),
+            (MuscleGroup.Biceps,     AppResources.Muscle_Biceps),
+            (MuscleGroup.Triceps,    AppResources.Muscle_Triceps),
+            (MuscleGroup.Quads,      AppResources.Muscle_Quads),
+            (MuscleGroup.Hamstrings, AppResources.Muscle_Hamstrings),
+            (MuscleGroup.Glutes,     AppResources.Muscle_Glutes),
+            (MuscleGroup.Calves,     AppResources.Muscle_Calves),
+            (MuscleGroup.Abs,        AppResources.Muscle_Abs),
+        };
+
+        foreach (var (m, label) in muscles)
+        {
+            Grow.Add(new MusclePriorityRow
+            {
+                Muscle = m,
+                Label = label,
+                Priority = MusclePriorityLevel.Grow,
+            });
+        }
+    }
+
+    private static List<int> ParsePreferredEquipment(string? json)
+    {
+        if (string.IsNullOrWhiteSpace(json)) return new List<int>();
+        try { return System.Text.Json.JsonSerializer.Deserialize<List<int>>(json) ?? new List<int>(); }
+        catch { return new List<int>(); }
+    }
+}
+
+public partial class MusclePriorityRow : ObservableObject
+{
+    public MuscleGroup Muscle { get; set; }
+    [ObservableProperty] private string _label = string.Empty;
+    [ObservableProperty] private MusclePriorityLevel _priority;
+
+    public bool IsEmphasize => Priority == MusclePriorityLevel.Emphasize;
+    public bool IsGrow => Priority == MusclePriorityLevel.Grow;
+    public bool IsMaintain => Priority == MusclePriorityLevel.Maintain;
+
+    partial void OnPriorityChanged(MusclePriorityLevel value)
+    {
+        OnPropertyChanged(nameof(IsEmphasize));
+        OnPropertyChanged(nameof(IsGrow));
+        OnPropertyChanged(nameof(IsMaintain));
+    }
 }

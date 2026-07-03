@@ -687,6 +687,34 @@
   <data name="MesoBuilder_Week_Deload" xml:space="preserve"><value>Deload</value></data>
   <data name="Periodization_MesoBuilder_Button" xml:space="preserve"><value>+ MESO BUILDER</value></data>
 
+  <!-- RP MesoBuilder wizard (Task 20) -->
+  <data name="MesoBuilder_Step0_Title" xml:space="preserve"><value>HUR MÅNGA DAGAR?</value></data>
+  <data name="MesoBuilder_Step0_Subtitle" xml:space="preserve"><value>Välj hur ofta du kan träna</value></data>
+  <data name="MesoBuilder_Days_Format" xml:space="preserve"><value>{0} dagar</value></data>
+  <data name="MesoBuilder_Step1_Title" xml:space="preserve"><value>PRIORITERA MUSKELGRUPPER</value></data>
+  <data name="MesoBuilder_Step1_Subtitle" xml:space="preserve"><value>Emphasize = mer volym, Maintain = mindre</value></data>
+  <data name="MesoBuilder_Emphasize" xml:space="preserve"><value>EMPHASIZE</value></data>
+  <data name="MesoBuilder_Grow" xml:space="preserve"><value>GROW</value></data>
+  <data name="MesoBuilder_Maintain" xml:space="preserve"><value>MAINTAIN</value></data>
+  <data name="MesoBuilder_Step2_Title" xml:space="preserve"><value>NAMN &amp; VECKOR</value></data>
+  <data name="MesoBuilder_Weeks_Label" xml:space="preserve"><value>Veckor</value></data>
+  <data name="MesoBuilder_Weeks_Format" xml:space="preserve"><value>{0}</value></data>
+  <data name="MesoBuilder_Deload_Note" xml:space="preserve"><value>Sista veckan är alltid deload</value></data>
+  <data name="MesoBuilder_Unit_Label" xml:space="preserve"><value>Enhet</value></data>
+  <data name="MesoBuilder_Unit_Kg" xml:space="preserve"><value>KG</value></data>
+  <data name="MesoBuilder_Unit_Lb" xml:space="preserve"><value>LB</value></data>
+  <data name="MesoBuilder_Continue" xml:space="preserve"><value>FORTSÄTT</value></data>
+  <data name="MesoBuilder_Back" xml:space="preserve"><value>TILLBAKA</value></data>
+  <data name="MesoBuilder_Create" xml:space="preserve"><value>SKAPA CYKEL</value></data>
+  <data name="MesoBuilder_Cancel" xml:space="preserve"><value>AVBRYT</value></data>
+  <data name="MesoBuilder_Progress_Format" xml:space="preserve"><value>{0}/{1}</value></data>
+  <data name="MesoBuilder_Created_Toast" xml:space="preserve"><value>Cykeln har skapats</value></data>
+  <data name="Muscle_Chest" xml:space="preserve"><value>Bröst</value></data>
+  <data name="Muscle_Back" xml:space="preserve"><value>Rygg</value></data>
+  <data name="Muscle_Shoulders" xml:space="preserve"><value>Axlar</value></data>
+  <data name="Muscle_Biceps" xml:space="preserve"><value>Biceps</value></data>
+  <data name="Muscle_Triceps" xml:space="preserve"><value>Triceps</value></data>
+
   <!-- RP RIR-mål per cykel-vecka (visas i pass när aktiv cykel finns) -->
   <data name="LoggedSet_TargetRir_Format" xml:space="preserve"><value>Målsatt RIR: {0}</value></data>
 

@@ -391,6 +391,29 @@ public static class AppResources
     public static string MesoBuilder_Week_Deload                     => Get(nameof(MesoBuilder_Week_Deload));
     public static string Periodization_MesoBuilder_Button            => Get(nameof(Periodization_MesoBuilder_Button));
 
+    // MesoBuilder wizard (Task 20)
+    public static string MesoBuilder_Step0_Title                     => Get(nameof(MesoBuilder_Step0_Title));
+    public static string MesoBuilder_Step0_Subtitle                  => Get(nameof(MesoBuilder_Step0_Subtitle));
+    public static string MesoBuilder_Days_Format                     => Get(nameof(MesoBuilder_Days_Format));
+    public static string MesoBuilder_Step1_Title                     => Get(nameof(MesoBuilder_Step1_Title));
+    public static string MesoBuilder_Step1_Subtitle                  => Get(nameof(MesoBuilder_Step1_Subtitle));
+    public static string MesoBuilder_Emphasize                       => Get(nameof(MesoBuilder_Emphasize));
+    public static string MesoBuilder_Grow                            => Get(nameof(MesoBuilder_Grow));
+    public static string MesoBuilder_Maintain                        => Get(nameof(MesoBuilder_Maintain));
+    public static string MesoBuilder_Step2_Title                     => Get(nameof(MesoBuilder_Step2_Title));
+    public static string MesoBuilder_Weeks_Label                     => Get(nameof(MesoBuilder_Weeks_Label));
+    public static string MesoBuilder_Weeks_Format                    => Get(nameof(MesoBuilder_Weeks_Format));
+    public static string MesoBuilder_Deload_Note                     => Get(nameof(MesoBuilder_Deload_Note));
+    public static string MesoBuilder_Unit_Label                      => Get(nameof(MesoBuilder_Unit_Label));
+    public static string MesoBuilder_Unit_Kg                         => Get(nameof(MesoBuilder_Unit_Kg));
+    public static string MesoBuilder_Unit_Lb                         => Get(nameof(MesoBuilder_Unit_Lb));
+    public static string MesoBuilder_Continue                        => Get(nameof(MesoBuilder_Continue));
+    public static string MesoBuilder_Back_Btn                        => Get("MesoBuilder_Back");
+    public static string MesoBuilder_Create                          => Get(nameof(MesoBuilder_Create));
+    public static string MesoBuilder_Cancel                          => Get(nameof(MesoBuilder_Cancel));
+    public static string MesoBuilder_Progress_Format                 => Get(nameof(MesoBuilder_Progress_Format));
+    public static string MesoBuilder_Created_Toast                   => Get(nameof(MesoBuilder_Created_Toast));
+
     // ── RP RIR-mål per cykel-vecka ─────────────────────────────────────
     public static string LoggedSet_TargetRir_Format                  => Get(nameof(LoggedSet_TargetRir_Format));
 
@@ -832,6 +855,11 @@ public static class AppResources
     public static string Template_Saved_Toast               => Get(nameof(Template_Saved_Toast));
 
     // Muscle labels (extras utöver Library_Muscle_*)
+    public static string Muscle_Chest       => Get(nameof(Muscle_Chest));
+    public static string Muscle_Back        => Get(nameof(Muscle_Back));
+    public static string Muscle_Shoulders   => Get(nameof(Muscle_Shoulders));
+    public static string Muscle_Biceps      => Get(nameof(Muscle_Biceps));
+    public static string Muscle_Triceps     => Get(nameof(Muscle_Triceps));
     public static string Muscle_Quads       => Get(nameof(Muscle_Quads));
     public static string Muscle_Hamstrings  => Get(nameof(Muscle_Hamstrings));
     public static string Muscle_Glutes      => Get(nameof(Muscle_Glutes));

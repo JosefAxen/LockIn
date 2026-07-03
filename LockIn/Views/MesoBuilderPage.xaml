@@ -1,10 +1,510 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:LockIn.ViewModels"
+             xmlns:controls="clr-namespace:LockIn.Controls"
+             xmlns:loc="clr-namespace:LockIn.Resources.Strings"
+             xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+             ios:Page.UseSafeArea="False"
              x:Class="LockIn.Views.MesoBuilderPage"
-             Title="—">
-    <!-- TODO: RP-clone Task 20 — ersätts av MesoBuilderPageV2 -->
-    <Label Text="Ersätts i Task 20"
-           HorizontalOptions="Center"
-           VerticalOptions="Center"/>
+             x:DataType="vm:MesoBuilderViewModel"
+             Title="{loc:Localize MesoBuilder_Title}"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="Transparent">
+
+    <Grid SafeAreaEdges="None">
+
+        <!-- Atmosfärisk bakgrund -->
+        <controls:AtmosphericBackgroundView InputTransparent="True"/>
+
+        <!-- Status-bar gradient -->
+        <BoxView VerticalOptions="Start" HeightRequest="90" InputTransparent="True" ZIndex="19">
+            <BoxView.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="{AppThemeBinding Light=#28FCFCFC, Dark=#28141418}" Offset="0.0"/>
+                    <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark=#00141418}" Offset="1.0"/>
+                </LinearGradientBrush>
+            </BoxView.Background>
+        </BoxView>
+
+        <!-- Loader -->
+        <ActivityIndicator IsRunning="{Binding IsBusy}"
+                           IsVisible="{Binding IsBusy}"
+                           Color="{StaticResource ForgeAccent}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           ZIndex="20"/>
+
+        <Grid RowDefinitions="Auto,*,Auto">
+
+            <!-- Header: avbryt + progress -->
+            <Grid Grid.Row="0" Padding="16,56,16,10" ColumnDefinitions="Auto,*,Auto">
+                <Label Grid.Column="0"
+                       Text="{loc:Localize MesoBuilder_Cancel}"
+                       FontFamily="DMSansMedium" FontSize="13"
+                       CharacterSpacing="1.2"
+                       TextColor="{StaticResource ForgeMuted}"
+                       VerticalOptions="Center">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding CancelCommand}"/>
+                    </Label.GestureRecognizers>
+                </Label>
+
+                <Label Grid.Column="1"
+                       Text="{Binding ProgressLabel}"
+                       FontFamily="BebasNeue" FontSize="16" CharacterSpacing="2"
+                       TextColor="{StaticResource ForgeMuted}"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"/>
+            </Grid>
+
+            <!-- Innehåll: 3 steg -->
+            <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Never">
+                <Grid>
+
+                    <!-- ================= STEG 0: FREKVENS ================= -->
+                    <VerticalStackLayout IsVisible="{Binding IsStep0}" Spacing="0" Padding="20,10,20,20">
+
+                        <Label Text="{loc:Localize MesoBuilder_Step0_Title}"
+                               FontFamily="BebasNeue" FontSize="34" CharacterSpacing="1"
+                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+
+                        <Label Text="{loc:Localize MesoBuilder_Step0_Subtitle}"
+                               FontFamily="DMSansRegular" FontSize="14"
+                               LineHeight="1.4"
+                               Margin="0,6,0,26"
+                               TextColor="{StaticResource ForgeMuted}"/>
+
+                        <!-- Dag-knappar -->
+                        <VerticalStackLayout Spacing="10">
+
+                            <Border BackgroundColor="{Binding IsDays2, Converter={x:Static vm:BoolToAccentBgConverter.Instance}}"
+                                    Stroke="{StaticResource ForgeAccent}"
+                                    StrokeThickness="{Binding IsDays2, Converter={x:Static vm:BoolToStrokeConverter.Instance}}"
+                                    StrokeShape="RoundRectangle 14"
+                                    HeightRequest="60"
+                                    Padding="18,0">
+                                <Label Text="2 dagar"
+                                       FontFamily="BebasNeue" FontSize="22" CharacterSpacing="1.5"
+                                       TextColor="{Binding IsDays2, Converter={x:Static vm:BoolToAccentFgConverter.Instance}}"
+                                       VerticalOptions="Center"/>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SelectDaysCommand}" CommandParameter="2"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+
+                            <Border BackgroundColor="{Binding IsDays3, Converter={x:Static vm:BoolToAccentBgConverter.Instance}}"
+                                    Stroke="{StaticResource ForgeAccent}"
+                                    StrokeThickness="{Binding IsDays3, Converter={x:Static vm:BoolToStrokeConverter.Instance}}"
+                                    StrokeShape="RoundRectangle 14"
+                                    HeightRequest="60"
+                                    Padding="18,0">
+                                <Label Text="3 dagar"
+                                       FontFamily="BebasNeue" FontSize="22" CharacterSpacing="1.5"
+                                       TextColor="{Binding IsDays3, Converter={x:Static vm:BoolToAccentFgConverter.Instance}}"
+                                       VerticalOptions="Center"/>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SelectDaysCommand}" CommandParameter="3"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+
+                            <Border BackgroundColor="{Binding IsDays4, Converter={x:Static vm:BoolToAccentBgConverter.Instance}}"
+                                    Stroke="{StaticResource ForgeAccent}"
+                                    StrokeThickness="{Binding IsDays4, Converter={x:Static vm:BoolToStrokeConverter.Instance}}"
+                                    StrokeShape="RoundRectangle 14"
+                                    HeightRequest="60"
+                                    Padding="18,0">
+                                <Label Text="4 dagar"
+                                       FontFamily="BebasNeue" FontSize="22" CharacterSpacing="1.5"
+                                       TextColor="{Binding IsDays4, Converter={x:Static vm:BoolToAccentFgConverter.Instance}}"
+                                       VerticalOptions="Center"/>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SelectDaysCommand}" CommandParameter="4"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+
+                            <Border BackgroundColor="{Binding IsDays5, Converter={x:Static vm:BoolToAccentBgConverter.Instance}}"
+                                    Stroke="{StaticResource ForgeAccent}"
+                                    StrokeThickness="{Binding IsDays5, Converter={x:Static vm:BoolToStrokeConverter.Instance}}"
+                                    StrokeShape="RoundRectangle 14"
+                                    HeightRequest="60"
+                                    Padding="18,0">
+                                <Label Text="5 dagar"
+                                       FontFamily="BebasNeue" FontSize="22" CharacterSpacing="1.5"
+                                       TextColor="{Binding IsDays5, Converter={x:Static vm:BoolToAccentFgConverter.Instance}}"
+                                       VerticalOptions="Center"/>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SelectDaysCommand}" CommandParameter="5"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+
+                            <Border BackgroundColor="{Binding IsDays6, Converter={x:Static vm:BoolToAccentBgConverter.Instance}}"
+                                    Stroke="{StaticResource ForgeAccent}"
+                                    StrokeThickness="{Binding IsDays6, Converter={x:Static vm:BoolToStrokeConverter.Instance}}"
+                                    StrokeShape="RoundRectangle 14"
+                                    HeightRequest="60"
+                                    Padding="18,0">
+                                <Label Text="6 dagar"
+                                       FontFamily="BebasNeue" FontSize="22" CharacterSpacing="1.5"
+                                       TextColor="{Binding IsDays6, Converter={x:Static vm:BoolToAccentFgConverter.Instance}}"
+                                       VerticalOptions="Center"/>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SelectDaysCommand}" CommandParameter="6"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+
+                        </VerticalStackLayout>
+
+                    </VerticalStackLayout>
+
+                    <!-- ================= STEG 1: PRIO ================= -->
+                    <VerticalStackLayout IsVisible="{Binding IsStep1}" Spacing="0" Padding="20,10,20,20">
+
+                        <Label Text="{loc:Localize MesoBuilder_Step1_Title}"
+                               FontFamily="BebasNeue" FontSize="30" CharacterSpacing="1"
+                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+
+                        <Label Text="{loc:Localize MesoBuilder_Step1_Subtitle}"
+                               FontFamily="DMSansRegular" FontSize="13"
+                               LineHeight="1.4"
+                               Margin="0,6,0,20"
+                               TextColor="{StaticResource ForgeMuted}"/>
+
+                        <!-- EMPHASIZE -->
+                        <Label Text="{loc:Localize MesoBuilder_Emphasize}"
+                               FontFamily="BebasNeue" FontSize="15" CharacterSpacing="2"
+                               TextColor="{StaticResource ForgeAccent}"
+                               Margin="0,0,0,6"/>
+                        <StackLayout BindableLayout.ItemsSource="{Binding Emphasize}" Spacing="6" Margin="0,0,0,16">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="vm:MusclePriorityRow">
+                                    <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
+                                            StrokeShape="RoundRectangle 12" StrokeThickness="0"
+                                            Padding="14,10">
+                                        <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="6">
+                                            <Label Grid.Column="0"
+                                                   Text="{Binding Label}"
+                                                   FontFamily="DMSansMedium" FontSize="15"
+                                                   VerticalOptions="Center"
+                                                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                                            <Button Grid.Column="1" Text="III"
+                                                    FontFamily="BebasNeue" FontSize="13"
+                                                    BackgroundColor="{StaticResource ForgeAccent}"
+                                                    TextColor="White"
+                                                    Padding="10,4" HeightRequest="32" MinimumWidthRequest="44"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MesoBuilderViewModel}}, Path=MoveToEmphasizeCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                            <Button Grid.Column="2" Text="II"
+                                                    FontFamily="BebasNeue" FontSize="13"
+                                                    BackgroundColor="Transparent"
+                                                    TextColor="{StaticResource ForgeMuted}"
+                                                    Padding="10,4" HeightRequest="32" MinimumWidthRequest="44"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MesoBuilderViewModel}}, Path=MoveToGrowCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                            <Button Grid.Column="3" Text="I"
+                                                    FontFamily="BebasNeue" FontSize="13"
+                                                    BackgroundColor="Transparent"
+                                                    TextColor="{StaticResource ForgeMuted}"
+                                                    Padding="10,4" HeightRequest="32" MinimumWidthRequest="44"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MesoBuilderViewModel}}, Path=MoveToMaintainCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </StackLayout>
+
+                        <!-- GROW -->
+                        <Label Text="{loc:Localize MesoBuilder_Grow}"
+                               FontFamily="BebasNeue" FontSize="15" CharacterSpacing="2"
+                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
+                               Margin="0,0,0,6"/>
+                        <StackLayout BindableLayout.ItemsSource="{Binding Grow}" Spacing="6" Margin="0,0,0,16">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="vm:MusclePriorityRow">
+                                    <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
+                                            StrokeShape="RoundRectangle 12" StrokeThickness="0"
+                                            Padding="14,10">
+                                        <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="6">
+                                            <Label Grid.Column="0"
+                                                   Text="{Binding Label}"
+                                                   FontFamily="DMSansMedium" FontSize="15"
+                                                   VerticalOptions="Center"
+                                                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                                            <Button Grid.Column="1" Text="III"
+                                                    FontFamily="BebasNeue" FontSize="13"
+                                                    BackgroundColor="Transparent"
+                                                    TextColor="{StaticResource ForgeMuted}"
+                                                    Padding="10,4" HeightRequest="32" MinimumWidthRequest="44"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MesoBuilderViewModel}}, Path=MoveToEmphasizeCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                            <Button Grid.Column="2" Text="II"
+                                                    FontFamily="BebasNeue" FontSize="13"
+                                                    BackgroundColor="{StaticResource ForgeAccent}"
+                                                    TextColor="White"
+                                                    Padding="10,4" HeightRequest="32" MinimumWidthRequest="44"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MesoBuilderViewModel}}, Path=MoveToGrowCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                            <Button Grid.Column="3" Text="I"
+                                                    FontFamily="BebasNeue" FontSize="13"
+                                                    BackgroundColor="Transparent"
+                                                    TextColor="{StaticResource ForgeMuted}"
+                                                    Padding="10,4" HeightRequest="32" MinimumWidthRequest="44"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MesoBuilderViewModel}}, Path=MoveToMaintainCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </StackLayout>
+
+                        <!-- MAINTAIN -->
+                        <Label Text="{loc:Localize MesoBuilder_Maintain}"
+                               FontFamily="BebasNeue" FontSize="15" CharacterSpacing="2"
+                               TextColor="{StaticResource ForgeMuted}"
+                               Margin="0,0,0,6"/>
+                        <StackLayout BindableLayout.ItemsSource="{Binding Maintain}" Spacing="6" Margin="0,0,0,10">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="vm:MusclePriorityRow">
+                                    <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
+                                            StrokeShape="RoundRectangle 12" StrokeThickness="0"
+                                            Padding="14,10">
+                                        <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="6">
+                                            <Label Grid.Column="0"
+                                                   Text="{Binding Label}"
+                                                   FontFamily="DMSansMedium" FontSize="15"
+                                                   VerticalOptions="Center"
+                                                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                                            <Button Grid.Column="1" Text="III"
+                                                    FontFamily="BebasNeue" FontSize="13"
+                                                    BackgroundColor="Transparent"
+                                                    TextColor="{StaticResource ForgeMuted}"
+                                                    Padding="10,4" HeightRequest="32" MinimumWidthRequest="44"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MesoBuilderViewModel}}, Path=MoveToEmphasizeCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                            <Button Grid.Column="2" Text="II"
+                                                    FontFamily="BebasNeue" FontSize="13"
+                                                    BackgroundColor="Transparent"
+                                                    TextColor="{StaticResource ForgeMuted}"
+                                                    Padding="10,4" HeightRequest="32" MinimumWidthRequest="44"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MesoBuilderViewModel}}, Path=MoveToGrowCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                            <Button Grid.Column="3" Text="I"
+                                                    FontFamily="BebasNeue" FontSize="13"
+                                                    BackgroundColor="{StaticResource ForgeAccent}"
+                                                    TextColor="White"
+                                                    Padding="10,4" HeightRequest="32" MinimumWidthRequest="44"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MesoBuilderViewModel}}, Path=MoveToMaintainCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </StackLayout>
+
+                    </VerticalStackLayout>
+
+                    <!-- ================= STEG 2: NAMN / VECKOR / ENHET ================= -->
+                    <VerticalStackLayout IsVisible="{Binding IsStep2}" Spacing="0" Padding="20,10,20,20">
+
+                        <Label Text="{loc:Localize MesoBuilder_Step2_Title}"
+                               FontFamily="BebasNeue" FontSize="30" CharacterSpacing="1"
+                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+
+                        <!-- Namn -->
+                        <Label Text="{loc:Localize MesoBuilder_Name_Label}"
+                               FontFamily="BebasNeue" FontSize="14" CharacterSpacing="1.5"
+                               TextColor="{StaticResource ForgeMuted}"
+                               Margin="0,20,0,6"/>
+                        <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
+                                StrokeShape="RoundRectangle 12" StrokeThickness="0"
+                                Padding="14,4">
+                            <Entry Text="{Binding MesocycleName, Mode=TwoWay}"
+                                   Placeholder="{loc:Localize MesoBuilder_Name_Placeholder}"
+                                   FontFamily="DMSansRegular" FontSize="15"
+                                   BackgroundColor="Transparent"/>
+                        </Border>
+
+                        <!-- Veckor -->
+                        <Label Text="{loc:Localize MesoBuilder_Weeks_Label}"
+                               FontFamily="BebasNeue" FontSize="14" CharacterSpacing="1.5"
+                               TextColor="{StaticResource ForgeMuted}"
+                               Margin="0,20,0,6"/>
+                        <HorizontalStackLayout Spacing="8">
+                            <Border BackgroundColor="{Binding IsWeeks4, Converter={x:Static vm:BoolToAccentBgConverter.Instance}}"
+                                    Stroke="{StaticResource ForgeAccent}"
+                                    StrokeThickness="{Binding IsWeeks4, Converter={x:Static vm:BoolToStrokeConverter.Instance}}"
+                                    StrokeShape="RoundRectangle 10"
+                                    WidthRequest="52" HeightRequest="44">
+                                <Label Text="4"
+                                       FontFamily="BebasNeue" FontSize="20"
+                                       TextColor="{Binding IsWeeks4, Converter={x:Static vm:BoolToAccentFgConverter.Instance}}"
+                                       HorizontalOptions="Center" VerticalOptions="Center"/>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SetWeeksCommand}" CommandParameter="4"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+                            <Border BackgroundColor="{Binding IsWeeks5, Converter={x:Static vm:BoolToAccentBgConverter.Instance}}"
+                                    Stroke="{StaticResource ForgeAccent}"
+                                    StrokeThickness="{Binding IsWeeks5, Converter={x:Static vm:BoolToStrokeConverter.Instance}}"
+                                    StrokeShape="RoundRectangle 10"
+                                    WidthRequest="52" HeightRequest="44">
+                                <Label Text="5"
+                                       FontFamily="BebasNeue" FontSize="20"
+                                       TextColor="{Binding IsWeeks5, Converter={x:Static vm:BoolToAccentFgConverter.Instance}}"
+                                       HorizontalOptions="Center" VerticalOptions="Center"/>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SetWeeksCommand}" CommandParameter="5"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+                            <Border BackgroundColor="{Binding IsWeeks6, Converter={x:Static vm:BoolToAccentBgConverter.Instance}}"
+                                    Stroke="{StaticResource ForgeAccent}"
+                                    StrokeThickness="{Binding IsWeeks6, Converter={x:Static vm:BoolToStrokeConverter.Instance}}"
+                                    StrokeShape="RoundRectangle 10"
+                                    WidthRequest="52" HeightRequest="44">
+                                <Label Text="6"
+                                       FontFamily="BebasNeue" FontSize="20"
+                                       TextColor="{Binding IsWeeks6, Converter={x:Static vm:BoolToAccentFgConverter.Instance}}"
+                                       HorizontalOptions="Center" VerticalOptions="Center"/>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SetWeeksCommand}" CommandParameter="6"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+                            <Border BackgroundColor="{Binding IsWeeks7, Converter={x:Static vm:BoolToAccentBgConverter.Instance}}"
+                                    Stroke="{StaticResource ForgeAccent}"
+                                    StrokeThickness="{Binding IsWeeks7, Converter={x:Static vm:BoolToStrokeConverter.Instance}}"
+                                    StrokeShape="RoundRectangle 10"
+                                    WidthRequest="52" HeightRequest="44">
+                                <Label Text="7"
+                                       FontFamily="BebasNeue" FontSize="20"
+                                       TextColor="{Binding IsWeeks7, Converter={x:Static vm:BoolToAccentFgConverter.Instance}}"
+                                       HorizontalOptions="Center" VerticalOptions="Center"/>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SetWeeksCommand}" CommandParameter="7"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+                            <Border BackgroundColor="{Binding IsWeeks8, Converter={x:Static vm:BoolToAccentBgConverter.Instance}}"
+                                    Stroke="{StaticResource ForgeAccent}"
+                                    StrokeThickness="{Binding IsWeeks8, Converter={x:Static vm:BoolToStrokeConverter.Instance}}"
+                                    StrokeShape="RoundRectangle 10"
+                                    WidthRequest="52" HeightRequest="44">
+                                <Label Text="8"
+                                       FontFamily="BebasNeue" FontSize="20"
+                                       TextColor="{Binding IsWeeks8, Converter={x:Static vm:BoolToAccentFgConverter.Instance}}"
+                                       HorizontalOptions="Center" VerticalOptions="Center"/>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SetWeeksCommand}" CommandParameter="8"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+                        </HorizontalStackLayout>
+                        <Label Text="{loc:Localize MesoBuilder_Deload_Note}"
+                               FontFamily="DMSansRegular" FontSize="12"
+                               TextColor="{StaticResource ForgeMuted}"
+                               Margin="0,8,0,0"/>
+
+                        <!-- Enhet -->
+                        <Label Text="{loc:Localize MesoBuilder_Unit_Label}"
+                               FontFamily="BebasNeue" FontSize="14" CharacterSpacing="1.5"
+                               TextColor="{StaticResource ForgeMuted}"
+                               Margin="0,20,0,6"/>
+                        <HorizontalStackLayout Spacing="8">
+                            <Border BackgroundColor="{Binding IsUnitKg, Converter={x:Static vm:BoolToAccentBgConverter.Instance}}"
+                                    Stroke="{StaticResource ForgeAccent}"
+                                    StrokeThickness="{Binding IsUnitKg, Converter={x:Static vm:BoolToStrokeConverter.Instance}}"
+                                    StrokeShape="RoundRectangle 10"
+                                    WidthRequest="80" HeightRequest="44">
+                                <Label Text="{loc:Localize MesoBuilder_Unit_Kg}"
+                                       FontFamily="BebasNeue" FontSize="18" CharacterSpacing="1.5"
+                                       TextColor="{Binding IsUnitKg, Converter={x:Static vm:BoolToAccentFgConverter.Instance}}"
+                                       HorizontalOptions="Center" VerticalOptions="Center"/>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SetUnitKgCommand}"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+                            <Border BackgroundColor="{Binding IsUnitLb, Converter={x:Static vm:BoolToAccentBgConverter.Instance}}"
+                                    Stroke="{StaticResource ForgeAccent}"
+                                    StrokeThickness="{Binding IsUnitLb, Converter={x:Static vm:BoolToStrokeConverter.Instance}}"
+                                    StrokeShape="RoundRectangle 10"
+                                    WidthRequest="80" HeightRequest="44">
+                                <Label Text="{loc:Localize MesoBuilder_Unit_Lb}"
+                                       FontFamily="BebasNeue" FontSize="18" CharacterSpacing="1.5"
+                                       TextColor="{Binding IsUnitLb, Converter={x:Static vm:BoolToAccentFgConverter.Instance}}"
+                                       HorizontalOptions="Center" VerticalOptions="Center"/>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SetUnitLbCommand}"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+                        </HorizontalStackLayout>
+
+                    </VerticalStackLayout>
+
+                </Grid>
+            </ScrollView>
+
+            <!-- Footer: navigations-knappar (varje steg har egen synlig grupp) -->
+            <Grid Grid.Row="2" Padding="20,10,20,34">
+
+                <!-- Steg 0: bara FORTSÄTT -->
+                <Button Text="{loc:Localize MesoBuilder_Continue}"
+                        IsVisible="{Binding IsStep0}"
+                        IsEnabled="{Binding CanContinueStep0}"
+                        FontFamily="BebasNeue" FontSize="17" CharacterSpacing="2"
+                        BackgroundColor="{StaticResource ForgeAccent}"
+                        TextColor="White"
+                        HeightRequest="56"
+                        CornerRadius="14"
+                        Command="{Binding ContinueToPrioritiesCommand}"/>
+
+                <!-- Steg 1: TILLBAKA + FORTSÄTT -->
+                <Grid IsVisible="{Binding IsStep1}" ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                    <Button Grid.Column="0"
+                            Text="{loc:Localize MesoBuilder_Back}"
+                            FontFamily="BebasNeue" FontSize="15" CharacterSpacing="2"
+                            BackgroundColor="Transparent"
+                            TextColor="{StaticResource ForgeAccent}"
+                            BorderColor="{StaticResource ForgeAccent}"
+                            BorderWidth="1.5"
+                            HeightRequest="56"
+                            WidthRequest="120"
+                            CornerRadius="14"
+                            Command="{Binding BackToDaysCommand}"/>
+                    <Button Grid.Column="1"
+                            Text="{loc:Localize MesoBuilder_Continue}"
+                            FontFamily="BebasNeue" FontSize="17" CharacterSpacing="2"
+                            BackgroundColor="{StaticResource ForgeAccent}"
+                            TextColor="White"
+                            HeightRequest="56"
+                            CornerRadius="14"
+                            Command="{Binding ContinueToFinalizeCommand}"/>
+                </Grid>
+
+                <!-- Steg 2: TILLBAKA + SKAPA CYKEL -->
+                <Grid IsVisible="{Binding IsStep2}" ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                    <Button Grid.Column="0"
+                            Text="{loc:Localize MesoBuilder_Back}"
+                            FontFamily="BebasNeue" FontSize="15" CharacterSpacing="2"
+                            BackgroundColor="Transparent"
+                            TextColor="{StaticResource ForgeAccent}"
+                            BorderColor="{StaticResource ForgeAccent}"
+                            BorderWidth="1.5"
+                            HeightRequest="56"
+                            WidthRequest="120"
+                            CornerRadius="14"
+                            Command="{Binding BackToPrioritiesCommand}"/>
+                    <Button Grid.Column="1"
+                            Text="{loc:Localize MesoBuilder_Create}"
+                            IsEnabled="{Binding CanCreate}"
+                            FontFamily="BebasNeue" FontSize="17" CharacterSpacing="2"
+                            BackgroundColor="{StaticResource ForgeAccent}"
+                            TextColor="White"
+                            HeightRequest="56"
+                            CornerRadius="14"
+                            Command="{Binding CreateCommand}"/>
+                </Grid>
+
+            </Grid>
+
+        </Grid>
+
+    </Grid>
 </ContentPage>

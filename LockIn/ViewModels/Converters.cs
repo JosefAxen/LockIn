@@ -65,6 +65,34 @@ public class OnboardingButtonColorConverter : IValueConverter
         throw new NotImplementedException();
 }
 
+// MesoBuilder wizard (Task 20) — active/inactive knapp-styling
+public class BoolToAccentBgConverter : IValueConverter
+{
+    public static readonly BoolToAccentBgConverter Instance = new();
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        value is true ? Color.FromArgb("#B8B8BC") : Colors.Transparent;
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        throw new NotImplementedException();
+}
+
+public class BoolToAccentFgConverter : IValueConverter
+{
+    public static readonly BoolToAccentFgConverter Instance = new();
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        value is true ? Colors.White : Color.FromArgb("#B8B8BC");
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        throw new NotImplementedException();
+}
+
+public class BoolToStrokeConverter : IValueConverter
+{
+    public static readonly BoolToStrokeConverter Instance = new();
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        value is true ? 0.0 : 1.5;
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        throw new NotImplementedException();
+}
+
 public class CompletedOpacityConverter : IValueConverter
 {
     public static readonly CompletedOpacityConverter Instance = new();
