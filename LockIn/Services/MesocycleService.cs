@@ -23,32 +23,32 @@ public interface IMesocycleService
 
 public class MesocycleService : IMesocycleService
 {
-    private readonly DatabaseService _db;
+    private readonly IMesocycleRepository _mesocycles;
     private readonly ITemplateRepository _templates;
-    public MesocycleService(DatabaseService db, ITemplateRepository templates)
+
+    public MesocycleService(IMesocycleRepository mesocycles, ITemplateRepository templates)
     {
-        _db = db;
+        _mesocycles = mesocycles;
         _templates = templates;
     }
 
-    public Task<List<Mesocycle>> ListAsync() => _db.GetMesocyclesAsync();
-    public Task<Mesocycle?> GetActiveAsync() => _db.GetActiveMesocycleAsync();
+    public Task<List<Mesocycle>> ListAsync() => _mesocycles.GetAllAsync();
+    public Task<Mesocycle?> GetActiveAsync() => _mesocycles.GetActiveAsync();
 
+    // ADR-001 PR 5: bundle-metod hämtar weeks + priorities parallellt.
     public async Task<MesocycleDetail?> GetDetailAsync(int mesocycleId)
     {
-        var meso = await _db.GetMesocycleAsync(mesocycleId);
-        if (meso is null) return null;
-        var template = await _templates.GetAsync(meso.TemplateId);
-        var weeks = await _db.GetMesocycleWeeksAsync(mesocycleId);
-        var priorities = await _db.GetMesocyclePrioritiesAsync(mesocycleId);
-        return new MesocycleDetail(meso, template, weeks, priorities);
+        var bundle = await _mesocycles.GetBundleAsync(mesocycleId);
+        if (bundle is null) return null;
+        var template = await _templates.GetAsync(bundle.Mesocycle.TemplateId);
+        return new MesocycleDetail(bundle.Mesocycle, template, bundle.Weeks, bundle.Priorities);
     }
 
     public Task<int> SaveAsync(Mesocycle meso, List<MesocyclePriority> priorities, List<MesocycleWeek> weeks)
-        => _db.SaveMesocycleAsync(meso, priorities, weeks);
+        => _mesocycles.SaveAsync(meso, priorities, weeks);
 
-    public Task ActivateAsync(int mesocycleId) => _db.ActivateMesocycleAsync(mesocycleId);
-    public Task DeleteAsync(int mesocycleId) => _db.DeleteMesocycleAsync(mesocycleId);
+    public Task ActivateAsync(int mesocycleId) => _mesocycles.ActivateAsync(mesocycleId);
+    public Task DeleteAsync(int mesocycleId) => _mesocycles.DeleteAsync(mesocycleId);
 
     public async Task<MesocycleWeek?> GetCurrentWeekAsync()
     {
@@ -60,13 +60,13 @@ public class MesocycleService : IMesocycleService
         var weekNumber = weekIndex + 1;
         if (weekNumber > active.WeekCount) return null;
 
-        var weeks = await _db.GetMesocycleWeeksAsync(active.Id);
+        var weeks = await _mesocycles.GetWeeksAsync(active.Id);
         return weeks.FirstOrDefault(w => w.WeekNumber == weekNumber);
     }
 
     public async Task<MesocyclePriority?> GetPriorityAsync(int mesocycleId, MuscleGroup muscle)
     {
-        var priorities = await _db.GetMesocyclePrioritiesAsync(mesocycleId);
+        var priorities = await _mesocycles.GetPrioritiesAsync(mesocycleId);
         return priorities.FirstOrDefault(p => p.MuscleGroupValue == (int)muscle);
     }
 }

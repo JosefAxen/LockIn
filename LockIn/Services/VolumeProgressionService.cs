@@ -1,3 +1,4 @@
+using LockIn.Data.Repositories;
 using LockIn.Models;
 
 namespace LockIn.Services;
@@ -12,7 +13,7 @@ public interface IVolumeProgressionService
 
 public class VolumeProgressionService : IVolumeProgressionService
 {
-    private readonly DatabaseService _db;
+    private readonly IMesocycleRepository _mesocyclesRepo;
     private readonly IMesocycleService _mesocycles;
 
     // MV per muskelgrupp (sektion A + D)
@@ -24,9 +25,9 @@ public class VolumeProgressionService : IVolumeProgressionService
         { MuscleGroup.Traps, 6 }, { MuscleGroup.Forearms, 4 }, { MuscleGroup.Abs, 4 },
     };
 
-    public VolumeProgressionService(DatabaseService db, IMesocycleService mesocycles)
+    public VolumeProgressionService(IMesocycleRepository mesocyclesRepo, IMesocycleService mesocycles)
     {
-        _db = db;
+        _mesocyclesRepo = mesocyclesRepo;
         _mesocycles = mesocycles;
     }
 
@@ -35,7 +36,7 @@ public class VolumeProgressionService : IVolumeProgressionService
         var detail = await _mesocycles.GetDetailAsync(mesocycleId);
         if (detail is null) return new List<PlannedVolume>();
 
-        var landmarks = await _db.GetMuscleVolumeLandmarksAsync();
+        var landmarks = await _mesocyclesRepo.GetLandmarksAsync();
         var mevByMuscle = landmarks.ToDictionary(l => l.MuscleGroup, l => l.MEV);
         var mrvByMuscle = landmarks.ToDictionary(l => l.MuscleGroup, l => l.MRV);
 

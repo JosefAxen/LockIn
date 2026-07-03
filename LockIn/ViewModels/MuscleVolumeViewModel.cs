@@ -1,6 +1,7 @@
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using LockIn.Data.Repositories;
 using LockIn.Models;
 using LockIn.Resources.Strings;
 using LockIn.Services;
@@ -8,7 +9,7 @@ using System.Collections.ObjectModel;
 
 namespace LockIn.ViewModels;
 
-public partial class MuscleVolumeViewModel(DatabaseService db) : ObservableObject
+public partial class MuscleVolumeViewModel(IMesocycleRepository mesocyclesRepo) : ObservableObject
 {
     public ObservableCollection<MuscleVolumeRow> Rows { get; } = new();
 
@@ -20,7 +21,7 @@ public partial class MuscleVolumeViewModel(DatabaseService db) : ObservableObjec
         try
         {
             Rows.Clear();
-            var all = await db.GetMuscleVolumeLandmarksAsync();
+            var all = await mesocyclesRepo.GetLandmarksAsync();
             var order = new[]
             {
                 MuscleGroup.Chest, MuscleGroup.Back, MuscleGroup.Shoulders,
@@ -54,7 +55,7 @@ public partial class MuscleVolumeViewModel(DatabaseService db) : ObservableObjec
             if (!int.TryParse(row.MevText, out var mev) || mev <= 0) continue;
             if (!int.TryParse(row.MrvText, out var mrv) || mrv <= 0) continue;
             if (mrv < mev) mrv = mev; // enforce mrv >= mev
-            await db.SaveMuscleVolumeLandmarksAsync(new MuscleVolumeLandmarks
+            await mesocyclesRepo.SaveLandmarksAsync(new MuscleVolumeLandmarks
             {
                 MuscleGroup = row.Muscle,
                 MEV = mev,

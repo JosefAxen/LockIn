@@ -1,3 +1,4 @@
+using LockIn.Data.Repositories;
 using LockIn.Models;
 
 namespace LockIn.Services;
@@ -23,11 +24,13 @@ public interface IWeeklyVolumeService
 public class WeeklyVolumeService : IWeeklyVolumeService
 {
     private readonly DatabaseService _db;
+    private readonly IMesocycleRepository _mesocyclesRepo;
     private readonly IVolumeProgressionService _volumeProgression;
 
-    public WeeklyVolumeService(DatabaseService db, IVolumeProgressionService volumeProgression)
+    public WeeklyVolumeService(DatabaseService db, IMesocycleRepository mesocyclesRepo, IVolumeProgressionService volumeProgression)
     {
         _db = db;
+        _mesocyclesRepo = mesocyclesRepo;
         _volumeProgression = volumeProgression;
     }
 
@@ -35,7 +38,7 @@ public class WeeklyVolumeService : IWeeklyVolumeService
     {
         var weekStart = GetMondayThisWeek();
         var weekEnd = weekStart.AddDays(7);
-        var landmarks = await _db.GetMuscleVolumeLandmarksAsync();
+        var landmarks = await _mesocyclesRepo.GetLandmarksAsync();
         var landmarkByMuscle = landmarks.ToDictionary(l => l.MuscleGroup);
 
         // Aggregera sets per muskelgrupp via direkta SQL-joins för korrekt filtrering

@@ -168,12 +168,14 @@ public class DatabaseService
         }
     }
 
+    [Obsolete("Använd IMesocycleRepository.GetLandmarksAsync — ADR-001 PR 5")]
     public async Task<List<MuscleVolumeLandmarks>> GetMuscleVolumeLandmarksAsync()
     {
         await InitAsync();
         return await _db.Table<MuscleVolumeLandmarks>().ToListAsync();
     }
 
+    [Obsolete("Använd IMesocycleRepository.SaveLandmarksAsync — ADR-001 PR 5")]
     public async Task SaveMuscleVolumeLandmarksAsync(MuscleVolumeLandmarks landmarks)
     {
         await InitAsync();
@@ -1378,25 +1380,30 @@ public class DatabaseService
     }
 
     // ── Mesocycles ────────────────────────────────────────────────────────────
+    // ADR-001: flyttas till IMesocycleRepository. Kvar tills alla callers migrerat.
 
+    [Obsolete("Använd IMesocycleRepository.GetAllAsync — ADR-001 PR 5")]
     public async Task<List<Mesocycle>> GetMesocyclesAsync()
     {
         await InitAsync();
         return await _db.Table<Mesocycle>().OrderByDescending(m => m.CreatedAt).ToListAsync();
     }
 
+    [Obsolete("Använd IMesocycleRepository.GetActiveAsync — ADR-001 PR 5")]
     public async Task<Mesocycle?> GetActiveMesocycleAsync()
     {
         await InitAsync();
         return await _db.Table<Mesocycle>().Where(m => m.IsActive).FirstOrDefaultAsync();
     }
 
+    [Obsolete("Använd IMesocycleRepository.GetAsync — ADR-001 PR 5")]
     public async Task<Mesocycle?> GetMesocycleAsync(int id)
     {
         await InitAsync();
         return await _db.Table<Mesocycle>().Where(m => m.Id == id).FirstOrDefaultAsync();
     }
 
+    [Obsolete("Använd IMesocycleRepository.GetPrioritiesAsync — ADR-001 PR 5")]
     public async Task<List<MesocyclePriority>> GetMesocyclePrioritiesAsync(int mesocycleId)
     {
         await InitAsync();
@@ -1405,6 +1412,7 @@ public class DatabaseService
             .ToListAsync();
     }
 
+    [Obsolete("Använd IMesocycleRepository.GetWeeksAsync — ADR-001 PR 5")]
     public async Task<List<MesocycleWeek>> GetMesocycleWeeksAsync(int mesocycleId)
     {
         await InitAsync();
@@ -1414,6 +1422,7 @@ public class DatabaseService
             .ToListAsync();
     }
 
+    [Obsolete("Använd IMesocycleRepository.SaveAsync — ADR-001 PR 5")]
     public async Task<int> SaveMesocycleAsync(
         Mesocycle meso,
         List<MesocyclePriority> priorities,
@@ -1446,6 +1455,7 @@ public class DatabaseService
         return mesoId;
     }
 
+    [Obsolete("Använd IMesocycleRepository.ActivateAsync — ADR-001 PR 5")]
     public async Task ActivateMesocycleAsync(int mesocycleId)
     {
         await InitAsync();
@@ -1453,6 +1463,7 @@ public class DatabaseService
         await _db.ExecuteAsync("UPDATE Mesocycles SET IsActive = 1 WHERE Id = ?", mesocycleId);
     }
 
+    [Obsolete("Använd IMesocycleRepository.DeleteAsync — ADR-001 PR 5")]
     public async Task DeleteMesocycleAsync(int mesocycleId)
     {
         await InitAsync();
@@ -1483,6 +1494,7 @@ public class DatabaseService
         return await _db.Table<WorkoutSession>().OrderByDescending(s => s.StartedAt).ToListAsync();
     }
 
+    [Obsolete("Använd IMesocycleRepository.GetSessionsForMesocycleAsync — ADR-001 PR 5")]
     public async Task<List<WorkoutSession>> GetSessionsForMesocycleAsync(int mesocycleId)
     {
         await InitAsync();
