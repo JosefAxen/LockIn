@@ -13,7 +13,7 @@ using System.Globalization;
 
 namespace LockIn.ViewModels;
 
-public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, RestTimerService timer, ISoundService sound, ActiveWorkoutStateService state, NotificationService notifications, IWeightProgressionService weightProgression, ICycleContextService cycleContext, IMesocycleService mesocycles, ISettingsRepository settingsRepo)
+public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, RestTimerService timer, ISoundService sound, ActiveWorkoutStateService state, NotificationService notifications, IWeightProgressionService weightProgression, ICycleContextService cycleContext, IMesocycleService mesocycles, ISettingsRepository settingsRepo, IExerciseRepository exerciseRepo)
     : ObservableObject, IQueryAttributable
 {
     private WorkoutSession? _session;
@@ -123,7 +123,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
                         var exs = await db.GetTemplateExercisesForSlotAsync(slot.Id);
                         foreach (var te in exs)
                         {
-                            var exercise = await db.GetExerciseAsync(te.ExerciseId);
+                            var exercise = await exerciseRepo.GetAsync(te.ExerciseId);
                             if (exercise is null) continue;
                             await AddExerciseSectionAsync(exercise, sortIndex++, 3, te.TargetRepsMin,
                                 0m, te.DefaultRestSeconds,

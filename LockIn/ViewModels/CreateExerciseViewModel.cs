@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using LockIn.Data.Repositories;
 using LockIn.Models;
 using LockIn.Resources.Strings;
 using LockIn.Services;
@@ -62,7 +63,7 @@ public partial class EquipmentOption : ObservableObject
 
 public partial class CreateExerciseViewModel : ObservableObject
 {
-    private readonly DatabaseService _db;
+    private readonly IExerciseRepository _exerciseRepo;
     private readonly ActiveWorkoutStateService _state;
     private readonly ActiveWorkoutViewModel _activeVm;
     private readonly List<MuscleGroupOption> _muscleGroups;
@@ -76,9 +77,9 @@ public partial class CreateExerciseViewModel : ObservableObject
     public IReadOnlyList<MuscleGroupOption> MuscleGroups => _muscleGroups;
     public IReadOnlyList<EquipmentOption> EquipmentOptions => _equipmentOptions;
 
-    public CreateExerciseViewModel(DatabaseService db, ActiveWorkoutStateService state, ActiveWorkoutViewModel activeVm)
+    public CreateExerciseViewModel(IExerciseRepository exerciseRepo, ActiveWorkoutStateService state, ActiveWorkoutViewModel activeVm)
     {
-        _db = db;
+        _exerciseRepo = exerciseRepo;
         _state = state;
         _activeVm = activeVm;
 
@@ -151,7 +152,7 @@ public partial class CreateExerciseViewModel : ObservableObject
             DefaultRestSeconds = RestSeconds,
             Notes             = Notes.Trim()
         };
-        await _db.SaveExerciseAsync(exercise);
+        await _exerciseRepo.SaveAsync(exercise);
 
         if (_state.IsActive)
         {

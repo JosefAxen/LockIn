@@ -35,6 +35,7 @@ public static class MauiProgram
         // ADR-001: repositories per aggregat
         builder.Services.AddSingleton<Data.Repositories.ISettingsRepository, Data.Repositories.SettingsRepository>();
         builder.Services.AddSingleton<Data.Repositories.IBodyRepository, Data.Repositories.BodyRepository>();
+        builder.Services.AddSingleton<Data.Repositories.IExerciseRepository, Data.Repositories.ExerciseRepository>();
         builder.Services.AddTransient<PhotoService>();
         builder.Services.AddTransient<WorkoutShareService>();
         builder.Services.AddTransient<ProgressReportService>();

@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using LockIn.Data.Repositories;
 using LockIn.Models;
 using LockIn.Resources.Strings;
 using LockIn.Services;
@@ -17,18 +18,18 @@ public partial class TemplatePlanningBoardViewModel : ObservableObject, IQueryAt
 {
     private readonly ITemplateService _templates;
     private readonly IExerciseRecommendationService _recommendation;
-    private readonly DatabaseService _db;
+    private readonly IExerciseRepository _exerciseRepo;
 
     private int? _templateId;
 
     public TemplatePlanningBoardViewModel(
         ITemplateService templates,
         IExerciseRecommendationService recommendation,
-        DatabaseService db)
+        IExerciseRepository exerciseRepo)
     {
         _templates = templates;
         _recommendation = recommendation;
-        _db = db;
+        _exerciseRepo = exerciseRepo;
     }
 
     [ObservableProperty] private string _templateName = "";
@@ -78,7 +79,7 @@ public partial class TemplatePlanningBoardViewModel : ObservableObject, IQueryAt
 
             TemplateName = detail.Template.Name;
 
-            var exerciseNameById = (await _db.GetExercisesAsync())
+            var exerciseNameById = (await _exerciseRepo.GetAllAsync())
                 .ToDictionary(e => e.Id, e => e.Name);
 
             foreach (var d in detail.Days.OrderBy(x => x.DayIndex))

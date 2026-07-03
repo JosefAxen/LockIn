@@ -461,25 +461,30 @@ public class DatabaseService
     }
 
     // ── Exercises ──────────────────────────────────────────────────────────
+    // ADR-001: flyttas till IExerciseRepository. Kvar tills alla callers migrerat.
 
+    [Obsolete("Använd IExerciseRepository.GetAllAsync — ADR-001 PR 3")]
     public async Task<List<Exercise>> GetExercisesAsync()
     {
         await InitAsync();
         return await _db.Table<Exercise>().OrderBy(e => e.Name).ToListAsync();
     }
 
+    [Obsolete("Använd IExerciseRepository.GetAsync — ADR-001 PR 3")]
     public async Task<Exercise?> GetExerciseAsync(int id)
     {
         await InitAsync();
         return await _db.Table<Exercise>().Where(e => e.Id == id).FirstOrDefaultAsync();
     }
 
+    [Obsolete("Använd IExerciseRepository.SaveAsync — ADR-001 PR 3")]
     public async Task<int> SaveExerciseAsync(Exercise exercise)
     {
         await InitAsync();
         return exercise.Id == 0 ? await _db.InsertAsync(exercise) : await _db.UpdateAsync(exercise);
     }
 
+    [Obsolete("Använd IExerciseRepository.DeleteAsync — ADR-001 PR 3")]
     public async Task<int> DeleteExerciseAsync(Exercise exercise)
     {
         await InitAsync();

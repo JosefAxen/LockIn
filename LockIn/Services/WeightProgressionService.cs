@@ -1,3 +1,4 @@
+using LockIn.Data.Repositories;
 using LockIn.Models;
 using LockIn.Resources.Strings;
 
@@ -18,11 +19,13 @@ public interface IWeightProgressionService
 public class WeightProgressionService : IWeightProgressionService
 {
     private readonly DatabaseService _db;
+    private readonly IExerciseRepository _exerciseRepo;
     private readonly IMesocycleService _mesocycles;
 
-    public WeightProgressionService(DatabaseService db, IMesocycleService mesocycles)
+    public WeightProgressionService(DatabaseService db, IExerciseRepository exerciseRepo, IMesocycleService mesocycles)
     {
         _db = db;
+        _exerciseRepo = exerciseRepo;
         _mesocycles = mesocycles;
     }
 
@@ -44,7 +47,7 @@ public class WeightProgressionService : IWeightProgressionService
             return new WeightSuggestion(deloadWeight, AppResources.WeightSuggestion_Reason_Deload);
         }
 
-        var exercise = await _db.GetExerciseAsync(exerciseId);
+        var exercise = await _exerciseRepo.GetAsync(exerciseId);
         var isIsolation = exercise?.Mechanic == ExerciseMechanic.Isolation;
         var increment = isIsolation ? 1.25m : 2.5m;
 

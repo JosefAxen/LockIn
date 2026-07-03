@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn;
 using LockIn.Data;
+using LockIn.Data.Repositories;
 using LockIn.Models;
 using LockIn.Resources.Strings;
 using LockIn.Services;
@@ -10,7 +11,7 @@ using System.Collections.ObjectModel;
 
 namespace LockIn.ViewModels;
 
-public partial class LibraryViewModel(DatabaseService db, ITemplateService templates) : ObservableObject
+public partial class LibraryViewModel(IExerciseRepository exerciseRepo, ITemplateService templates) : ObservableObject
 {
     // ── Tab control ────────────────────────────────────────────────────────
 
@@ -102,7 +103,7 @@ public partial class LibraryViewModel(DatabaseService db, ITemplateService templ
     public async Task LoadAsync()
     {
         IsLoading = true;
-        _allExercises = await db.GetExercisesAsync();
+        _allExercises = await exerciseRepo.GetAllAsync();
 
         MuscleChips.Clear();
         MuscleChips.Add(new MuscleGroupChip { Label = AppResources.Library_Chip_All, MuscleGroup = null, IsSelected = true });

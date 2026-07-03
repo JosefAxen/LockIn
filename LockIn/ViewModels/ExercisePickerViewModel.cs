@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LockIn;
+using LockIn.Data.Repositories;
 using LockIn.Models;
 using LockIn.Resources.Strings;
 using LockIn.Services;
@@ -10,7 +11,7 @@ namespace LockIn.ViewModels;
 
 [QueryProperty(nameof(CallbackAction), "CallbackAction")]
 [QueryProperty(nameof(MuscleFilterQuery), "muscle")]
-public partial class ExercisePickerViewModel(DatabaseService db, IExerciseRecommendationService recommend) : ObservableObject
+public partial class ExercisePickerViewModel(IExerciseRepository exerciseRepo, IExerciseRecommendationService recommend) : ObservableObject
 {
     private List<Exercise> _allExercises = new();
 
@@ -42,7 +43,7 @@ public partial class ExercisePickerViewModel(DatabaseService db, IExerciseRecomm
     public async Task LoadAsync()
     {
         IsLoading = true;
-        _allExercises = await db.GetExercisesAsync();
+        _allExercises = await exerciseRepo.GetAllAsync();
 
         MuscleChips.Clear();
         MuscleChips.Add(new MuscleGroupChip { Label = AppResources.Library_Chip_All, MuscleGroup = null, IsSelected = true });

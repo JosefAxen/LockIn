@@ -1,12 +1,13 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using LockIn.Data.Repositories;
 using LockIn.Models;
 using LockIn.Resources.Strings;
 using LockIn.Services;
 
 namespace LockIn.ViewModels;
 
-public partial class ExerciseProgressViewModel(DatabaseService db, ProgressReportService report) : ObservableObject, IQueryAttributable
+public partial class ExerciseProgressViewModel(DatabaseService db, IExerciseRepository exerciseRepo, ProgressReportService report) : ObservableObject, IQueryAttributable
 {
     [ObservableProperty] private string _exerciseName = "";
     [ObservableProperty] private string _muscleGroupName = "";
@@ -43,7 +44,7 @@ public partial class ExerciseProgressViewModel(DatabaseService db, ProgressRepor
     {
         IsLoading = true;
 
-        _exercise = await db.GetExerciseAsync(exerciseId);
+        _exercise = await exerciseRepo.GetAsync(exerciseId);
         if (_exercise is not null)
         {
             ExerciseName        = _exercise.Name;
@@ -88,7 +89,7 @@ public partial class ExerciseProgressViewModel(DatabaseService db, ProgressRepor
     {
         if (_exercise is null) return;
         _exercise.Notes = ExerciseNotes;
-        await db.SaveExerciseAsync(_exercise);
+        await exerciseRepo.SaveAsync(_exercise);
     }
 
     private bool CanShareProgress() => !IsSharing && ChartPoints.Count > 0;

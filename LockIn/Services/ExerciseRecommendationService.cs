@@ -16,12 +16,12 @@ public interface IExerciseRecommendationService
 
 public class ExerciseRecommendationService : IExerciseRecommendationService
 {
-    private readonly DatabaseService _db;
+    private readonly IExerciseRepository _exerciseRepo;
     private readonly ISettingsRepository _settingsRepo;
 
-    public ExerciseRecommendationService(DatabaseService db, ISettingsRepository settingsRepo)
+    public ExerciseRecommendationService(IExerciseRepository exerciseRepo, ISettingsRepository settingsRepo)
     {
-        _db = db;
+        _exerciseRepo = exerciseRepo;
         _settingsRepo = settingsRepo;
     }
 
@@ -32,7 +32,7 @@ public class ExerciseRecommendationService : IExerciseRecommendationService
         int mesocycleIdForTieBreak = 0,
         int slotIdForTieBreak = 0)
     {
-        var all = await _db.GetExercisesAsync();
+        var all = await _exerciseRepo.GetAllAsync();
         var settings = await _settingsRepo.GetAsync();
         var preferredEquipment = settings.ParsePreferredEquipment();
 

@@ -16,7 +16,8 @@ public partial class PostWorkoutViewModel(
     ActiveWorkoutViewModel activeWorkout,
     WorkoutShareService share,
     ISettingsRepository settingsRepo,
-    IBodyRepository bodyRepo) : ObservableObject
+    IBodyRepository bodyRepo,
+    IExerciseRepository exerciseRepo) : ObservableObject
 {
     [ObservableProperty] private int _sessionId;
     [ObservableProperty] private string _templateName = "";
@@ -96,7 +97,7 @@ public partial class PostWorkoutViewModel(
         if (prSets.Count > 0)
         {
             var seTask  = db.GetSessionExercisesAsync(sessionId);
-            var exTask  = db.GetExercisesAsync();
+            var exTask  = exerciseRepo.GetAllAsync();
             await Task.WhenAll(seTask, exTask);
             var seById      = seTask.Result.ToDictionary(se => se.Id);
             var exerciseById = exTask.Result.ToDictionary(e => e.Id);
@@ -173,7 +174,7 @@ public partial class PostWorkoutViewModel(
         }
 
         // Custom exercise check
-        var exercises = await db.GetExercisesAsync();
+        var exercises = await exerciseRepo.GetAllAsync();
         if (exercises.Any(e => e.IsCustom))
             await TryUnlock(AchievementId.FirstCustomExercise);
 
