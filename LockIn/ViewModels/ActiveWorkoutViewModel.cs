@@ -10,7 +10,7 @@ using System.Globalization;
 
 namespace LockIn.ViewModels;
 
-public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, RestTimerService timer, ISoundService sound, ActiveWorkoutStateService state, NotificationService notifications, IWeightProgressionService weightProgression, ICycleContextService cycleContext)
+public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, RestTimerService timer, ISoundService sound, ActiveWorkoutStateService state, NotificationService notifications, IWeightProgressionService weightProgression, ICycleContextService cycleContext, IMesocycleService mesocycles)
     : ObservableObject, IQueryAttributable
 {
     private WorkoutSession? _session;
@@ -32,6 +32,10 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
     [ObservableProperty] private string _autoProgressMessage = "";
     [ObservableProperty] private bool _showRirHint;
     [ObservableProperty] private bool _isDeloadWeek;
+    [ObservableProperty] private string _weekDayHeader = "";
+    [ObservableProperty] private string _weekDaySubHeader = "";
+    [ObservableProperty] private bool _hasMesocycle;
+    [ObservableProperty] private bool _showStartWeightHint;
 
     public event EventHandler? PRScored;
     public event EventHandler<int>? ScrollToSectionRequested;
@@ -68,12 +72,26 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
 
             _activeCycle = await cycleContext.GetCurrentAsync();
             IsDeloadWeek = _activeCycle?.IsDeload ?? false;
+            HasMesocycle = _activeCycle is not null;
 
             if (templateId != 0)
             {
                 var templates = await db.GetTemplatesAsync();
                 var template = templates.FirstOrDefault(t => t.Id == templateId);
                 TemplateName = template?.Name ?? AppResources.ActiveWorkout_FreeWorkout;
+            }
+
+            if (_activeCycle is not null)
+            {
+                WeekDayHeader = string.Format(AppResources.ActiveWorkout_Week_Day_Format,
+                    _activeCycle.WeekNumber, ComputeDayNumber());
+                WeekDaySubHeader = string.Format(AppResources.ActiveWorkout_DayLabel_Format,
+                    ComputeDayName(), TemplateName);
+            }
+            else
+            {
+                WeekDayHeader = AppResources.ActiveWorkout_FreeWorkout;
+                WeekDaySubHeader = TemplateName;
             }
 
             // Skapa sessionen EFTER att övningar laddats, för att undvika orphan sessions
@@ -109,6 +127,13 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
                         }
                     }
                 }
+            }
+
+            // Blå info-banner: första passet någonsin (inga prev-sets alls) och användaren har inte sett hint
+            if (!settings.HasSeenStartWeightHint
+                && Exercises.All(s => string.IsNullOrEmpty(s.PrevSessionSummary)))
+            {
+                ShowStartWeightHint = true;
             }
 
             StartClock();
@@ -165,6 +190,30 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             MuscleGroup = exercise.MuscleGroup,
             TargetRir = _activeCycle?.TargetRir ?? -1,
         };
+
+        // Priority-tag från mesocykeln (III=Emphasize, II=Grow/default, I=Maintain)
+        if (_activeCycle is not null)
+        {
+            var prio = await mesocycles.GetPriorityAsync(_activeCycle.MesocycleId, exercise.MuscleGroup);
+            section.PriorityTag = prio?.PriorityLevel switch
+            {
+                MusclePriorityLevel.Emphasize => "III",
+                MusclePriorityLevel.Maintain  => "I",
+                _                             => "II",
+            };
+        }
+        else
+        {
+            section.PriorityTag = "II";
+        }
+
+        // Rekommenderat-RIR-hint under set-raderna
+        if (section.HasTargetRir)
+        {
+            section.RecommendedRirHintText = string.Format(
+                AppResources.ActiveWorkout_RecommendedRir_Format, section.TargetRir);
+            section.ShowRecommendedRirHint = true;
+        }
 
         var prevSets = await db.GetLastSessionSetsAsync(exercise.Id, _session!.Id);
 
@@ -606,6 +655,126 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         _session = null;
         notifications.CancelTimer();
         ForceDeactivateCore();
+    }
+
+    // TODO Task 30: räkna antal loggade sessioner denna vecka (måndag-söndag) + 1
+    private int ComputeDayNumber() => 1;
+    private string ComputeDayName() => DateTime.Now.DayOfWeek switch
+    {
+        DayOfWeek.Monday    => "Måndag",
+        DayOfWeek.Tuesday   => "Tisdag",
+        DayOfWeek.Wednesday => "Onsdag",
+        DayOfWeek.Thursday  => "Torsdag",
+        DayOfWeek.Friday    => "Fredag",
+        DayOfWeek.Saturday  => "Lördag",
+        DayOfWeek.Sunday    => "Söndag",
+        _                   => DateTime.Now.DayOfWeek.ToString(),
+    };
+
+    [RelayCommand]
+    private async Task OpenMesocycleStatsAsync() =>
+        await Shell.Current.GoToAsync("mesocyclestats");
+
+    [RelayCommand]
+    private async Task ShowStartWeightGuideAsync()
+    {
+        await Shell.Current.DisplayAlert(
+            AppResources.StartWeight_Guide_Title,
+            AppResources.StartWeight_Guide_Body,
+            AppResources.Common_OK);
+        ShowStartWeightHint = false;
+        var settings = await db.GetAppSettingsAsync();
+        settings.HasSeenStartWeightHint = true;
+        await db.SaveAppSettingsAsync(settings);
+    }
+
+    [RelayCommand]
+    private async Task ShowExerciseMenuAsync(WorkoutExerciseSection section)
+    {
+        if (section is null) return;
+
+        var options = new[]
+        {
+            AppResources.ExerciseMenu_AddNote,
+            AppResources.ExerciseMenu_MoveUp,
+            AppResources.ExerciseMenu_MoveDown,
+            AppResources.ExerciseMenu_Replace,
+            AppResources.ExerciseMenu_JointPain,
+            AppResources.ExerciseMenu_AddSet,
+            AppResources.ExerciseMenu_SkipSets,
+            AppResources.ExerciseMenu_Remove,
+        };
+
+        var page = Shell.Current?.CurrentPage;
+        if (page is null) return;
+        var choice = await page.DisplayActionSheet(
+            AppResources.ExerciseMenu_Title,
+            AppResources.Common_Cancel,
+            null,
+            options);
+        if (string.IsNullOrEmpty(choice) || choice == AppResources.Common_Cancel) return;
+
+        if      (choice == AppResources.ExerciseMenu_AddNote)   await AddNoteAsync(section);
+        else if (choice == AppResources.ExerciseMenu_MoveUp)    MoveSection(section, -1);
+        else if (choice == AppResources.ExerciseMenu_MoveDown)  MoveSection(section, +1);
+        else if (choice == AppResources.ExerciseMenu_Replace)   await ReplaceExerciseAsync(section);
+        else if (choice == AppResources.ExerciseMenu_JointPain) await OpenJointPainSheetAsync(section);
+        else if (choice == AppResources.ExerciseMenu_AddSet)    AddSet(section);
+        else if (choice == AppResources.ExerciseMenu_SkipSets)  await SkipRemainingSetsAsync(section);
+        else if (choice == AppResources.ExerciseMenu_Remove)    await RemoveExerciseAsync(section);
+    }
+
+    private async Task AddNoteAsync(WorkoutExerciseSection section)
+    {
+        var page = Shell.Current?.CurrentPage;
+        if (page is null) return;
+        var note = await page.DisplayPromptAsync(
+            AppResources.ExerciseMenu_AddNote,
+            string.Format(AppResources.ExerciseMenu_AddNote_Body_Format, section.ExerciseName),
+            placeholder: AppResources.ExerciseMenu_AddNote_Placeholder,
+            initialValue: section.Notes);
+        if (note is null) return;
+        section.Notes = note;
+        await db.SetSessionExerciseNotesAsync(section.SessionExerciseId, note);
+    }
+
+    private void MoveSection(WorkoutExerciseSection section, int delta)
+    {
+        var idx = Exercises.IndexOf(section);
+        var newIdx = idx + delta;
+        if (idx < 0 || newIdx < 0 || newIdx >= Exercises.Count) return;
+        Exercises.Move(idx, newIdx);
+    }
+
+    private async Task ReplaceExerciseAsync(WorkoutExerciseSection section)
+    {
+        var muscleQuery = section.MuscleGroup.ToString();
+        await Shell.Current.GoToAsync($"{nameof(ExercisePickerPage)}?muscle={muscleQuery}", new Dictionary<string, object>
+        {
+            { "CallbackAction", new Action<Exercise>(async ex =>
+            {
+                await db.UpdateSessionExerciseExerciseIdAsync(section.SessionExerciseId, ex.Id);
+                section.ExerciseId = ex.Id;
+                section.ExerciseName = ex.Name;
+                section.MuscleGroup = ex.MuscleGroup;
+                section.NotifyExerciseChanged();
+            })}
+        });
+    }
+
+    private async Task OpenJointPainSheetAsync(WorkoutExerciseSection section)
+    {
+        // TODO Task 26: fullständigt ledsmärta-flöde
+        await Toast.Make(AppResources.ExerciseMenu_JointPain_ComingSoon).Show();
+    }
+
+    private async Task SkipRemainingSetsAsync(WorkoutExerciseSection section)
+    {
+        // Enklaste implementation: ta bort osparade set-rader från UI:t
+        var unloggedSets = section.Sets.Where(s => !s.IsCompleted).ToList();
+        foreach (var s in unloggedSets)
+            section.Sets.Remove(s);
+        await Toast.Make(AppResources.ExerciseMenu_SkipSets_Toast).Show();
     }
 
     [RelayCommand]

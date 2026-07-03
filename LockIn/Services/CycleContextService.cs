@@ -2,7 +2,7 @@ using LockIn.Models;
 
 namespace LockIn.Services;
 
-public sealed record CycleContext(int WeekNumber, int TotalWeeks, bool IsDeload, int TargetRir, string CycleName);
+public sealed record CycleContext(int WeekNumber, int TotalWeeks, bool IsDeload, int TargetRir, string CycleName, int MesocycleId);
 
 public interface ICycleContextService
 {
@@ -31,7 +31,7 @@ public class CycleContextService : ICycleContextService
         var isDeload = currentWeek.IsDeload;
         var targetRir = isDeload ? 4 : ComputeTargetRir(weekIndex, totalWeeks);
 
-        return new CycleContext(currentWeek.WeekNumber, totalWeeks, isDeload, targetRir, active.Name);
+        return new CycleContext(currentWeek.WeekNumber, totalWeeks, isDeload, targetRir, active.Name, active.Id);
     }
 
     // RIR-target per vecka. Deload-vecka = 4. Övriga: linjär nedtrappning 4 → 1

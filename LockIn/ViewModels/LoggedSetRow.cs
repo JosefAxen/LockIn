@@ -74,9 +74,24 @@ public partial class LoggedSetRow : ObservableObject
         ? (PrevRepsHint.Length > 0 ? PrevRepsHint : "SEK")
         : PrevRepsHint;
 
+    // RP-mönster: Reps-Entry visar target-RIR som placeholder istället för
+    // separat RIR-fält per set. Reps-fältet får dubbel semantik — det syftar
+    // på det RIR-baserade reps-målet.
+    public string RepsPlaceholderWithRir
+    {
+        get
+        {
+            if (SetType == SetType.Time) return RepsPlaceholder;
+            if (TargetRir >= 0) return $"{TargetRir} RIR";
+            if (!string.IsNullOrEmpty(PrevRepsHint)) return PrevRepsHint;
+            return TargetReps > 0 ? TargetReps.ToString() : "";
+        }
+    }
+
     partial void OnSetTypeChanged(SetType value)
     {
         OnPropertyChanged(nameof(RepsPlaceholder));
+        OnPropertyChanged(nameof(RepsPlaceholderWithRir));
     }
 
     partial void OnSetNumberChanged(int value) =>

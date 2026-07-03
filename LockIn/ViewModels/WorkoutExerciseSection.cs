@@ -46,6 +46,42 @@ public partial class WorkoutExerciseSection : ObservableObject
 
     public SolidColorBrush AccentBrush => new(AccentColor);
 
+    public string ExerciseMuscleUpper => MuscleGroupLabel(MuscleGroup).ToUpperInvariant();
+
+    private static string MuscleGroupLabel(MuscleGroup g) => g switch
+    {
+        MuscleGroup.Chest     => "Bröst",
+        MuscleGroup.Back      => "Rygg",
+        MuscleGroup.Shoulders => "Axlar",
+        MuscleGroup.Biceps    => "Biceps",
+        MuscleGroup.Triceps   => "Triceps",
+        MuscleGroup.Legs      => "Ben",
+        MuscleGroup.Core      => "Mage",
+        MuscleGroup.FullBody  => "Helkropp",
+        MuscleGroup.Forearms  => "Underarmar",
+        _                     => "Övrigt",
+    };
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(PriorityTagColor))]
+    private string _priorityTag = "II";
+
+    public Color PriorityTagColor => PriorityTag switch
+    {
+        "III" => Color.FromArgb("#FF5A1F"),
+        "II"  => Color.FromArgb("#71717A"),
+        "I"   => Color.FromArgb("#52525B"),
+        _     => Color.FromArgb("#52525B"),
+    };
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasNotes))]
+    private string _notes = "";
+    public bool HasNotes => !string.IsNullOrWhiteSpace(Notes);
+
+    [ObservableProperty] private bool _showRecommendedRirHint;
+    [ObservableProperty] private string _recommendedRirHintText = "";
+
     [ObservableProperty] private int _restSeconds;
     [ObservableProperty] private bool _isTimerActive;
     [ObservableProperty] private int _timerSecondsRemaining;
@@ -60,6 +96,15 @@ public partial class WorkoutExerciseSection : ObservableObject
     {
         OnPropertyChanged(nameof(TimerDisplay));
         OnPropertyChanged(nameof(RestDisplay));
+    }
+
+    /// <summary>Trigger notifications för read-only-properties (t.ex. efter Replace).</summary>
+    public void NotifyExerciseChanged()
+    {
+        OnPropertyChanged(nameof(ExerciseName));
+        OnPropertyChanged(nameof(ExerciseMuscleUpper));
+        OnPropertyChanged(nameof(AccentColor));
+        OnPropertyChanged(nameof(AccentBrush));
     }
 
     partial void OnRestSecondsChanged(int value) =>

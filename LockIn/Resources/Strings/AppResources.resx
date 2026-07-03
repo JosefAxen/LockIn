@@ -735,6 +735,29 @@
   <data name="ActiveWorkout_FinishConfirm_Title" xml:space="preserve"><value>Avsluta pass</value></data>
   <data name="ActiveWorkout_FinishConfirm_Body" xml:space="preserve"><value>Är du klar med passet?</value></data>
   <data name="ActiveWorkout_FinishConfirm_Yes" xml:space="preserve"><value>Ja, avsluta</value></data>
+
+  <!-- ActiveWorkout — RP-header + set-rad + kebab-meny (Task 23-25) -->
+  <data name="ActiveWorkout_Week_Day_Format" xml:space="preserve"><value>WEEK {0} DAY {1}</value></data>
+  <data name="ActiveWorkout_DayLabel_Format" xml:space="preserve"><value>{0} · {1}</value></data>
+  <data name="ActiveWorkout_RecommendedRir_Format" xml:space="preserve"><value>Rekommenderat: {0} RIR</value></data>
+  <data name="StartWeight_Guide_Title" xml:space="preserve"><value>Hur väljer jag startvikt?</value></data>
+  <data name="StartWeight_Guide_Body" xml:space="preserve"><value>RP rekommenderar: välj en vikt du klarar med minst 3 reps kvar (3 RIR) i första setet. Om osäker: börja lätt — det är bättre att öka nästa pass än att missa reps.</value></data>
+  <data name="StartWeight_Hint_Title" xml:space="preserve"><value>Hur väljer jag startvikt?</value></data>
+  <data name="StartWeight_Hint_Sub" xml:space="preserve"><value>Tap för RP:s vägledning</value></data>
+  <data name="ExerciseMenu_Title" xml:space="preserve"><value>Vad vill du göra?</value></data>
+  <data name="ExerciseMenu_AddNote" xml:space="preserve"><value>Lägg till notering</value></data>
+  <data name="ExerciseMenu_AddNote_Body_Format" xml:space="preserve"><value>Notering för {0}</value></data>
+  <data name="ExerciseMenu_AddNote_Placeholder" xml:space="preserve"><value>T.ex. 'Kändes tungt'</value></data>
+  <data name="ExerciseMenu_MoveUp" xml:space="preserve"><value>Flytta upp</value></data>
+  <data name="ExerciseMenu_MoveDown" xml:space="preserve"><value>Flytta ned</value></data>
+  <data name="ExerciseMenu_Replace" xml:space="preserve"><value>Byt övning</value></data>
+  <data name="ExerciseMenu_JointPain" xml:space="preserve"><value>Ledsmärta</value></data>
+  <data name="ExerciseMenu_JointPain_ComingSoon" xml:space="preserve"><value>Ledsmärta-flöde kommer i Task 26</value></data>
+  <data name="ExerciseMenu_AddSet" xml:space="preserve"><value>Lägg till set</value></data>
+  <data name="ExerciseMenu_SkipSets" xml:space="preserve"><value>Skippa återstående set</value></data>
+  <data name="ExerciseMenu_SkipSets_Toast" xml:space="preserve"><value>Återstående set skippade</value></data>
+  <data name="ExerciseMenu_Remove" xml:space="preserve"><value>Ta bort övning</value></data>
+
   <data name="Library_Equipment_Dumbbell" xml:space="preserve"><value>HANTEL</value></data>
   <data name="Library_Equipment_Cable" xml:space="preserve"><value>KABEL</value></data>
   <data name="Library_Equipment_Machine" xml:space="preserve"><value>MASKIN</value></data>

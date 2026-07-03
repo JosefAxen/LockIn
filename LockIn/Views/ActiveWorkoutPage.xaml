@@ -88,8 +88,8 @@
         <ScrollView x:Name="MainScrollView" Grid.Row="0" Grid.RowSpan="2" VerticalScrollBarVisibility="Never" Scrolled="OnScrolled">
             <StackLayout Padding="16,0,16,140" Spacing="12">
 
-                <!-- Top bar � scrollar med inneh�llet -->
-                <Grid x:Name="TopBar" Padding="0,56,4,8" ColumnDefinitions="Auto,*,Auto,Auto">
+                <!-- Top bar — RP-header (WEEK N DAY M) + kalender-ikon + tid -->
+                <Grid x:Name="TopBar" Padding="0,56,4,8" ColumnDefinitions="Auto,*,Auto,Auto,Auto" ColumnSpacing="8">
                     <Border Grid.Column="0"
                             WidthRequest="44" HeightRequest="44"
                             StrokeShape="Ellipse"
@@ -102,17 +102,40 @@
                             <TapGestureRecognizer Tapped="OnBackClicked"/>
                         </Border.GestureRecognizers>
                     </Border>
-                    <Label Grid.Column="1" Text="{Binding TemplateName}"
-                           Style="{StaticResource DisplayLabel}"
-                           TextColor="{StaticResource ForgeText}"
-                           FontSize="20"
-                           CharacterSpacing="0"
-                           HorizontalOptions="Center" VerticalOptions="Center"/>
+                    <VerticalStackLayout Grid.Column="1" Spacing="0"
+                                         VerticalOptions="Center" HorizontalOptions="Center">
+                        <Label Text="{Binding WeekDayHeader}"
+                               FontFamily="BebasNeue" FontSize="30"
+                               CharacterSpacing="1"
+                               TextColor="{StaticResource ForgeText}"
+                               HorizontalTextAlignment="Center"/>
+                        <Label Text="{Binding WeekDaySubHeader}"
+                               FontFamily="DMSansRegular" FontSize="12"
+                               TextColor="{StaticResource ForgeMuted}"
+                               LineBreakMode="TailTruncation"
+                               HorizontalTextAlignment="Center"/>
+                    </VerticalStackLayout>
+                    <!-- Kalender-ikon: navigerar till mesocyclestats -->
                     <Border Grid.Column="2"
+                            IsVisible="{Binding HasMesocycle}"
                             WidthRequest="44" HeightRequest="44"
-                            BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}"
+                            BackgroundColor="{StaticResource ForgeSurface2}"
                             StrokeShape="Ellipse" StrokeThickness="0"
-                            Margin="0,0,6,0">
+                            VerticalOptions="Center">
+                        <Label Text="📊" FontSize="18"
+                               HorizontalOptions="Center" VerticalOptions="Center"/>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding OpenMesocycleStatsCommand}"/>
+                            <PointerGestureRecognizer
+                                PointerPressed="OnElemPointerPressed"
+                                PointerReleased="OnElemPointerReleased"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+                    <Border Grid.Column="3"
+                            WidthRequest="44" HeightRequest="44"
+                            BackgroundColor="{StaticResource ForgeSurface2}"
+                            StrokeShape="Ellipse" StrokeThickness="0"
+                            VerticalOptions="Center">
                         <views:AppIcon Source="ic_scale.png"
                                        WidthRequest="20" HeightRequest="20"
                                        HorizontalOptions="Center" VerticalOptions="Center"/>
@@ -120,11 +143,41 @@
                             <TapGestureRecognizer Command="{Binding OpenPlateCalculatorCommand}"/>
                         </Border.GestureRecognizers>
                     </Border>
-                    <Label Grid.Column="3" Text="{Binding ElapsedTime}"
+                    <Label Grid.Column="4" Text="{Binding ElapsedTime}"
                            TextColor="{StaticResource ForgeAccent}"
                            FontFamily="BebasNeue" FontSize="22"
                            VerticalOptions="Center"/>
                 </Grid>
+
+                <!-- Blå info-banner: "Hur väljer jag startvikt?" (första passet någonsin) -->
+                <Border IsVisible="{Binding ShowStartWeightHint}"
+                        BackgroundColor="{StaticResource ForgeAccentBlueDim}"
+                        Stroke="{StaticResource ForgeAccentBlue}"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 12"
+                        Padding="14,10">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                        <VerticalStackLayout Grid.Column="0" Spacing="2">
+                            <Label Text="{loc:Localize StartWeight_Hint_Title}"
+                                   FontFamily="BebasNeue" FontSize="16"
+                                   CharacterSpacing="1"
+                                   TextColor="{StaticResource ForgeAccentBlue}"/>
+                            <Label Text="{loc:Localize StartWeight_Hint_Sub}"
+                                   FontFamily="DMSansRegular" FontSize="12"
+                                   TextColor="{StaticResource ForgeMuted}"/>
+                        </VerticalStackLayout>
+                        <Label Grid.Column="1" Text="›"
+                               FontSize="24"
+                               TextColor="{StaticResource ForgeAccentBlue}"
+                               VerticalOptions="Center"/>
+                    </Grid>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ShowStartWeightGuideCommand}"/>
+                        <PointerGestureRecognizer
+                            PointerPressed="OnElemPointerPressed"
+                            PointerReleased="OnElemPointerReleased"/>
+                    </Border.GestureRecognizers>
+                </Border>
 
 
                 <!-- PR Banner -->
@@ -227,16 +280,43 @@
                                         </Border>
                                     </Grid>
 
-                                    <!-- Exercise header: punkt + name + info + rest time badge + remove -->
-                                    <Grid ColumnDefinitions="12,*,Auto,Auto,Auto" ColumnSpacing="10"
-                                          Padding="18,12,12,10">
+                                    <!-- Sektionsheader: muskelnamn + prio-pill -->
+                                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8"
+                                          Padding="18,14,14,6">
                                         <Ellipse Grid.Column="0"
                                                  WidthRequest="10" HeightRequest="10"
                                                  Fill="{Binding AccentColor}"
                                                  VerticalOptions="Center"/>
-                                        <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                                        <Label Grid.Column="1"
+                                               Text="{Binding ExerciseMuscleUpper}"
+                                               FontFamily="BebasNeue" FontSize="14"
+                                               CharacterSpacing="2"
+                                               TextColor="{StaticResource ForgeMuted}"
+                                               VerticalOptions="Center"/>
+                                        <Border Grid.Column="2"
+                                                BackgroundColor="{Binding PriorityTagColor}"
+                                                StrokeShape="RoundRectangle 10"
+                                                StrokeThickness="0"
+                                                Padding="10,3"
+                                                VerticalOptions="Center">
+                                            <Label Text="{Binding PriorityTag}"
+                                                   FontFamily="BebasNeue" FontSize="11"
+                                                   CharacterSpacing="1"
+                                                   TextColor="White"/>
+                                        </Border>
+                                    </Grid>
+
+                                    <!-- Exercise header: namn + info + rest-time badge + kebab-meny -->
+                                    <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="8"
+                                          Padding="18,0,10,10">
+                                        <VerticalStackLayout Grid.Column="0" VerticalOptions="Center" Spacing="2">
                                             <Label Text="{Binding ExerciseName}"
-                                                   FontFamily="DMSansMedium" FontSize="16"/>
+                                                   FontFamily="DMSansMedium" FontSize="17"/>
+                                            <Label Text="{Binding Notes}"
+                                                   IsVisible="{Binding HasNotes}"
+                                                   FontFamily="DMSansRegular" FontSize="11"
+                                                   TextColor="{StaticResource ForgeAccentBlue}"
+                                                   LineBreakMode="WordWrap"/>
                                             <Label Text="{Binding PrevSessionSummary}"
                                                    IsVisible="{Binding HasPrevSession}"
                                                    FontFamily="DMSansRegular" FontSize="11"
@@ -247,20 +327,20 @@
                                                    FontFamily="DMSansRegular" FontSize="11"
                                                    TextColor="{StaticResource ForgeAccent}"
                                                    LineBreakMode="WordWrap"/>
-                                            <Label Text="{Binding TargetRirDisplay}"
-                                                   IsVisible="{Binding HasTargetRir}"
+                                            <Label Text="{Binding RecommendedRirHintText}"
+                                                   IsVisible="{Binding ShowRecommendedRirHint}"
                                                    FontFamily="DMSansMedium" FontSize="11"
                                                    TextColor="{StaticResource ForgeAccentBlue}"/>
                                         </VerticalStackLayout>
 
-                                        <!-- Info button � only visible when description exists -->
-                                        <Border Grid.Column="2"
+                                        <!-- Info-knapp — visas när övningen har beskrivning -->
+                                        <Border Grid.Column="1"
                                                 IsVisible="{Binding HasDescription}"
                                                 BackgroundColor="Transparent"
                                                 StrokeThickness="0"
-                                                MinimumWidthRequest="44"
-                                                MinimumHeightRequest="44"
-                                                Padding="10">
+                                                MinimumWidthRequest="40"
+                                                MinimumHeightRequest="40"
+                                                Padding="8">
                                             <views:AppIcon Source="ic_barbell.png" WidthRequest="18" HeightRequest="18"
                                                          HorizontalOptions="Center" VerticalOptions="Center"/>
                                             <Border.GestureRecognizers>
@@ -270,12 +350,13 @@
                                             </Border.GestureRecognizers>
                                         </Border>
 
-                                        <!-- Rest time badge � tap to change -->
-                                        <Border Grid.Column="3"
+                                        <!-- Rest time badge — tap to change -->
+                                        <Border Grid.Column="2"
                                                 BackgroundColor="{StaticResource ForgeAccentDim}"
                                                 StrokeShape="RoundRectangle 8"
                                                 StrokeThickness="0"
-                                                Padding="10,6">
+                                                Padding="10,6"
+                                                VerticalOptions="Center">
                                             <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="4">
                                                 <views:AppIcon Grid.Column="0" Source="ic_timer.png"
                                                               WidthRequest="13" HeightRequest="13"
@@ -296,25 +377,32 @@
                                             </Border.GestureRecognizers>
                                         </Border>
 
-                                        <!-- Remove exercise button -->
-                                        <Border Grid.Column="4"
+                                        <!-- Kebab-meny (⋯) — samlar Remove/Move/Replace/Note/JointPain/Skip -->
+                                        <Border Grid.Column="3"
                                                 BackgroundColor="Transparent"
                                                 StrokeThickness="0"
                                                 MinimumWidthRequest="44"
                                                 MinimumHeightRequest="44"
-                                                Padding="10">
-                                            <views:AppIcon Source="ic_trash.png" WidthRequest="18" HeightRequest="18"
-                                                         HorizontalOptions="Center" VerticalOptions="Center"/>
+                                                Padding="8"
+                                                VerticalOptions="Center">
+                                            <Label Text="⋯"
+                                                   FontSize="22"
+                                                   TextColor="{StaticResource ForgeMuted}"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center"/>
                                             <Border.GestureRecognizers>
                                                 <TapGestureRecognizer
-                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ActiveWorkoutViewModel}}, Path=RemoveExerciseCommand}"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ActiveWorkoutViewModel}}, Path=ShowExerciseMenuCommand}"
                                                     CommandParameter="{Binding .}"/>
+                                                <PointerGestureRecognizer
+                                                    PointerPressed="OnElemPointerPressed"
+                                                    PointerReleased="OnElemPointerReleased"/>
                                             </Border.GestureRecognizers>
                                         </Border>
                                     </Grid>
 
-                                    <!-- Column headers -->
-                                    <Grid ColumnDefinitions="36,*,14,*,44,44"
+                                    <!-- Column headers (RIR-kolumn borttagen — placeholder istället) -->
+                                    <Grid ColumnDefinitions="36,*,14,*,44"
                                           Padding="16,0,16,6" ColumnSpacing="6">
                                         <Label Grid.Column="0" Text="{loc:Localize ActiveWorkout_Col_Set}"
                                                Style="{StaticResource SectionLabel}" FontSize="10"/>
@@ -324,16 +412,13 @@
                                         <Label Grid.Column="3" Text="{loc:Localize ActiveWorkout_Col_Reps}"
                                                Style="{StaticResource SectionLabel}" FontSize="10"
                                                HorizontalTextAlignment="Center"/>
-                                        <Label Grid.Column="4" Text="{loc:Localize ActiveWorkout_Col_Rir}"
-                                               Style="{StaticResource SectionLabel}" FontSize="10"
-                                               HorizontalTextAlignment="Center"/>
                                     </Grid>
 
                                     <!-- Set rows -->
                                     <StackLayout BindableLayout.ItemsSource="{Binding Sets}" Spacing="0">
                                         <BindableLayout.ItemTemplate>
                                             <DataTemplate x:DataType="vm:LoggedSetRow">
-                                                <Grid ColumnDefinitions="36,*,14,*,44,44"
+                                                <Grid ColumnDefinitions="36,*,14,*,44"
                                                       Padding="16,6,16,6" ColumnSpacing="6"
                                                       HeightRequest="52"
                                                       Opacity="{Binding IsCompleted, Converter={StaticResource CompletedOpacityConverter}}"
@@ -397,14 +482,14 @@
                                                            HorizontalOptions="Center"
                                                            VerticalOptions="Center"/>
 
-                                                    <!-- Reps / Duration -->
+                                                    <!-- Reps / Duration — placeholder = target-RIR (t.ex. "3 RIR") -->
                                                     <Border Grid.Column="3"
                                                             BackgroundColor="{StaticResource ForgeSurface2}"
                                                             StrokeShape="RoundRectangle 8"
                                                             StrokeThickness="0" Padding="4,2">
                                                         <Entry Text="{Binding RepsText}"
                                                                Keyboard="Numeric"
-                                                               Placeholder="{Binding RepsPlaceholder}"
+                                                               Placeholder="{Binding RepsPlaceholderWithRir}"
                                                                PlaceholderColor="{StaticResource ForgeTextSecondary}"
                                                                HorizontalTextAlignment="Center"
                                                                FontFamily="DMSansMedium" FontSize="15"
@@ -413,26 +498,8 @@
                                                                HeightRequest="44" Margin="0"/>
                                                     </Border>
 
-                                                    <!-- RIR � tap to cycle 0-5 -->
-                                                    <Border Grid.Column="4"
-                                                            BackgroundColor="{StaticResource ForgeSurface2}"
-                                                            StrokeShape="RoundRectangle 8"
-                                                            StrokeThickness="0">
-                                                        <Label Text="{Binding RirDisplay}"
-                                                               HorizontalOptions="Center"
-                                                               VerticalOptions="Center"
-                                                               FontFamily="DMSansMedium" FontSize="13"
-                                                               TextColor="{Binding RirColor}"/>
-                                                        <Border.GestureRecognizers>
-                                                            <TapGestureRecognizer Tapped="OnRirTapped"/>
-                                                            <PointerGestureRecognizer
-                                                                PointerPressed="OnElemPointerPressed"
-                                                                PointerReleased="OnElemPointerReleased"/>
-                                                        </Border.GestureRecognizers>
-                                                    </Border>
-
                                                     <!-- Done -->
-                                                    <Border Grid.Column="5"
+                                                    <Border Grid.Column="4"
                                                             StrokeShape="RoundRectangle 8"
                                                             StrokeThickness="0"
                                                             BackgroundColor="{Binding IsCompleted, Converter={StaticResource BoolToColorConverter}}">

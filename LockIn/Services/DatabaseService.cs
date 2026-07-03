@@ -1450,6 +1450,22 @@ public class DatabaseService
         await _db.ExecuteAsync("DELETE FROM SessionExercises WHERE Id = ?", sessionExerciseId);
     }
 
+    public async Task SetSessionExerciseNotesAsync(int sessionExerciseId, string notes)
+    {
+        await InitAsync();
+        await _db.ExecuteAsync(
+            "UPDATE SessionExercises SET Notes = ? WHERE Id = ?",
+            notes ?? "", sessionExerciseId);
+    }
+
+    public async Task UpdateSessionExerciseExerciseIdAsync(int sessionExerciseId, int newExerciseId)
+    {
+        await InitAsync();
+        await _db.ExecuteAsync(
+            "UPDATE SessionExercises SET ExerciseId = ? WHERE Id = ?",
+            newExerciseId, sessionExerciseId);
+    }
+
     // Feedback CRUD
     public async Task<int> SaveSessionMuscleFeedbackAsync(SessionMuscleFeedback fb)
     {

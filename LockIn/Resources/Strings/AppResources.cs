@@ -352,6 +352,28 @@ public static class AppResources
     public static string ActiveWorkout_AutoProgress_WeightUp_Format  => Get(nameof(ActiveWorkout_AutoProgress_WeightUp_Format));
     public static string ActiveWorkout_AutoProgress_RepsUp_Format    => Get(nameof(ActiveWorkout_AutoProgress_RepsUp_Format));
 
+    // RP-clone Task 23-25
+    public static string ActiveWorkout_Week_Day_Format               => Get(nameof(ActiveWorkout_Week_Day_Format));
+    public static string ActiveWorkout_DayLabel_Format               => Get(nameof(ActiveWorkout_DayLabel_Format));
+    public static string ActiveWorkout_RecommendedRir_Format         => Get(nameof(ActiveWorkout_RecommendedRir_Format));
+    public static string StartWeight_Guide_Title                     => Get(nameof(StartWeight_Guide_Title));
+    public static string StartWeight_Guide_Body                      => Get(nameof(StartWeight_Guide_Body));
+    public static string StartWeight_Hint_Title                      => Get(nameof(StartWeight_Hint_Title));
+    public static string StartWeight_Hint_Sub                        => Get(nameof(StartWeight_Hint_Sub));
+    public static string ExerciseMenu_Title                          => Get(nameof(ExerciseMenu_Title));
+    public static string ExerciseMenu_AddNote                        => Get(nameof(ExerciseMenu_AddNote));
+    public static string ExerciseMenu_AddNote_Body_Format            => Get(nameof(ExerciseMenu_AddNote_Body_Format));
+    public static string ExerciseMenu_AddNote_Placeholder            => Get(nameof(ExerciseMenu_AddNote_Placeholder));
+    public static string ExerciseMenu_MoveUp                         => Get(nameof(ExerciseMenu_MoveUp));
+    public static string ExerciseMenu_MoveDown                       => Get(nameof(ExerciseMenu_MoveDown));
+    public static string ExerciseMenu_Replace                        => Get(nameof(ExerciseMenu_Replace));
+    public static string ExerciseMenu_JointPain                      => Get(nameof(ExerciseMenu_JointPain));
+    public static string ExerciseMenu_JointPain_ComingSoon           => Get(nameof(ExerciseMenu_JointPain_ComingSoon));
+    public static string ExerciseMenu_AddSet                         => Get(nameof(ExerciseMenu_AddSet));
+    public static string ExerciseMenu_SkipSets                       => Get(nameof(ExerciseMenu_SkipSets));
+    public static string ExerciseMenu_SkipSets_Toast                 => Get(nameof(ExerciseMenu_SkipSets_Toast));
+    public static string ExerciseMenu_Remove                         => Get(nameof(ExerciseMenu_Remove));
+
     // ── RP MuscleVolumePage ─────────────────────────────────────────────
     public static string MuscleVolume_Title                          => Get(nameof(MuscleVolume_Title));
     public static string MuscleVolume_Explainer_Header               => Get(nameof(MuscleVolume_Explainer_Header));
