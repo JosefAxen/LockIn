@@ -13,15 +13,37 @@ public sealed class SettingsRepository : ISettingsRepository
 
     public SettingsRepository(DatabaseService db) => _db = db;
 
-    public Task<AppSettings> GetAsync() => _db.GetAppSettingsAsync();
-    public Task SaveAsync(AppSettings settings) => _db.SaveAppSettingsAsync(settings);
+    public async Task<AppSettings> GetAsync()
+    {
+        var db = await _db.EnsureConnectionAsync();
+        return await db.Table<AppSettings>().FirstOrDefaultAsync() ?? new AppSettings();
+    }
 
-    public Task<HashSet<int>> GetUnlockedAchievementIdsAsync()
-        => _db.GetUnlockedAchievementIdsAsync();
+    public async Task SaveAsync(AppSettings settings)
+    {
+        var db = await _db.EnsureConnectionAsync();
+        await db.UpdateAsync(settings);
+    }
 
-    public Task<List<UserAchievement>> GetUnlockedAchievementsAsync()
-        => _db.GetUnlockedAchievementsAsync();
+    public async Task<HashSet<int>> GetUnlockedAchievementIdsAsync()
+    {
+        var db = await _db.EnsureConnectionAsync();
+        var rows = await db.Table<UserAchievement>().ToListAsync();
+        return rows.Select(r => r.Id).ToHashSet();
+    }
 
-    public Task<bool> UnlockAchievementAsync(AchievementId id)
-        => _db.UnlockAchievementAsync(id);
+    public async Task<List<UserAchievement>> GetUnlockedAchievementsAsync()
+    {
+        var db = await _db.EnsureConnectionAsync();
+        return await db.Table<UserAchievement>().ToListAsync();
+    }
+
+    public async Task<bool> UnlockAchievementAsync(AchievementId id)
+    {
+        var db = await _db.EnsureConnectionAsync();
+        var existing = await db.Table<UserAchievement>().Where(a => a.Id == (int)id).FirstOrDefaultAsync();
+        if (existing is not null) return false;
+        await db.InsertAsync(new UserAchievement { Id = (int)id, UnlockedAt = DateTime.Now });
+        return true;
+    }
 }

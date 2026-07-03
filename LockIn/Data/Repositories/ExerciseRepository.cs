@@ -13,8 +13,27 @@ public sealed class ExerciseRepository : IExerciseRepository
 
     public ExerciseRepository(DatabaseService db) => _db = db;
 
-    public Task<List<Exercise>> GetAllAsync() => _db.GetExercisesAsync();
-    public Task<Exercise?> GetAsync(int id) => _db.GetExerciseAsync(id);
-    public Task<int> SaveAsync(Exercise exercise) => _db.SaveExerciseAsync(exercise);
-    public Task<int> DeleteAsync(Exercise exercise) => _db.DeleteExerciseAsync(exercise);
+    public async Task<List<Exercise>> GetAllAsync()
+    {
+        var db = await _db.EnsureConnectionAsync();
+        return await db.Table<Exercise>().OrderBy(e => e.Name).ToListAsync();
+    }
+
+    public async Task<Exercise?> GetAsync(int id)
+    {
+        var db = await _db.EnsureConnectionAsync();
+        return await db.Table<Exercise>().Where(e => e.Id == id).FirstOrDefaultAsync();
+    }
+
+    public async Task<int> SaveAsync(Exercise exercise)
+    {
+        var db = await _db.EnsureConnectionAsync();
+        return exercise.Id == 0 ? await db.InsertAsync(exercise) : await db.UpdateAsync(exercise);
+    }
+
+    public async Task<int> DeleteAsync(Exercise exercise)
+    {
+        var db = await _db.EnsureConnectionAsync();
+        return await db.DeleteAsync(exercise);
+    }
 }

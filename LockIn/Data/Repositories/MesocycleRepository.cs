@@ -14,29 +14,115 @@ public sealed class MesocycleRepository : IMesocycleRepository
 
     public MesocycleRepository(DatabaseService db) => _db = db;
 
-#pragma warning disable CS0618 // Delegate till Obsolete-metoder — flyttas fysiskt i PR 7
-    public Task<List<Mesocycle>> GetAllAsync() => _db.GetMesocyclesAsync();
-    public Task<Mesocycle?> GetAsync(int id) => _db.GetMesocycleAsync(id);
-    public Task<Mesocycle?> GetActiveAsync() => _db.GetActiveMesocycleAsync();
+    public async Task<List<Mesocycle>> GetAllAsync()
+    {
+        var db = await _db.EnsureConnectionAsync();
+        return await db.Table<Mesocycle>().OrderByDescending(m => m.CreatedAt).ToListAsync();
+    }
 
-    public Task<int> SaveAsync(Mesocycle meso, List<MesocyclePriority> priorities, List<MesocycleWeek> weeks)
-        => _db.SaveMesocycleAsync(meso, priorities, weeks);
+    public async Task<Mesocycle?> GetAsync(int id)
+    {
+        var db = await _db.EnsureConnectionAsync();
+        return await db.Table<Mesocycle>().Where(m => m.Id == id).FirstOrDefaultAsync();
+    }
 
-    public Task ActivateAsync(int mesocycleId) => _db.ActivateMesocycleAsync(mesocycleId);
-    public Task DeleteAsync(int mesocycleId) => _db.DeleteMesocycleAsync(mesocycleId);
+    public async Task<Mesocycle?> GetActiveAsync()
+    {
+        var db = await _db.EnsureConnectionAsync();
+        return await db.Table<Mesocycle>().Where(m => m.IsActive).FirstOrDefaultAsync();
+    }
 
-    public Task<List<WorkoutSession>> GetSessionsForMesocycleAsync(int mesocycleId)
-        => _db.GetSessionsForMesocycleAsync(mesocycleId);
+    public async Task<int> SaveAsync(Mesocycle meso, List<MesocyclePriority> priorities, List<MesocycleWeek> weeks)
+    {
+        var db = await _db.EnsureConnectionAsync();
+        int mesoId = meso.Id;
+        await db.RunInTransactionAsync(conn =>
+        {
+            if (meso.Id == 0) conn.Insert(meso);
+            else conn.Update(meso);
+            mesoId = meso.Id;
 
-    public Task<List<MesocyclePriority>> GetPrioritiesAsync(int mesocycleId)
-        => _db.GetMesocyclePrioritiesAsync(mesocycleId);
+            conn.Execute("DELETE FROM MesocyclePriorities WHERE MesocycleId = ?", mesoId);
+            conn.Execute("DELETE FROM MesocycleWeeks WHERE MesocycleId = ?", mesoId);
 
-    public Task<List<MesocycleWeek>> GetWeeksAsync(int mesocycleId)
-        => _db.GetMesocycleWeeksAsync(mesocycleId);
+            foreach (var p in priorities)
+            {
+                p.Id = 0;
+                p.MesocycleId = mesoId;
+                conn.Insert(p);
+            }
+            foreach (var w in weeks)
+            {
+                w.Id = 0;
+                w.MesocycleId = mesoId;
+                conn.Insert(w);
+            }
+        });
+        return mesoId;
+    }
 
-    public Task<List<MuscleVolumeLandmarks>> GetLandmarksAsync() => _db.GetMuscleVolumeLandmarksAsync();
-    public Task SaveLandmarksAsync(MuscleVolumeLandmarks landmarks) => _db.SaveMuscleVolumeLandmarksAsync(landmarks);
-#pragma warning restore CS0618
+    public async Task ActivateAsync(int mesocycleId)
+    {
+        var db = await _db.EnsureConnectionAsync();
+        await db.ExecuteAsync("UPDATE Mesocycles SET IsActive = 0");
+        await db.ExecuteAsync("UPDATE Mesocycles SET IsActive = 1 WHERE Id = ?", mesocycleId);
+    }
+
+    public async Task DeleteAsync(int mesocycleId)
+    {
+        var db = await _db.EnsureConnectionAsync();
+        await db.RunInTransactionAsync(conn =>
+        {
+            conn.Execute("DELETE FROM MesocyclePriorities WHERE MesocycleId = ?", mesocycleId);
+            conn.Execute("DELETE FROM MesocycleWeeks WHERE MesocycleId = ?", mesocycleId);
+            conn.Execute("DELETE FROM Mesocycles WHERE Id = ?", mesocycleId);
+        });
+    }
+
+    public async Task<List<WorkoutSession>> GetSessionsForMesocycleAsync(int mesocycleId)
+    {
+        var db = await _db.EnsureConnectionAsync();
+        return await db.QueryAsync<WorkoutSession>(
+            @"SELECT ws.* FROM WorkoutSessions ws
+              JOIN MesocycleWeeks mw ON mw.Id = ws.MesocycleWeekId
+              WHERE mw.MesocycleId = ?
+              ORDER BY ws.StartedAt DESC", mesocycleId);
+    }
+
+    public async Task<List<MesocyclePriority>> GetPrioritiesAsync(int mesocycleId)
+    {
+        var db = await _db.EnsureConnectionAsync();
+        return await db.Table<MesocyclePriority>()
+            .Where(p => p.MesocycleId == mesocycleId)
+            .ToListAsync();
+    }
+
+    public async Task<List<MesocycleWeek>> GetWeeksAsync(int mesocycleId)
+    {
+        var db = await _db.EnsureConnectionAsync();
+        return await db.Table<MesocycleWeek>()
+            .Where(w => w.MesocycleId == mesocycleId)
+            .OrderBy(w => w.WeekNumber)
+            .ToListAsync();
+    }
+
+    public async Task<List<MuscleVolumeLandmarks>> GetLandmarksAsync()
+    {
+        var db = await _db.EnsureConnectionAsync();
+        return await db.Table<MuscleVolumeLandmarks>().ToListAsync();
+    }
+
+    public async Task SaveLandmarksAsync(MuscleVolumeLandmarks landmarks)
+    {
+        var db = await _db.EnsureConnectionAsync();
+        var existing = await db.Table<MuscleVolumeLandmarks>()
+            .Where(l => l.MuscleGroupValue == landmarks.MuscleGroupValue)
+            .FirstOrDefaultAsync();
+        if (existing is null)
+            await db.InsertAsync(landmarks);
+        else
+            await db.UpdateAsync(landmarks);
+    }
 
     public async Task<MesocycleBundle?> GetBundleAsync(int mesocycleId)
     {

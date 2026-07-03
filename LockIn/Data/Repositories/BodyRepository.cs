@@ -13,33 +13,68 @@ public sealed class BodyRepository : IBodyRepository
 
     public BodyRepository(DatabaseService db) => _db = db;
 
-    public Task<List<BodyWeightEntry>> GetWeightEntriesAsync()
-        => _db.GetBodyWeightEntriesAsync();
+    public async Task<List<BodyWeightEntry>> GetWeightEntriesAsync()
+    {
+        var db = await _db.EnsureConnectionAsync();
+        return await db.Table<BodyWeightEntry>().OrderByDescending(e => e.LoggedAt).ToListAsync();
+    }
 
-    public Task<int> SaveWeightEntryAsync(BodyWeightEntry entry)
-        => _db.SaveBodyWeightEntryAsync(entry);
+    public async Task<int> SaveWeightEntryAsync(BodyWeightEntry entry)
+    {
+        var db = await _db.EnsureConnectionAsync();
+        return entry.Id == 0 ? await db.InsertAsync(entry) : await db.UpdateAsync(entry);
+    }
 
-    public Task<int> DeleteWeightEntryAsync(BodyWeightEntry entry)
-        => _db.DeleteBodyWeightEntryAsync(entry);
+    public async Task<int> DeleteWeightEntryAsync(BodyWeightEntry entry)
+    {
+        var db = await _db.EnsureConnectionAsync();
+        return await db.DeleteAsync(entry);
+    }
 
-    public Task<List<BodyCompositionEntry>> GetCompositionEntriesAsync()
-        => _db.GetBodyCompositionEntriesAsync();
+    public async Task<List<BodyCompositionEntry>> GetCompositionEntriesAsync()
+    {
+        var db = await _db.EnsureConnectionAsync();
+        return await db.Table<BodyCompositionEntry>().OrderByDescending(e => e.LoggedAt).ToListAsync();
+    }
 
-    public Task<int> SaveCompositionEntryAsync(BodyCompositionEntry entry)
-        => _db.SaveBodyCompositionEntryAsync(entry);
+    public async Task<int> SaveCompositionEntryAsync(BodyCompositionEntry entry)
+    {
+        var db = await _db.EnsureConnectionAsync();
+        return entry.Id == 0 ? await db.InsertAsync(entry) : await db.UpdateAsync(entry);
+    }
 
-    public Task<int> DeleteCompositionEntryAsync(BodyCompositionEntry entry)
-        => _db.DeleteBodyCompositionEntryAsync(entry);
+    public async Task<int> DeleteCompositionEntryAsync(BodyCompositionEntry entry)
+    {
+        var db = await _db.EnsureConnectionAsync();
+        return await db.DeleteAsync(entry);
+    }
 
-    public Task<List<WorkoutPhoto>> GetPhotosForSessionAsync(int sessionId)
-        => _db.GetPhotosForSessionAsync(sessionId);
+    public async Task<List<WorkoutPhoto>> GetPhotosForSessionAsync(int sessionId)
+    {
+        var db = await _db.EnsureConnectionAsync();
+        return await db.Table<WorkoutPhoto>()
+            .Where(p => p.SessionId == sessionId)
+            .OrderByDescending(p => p.TakenAt)
+            .ToListAsync();
+    }
 
-    public Task<List<WorkoutPhoto>> GetAllPhotosAsync()
-        => _db.GetAllPhotosAsync();
+    public async Task<List<WorkoutPhoto>> GetAllPhotosAsync()
+    {
+        var db = await _db.EnsureConnectionAsync();
+        return await db.Table<WorkoutPhoto>().OrderByDescending(p => p.TakenAt).ToListAsync();
+    }
 
-    public Task<int> SavePhotoAsync(WorkoutPhoto photo)
-        => _db.SavePhotoAsync(photo);
+    public async Task<int> SavePhotoAsync(WorkoutPhoto photo)
+    {
+        var db = await _db.EnsureConnectionAsync();
+        return photo.Id == 0 ? await db.InsertAsync(photo) : await db.UpdateAsync(photo);
+    }
 
-    public Task<int> DeletePhotoAsync(WorkoutPhoto photo)
-        => _db.DeletePhotoAsync(photo);
+    public async Task<int> DeletePhotoAsync(WorkoutPhoto photo)
+    {
+        var db = await _db.EnsureConnectionAsync();
+        if (File.Exists(photo.FilePath))
+            File.Delete(photo.FilePath);
+        return await db.DeleteAsync(photo);
+    }
 }
