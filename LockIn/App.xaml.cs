@@ -8,15 +8,15 @@ public partial class App : Application
     public App()
     {
         InitializeComponent();
-#if IOS
-        RequestedThemeChanged += (_, _) => AppDelegate.ConfigureTabBarAppearance();
-#endif
+        // Appen är bara designad för mörkt läge (Info.plist sätter också UIUserInterfaceStyle=Dark).
+        UserAppTheme = AppTheme.Dark;
     }
 
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        // Start with dark blank page to avoid flash, then navigate based on onboarding state
-        var splash = new ContentPage { BackgroundColor = Color.FromArgb("#141418") };
+        // Start with a blank page in the same color as splash/window/page background to avoid
+        // visible color steps, then navigate based on onboarding state
+        var splash = new ContentPage { BackgroundColor = DesignTokens.Background };
         var window = new Window(splash);
 
         window.HandlerChanged += (_, _) =>
@@ -31,15 +31,7 @@ public partial class App : Application
                     CancelsTouchesInView = false
                 };
                 uiView.AddGestureRecognizer(tap);
-
-                // application.Windows is empty in scene-based iOS apps during FinishedLaunching
-                // (UIScene connects AFTER that callback), so ConfigureWindowBackground's loop is
-                // dead code. Set the UIWindow background here where uiView.Window is guaranteed.
-                if (uiView.Window is { } nativeWindow)
-                    nativeWindow.BackgroundColor = UIKit.UIColor.FromDynamicProvider(t =>
-                        t.UserInterfaceStyle == UIKit.UIUserInterfaceStyle.Dark
-                            ? UIKit.UIColor.FromRGB(0x0E, 0x0E, 0x10)
-                            : UIKit.UIColor.FromRGB(0xFC, 0xFC, 0xFC));
+                // UIWindow background is set by SceneDelegate.WillConnect.
             }
 #endif
         };
@@ -55,10 +47,9 @@ public partial class App : Application
         var db       = services.GetRequiredService<DatabaseService>();
         var settingsRepo = services.GetRequiredService<Data.Repositories.ISettingsRepository>();
         var sessionRepo  = services.GetRequiredService<Data.Repositories.ISessionRepository>();
-        var notifs   = services.GetRequiredService<NotificationService>();
 
+        // Notification permission is requested on first use (NotificationService), not at launch.
         await db.InitAsync();
-        _ = notifs.RequestPermissionAsync();
 
         var settings = await settingsRepo.GetAsync();
 

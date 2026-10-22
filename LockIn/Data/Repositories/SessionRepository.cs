@@ -93,6 +93,21 @@ public sealed class SessionRepository : ISessionRepository
             monday);
     }
 
+    /// <summary>Tar bort ett pass helt: set, feedback, övningar och själva passet.</summary>
+    public async Task DeleteSessionAsync(int sessionId)
+    {
+        var db = await _db.EnsureConnectionAsync();
+        await db.ExecuteAsync(
+            "DELETE FROM LoggedSets WHERE SessionExerciseId IN (SELECT Id FROM SessionExercises WHERE SessionId = ?)",
+            sessionId);
+        await db.ExecuteAsync(
+            "DELETE FROM SessionExerciseFeedback WHERE SessionExerciseId IN (SELECT Id FROM SessionExercises WHERE SessionId = ?)",
+            sessionId);
+        await db.ExecuteAsync("DELETE FROM SessionMuscleFeedback WHERE SessionId = ?", sessionId);
+        await db.ExecuteAsync("DELETE FROM SessionExercises WHERE SessionId = ?", sessionId);
+        await db.ExecuteAsync("DELETE FROM WorkoutSessions WHERE Id = ?", sessionId);
+    }
+
     // ── SessionExercise ────────────────────────────────────────────────────
     public async Task<int> SaveSessionExerciseAsync(SessionExercise se)
     {
@@ -136,7 +151,9 @@ public sealed class SessionRepository : ISessionRepository
     {
         var db = await _db.EnsureConnectionAsync();
         return await db.QueryAsync<SessionExerciseDetailRow>(
-            @"SELECT e.Name as ExerciseName, ls.SetNumber, ls.WeightKg, ls.Reps, ls.RIR, ls.IsPR,
+            // Svenskt namn när det finns; RIR -1 = inte loggad (SessionExerciseDetailRow.RIR är int)
+            @"SELECT COALESCE(NULLIF(e.SwedishName, ''), e.Name) as ExerciseName, ls.SetNumber, ls.WeightKg, ls.Reps,
+                     COALESCE(ls.RIR, -1) as RIR, ls.IsPR,
                      ls.SetType, ls.DurationSeconds
               FROM SessionExercises se
               JOIN Exercises e ON e.Id = se.ExerciseId
@@ -150,6 +167,27 @@ public sealed class SessionRepository : ISessionRepository
     {
         var db = await _db.EnsureConnectionAsync();
         return set.Id == 0 ? await db.InsertAsync(set) : await db.UpdateAsync(set);
+    }
+
+    public async Task DeleteLoggedSetAsync(int loggedSetId)
+    {
+        var db = await _db.EnsureConnectionAsync();
+        await db.ExecuteAsync("DELETE FROM LoggedSets WHERE Id = ?", loggedSetId);
+    }
+
+    /// <summary>
+    /// True om övningen har loggade set med vikt i något annat avslutat pass.
+    /// Utan sådan historik finns inget att slå, och då är ett set inget PR.
+    /// </summary>
+    public async Task<bool> HasCompletedHistoryAsync(int exerciseId, int excludeSessionId)
+    {
+        var db = await _db.EnsureConnectionAsync();
+        return await db.ExecuteScalarAsync<int>(
+            @"SELECT COUNT(*) FROM LoggedSets ls
+              JOIN SessionExercises se ON se.Id = ls.SessionExerciseId
+              JOIN WorkoutSessions ws ON ws.Id = se.SessionId
+              WHERE se.ExerciseId = ? AND ws.Id != ? AND ws.CompletedAt IS NOT NULL AND ls.WeightKg > 0",
+            exerciseId, excludeSessionId) > 0;
     }
 
     public async Task<List<LoggedSet>> GetSetsForSessionExerciseAsync(int sessionExerciseId)

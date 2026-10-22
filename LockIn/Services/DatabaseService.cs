@@ -38,17 +38,21 @@ public class DatabaseService
         _db = new SQLiteAsyncConnection(dbPath,
             SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache);
 
-        // RP-clone reset: droppa gamla RP-relaterade tabeller (appen har inga
-        // riktiga användare än — historik offras för att kunna bygga om schemat)
-        await _db.ExecuteAsync("DROP TABLE IF EXISTS WorkoutTemplates");
-        await _db.ExecuteAsync("DROP TABLE IF EXISTS TemplateExercises");
-        await _db.ExecuteAsync("DROP TABLE IF EXISTS TrainingCycles");
-        await _db.ExecuteAsync("DROP TABLE IF EXISTS CycleWeeks");
-        await _db.ExecuteAsync("DROP TABLE IF EXISTS CycleSessions");
-        await _db.ExecuteAsync("DROP TABLE IF EXISTS WorkoutSessions");
-        await _db.ExecuteAsync("DROP TABLE IF EXISTS SessionExercises");
-        await _db.ExecuteAsync("DROP TABLE IF EXISTS LoggedSets");
-        await _db.ExecuteAsync("DROP TABLE IF EXISTS MuscleVolumeLandmarks");
+        // RP-clone reset: droppa gamla RP-relaterade tabeller EN gång (juli 2026).
+        // Tidigare kördes detta vid varje start och raderade all historik.
+        if (!Preferences.Default.Get("db_rpclone_reset_done", false))
+        {
+            await _db.ExecuteAsync("DROP TABLE IF EXISTS WorkoutTemplates");
+            await _db.ExecuteAsync("DROP TABLE IF EXISTS TemplateExercises");
+            await _db.ExecuteAsync("DROP TABLE IF EXISTS TrainingCycles");
+            await _db.ExecuteAsync("DROP TABLE IF EXISTS CycleWeeks");
+            await _db.ExecuteAsync("DROP TABLE IF EXISTS CycleSessions");
+            await _db.ExecuteAsync("DROP TABLE IF EXISTS WorkoutSessions");
+            await _db.ExecuteAsync("DROP TABLE IF EXISTS SessionExercises");
+            await _db.ExecuteAsync("DROP TABLE IF EXISTS LoggedSets");
+            await _db.ExecuteAsync("DROP TABLE IF EXISTS MuscleVolumeLandmarks");
+            Preferences.Default.Set("db_rpclone_reset_done", true);
+        }
 
         // Ny schema
         await _db.CreateTableAsync<Exercise>();
@@ -467,7 +471,7 @@ public class DatabaseService
         // CASE-tabell för (1 − RIR/6)^1.5 — RIR är begränsat till 0..6 av UI.
         return await _db.ExecuteScalarAsync<double>(
             @"SELECT COALESCE(SUM(
-                WeightKg * Reps * CASE RIR
+                WeightKg * Reps * CASE COALESCE(RIR, 3)  -- saknad RIR = måttlig ansträngning
                     WHEN 0 THEN 1.0000
                     WHEN 1 THEN 0.7607
                     WHEN 2 THEN 0.5443
@@ -870,7 +874,7 @@ public class DatabaseService
         public int SetType { get; set; }
         public double WeightKg { get; set; }
         public int Reps { get; set; }
-        public int RIR { get; set; }
+        public int? RIR { get; set; }
         public bool IsPR { get; set; }
         public int DurationSeconds { get; set; }
     }

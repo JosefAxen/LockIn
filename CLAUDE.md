@@ -6,6 +6,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 iOS-träningsapp byggd med **.NET MAUI 10**, target `net10.0-ios`. CI publicerar till GitHub Releases via GitHub Actions. SDK `10.0.x` + `dotnet workload install maui-ios`. Appen är på svenska.
 
+**Låsta val:**
+- **Bara mörkt läge:** `Info.plist` UIUserInterfaceStyle=Dark + `UserAppTheme=Dark`. Ljust läge är inte designat; bakgrunden är alltid mörk.
+- **Bara iPhone, stående läge.**
+- **Kulturen är tvingad till sv-SE** i `MauiProgram`, så `ToString()` ger decimalkomma.
+  - Parsa inmatning med `text.Replace(',', '.')` + `CultureInfo.InvariantCulture`.
+  - Skriv CSV med InvariantCulture.
+- **Övningsnamn i UI:** `Exercise.DisplayName` / `SwedishExerciseNames.Display(name)`.
+
 ## Bygga och köra
 
 ```bash
@@ -129,6 +137,13 @@ Alla custom canvas-kontroller i `Controls/` ärver `SKCanvasView` och renderar i
 - `Entitlements.plist` — har `com.apple.developer.healthkit`
 
 ### Animationer
+- **Minska rörelse:**
+  - Kolla `AnimationHelper.ReduceMotion` före varje icke-nödvändig animation.
+  - Haptik går via `AnimationHelper.Haptic()`, som respekterar inställningen.
+  - Bakgrunden (`AtmosphericBackgroundView`) är statisk.
+- **Tillgänglighet:**
+  - Tryckytor ska vara ≥ 44 pt. Runda ikonknappar använder stilen `IconCircleButton`.
+  - Varje tappbar yta utan text får `SemanticProperties.Description` (nycklarna `A11y_*`).
 - **Knappar:** `AnimatedButtonBehavior` (Pressed/Released → ScaleTo)
 - **Gester på Border/custom views:** `PointerGestureRecognizer` med `OnElemPointerPressed/Released` i code-behind (scale 0.93)
 - **Sidövergångar (tabs):** `TranslateTo` + `FadeTo` i `OnAppearing` i varje tab-sidas code-behind

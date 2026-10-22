@@ -40,8 +40,17 @@
             <VerticalStackLayout Spacing="0">
 
                 <!-- Header -->
-                <Grid Padding="20,56,20,10">
-                    <Label Text="MESOCYKLER"
+                <Grid Padding="16,56,20,10" ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                    <Border Grid.Column="0"
+                            Style="{StaticResource IconCircleButton}"
+                            SemanticProperties.Description="{loc:Localize A11y_Back}">
+                        <Path Style="{StaticResource BackChevron}"/>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoBackCommand}"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+                    <Label Grid.Column="1"
+                           Text="MESOCYKLER"
                            FontFamily="BebasNeue" FontSize="38" CharacterSpacing="1"
                            TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
                            VerticalOptions="Center"/>
@@ -55,18 +64,19 @@
                             BackgroundColor="{StaticResource ForgeAccent}"
                             StrokeShape="RoundRectangle 18"
                             StrokeThickness="0"
-                            HeightRequest="86">
+                            HeightRequest="86"
+                            SemanticProperties.Description="{loc:Localize Periodization_MesoBuilder_A11y}">
                         <Border.Shadow>
                             <Shadow Brush="Black" Offset="0,4" Radius="14" Opacity="0.28"/>
                         </Border.Shadow>
                         <VerticalStackLayout Spacing="2" HorizontalOptions="Center" VerticalOptions="Center">
                             <Label Text="+"
                                    FontFamily="BebasNeue" FontSize="26"
-                                   TextColor="White"
+                                   TextColor="{StaticResource ForgeFabForeground}"
                                    HorizontalOptions="Center"/>
                             <Label Text="MESO BUILDER"
                                    FontFamily="BebasNeue" FontSize="18" CharacterSpacing="2"
-                                   TextColor="White"
+                                   TextColor="{StaticResource ForgeFabForeground}"
                                    HorizontalOptions="Center"/>
                         </VerticalStackLayout>
                         <Border.GestureRecognizers>
@@ -80,7 +90,8 @@
                             Stroke="{StaticResource ForgeAccent}"
                             StrokeThickness="1.5"
                             StrokeShape="RoundRectangle 18"
-                            HeightRequest="86">
+                            HeightRequest="86"
+                            SemanticProperties.Description="{loc:Localize Periodization_TemplatePicker_Button}">
                         <VerticalStackLayout Spacing="2" HorizontalOptions="Center" VerticalOptions="Center">
                             <Label Text="✓"
                                    FontFamily="BebasNeue" FontSize="24"
@@ -180,11 +191,13 @@
                                         <BoxView Grid.Column="0" BackgroundColor="Transparent"/>
                                         <Button Grid.Column="1"
                                                 Text="{loc:Localize Common_Delete}"
-                                                FontFamily="DMSansMedium" FontSize="12"
+                                                FontFamily="DMSansMedium" FontSize="13"
                                                 BackgroundColor="Transparent"
-                                                TextColor="{StaticResource ForgeDestructive}"
-                                                Padding="8,4"
-                                                HeightRequest="32"
+                                                TextColor="{StaticResource ForgeDestructiveText}"
+                                                Padding="12,4"
+                                                HeightRequest="44"
+                                                MinimumWidthRequest="44"
+                                                SemanticProperties.Description="{Binding DeleteA11y}"
                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:PeriodizationViewModel}}, Path=DeleteMesocycleCommand}"
                                                 CommandParameter="{Binding .}"/>
                                     </Grid>

@@ -38,7 +38,7 @@ public partial class PlateCalculatorViewModel : ObservableObject
 
         if (target < barWeight)
         {
-            ResultText = string.Format(AppResources.PlateCalculator_TargetBelowBar_Format, barWeight);
+            ResultText = string.Format(AppResources.PlateCalculator_TargetBelowBar_Format, Kg(barWeight));
             PlateData = new();
             PlatesChanged?.Invoke();
             HasResult = true;
@@ -62,7 +62,7 @@ public partial class PlateCalculatorViewModel : ObservableObject
         if (remaining > 0.01m)
         {
             var achievable = target - remaining * 2;
-            ResultText = string.Format(AppResources.PlateCalculator_NotExact_Format, target, $"{achievable:G}");
+            ResultText = string.Format(AppResources.PlateCalculator_NotExact_Format, Kg(target), Kg(achievable));
             PlateData = new();
             PlatesChanged?.Invoke();
             HasResult = true;
@@ -71,20 +71,27 @@ public partial class PlateCalculatorViewModel : ObservableObject
 
         if (pairs.Count == 0)
         {
-            ResultText = string.Format(AppResources.PlateCalculator_BarOnly_Format, barWeight);
+            ResultText = string.Format(AppResources.PlateCalculator_BarOnly_Format, Kg(barWeight));
             PlateData = new();
             PlatesChanged?.Invoke();
             HasResult = true;
             return;
         }
 
-        var parts = pairs.Select(p => $"{p.Count}× {p.Plate:G}");
+        var parts = pairs.Select(p => $"{p.Count}× {Kg(p.Plate)}");
         ResultText = string.Join(" + ", parts) + " " + AppResources.PlateCalculator_PerSideSuffix;
         PlateData = pairs;
         PlatesChanged?.Invoke();
         HasResult = true;
     }
 
+    /// <summary>Svensk visning utan onödiga nollor: 2,5 / 1,25 / 20.</summary>
+    private static string Kg(decimal weightKg) => weightKg.ToString("0.##");
+
     [RelayCommand]
-    private async Task GoBackAsync() => await Shell.Current.GoToAsync(AppRoutes.Back);
+    private async Task GoBackAsync()
+    {
+        try { await Shell.Current.GoToAsync(AppRoutes.Back); }
+        catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"[PlateCalculator] GoBack: {ex}"); }
+    }
 }

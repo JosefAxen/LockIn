@@ -20,7 +20,7 @@
 
     <Grid RowDefinitions="Auto,*,Auto" SafeAreaEdges="None">
 
-        <!-- Atmosf�risk bakgrund -->
+        <!-- Atmosfärisk bakgrund -->
         <controls:AtmosphericBackgroundView Grid.RowSpan="3" InputTransparent="True"/>
 
         <!-- Top bar: back + step dots + skip -->
@@ -28,11 +28,10 @@
 
             <!-- Back button -->
             <Border Grid.Column="0"
+                    Style="{StaticResource IconCircleButton}"
                     IsVisible="{Binding ShowBackButton}"
-                    BackgroundColor="{StaticResource ForgeSurface2}"
-                    StrokeShape="RoundRectangle 12" StrokeThickness="0"
-                    WidthRequest="44" HeightRequest="44"
-                    HorizontalOptions="Start">
+                    HorizontalOptions="Start"
+                    SemanticProperties.Description="{loc:Localize A11y_Back}">
                 <Path Style="{StaticResource BackChevron}"/>
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding BackCommand}"/>
@@ -61,14 +60,15 @@
                          BackgroundColor="{Binding IsStep5, Converter={x:Static vm:DotColorConverter.Instance}}"/>
             </HorizontalStackLayout>
 
-            <!-- Skip link � synlig p� alla steg s� erfarna lyftare kan bail n�r som helst -->
+            <!-- Skip link — synlig på alla steg så erfarna lyftare kan bail när som helst -->
             <Border Grid.Column="2"
                     BackgroundColor="Transparent"
                     StrokeThickness="0"
                     MinimumWidthRequest="44"
                     MinimumHeightRequest="44"
                     Padding="10,0"
-                    VerticalOptions="Center">
+                    VerticalOptions="Center"
+                    SemanticProperties.Description="{loc:Localize Onboarding_SkipLink}">
                 <Label Text="{loc:Localize Onboarding_SkipLink}"
                        FontFamily="DMSansMedium" FontSize="13"
                        TextColor="{StaticResource ForgeMuted}"
@@ -121,7 +121,7 @@
                     </Border>
                 </VerticalStackLayout>
 
-                <!-- Steg 1: Veckom�l -->
+                <!-- Steg 1: Veckomål -->
                 <VerticalStackLayout x:Name="Step1" IsVisible="{Binding IsStep1}" Spacing="10">
                     <Label Text="{loc:Localize Onboarding_Step1_Title}"
                            FontFamily="BebasNeue" FontSize="44" CharacterSpacing="2"
@@ -131,6 +131,18 @@
                            FontFamily="BebasNeue" FontSize="28" CharacterSpacing="1"
                            TextColor="{StaticResource ForgeText}"
                            Margin="0,0,0,28"/>
+                    <Border Style="{StaticResource StepCard}" BackgroundColor="{Binding Wk1Bg}">
+                        <Grid ColumnDefinitions="56,*" ColumnSpacing="14" VerticalOptions="Center">
+                            <Label Grid.Column="0" Text="1" FontFamily="BebasNeue" FontSize="42" TextColor="{Binding Wk1Fg}" HorizontalOptions="Center" VerticalOptions="Center"/>
+                            <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                <Label Text="{loc:Localize Onboarding_Step1_Wk1_Title}" FontFamily="BebasNeue" FontSize="20" CharacterSpacing="1" TextColor="{Binding Wk1Fg}"/>
+                                <Label Text="{loc:Localize Onboarding_Step1_Wk1_Sub}" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding Wk1Fg}" Opacity="0.7"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectWeeklyGoalCommand}" CommandParameter="{x:Int32 1}"/>
+                        </Border.GestureRecognizers>
+                    </Border>
                     <Border Style="{StaticResource StepCard}" BackgroundColor="{Binding Wk2Bg}">
                         <Grid ColumnDefinitions="56,*" ColumnSpacing="14" VerticalOptions="Center">
                             <Label Grid.Column="0" Text="2" FontFamily="BebasNeue" FontSize="42" TextColor="{Binding Wk2Fg}" HorizontalOptions="Center" VerticalOptions="Center"/>
@@ -191,6 +203,18 @@
                             <TapGestureRecognizer Command="{Binding SelectWeeklyGoalCommand}" CommandParameter="{x:Int32 6}"/>
                         </Border.GestureRecognizers>
                     </Border>
+                    <Border Style="{StaticResource StepCard}" BackgroundColor="{Binding Wk7Bg}">
+                        <Grid ColumnDefinitions="56,*" ColumnSpacing="14" VerticalOptions="Center">
+                            <Label Grid.Column="0" Text="7" FontFamily="BebasNeue" FontSize="42" TextColor="{Binding Wk7Fg}" HorizontalOptions="Center" VerticalOptions="Center"/>
+                            <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                <Label Text="{loc:Localize Onboarding_Step1_Wk7_Title}" FontFamily="BebasNeue" FontSize="20" CharacterSpacing="1" TextColor="{Binding Wk7Fg}"/>
+                                <Label Text="{loc:Localize Onboarding_Step1_Wk7_Sub}" FontFamily="DMSansRegular" FontSize="13" TextColor="{Binding Wk7Fg}" Opacity="0.7"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectWeeklyGoalCommand}" CommandParameter="{x:Int32 7}"/>
+                        </Border.GestureRecognizers>
+                    </Border>
                 </VerticalStackLayout>
 
                 <!-- Steg 2: Erfarenhet -->
@@ -241,7 +265,7 @@
                     </Border>
                 </VerticalStackLayout>
 
-                <!-- Steg 3: M�l -->
+                <!-- Steg 3: Mål -->
                 <VerticalStackLayout x:Name="Step3" IsVisible="{Binding IsStep3}" Spacing="12">
                     <Label Text="{loc:Localize Onboarding_Step3_Title}"
                            FontFamily="BebasNeue" FontSize="44" CharacterSpacing="2"
@@ -312,24 +336,21 @@
                         </VerticalStackLayout>
                     </Border>
 
-                    <Button Text="{loc:Localize Onboarding_Step4_Activate}"
+                    <!-- Programmet aktiveras inte här — säg var det finns i stället för att lova en aktivering -->
+                    <Label Text="{loc:Localize Onboarding_Step4_LibraryNote}"
+                           FontFamily="DMSansRegular" FontSize="14"
+                           TextColor="{StaticResource ForgeTextSecondary}"
+                           LineBreakMode="WordWrap"
+                           Margin="0,0,0,20"/>
+
+                    <Button Text="{loc:Localize Onboarding_Continue}"
                             Style="{StaticResource PrimaryButton}"
                             BackgroundColor="{StaticResource ForgeAccent}"
-                            TextColor="{StaticResource ForgeBackground}"
+                            TextColor="{StaticResource ForgeFabForeground}"
                             FontFamily="BebasNeue" FontSize="17" CharacterSpacing="1"
                             HeightRequest="54"
                             Margin="0,0,0,12"
-                            Command="{Binding ActivateProgramCommand}"/>
-
-                    <Label Text="{loc:Localize Onboarding_Step4_SkipProgram}"
-                           FontFamily="DMSansMedium" FontSize="14"
-                           TextColor="{StaticResource ForgeMuted}"
-                           HorizontalOptions="Center"
-                           Padding="0,8">
-                        <Label.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding SkipProgramCommand}"/>
-                        </Label.GestureRecognizers>
-                    </Label>
+                            Command="{Binding ContinueFromRecommendationCommand}"/>
                 </VerticalStackLayout>
 
                 <!-- Steg 5: Utrustning -->
@@ -457,7 +478,7 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- Bottom CTA (visible steps 0�3) -->
+        <!-- Bottom CTA (visible steps 0–3) -->
         <Grid Grid.Row="2"
               IsVisible="{Binding ShowBottomCta}"
               Padding="24,12,24,44">

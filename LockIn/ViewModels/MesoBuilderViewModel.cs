@@ -15,12 +15,14 @@ public partial class MesoBuilderViewModel : ObservableObject
     private readonly IMesoBuilderService _builder;
     private readonly DatabaseService _db;
     private readonly ISettingsRepository _settingsRepo;
+    private readonly IMesocycleService _mesocycles;
 
-    public MesoBuilderViewModel(IMesoBuilderService builder, DatabaseService db, ISettingsRepository settingsRepo)
+    public MesoBuilderViewModel(IMesoBuilderService builder, DatabaseService db, ISettingsRepository settingsRepo, IMesocycleService mesocycles)
     {
         _builder = builder;
         _db = db;
         _settingsRepo = settingsRepo;
+        _mesocycles = mesocycles;
     }
 
     [ObservableProperty] private int _step = 0;
@@ -41,6 +43,8 @@ public partial class MesoBuilderViewModel : ObservableObject
     public bool CanContinueStep0 => DaysPerWeek >= 2 && DaysPerWeek <= 6;
     public bool CanContinueStep1 => true;
     public bool CanCreate => !string.IsNullOrWhiteSpace(MesocycleName) && WeekCount >= 3 && !IsBusy;
+    // Förklarar varför SKAPA CYKEL är inaktiv
+    public bool ShowNameRequiredHint => string.IsNullOrWhiteSpace(MesocycleName);
 
     public bool IsDays2 => DaysPerWeek == 2;
     public bool IsDays3 => DaysPerWeek == 3;
@@ -96,6 +100,7 @@ public partial class MesoBuilderViewModel : ObservableObject
     partial void OnMesocycleNameChanged(string value)
     {
         OnPropertyChanged(nameof(CanCreate));
+        OnPropertyChanged(nameof(ShowNameRequiredHint));
     }
 
     partial void OnIsBusyChanged(bool value)
@@ -191,6 +196,9 @@ public partial class MesoBuilderViewModel : ObservableObject
         IsBusy = true;
         try
         {
+            // En ny cykel aktiveras och avaktiverar den aktiva — fråga först.
+            if (!await ConfirmReplaceActiveAsync(_mesocycles)) return;
+
             var priorities = new Dictionary<MuscleGroup, MusclePriorityLevel>();
             foreach (var row in Emphasize) priorities[row.Muscle] = MusclePriorityLevel.Emphasize;
             foreach (var row in Grow) priorities[row.Muscle] = MusclePriorityLevel.Grow;
@@ -214,12 +222,34 @@ public partial class MesoBuilderViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            await Toast.Make($"Fel: {ex.Message}").Show();
+            System.Diagnostics.Debug.WriteLine($"[MesoBuilder] Kunde inte skapa cykel: {ex}");
+            await Toast.Make(AppResources.Common_ErrorRetry).Show();
         }
         finally
         {
             IsBusy = false;
         }
+    }
+
+    /// <summary>
+    /// MesoBuilderServiceV2.StartFromTemplateAsync aktiverar den nya cykeln och avaktiverar
+    /// den som är aktiv. Returnerar true om ingen cykel är aktiv eller om användaren godkänner.
+    /// Delas med TemplatePickerViewModel.
+    /// </summary>
+    internal static async Task<bool> ConfirmReplaceActiveAsync(IMesocycleService mesocycles)
+    {
+        var active = await mesocycles.GetActiveAsync();
+        if (active is null) return true;
+
+        var page = Shell.Current?.CurrentPage;
+        if (page is null) return false;
+
+        var name = string.IsNullOrWhiteSpace(active.Name) ? "—" : active.Name;
+        return await page.DisplayAlert(
+            AppResources.MesoBuilder_ReplaceActive_Title,
+            string.Format(AppResources.MesoBuilder_ReplaceActive_Body_Format, name),
+            AppResources.MesoBuilder_ReplaceActive_Confirm,
+            AppResources.Common_Cancel);
     }
 
     private void InitializePriorityLists()

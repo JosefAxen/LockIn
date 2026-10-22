@@ -1,3 +1,4 @@
+using LockIn.Resources.Strings;
 using LockIn.ViewModels;
 
 namespace LockIn.Views;
@@ -10,6 +11,8 @@ public static class HeatmapBuilder
         grid.Children.Clear();
 
         if (tiles.Count == 0) return;
+
+        bool animate = !AnimationHelper.ReduceMotion;
 
         int rows = (tiles.Count + 3) / 4;
         for (int r = 0; r < rows; r++)
@@ -35,9 +38,14 @@ public static class HeatmapBuilder
                     Radius = 12,
                     Opacity = 0.22f
                 },
-                Opacity = 0,
-                Scale = 0.9
+                Opacity = animate ? 0 : 1,
+                Scale = animate ? 0.9 : 1
             };
+
+            // En sammanfattning per ruta i stället för tre lösa etiketter.
+            SemanticProperties.SetDescription(border, tile.Score >= 0.05
+                ? string.Format(AppResources.Hem_Heatmap_Tile_A11y, tile.Name, tile.ScoreText)
+                : string.Format(AppResources.Hem_Heatmap_Tile_A11y_None, tile.Name));
 
             var rootGrid = new Grid
             {
@@ -55,12 +63,12 @@ public static class HeatmapBuilder
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.Center
             };
+            // Etiketterna har full opacitet: 0,7/0,65 föll under 4,5:1 på de ljusare rutorna.
             stack.Add(new Label
             {
                 Text = tile.Name,
                 FontSize = 9,
                 TextColor = tile.TextColor,
-                Opacity = 0.7,
                 FontFamily = "BebasNeue",
                 CharacterSpacing = 1,
                 HorizontalOptions = LayoutOptions.Center,
@@ -83,7 +91,6 @@ public static class HeatmapBuilder
                     FontSize = 8,
                     FontFamily = "DMSansRegular",
                     TextColor = tile.TextColor,
-                    Opacity = 0.65,
                     HorizontalOptions = LayoutOptions.Center,
                     CharacterSpacing = 0.3,
                 });
@@ -116,22 +123,13 @@ public static class HeatmapBuilder
 
             border.Content = rootGrid;
 
-            border.GestureRecognizers.Add(new PointerGestureRecognizer());
-            var pointer = (PointerGestureRecognizer)border.GestureRecognizers[^1];
-            pointer.PointerPressed += async (_, __) =>
-            {
-                Microsoft.Maui.Devices.HapticFeedback.Default.Perform(
-                    Microsoft.Maui.Devices.HapticFeedbackType.Click);
-                await border.ScaleTo(0.94, 60, Easing.CubicOut);
-            };
-            pointer.PointerReleased += async (_, __) =>
-            {
-                await border.ScaleTo(1.0, 180, Easing.SpringOut);
-            };
+            // Rutorna är inte tappbara — ingen haptik eller tryck-animation som antyder det.
 
             Grid.SetRow(border, row);
             Grid.SetColumn(border, col);
             grid.Children.Add(border);
+
+            if (!animate) continue;
 
             var delay = i * 30;
             _ = Task.Run(async () =>

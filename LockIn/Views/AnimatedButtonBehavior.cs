@@ -20,14 +20,14 @@ public class AnimatedButtonBehavior : Behavior<Button>
 
     private static void OnPressed(object? sender, EventArgs e)
     {
-        HapticFeedback.Default.Perform(HapticFeedbackType.Click);
-        if (sender is Button btn)
+        AnimationHelper.Haptic();
+        if (sender is Button btn && !AnimationHelper.ReduceMotion)
             _ = btn.ScaleTo(0.94, 65, Easing.CubicOut);
     }
 
     private static void OnReleased(object? sender, EventArgs e)
     {
-        if (sender is Button btn)
+        if (sender is Button btn && !AnimationHelper.ReduceMotion)
             _ = btn.ScaleTo(1.0, 230, Easing.SpringOut);
     }
 }

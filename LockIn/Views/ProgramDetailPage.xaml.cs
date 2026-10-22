@@ -21,6 +21,9 @@ public partial class ProgramDetailPage : ContentPage
     private void OnScrolled(object sender, ScrolledEventArgs e)
         => StickyHeader.Opacity = Math.Clamp((e.ScrollY - 80.0) / 40.0, 0, 1);
 
-    private async void OnBackClicked(object sender, EventArgs e) =>
-        await Shell.Current.GoToAsync(AppRoutes.Back);
+    private async void OnBackClicked(object sender, EventArgs e)
+    {
+        try { await Shell.Current.GoToAsync(AppRoutes.Back); }
+        catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"[ProgramDetail] Tillbaka misslyckades: {ex}"); }
+    }
 }

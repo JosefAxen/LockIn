@@ -17,13 +17,22 @@ public partial class TemplatePlanningBoardPage : ContentPage
     {
         if ((sender as VisualElement)?.BindingContext is not ExerciseRowViewModel row) return;
 
-        var choice = await Shell.Current.CurrentPage.DisplayActionSheet(
-            AppResources.TemplateBoard_ExerciseMenu_Title,
-            AppResources.Common_Cancel,
-            null,
-            AppResources.TemplateBoard_ExerciseMenu_MoveUp,
-            AppResources.TemplateBoard_ExerciseMenu_MoveDown,
-            AppResources.TemplateBoard_ExerciseMenu_Remove);
+        string? choice;
+        try
+        {
+            choice = await DisplayActionSheet(
+                AppResources.TemplateBoard_ExerciseMenu_Title,
+                AppResources.Common_Cancel,
+                null,
+                AppResources.TemplateBoard_ExerciseMenu_MoveUp,
+                AppResources.TemplateBoard_ExerciseMenu_MoveDown,
+                AppResources.TemplateBoard_ExerciseMenu_Remove);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[TemplateBoard] Övningsmenyn misslyckades: {ex}");
+            return;
+        }
 
         if (string.IsNullOrEmpty(choice) || choice == AppResources.Common_Cancel) return;
 

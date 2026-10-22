@@ -110,7 +110,7 @@ public class WorkoutShareService
 
     private static void DrawHeader(SKCanvas canvas, ShareImageData data)
     {
-        // "LOCKIN"
+        // "VANA" — varumärket (tillsammans med "Strength" nedan)
         using (var tf = LoadTypeface("BebasNeue"))
         using (var paint = new SKPaint
         {
@@ -121,10 +121,10 @@ public class WorkoutShareService
             TextAlign   = SKTextAlign.Center
         })
         {
-            canvas.DrawText("LOCKIN", Size / 2f, 130f, paint);
+            canvas.DrawText("VANA", Size / 2f, 130f, paint);
         }
 
-        // "Strength Training"
+        // "Strength"
         using (var tf = LoadTypeface("DMSansMedium"))
         using (var paint = new SKPaint
         {
@@ -135,7 +135,7 @@ public class WorkoutShareService
             TextAlign   = SKTextAlign.Center
         })
         {
-            canvas.DrawText("Strength Training", Size / 2f, 168f, paint);
+            canvas.DrawText("Strength", Size / 2f, 168f, paint);
         }
 
         // Divider line
@@ -351,7 +351,6 @@ public class WorkoutShareService
         }
 
         using var tfMedium  = LoadTypeface("DMSansMedium");
-        using var tfRegular = LoadTypeface("DMSansRegular");
 
         // "VANA STRENGTH" — left-aligned
         using (var paint = new SKPaint
@@ -364,19 +363,6 @@ public class WorkoutShareService
         })
         {
             canvas.DrawText("VANA STRENGTH", 80f, 1010f, paint);
-        }
-
-        // "lockin.app" — right-aligned
-        using (var paint = new SKPaint
-        {
-            IsAntialias = true,
-            Typeface    = tfRegular,
-            TextSize    = 20f,
-            Color       = SKColor.Parse("#A2A2A2"),
-            TextAlign   = SKTextAlign.Right
-        })
-        {
-            canvas.DrawText("lockin.app", 1000f, 1010f, paint);
         }
     }
 }

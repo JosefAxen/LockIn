@@ -53,12 +53,21 @@ public partial class JointPainSheetViewModel : ObservableObject
     private async Task SaveAsync()
     {
         if (Selected is null) return;
-        await _sessionRepo.SaveExerciseFeedbackAsync(new SessionExerciseFeedback
+        try
         {
-            SessionExerciseId = SessionExerciseId,
-            JointPainLevelValue = (int)Selected.Value,
-        });
-        CloseRequested?.Invoke(this, EventArgs.Empty);
+            await _sessionRepo.SaveExerciseFeedbackAsync(new SessionExerciseFeedback
+            {
+                SessionExerciseId = SessionExerciseId,
+                JointPainLevelValue = (int)Selected.Value,
+            });
+            CloseRequested?.Invoke(this, EventArgs.Empty);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[JointPain] Save: {ex}");
+            try { await CommunityToolkit.Maui.Alerts.Toast.Make(AppResources.Common_ErrorRetry).Show(); }
+            catch { /* felvisningen får inte själv fälla passet */ }
+        }
     }
 
     [RelayCommand]

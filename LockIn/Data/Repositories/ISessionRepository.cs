@@ -19,6 +19,7 @@ public interface ISessionRepository
     Task<List<SessionSummaryRow>> GetCompletedSummariesAsync();
     Task<int> GetTotalCompletedCountAsync();
     Task<int> GetCountThisWeekAsync();
+    Task DeleteSessionAsync(int sessionId);
 
     // SessionExercise
     Task<int> SaveSessionExerciseAsync(SessionExercise se);
@@ -30,6 +31,8 @@ public interface ISessionRepository
 
     // LoggedSet
     Task<int> SaveLoggedSetAsync(LoggedSet set);
+    Task DeleteLoggedSetAsync(int loggedSetId);
+    Task<bool> HasCompletedHistoryAsync(int exerciseId, int excludeSessionId);
     Task<List<LoggedSet>> GetSetsForSessionExerciseAsync(int sessionExerciseId);
     Task<List<LoggedSet>> GetLoggedSetsForSessionExerciseAsync(int sessionExerciseId);
     Task<List<LoggedSet>> GetAllSetsForSessionAsync(int sessionId);

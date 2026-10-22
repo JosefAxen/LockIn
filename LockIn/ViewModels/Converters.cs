@@ -79,7 +79,8 @@ public class BoolToAccentFgConverter : IValueConverter
 {
     public static readonly BoolToAccentFgConverter Instance = new();
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) =>
-        value is true ? Colors.White : Color.FromArgb("#B8B8BC");
+        // Vald = silverfylld knapp → mörk text (vitt på silver är 1,98:1)
+        value is true ? DesignTokens.FabForeground : DesignTokens.Accent;
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
         throw new NotImplementedException();
 }

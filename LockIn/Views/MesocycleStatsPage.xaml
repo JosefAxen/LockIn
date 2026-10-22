@@ -44,14 +44,9 @@
 
                     <!-- Tillbaka-pil -->
                     <Border Grid.Column="0"
-                            BackgroundColor="Transparent"
-                            StrokeThickness="0"
-                            WidthRequest="40" HeightRequest="40"
-                            VerticalOptions="Center">
-                        <Label Text="‹"
-                               FontFamily="BebasNeue" FontSize="34"
-                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
-                               HorizontalOptions="Center" VerticalOptions="Center"/>
+                            Style="{StaticResource IconCircleButton}"
+                            SemanticProperties.Description="{loc:Localize A11y_Back}">
+                        <Path Style="{StaticResource BackChevron}"/>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding GoBackCommand}"/>
                         </Border.GestureRecognizers>
@@ -76,11 +71,11 @@
                             VerticalOptions="Center">
                         <Label Text="{Binding StatusBadge}"
                                FontFamily="BebasNeue" FontSize="12" CharacterSpacing="2"
-                               TextColor="White"/>
+                               TextColor="{Binding StatusBadgeTextColor}"/>
                     </Border>
                 </Grid>
 
-                <!-- Vecko-progress -->
+                <!-- Vecko-progress (stapeln bara medan cykeln pågår) -->
                 <VerticalStackLayout Padding="20,4,20,20" Spacing="8"
                                      IsVisible="{Binding HasMesocycle}">
                     <Label Text="{Binding WeekProgressText}"
@@ -88,6 +83,7 @@
                            TextColor="{StaticResource ForgeAccent}"/>
                     <ProgressBar Progress="{Binding WeekProgressPercent}"
                                  ProgressColor="{StaticResource ForgeAccent}"
+                                 IsVisible="{Binding IsRunning}"
                                  HeightRequest="5"/>
                 </VerticalStackLayout>
 
@@ -129,7 +125,7 @@
                                                     <DataTrigger TargetType="Label"
                                                                  Binding="{Binding IsActive}"
                                                                  Value="True">
-                                                        <Setter Property="TextColor" Value="White"/>
+                                                        <Setter Property="TextColor" Value="{StaticResource ForgeFabForeground}"/>
                                                     </DataTrigger>
                                                 </Label.Triggers>
                                             </Label>
@@ -141,7 +137,7 @@
                                                     <DataTrigger TargetType="Label"
                                                                  Binding="{Binding IsActive}"
                                                                  Value="True">
-                                                        <Setter Property="TextColor" Value="#F5F5F5"/>
+                                                        <Setter Property="TextColor" Value="{StaticResource ForgeFabForeground}"/>
                                                     </DataTrigger>
                                                 </Label.Triggers>
                                             </Label>
@@ -185,10 +181,17 @@
                                         <ProgressBar Progress="{Binding SetsProgress}"
                                                      ProgressColor="{Binding ZoneColor}"
                                                      HeightRequest="6"/>
-                                        <Label Text="{Binding LandmarksDisplay}"
-                                               FontFamily="DMSansRegular" FontSize="11"
-                                               TextColor="{StaticResource ForgeMuted}"
-                                               Opacity="0.75"/>
+                                        <!-- Zonen i text (inte bara färg), samma etiketter som WeeklyVolume -->
+                                        <Grid ColumnDefinitions="*,Auto">
+                                            <Label Grid.Column="0"
+                                                   Text="{Binding LandmarksDisplay}"
+                                                   FontFamily="DMSansRegular" FontSize="11"
+                                                   TextColor="{StaticResource ForgeTextSecondary}"/>
+                                            <Label Grid.Column="1"
+                                                   Text="{Binding ZoneLabel}"
+                                                   FontFamily="DMSansMedium" FontSize="11"
+                                                   TextColor="{Binding ZoneColor}"/>
+                                        </Grid>
                                     </VerticalStackLayout>
                                 </Border>
                             </DataTemplate>
@@ -198,8 +201,7 @@
                     <!-- Legend -->
                     <Label Text="{loc:Localize MesoStats_Volume_Legend}"
                            FontFamily="DMSansRegular" FontSize="10"
-                           TextColor="{StaticResource ForgeMuted}"
-                           Opacity="0.7"
+                           TextColor="{StaticResource ForgeTextSecondary}"
                            HorizontalOptions="Center"
                            HorizontalTextAlignment="Center"
                            LineBreakMode="WordWrap"/>
@@ -248,8 +250,7 @@
                                             <Label Text="RIR"
                                                    FontFamily="DMSansRegular" FontSize="9"
                                                    HorizontalOptions="Center"
-                                                   TextColor="{StaticResource ForgeMuted}"
-                                                   Opacity="0.7"/>
+                                                   TextColor="{StaticResource ForgeTextSecondary}"/>
                                         </VerticalStackLayout>
                                     </Border>
                                 </DataTemplate>
@@ -313,10 +314,13 @@
                             StrokeShape="RoundRectangle 14"
                             StrokeThickness="0"
                             Padding="24,12"
-                            HorizontalOptions="Center">
+                            MinimumHeightRequest="44"
+                            HorizontalOptions="Center"
+                            SemanticProperties.Description="{loc:Localize MesoStats_Empty_Cta}">
                         <Label Text="{loc:Localize MesoStats_Empty_Cta}"
                                FontFamily="BebasNeue" FontSize="16" CharacterSpacing="2"
-                               TextColor="White"/>
+                               VerticalOptions="Center"
+                               TextColor="{StaticResource ForgeFabForeground}"/>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding OpenPeriodizationCommand}"/>
                         </Border.GestureRecognizers>

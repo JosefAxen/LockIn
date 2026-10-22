@@ -14,15 +14,15 @@
 
     <Grid RowDefinitions="Auto,*" SafeAreaEdges="None">
 
-        <!-- Atmosf�risk bakgrund -->
+        <!-- Atmosfärisk bakgrund -->
         <controls:AtmosphericBackgroundView Grid.RowSpan="2" InputTransparent="True"/>
 
         <!-- Permanent status bar gradient -->
         <BoxView Grid.RowSpan="2" VerticalOptions="Start" HeightRequest="90" InputTransparent="True" ZIndex="19">
             <BoxView.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <GradientStop Color="#28141418" Offset="0.0"/>
-                    <GradientStop Color="#00141418" Offset="1.0"/>
+                    <GradientStop Color="{StaticResource ForgeStatusBarOverlay}" Offset="0.0"/>
+                    <GradientStop Color="{StaticResource ForgeStatusBarOverlayClear}" Offset="1.0"/>
                 </LinearGradientBrush>
             </BoxView.Background>
         </BoxView>
@@ -33,10 +33,10 @@
             <BoxView InputTransparent="True">
                 <BoxView.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                        <GradientStop Color="#D8141418" Offset="0.0"/>
-                        <GradientStop Color="#90141418" Offset="0.35"/>
-                        <GradientStop Color="#38141418" Offset="0.65"/>
-                        <GradientStop Color="#00141418" Offset="1.0"/>
+                        <GradientStop Color="{StaticResource ForgeStickyHeaderTop}" Offset="0.0"/>
+                        <GradientStop Color="{StaticResource ForgeStickyHeaderMid1}" Offset="0.35"/>
+                        <GradientStop Color="{StaticResource ForgeStickyHeaderMid2}" Offset="0.65"/>
+                        <GradientStop Color="{StaticResource ForgeStatusBarOverlayClear}" Offset="1.0"/>
                     </LinearGradientBrush>
                 </BoxView.Background>
             </BoxView>
@@ -45,12 +45,8 @@
         <!-- Header -->
         <Grid Grid.Row="0" Padding="16,56,20,12" ColumnDefinitions="48,*" ZIndex="21">
             <Border Grid.Column="0"
-                    WidthRequest="36" HeightRequest="36"
-                    StrokeShape="Ellipse"
-                    BackgroundColor="#17FFFFFF"
-                    Stroke="#29FFFFFF"
-                    StrokeThickness="0.5"
-                    VerticalOptions="Center">
+                    Style="{StaticResource IconCircleButton}"
+                    SemanticProperties.Description="{x:Static res:AppResources.A11y_Back}">
                 <Path Style="{StaticResource BackChevron}"/>
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding GoBackCommand}"/>
@@ -64,7 +60,8 @@
         </Grid>
 
         <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Never" Scrolled="OnScrolled">
-            <StackLayout Padding="16,0,16,32" Spacing="12">
+            <!-- Bottenpadding: tab-baren är synlig här och får inte dölja sista övningen -->
+            <StackLayout Padding="16,0,16,120" Spacing="12">
 
                 <!-- Stats card -->
                 <Border Style="{StaticResource CardFrame}" Padding="16">
@@ -113,7 +110,7 @@
                             Text="{x:Static res:AppResources.SessionDetail_AddPhoto}"
                             Style="{StaticResource SecondaryButton}"
                             FontFamily="BebasNeue" FontSize="13"
-                            Padding="12,4" HeightRequest="32"
+                            Padding="12,4" HeightRequest="44"
                             Command="{Binding AddPhotoCommand}"/>
                 </Grid>
                 <CollectionView ItemsSource="{Binding Photos}"
@@ -132,18 +129,25 @@
                                 <Grid>
                                     <Image Source="{Binding Source}" Aspect="AspectFill"
                                            WidthRequest="120" HeightRequest="120"/>
-                                    <Border BackgroundColor="#CC000000"
-                                            StrokeThickness="0"
-                                            VerticalOptions="End" Padding="6,4">
-                                        <Label Text="✕" TextColor="White" FontSize="14"
-                                               HorizontalOptions="End">
-                                            <Label.GestureRecognizers>
-                                                <TapGestureRecognizer
-                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SessionDetailViewModel}}, Path=DeletePhotoCommand}"
-                                                    CommandParameter="{Binding .}"/>
-                                            </Label.GestureRecognizers>
-                                        </Label>
-                                    </Border>
+                                    <!-- Ta bort: 44×44 träffyta i hörnet, mörk platta så ✕ syns på ljusa foton -->
+                                    <Grid WidthRequest="44" HeightRequest="44"
+                                          HorizontalOptions="End" VerticalOptions="End"
+                                          BackgroundColor="Transparent"
+                                          SemanticProperties.Description="{x:Static res:AppResources.A11y_Delete}">
+                                        <Border BackgroundColor="#CC000000"
+                                                StrokeShape="Ellipse"
+                                                StrokeThickness="0"
+                                                WidthRequest="28" HeightRequest="28"
+                                                HorizontalOptions="Center" VerticalOptions="Center">
+                                            <Label Text="✕" TextColor="White" FontSize="14"
+                                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                                        </Border>
+                                        <Grid.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SessionDetailViewModel}}, Path=DeletePhotoCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                        </Grid.GestureRecognizers>
+                                    </Grid>
                                 </Grid>
                             </Border>
                         </DataTemplate>
@@ -188,7 +192,7 @@
                                                            FontFamily="DMSansMedium" FontSize="13"
                                                            VerticalOptions="Center"/>
                                                     <Label Grid.Column="1"
-                                                           Text="{Binding WeightDisplay}"
+                                                           Text="{Binding ., Converter={x:Static vm:SetWeightDisplayConverter.Instance}}"
                                                            FontFamily="DMSansMedium" FontSize="14"
                                                            HorizontalTextAlignment="Center"
                                                            VerticalOptions="Center"
@@ -199,7 +203,7 @@
                                                            HorizontalTextAlignment="Center"
                                                            VerticalOptions="Center"/>
                                                     <Label Grid.Column="3"
-                                                           Text="{Binding RIR}"
+                                                           Text="{Binding RIR, Converter={x:Static vm:RirDisplayConverter.Instance}}"
                                                            Style="{StaticResource MutedLabel}"
                                                            HorizontalTextAlignment="Center"
                                                            VerticalOptions="Center"/>
@@ -217,14 +221,14 @@
             </StackLayout>
         </ScrollView>
 
-        <!-- Bottom gradient fade � matchar topp-gradienten spegelv�nt -->
+        <!-- Bottom gradient fade — matchar topp-gradienten spegelvänt -->
         <BoxView Grid.RowSpan="2" InputTransparent="True" VerticalOptions="End" HeightRequest="150" ZIndex="22">
             <BoxView.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <GradientStop Color="#00141418" Offset="0.0"/>
-                    <GradientStop Color="#38141418" Offset="0.35"/>
-                    <GradientStop Color="#90141418" Offset="0.65"/>
-                    <GradientStop Color="#141418" Offset="1.0"/>
+                    <GradientStop Color="{StaticResource ForgeStatusBarOverlayClear}" Offset="0.0"/>
+                    <GradientStop Color="{StaticResource ForgeBottomFadeMid1}" Offset="0.35"/>
+                    <GradientStop Color="{StaticResource ForgeBottomFadeMid2}" Offset="0.65"/>
+                    <GradientStop Color="{StaticResource ForgeBottomFadeBottom}" Offset="1.0"/>
                 </LinearGradientBrush>
             </BoxView.Background>
         </BoxView>

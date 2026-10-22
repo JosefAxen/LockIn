@@ -1,8 +1,11 @@
-# DESIGN.md — LockIn Forge Design System
+# DESIGN.md — Vana Strength (Forge Design System)
 
-> Visual language, tokens, component patterns, and motion rules for the LockIn iOS app (.NET MAUI 10).
+> Visual language, tokens, component patterns, and motion rules for the Vana Strength iOS app (repo: LockIn, .NET MAUI 10).
 > Source of truth lives in `Colors.xaml` (XAML tokens) and `DesignTokens.cs` (C# tokens for SkiaSharp controls).
-> Never hardcode hex values outside those two files.
+> Hex values below are copied from those files — if they disagree, the code wins. Avoid new hex outside those two files.
+
+**Theme:** dark only. `Info.plist` sets `UIUserInterfaceStyle=Dark` and `App` sets `UserAppTheme=Dark`; the `Light*` tokens and `AppThemeBinding Light=` values are unused until a real light theme is designed (the page background is always the dark `AtmosphericBackgroundView`).
+**Orientation:** iPhone, portrait only.
 
 ---
 
@@ -10,58 +13,54 @@
 
 ### Surface Hierarchy
 
-Five depth levels. Each layer sits visually above the previous — never flat.
-
-| Token (XAML) | Hex | Role |
+| Token | Hex | Role |
 |---|---|---|
-| `ForgeBackground` | `#0E0E10` | Page background. The floor. |
-| `ForgeSurface` | `#1C1C24` | Cards, sheets, overlays. |
-| `ForgeSurface2` | `#252530` | Elevated cards, input fields. |
-| `ForgeSurface3` | `#2E2E3A` | Floating elements, tooltips. |
+| `SK_Background` / `DesignTokens.Background` | `#1E1E26` | Visible page background (AtmosphericBackgroundView, splash, UIWindow, startup page). |
+| `ForgeBackground` | `#141418` | `Page.BackgroundColor` behind the (transparent) pages. |
+| `ForgeSurface` | `#161618` | Cards, sheets, overlays. |
+| `ForgeSurface2` | `#222228` | Elevated cards, input fields. |
+| `ForgeSurface3` | `#2E2E36` | Floating elements, tooltips. |
 | `GraphGrid` (C#) | `#272732` | Graph grid lines only. |
 
 ### Borders
 
 | Token | Hex | Use |
 |---|---|---|
-| `ForgeBorder` | `#3A3A46` | Always-dark contexts (ActiveWorkout) |
-| `ForgeBorderLight` | `#2A2A36` | Standard card strokes |
+| `ForgeBorder` | `#252530` | Always-dark contexts |
+| `ForgeBorderLight` | `#323240` | Standard card strokes |
 
-### Text
+### Text (contrast measured on `#1E1E26` / `#161618`)
 
 | Token | Hex | Use |
 |---|---|---|
-| `ForgeText` | `#E8E8EC` | Primary text. ≥4.5:1 on all surfaces. |
-| `ForgeTextSecondary` | `#8E8E9A` | Secondary labels, sublabels |
-| `ForgeMuted` / `TextMuted` | `#52525E` | Section headers, axis labels, placeholders |
-| `GraphAxisText` (C#) | `#52525E` | Chart axis text only |
+| `ForgeText` | `#E2E8F0` | Primary text (≈14:1). |
+| `ForgeTextSecondary` = `ForgeMuted` | `#A2A2A2` | Secondary labels, section headers (≈6.5–7:1). |
+| `DesignTokens.TextMuted` / `GraphAxisText` / `CalNormalText` / `TextDim` | `#8E8E9A` | Lowest text level (≈5:1). Nothing dimmer is allowed for text. |
+| `ForgeDestructiveText` / `DesignTokens.DestructiveText` | `#F87171` | Destructive **text** on dark surfaces (≈6:1). |
+| `ForgeFabForeground` | `#0E0E10` | Text/icons on silver (`ForgeAccent`, `ForgeFabSilver*`) and on `ForgeSuccess` — never white there. |
 
 ### Accents
 
 | Token | Hex | Role | Constraints |
 |---|---|---|---|
 | `ForgeAccent` | `#B8B8BC` | **Brand accent. Silver/steel.** | Use precisely — color is information |
-| `ForgeAccentAmber` | `#F59E0B` | Energy, strain, warmth | Sparingly — high heat |
-| `ForgeAccentBlue` | `#3B82F6` | Sleep, recovery, calmness | Sparingly |
-| `ForgeSuccess` | `#4ADE80` | PR badges, success states | **Semantic only. Never brand accent.** |
-| `ForgeDestructive` | `#EF4444` | Delete, errors | Semantic only |
+| `ForgeAccentAmber` | `#FBBF24` | Energy, strain, warmth | Sparingly |
+| `ForgeAccentBlue` | `#38BDF8` | Sleep, recovery, calmness | Sparingly |
+| `ForgeSuccess` | `#4ADE80` | PR badges, success states | **Semantic only.** Dark foreground on it. |
+| `ForgeDestructive` | `#CA3214` | Destructive **fills** (white text ≈5.3:1) | Use `ForgeDestructiveText` for text |
 
-### Calendar tokens (C# only)
+### Tab bar
 
-| Token | Hex |
-|---|---|
-| `CalTodayStroke` | Defined in DesignTokens.cs |
-| `CalTodayText` | Defined in DesignTokens.cs |
-| `CalNormalText` | Defined in DesignTokens.cs |
+Selected tab = `ForgeText`, unselected = `ForgeTextSecondary` (set in `AppShell.xaml` / `Styles.xaml`). No UIAppearance overrides.
 
 ### Chips
 
 | Token | Hex |
 |---|---|
 | `ChipInactiveBg` | `#1C1C24` |
+| `ChipInactiveFg` | `#A2A2A2` |
+| `ChipActiveBg` / `ChipActiveFg` | `#3E3E44` / white |
 | `HeatmapInactive` | `#1A1A22` |
-| `ChipActiveBg` | Defined in DesignTokens.cs |
-| `ChipInactiveFg` / `ChipActiveFg` | Defined in DesignTokens.cs |
 
 ---
 
@@ -160,6 +159,12 @@ This hierarchy maps exactly to LockIn's HemPage: TrainingScore → MetricRingVie
 
 ---
 
+#### `IconCircleButton` (Border, Style)
+- Round icon button (back, close, settings, delete …): 44×44, ellipse, `ForgeOverlayWeak` fill, `ForgeOverlayStroke` 0.5
+- Every instance needs `SemanticProperties.Description` (`A11y_*` keys)
+
+---
+
 ### 4.3 Filter Chips
 
 Used in LibraryPage and ExercisePickerPage for MuscleGroup and Equipment filtering.
@@ -224,19 +229,19 @@ All custom canvas controls in `Controls/`. Pattern: inherit `SKCanvasView`, use 
 Semicircular arc gauge. Renders TrainingScore as a 300° swept arc with gradient fill. Start angle: 120°, sweep: 300° × progress.
 
 Layers (bottom to top):
-1. Background arc — stroke, `ForgeSurface3` color
-2. Progress arc — `SKShader.CreateLinearGradient`, `ForgeAccentAmber` → amber-light
-3. Center number — BebasNeue (or system font via `SKTypeface.FromFamilyName(null)`)
-4. Label text — DMSans, `ForgeMuted`
+1. Background arc — stroke, `SkiaTokens.TrackBg`
+2. Progress arc — sweep gradient in the logo colors (red `#C0392B` → purple `#8E44AD` → blue `#3498DB`)
+3. End dot with white glow
+4. Center number — system font (SF Pro), white, bold; sub label `SkiaTokens.AxisText`
 
 ### MetricRingView
 
 Three circular rings (Strain, Recovery, Sleep). Bindable: `Progress` (float 0–1), `RingColor` (Color), `CenterText` (string).
 
-- 300° arc, `StrokeWidth` ~14, `StrokeCap = Round`
-- Background arc: `ForgeSurface3`
-- Active arc: `SKShader.CreateLinearGradient` (RingColor → lighter variant)
-- Center: BebasNeue white
+- 270° arc from 135°, `StrokeWidth` 14pt × density, `StrokeCap = Round`
+- Background arc: `SkiaTokens.RingTrack`
+- Active arc: `RingColor`, 800 ms entry animation (skipped with Reduce Motion)
+- Center: system font (SF Pro), white, bold
 
 ### SparklineView
 
@@ -244,16 +249,15 @@ Compact trend line. Binds to float array. Background: transparent. Line: `ForgeA
 
 ### LineChartView
 
-Multi-series line chart. Grid: `GraphGrid` (#272732). Axis text: `GraphAxisText` (#52525E). Series colors match semantic tokens (Amber for strain, Blue for recovery/sleep, ForgeAccent for neutral).
+Multi-series line chart. Grid: `SkiaTokens.ChartSep`. Axis text 11pt. All sizes (margins, text, strokes, dots) are multiplied by the density scale `e.Info.Width / Width` — the canvas is in physical pixels. Same rule for every SkiaSharp control (MetricRingView, WeeklyGoalGauge and SparklineView already do this).
 
 ### AtmosphericBackgroundView
 
-Full-screen background with layered radial glows + Perlin grain. Renders 4 passes:
+**Static** full-screen background — no animation, no particles (removed October 2026 for a cleaner look). Painted only when the size changes:
 
-1. Base fill: `#0E0E10`
-2. Green radial glow (top-center, behind gauge zone): `#254ADE80` → transparent
-3. Blue ambient bottom gradient: `#1A3B82E6` → transparent
-4. Perlin grain overlay: turbulence `BlendMode.Screen`, alpha 12
+1. Base fill: `SK_Background` `#1E1E26`
+2. Soft silver bloom at the top: five overlapping radial gradients (`SK_AccentGlow1/2`)
+3. Vignette: radial `SK_Vignette` towards the edges
 
 `InputTransparent="True"`. ZIndex 0 behind all content. No bindable properties.
 
@@ -264,6 +268,7 @@ Live workout indicator dot with pulsing ring.
 - Pulse ring: `SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 4f)` — ONLY on the ring
 - Core dot: no blur. Draw LAST (on top) with fresh `SKPaint` without `MaskFilter`
 - `StartPulse()` / `StopPulse()` from code-behind on `OnAppearing` / `OnDisappearing`
+- With iOS "Reduce Motion" the pulse never starts (static dot only)
 
 ---
 
@@ -273,8 +278,9 @@ Live workout indicator dot with pulsing ring.
 
 ```
 Root Grid: SafeAreaEdges="None"          ← required for edge-to-edge
-Header padding top: 56pt                ← manual Dynamic Island clearance
-Tab bar clearance: 90pt bottom padding  ← on all scrollable content
+Header padding top: 56pt                ← manual Dynamic Island clearance (portrait iPhone only)
+Tab bar clearance: ≥110pt bottom padding ← on all scrollable tab content, more while the "PASS PÅGÅR" banner shows
+Push pages with their own bottom CTA     ← Shell.TabBarIsVisible="False"
 ```
 
 ### Spacing Rhythm
@@ -301,6 +307,10 @@ No arbitrary values. Use these intentional steps:
 ## 7. Motion
 
 **Animate only `transform` (Scale, Translate) and `opacity`. Never layout properties.**
+
+**Reduce Motion is mandatory.** Check `AnimationHelper.ReduceMotion` before every non-essential animation (entrances, count-ups, pulses, confetti); `AnimationHelper.PressAsync` / `PageEntryAsync` / `AnimatedButtonBehavior`, `ConfettiView`, `ForgeLiveDotView` and `MetricRingView` already do. Haptics go through `AnimationHelper.Haptic()` so the user's haptics setting is respected.
+
+**No motivational theatre:** confetti only for real PRs (not first-ever sets, not achievements).
 
 ### Button press
 ```csharp

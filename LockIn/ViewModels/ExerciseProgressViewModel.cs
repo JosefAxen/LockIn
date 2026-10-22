@@ -27,6 +27,8 @@ public partial class ExerciseProgressViewModel(ISessionRepository sessionRepo, I
     [ObservableProperty] private string _forceName = "";
     [ObservableProperty] private bool _hasMetadata;
     [ObservableProperty] private bool _isSharing;
+    // VoiceOver-sammanfattning av 1RM-diagrammet
+    [ObservableProperty] private string _chartDescription = "";
 
     private int _sessionCount;
     private Exercise? _exercise;
@@ -37,7 +39,22 @@ public partial class ExerciseProgressViewModel(ISessionRepository sessionRepo, I
     public void ApplyQueryAttributes(IDictionary<string, object> query)
     {
         if (query.TryGetValue("ExerciseId", out var val) && val is int id)
-            _ = LoadAsync(id);
+            _ = LoadSafeAsync(id);
+    }
+
+    private async Task LoadSafeAsync(int exerciseId)
+    {
+        try
+        {
+            await LoadAsync(exerciseId);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[ExerciseProgress] Laddning misslyckades: {ex}");
+            IsLoading = false;
+            if (Shell.Current?.CurrentPage is { } page)
+                await page.DisplayAlert(null, AppResources.Common_ErrorRetry, AppResources.Common_OK);
+        }
     }
 
     private async Task LoadAsync(int exerciseId)
@@ -47,7 +64,7 @@ public partial class ExerciseProgressViewModel(ISessionRepository sessionRepo, I
         _exercise = await exerciseRepo.GetAsync(exerciseId);
         if (_exercise is not null)
         {
-            ExerciseName        = _exercise.Name;
+            ExerciseName        = _exercise.DisplayName;
             MuscleGroupName     = MuscleGroupLabel(_exercise.MuscleGroup);
             ExerciseNotes       = _exercise.Notes ?? "";
             ExerciseDescription = _exercise.Description ?? "";
@@ -71,7 +88,7 @@ public partial class ExerciseProgressViewModel(ISessionRepository sessionRepo, I
         if (HasData)
         {
             var best = history.OrderByDescending(h => h.Epley1RM).First();
-            BestSet                 = $"{best.WeightKg} kg × {best.Reps} reps";
+            BestSet                 = $"{best.WeightKg.ToString("0.##")} kg × {best.Reps} reps";
             EstimatedOneRmFormatted = $"{AppResources.ExerciseProgress_Est1RM_Prefix}{best.Epley1RM:F0} kg";
             TotalSessions           = string.Format(AppResources.ExerciseProgress_Sessions_Format, history.Count);
 
@@ -79,6 +96,11 @@ public partial class ExerciseProgressViewModel(ISessionRepository sessionRepo, I
                 .TakeLast(12)
                 .Select(h => new ChartPoint(h.Date, h.Epley1RM))
                 .ToList();
+            ChartDescription = string.Format(
+                AppResources.ExerciseProgress_ChartA11y_Format,
+                ChartPoints.Count,
+                ChartPoints[^1].Value.ToString("0"),
+                ChartPoints.Max(p => p.Value).ToString("0"));
         }
 
         IsLoading = false;

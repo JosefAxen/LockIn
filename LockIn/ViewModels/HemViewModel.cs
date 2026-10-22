@@ -79,9 +79,97 @@ public partial class HemViewModel(DatabaseService db, IHealthService health, ISe
     [ObservableProperty] private System.Collections.ObjectModel.ObservableCollection<CoachChip> _coachChips = new();
     [ObservableProperty] private bool _hasCoachChips;
 
+    // Lokal data från LoadLocalAsync som Hälsa-steget bygger vidare på.
+    private AppSettings? _settings;
+    private IReadOnlyList<WorkoutSession> _recentSessions = Array.Empty<WorkoutSession>();
+    private double _volToday, _volAcute, _volChronic;
+
     public async Task LoadAsync()
     {
+        await LoadLocalAsync();
+        await LoadHealthAsync();
+    }
+
+    /// <summary>
+    /// Steg 1: lokal data (pass, svit, heatmap, coach-chips). Snabbt — sidan kan visas direkt.
+    /// Hälsa-data (behörighetsdialog + HealthKit-frågor, upp till 15 s) fylls på i LoadHealthAsync.
+    /// </summary>
+    public async Task LoadLocalAsync()
+    {
         IsLoading = true;
+
+        var weekStart    = GetMondayThisWeek();
+        var sevenAgo     = DateTime.Today.AddDays(-6);
+        var fortyFiveAgo = DateTime.Today.AddDays(-45);
+
+        var weekSessionsTask   = sessionRepo.GetCompletedInRangeAsync(weekStart, DateTime.Now);
+        var recentSessionsTask = sessionRepo.GetCompletedInRangeAsync(sevenAgo, DateTime.Now);
+        var streakSessionsTask = sessionRepo.GetCompletedInRangeAsync(fortyFiveAgo, DateTime.Now);
+        var streakTask         = db.GetCurrentStreakAsync();
+        var settingsTask       = settingsRepo.GetAsync();
+
+        // Volym × intensitet idag + ACWR-fönster (acute = senaste 7d inkl idag, chronic = 28d).
+        // ACWR (Acute:Chronic Workload Ratio) är en etablerad metod inom sport science
+        // för att bedöma träningsbelastning vs kapacitet — sweet spot ~0.8–1.3, risk >1.5.
+        var today        = DateTime.Today;
+        var tomorrow     = today.AddDays(1);
+        var volTodayTask = db.GetVolumeIntensityForRangeAsync(today, tomorrow);
+        var volAcuteTask = db.GetVolumeIntensityForRangeAsync(today.AddDays(-6), tomorrow);   // 7d
+        var volChrTask   = db.GetVolumeIntensityForRangeAsync(today.AddDays(-27), tomorrow); // 28d
+
+        await Task.WhenAll(weekSessionsTask, recentSessionsTask, streakSessionsTask, streakTask, settingsTask,
+            volTodayTask, volAcuteTask, volChrTask);
+
+        var weekSessions   = weekSessionsTask.Result;
+        var recentSessions = recentSessionsTask.Result;
+        var streakSessions = streakSessionsTask.Result;
+        var settings       = settingsTask.Result;
+
+        _settings       = settings;
+        _recentSessions = recentSessions;
+        _volToday       = (double)volTodayTask.Result;
+        _volAcute       = (double)volAcuteTask.Result;
+        _volChronic     = (double)volChrTask.Result;
+
+        // Veckans träningsmål (gaugen)
+        UserName = settings.UserName;
+        OnPropertyChanged(nameof(UserInitial));
+        OnPropertyChanged(nameof(GreetingText));
+
+        int goal   = settings.WeeklyWorkoutGoal > 0 ? settings.WeeklyWorkoutGoal : 4;
+        double score = Math.Min(100.0, weekSessions.Count / (double)goal * 100.0);
+        TrainingScore     = score;
+        TrainingScoreText = ((int)score).ToString();
+        MotivationText    = BuildMotivationText((int)score);
+        GaugeAccessibilityLabel = string.Format(AppResources.Hem_Accessibility_Gauge, (int)score);
+        OnPropertyChanged(nameof(GaugeProgress));
+
+        // Streak and calendar. Sviten räknas som på Träna (DatabaseService.GetCurrentStreakAsync):
+        // den lever om senaste passet var igår, den kräver inte pass idag.
+        Days       = BuildStreakDays(streakSessions);
+        int streak = streakTask.Result;
+        StreakLabel = streak > 0
+            ? string.Format(streak == 1 ? AppResources.Hem_StreakDays_One : AppResources.Hem_StreakDays_Many, streak)
+            : AppResources.Hem_NoStreak;
+
+        // Heatmap
+        await LoadHeatmapAsync();
+
+        // Aktiv tid kommer från loggade pass, inte från Hälsa
+        ActiveText   = CalculateActiveMinutesToday(recentSessions).ToString();
+        ActiveValues = BuildWeeklyActiveMinutes(recentSessions);
+
+        // Återhämtning är inte känd än (Hälsa laddas efteråt). CoachPromptEngine använder den inte.
+        await LoadCoachChipsAsync(weekSessions, recentSessions, double.NaN);
+    }
+
+    /// <summary>
+    /// Steg 2: Hälsa-data. Första gången visas behörighetsdialogen här — efter att den lokala
+    /// datan redan syns. Saknas data (ingen Apple Watch, nekad behörighet) visas "–"
+    /// och inga råd som bygger på återhämtning.
+    /// </summary>
+    public async Task LoadHealthAsync()
+    {
         try
         {
             if (!_permissionsRequested)
@@ -90,14 +178,6 @@ public partial class HemViewModel(DatabaseService db, IHealthService health, ISe
                 await health.RequestPermissionsAsync();
             }
 
-            var weekStart    = GetMondayThisWeek();
-            var sevenAgo     = DateTime.Today.AddDays(-6);
-            var fortyFiveAgo = DateTime.Today.AddDays(-45);
-
-            var weekSessionsTask   = sessionRepo.GetCompletedInRangeAsync(weekStart, DateTime.Now);
-            var recentSessionsTask = sessionRepo.GetCompletedInRangeAsync(sevenAgo, DateTime.Now);
-            var streakSessionsTask = sessionRepo.GetCompletedInRangeAsync(fortyFiveAgo, DateTime.Now);
-            var settingsTask       = settingsRepo.GetAsync();
             var stepsTask          = health.GetTodayStepsAsync();
             var caloriesTask       = health.GetTodayActiveCaloriesAsync();
             var heartRateTask      = health.GetTodayMaxHeartRateAsync();
@@ -112,61 +192,26 @@ public partial class HemViewModel(DatabaseService db, IHealthService health, ISe
             var maxHrTask          = health.GetEstimatedMaxHeartRateAsync();
             var vo2MaxTask         = health.GetVO2MaxAsync();
 
-            // Volym × intensitet idag + ACWR-fönster (acute = senaste 7d inkl idag, chronic = 28d).
-            // ACWR (Acute:Chronic Workload Ratio) är en etablerad metod inom sport science
-            // för att bedöma träningsbelastning vs kapacitet — sweet spot ~0.8–1.3, risk >1.5.
-            var today        = DateTime.Today;
-            var tomorrow     = today.AddDays(1);
-            var volTodayTask = db.GetVolumeIntensityForRangeAsync(today, tomorrow);
-            var volAcuteTask = db.GetVolumeIntensityForRangeAsync(today.AddDays(-6), tomorrow);   // 7d
-            var volChrTask   = db.GetVolumeIntensityForRangeAsync(today.AddDays(-27), tomorrow); // 28d
-
-            await Task.WhenAll(weekSessionsTask, recentSessionsTask, streakSessionsTask, settingsTask,
-                stepsTask, caloriesTask, heartRateTask,
+            await Task.WhenAll(stepsTask, caloriesTask, heartRateTask,
                 weeklyStepsTask, weeklyCaloriesTask, weeklyMaxHRTask,
                 sleepHoursTask, sleepStagesTask, hrvTask, rhrTask,
-                hrSamplesTask, maxHrTask, vo2MaxTask,
-                volTodayTask, volAcuteTask, volChrTask);
+                hrSamplesTask, maxHrTask, vo2MaxTask);
 
-            var weekSessions   = weekSessionsTask.Result;
-            var recentSessions = recentSessionsTask.Result;
-            var streakSessions = streakSessionsTask.Result;
-            var settings       = settingsTask.Result;
+            var settings = _settings ?? await settingsRepo.GetAsync();
+            var today    = DateTime.Today;
 
-            // Training score
-            UserName = settings.UserName;
-            OnPropertyChanged(nameof(UserInitial));
-            OnPropertyChanged(nameof(GreetingText));
-
-            int goal   = settings.WeeklyWorkoutGoal > 0 ? settings.WeeklyWorkoutGoal : 4;
-            double score = Math.Min(100.0, weekSessions.Count / (double)goal * 100.0);
-            TrainingScore     = score;
-            TrainingScoreText = ((int)score).ToString();
-            MotivationText    = BuildMotivationText((int)score);
-            OnPropertyChanged(nameof(GaugeProgress));
-
-            // Streak and calendar
-            Days       = BuildStreakDays(streakSessions);
-            int streak = CalculateStreak(streakSessions);
-            StreakLabel = streak > 0
-                ? string.Format(streak == 1 ? AppResources.Hem_StreakDays_One : AppResources.Hem_StreakDays_Many, streak)
-                : AppResources.Hem_NoStreak;
-
-            // Heatmap
-            await LoadHeatmapAsync();
-
-            // Health stats
+            // Health stats. 0 från Hälsa betyder oftast nekad behörighet eller ingen data —
+            // visa "–" i stället för en nolla som ser ut som ett mätvärde.
             var steps = stepsTask.Result;
-            StepsText     = steps > 0 ? $"{steps:N0}" : "0";
-            CaloriesText  = ((int)caloriesTask.Result).ToString();
-            ActiveText    = CalculateActiveMinutesToday(recentSessions).ToString();
+            StepsText     = steps > 0 ? $"{steps:N0}" : "–";
+            var kcal      = caloriesTask.Result;
+            CaloriesText  = kcal >= 1 ? ((int)kcal).ToString() : "–";
             var maxHR     = heartRateTask.Result;
             HeartRateText = maxHR > 0 ? maxHR.ToString() : "–";
 
-            StepsValues     = weeklyStepsTask.Result.ToArray();
-            CaloriesValues  = weeklyCaloriesTask.Result.ToArray();
-            ActiveValues    = BuildWeeklyActiveMinutes(recentSessions);
-            HeartRateValues = weeklyMaxHRTask.Result.ToArray();
+            StepsValues     = OrEmpty(weeklyStepsTask.Result);
+            CaloriesValues  = OrEmpty(weeklyCaloriesTask.Result);
+            HeartRateValues = OrEmpty(weeklyMaxHRTask.Result);
 
             var vo2Max = vo2MaxTask.Result;
             Vo2MaxText = vo2Max > 0 ? $"{vo2Max:F1}" : "–";
@@ -181,7 +226,7 @@ public partial class HemViewModel(DatabaseService db, IHealthService health, ISe
                 ? (int)rhrTask.Result.TodayBpm
                 : (rhrTask.Result.BaselineBpm > 0 ? (int)rhrTask.Result.BaselineBpm : 60);
             double hrStrainRaw  = CalculateStrainRaw(hrSamples, estMaxHr, restingBpm);
-            double volStrainRaw = volTodayTask.Result / 100.0;
+            double volStrainRaw = _volToday / 100.0;
             double rawCombined  = hrStrainRaw + volStrainRaw;
             double strainPct    = 100.0 * Math.Tanh(rawCombined / 80.0);
 
@@ -193,6 +238,10 @@ public partial class HemViewModel(DatabaseService db, IHealthService health, ISe
             var rhr   = rhrTask.Result;
             var stages = sleepStagesTask.Result;
             double sleepH = sleepHoursTask.Result;
+
+            // Utan HRV (Apple Watch) finns ingen riktig återhämtning — komponenterna nedan faller
+            // då tillbaka på 50 och ger ett påhittat "55 · MEDEL". Visa "–" och inga råd i stället.
+            bool hasRecoveryData = hrv.TodayMs > 0;
 
             // HRV-komponent: lnSDNN z-score mot 14-dagars baseline.
             // HRV är log-normalfördelad; CV ~20% är typisk inom-individ-variabilitet (Plews et al.).
@@ -228,46 +277,66 @@ public partial class HemViewModel(DatabaseService db, IHealthService health, ISe
 
             // Fatigue: ACWR (acute 7d / chronic 28d-snitt). Sweet spot 0.8–1.3, risk >1.5.
             // Skalar till 0–100 där hög ACWR = lågt score = mer trötthet.
-            double acute = volAcuteTask.Result / 7.0;
-            double chronicAvg = volChrTask.Result / 28.0;
+            double acute = _volAcute / 7.0;
+            double chronicAvg = _volChronic / 28.0;
             double acwr = chronicAvg > 0 ? acute / chronicAvg : 0;
             // ACWR 1.0 = perfekt (100 fatigueComp), 0.8 = lite under-tränad, 1.5+ = ackumulerad trötthet
             double fatigueComp = chronicAvg < 50  // för lite historik för meningsfull ACWR
-                ? 100 - Math.Clamp(volAcuteTask.Result / 700.0, 0, 1) * 100
+                ? 100 - Math.Clamp(_volAcute / 700.0, 0, 1) * 100
                 : Math.Clamp(100 - Math.Max(0, acwr - 1.0) * 80, 20, 100);
 
             double recoveryPct = hrvComp * 0.55 + rhrComp * 0.20 + sleepComp * 0.15 + fatigueComp * 0.10;
-            RecoveryProgress = (float)(recoveryPct / 100.0);
-            RecoveryText     = ((int)recoveryPct).ToString();
-            RecoveryComponentsText = hrv.TodayMs > 0
-                ? string.Format(AppResources.Hem_Recovery_Components, $"{hrv.TodayMs:F0}", $"{rhr.TodayBpm:F0}", $"{sleepH:F1}")
-                : AppResources.Hem_Recovery_NoWatch;
+            if (hasRecoveryData)
+            {
+                RecoveryProgress = (float)(recoveryPct / 100.0);
+                RecoveryText     = ((int)recoveryPct).ToString();
+                RecoveryComponentsText = string.Format(AppResources.Hem_Recovery_Components,
+                    $"{hrv.TodayMs:F0}",
+                    rhr.TodayBpm > 0 ? $"{rhr.TodayBpm:F0}" : "–",
+                    sleepH > 0 ? $"{sleepH:F1}" : "–");
+            }
+            else
+            {
+                RecoveryProgress = 0f;
+                RecoveryText     = "–";
+                RecoveryComponentsText = AppResources.Hem_Recovery_NoWatch;
+            }
 
+            bool hasStages = stages.TotalHours > 0;
             SleepStages    = stages;
-            CoreSleepText  = FormatSleepDuration(stages.CoreMinutes);
-            DeepSleepText  = FormatSleepDuration(stages.DeepMinutes);
-            RemSleepText   = FormatSleepDuration(stages.RemMinutes);
-            AwakeSleepText = FormatSleepDuration(stages.AwakeMinutes);
+            CoreSleepText  = hasStages ? FormatSleepDuration(stages.CoreMinutes)  : "–";
+            DeepSleepText  = hasStages ? FormatSleepDuration(stages.DeepMinutes)  : "–";
+            RemSleepText   = hasStages ? FormatSleepDuration(stages.RemMinutes)   : "–";
+            AwakeSleepText = hasStages ? FormatSleepDuration(stages.AwakeMinutes) : "–";
             SleepProgress  = sleepH > 0 ? (float)Math.Clamp(sleepH / 8.0, 0.0, 1.0) : 0f;
             SleepText      = sleepH > 0 ? $"{sleepH:F1}h" : "–";
 
             // Strain-target = fryst morgon-recovery. Sätts en gång per dag vid första laddning
-            // så att sjunkande vilopuls under dagen inte sänker målet.
-            string todayKey = today.ToString("yyyy-MM-dd");
-            double target   = (settings.MorningRecoveryDate == todayKey && settings.MorningRecoveryPct > 0)
-                ? settings.MorningRecoveryPct
-                : recoveryPct;
-            if (settings.MorningRecoveryDate != todayKey || settings.MorningRecoveryPct <= 0)
+            // så att sjunkande vilopuls under dagen inte sänker målet. Utan återhämtningsdata
+            // finns inget mål (och inget påhittat värde fryses för resten av dagen).
+            if (hasRecoveryData)
             {
-                settings.MorningRecoveryDate = todayKey;
-                settings.MorningRecoveryPct  = recoveryPct;
-                await settingsRepo.SaveAsync(settings);
+                string todayKey = today.ToString("yyyy-MM-dd");
+                double target   = (settings.MorningRecoveryDate == todayKey && settings.MorningRecoveryPct > 0)
+                    ? settings.MorningRecoveryPct
+                    : recoveryPct;
+                if (settings.MorningRecoveryDate != todayKey || settings.MorningRecoveryPct <= 0)
+                {
+                    settings.MorningRecoveryDate = todayKey;
+                    settings.MorningRecoveryPct  = recoveryPct;
+                    await settingsRepo.SaveAsync(settings);
+                }
+                StrainTarget     = (float)(target / 100.0);
+                StrainTargetText = string.Format(AppResources.Hem_StrainTarget_Format, (int)target);
             }
-            StrainTarget     = (float)(target / 100.0);
-            StrainTargetText = string.Format(AppResources.Hem_StrainTarget_Format, (int)target);
+            else
+            {
+                StrainTarget     = 0f;
+                StrainTargetText = "";
+            }
 
             // Statusindikatorer
-            RecoveryStatusText = recoveryPct switch
+            RecoveryStatusText = !hasRecoveryData ? "" : recoveryPct switch
             {
                 >= 80 => AppResources.Hem_Recovery_Optimal,
                 >= 60 => AppResources.Hem_Recovery_Good,
@@ -283,25 +352,38 @@ public partial class HemViewModel(DatabaseService db, IHealthService health, ISe
             };
 
             // Accessibility-labels
-            GaugeAccessibilityLabel    = string.Format(AppResources.Hem_Accessibility_Gauge, (int)score);
             StrainAccessibilityLabel   = hasStrainData
                 ? string.Format(AppResources.Hem_Accessibility_Strain, (int)strainPct)
                 : AppResources.Hem_Accessibility_StrainNoData;
-            RecoveryAccessibilityLabel = string.Format(AppResources.Hem_Accessibility_Recovery, (int)recoveryPct);
+            RecoveryAccessibilityLabel = hasRecoveryData
+                ? string.Format(AppResources.Hem_Accessibility_Recovery, (int)recoveryPct)
+                : AppResources.Hem_Accessibility_RecoveryNoData;
             SleepAccessibilityLabel    = sleepH > 0
                 ? string.Format(AppResources.Hem_Accessibility_Sleep, $"{sleepH:F1}")
                 : AppResources.Hem_Accessibility_SleepNoData;
 
-            var (recHead, recDetail) = BuildRecommendation(recoveryPct, recentSessions);
+            var (recHead, recDetail) = BuildRecommendation(hasRecoveryData ? recoveryPct : null, _recentSessions);
             TodayRecommendation       = recHead;
             TodayRecommendationDetail = recDetail;
-
-            await LoadCoachChipsAsync(weekSessions, recentSessions, recoveryPct);
+        }
+        catch
+        {
+            // Inget råd utan data — lämna inte "Hämtar data…" kvar.
+            TodayRecommendation       = AppResources.Hem_Rec_NoData_Head;
+            TodayRecommendationDetail = AppResources.Hem_Rec_NoData_Body;
+            throw;
         }
         finally
         {
             IsLoading = false;
         }
+    }
+
+    /// <summary>Tom serie om Hälsa bara gav nollor (ingen data) — då ritas ingen platt linje.</summary>
+    private static double[] OrEmpty(IEnumerable<double> values)
+    {
+        var arr = values.ToArray();
+        return arr.Any(v => v > 0) ? arr : [];
     }
 
     private async Task LoadCoachChipsAsync(
@@ -346,7 +428,7 @@ public partial class HemViewModel(DatabaseService db, IHealthService health, ISe
                 MuscleScores:          muscleScoresTask.Result,
                 RecoveryPct:           recoveryPct,
                 NearestPRGapKg:        prResult.HasValue ? prResult.Value.GapKg : null,
-                NearestPRExerciseName: prResult.HasValue ? prResult.Value.ExerciseName : null,
+                NearestPRExerciseName: prResult.HasValue ? SwedishExerciseNames.Display(prResult.Value.ExerciseName) : null,
                 NearestPRRecentMaxKg:  prResult.HasValue ? prResult.Value.RecentMaxKg : 0,
                 NearestPRAllTimeMaxKg: prResult.HasValue ? prResult.Value.AllTimeMaxKg : 0,
                 DaysSinceLastWorkout:  daysSinceLast,
@@ -407,7 +489,7 @@ public partial class HemViewModel(DatabaseService db, IHealthService health, ISe
                 Name          = m.name,
                 Score         = score,
                 TileColor     = DesignTokens.HeatmapTile(t),
-                TextColor     = DesignTokens.HeatmapText(t),
+                TextColor     = HeatmapTile.TextOn(DesignTokens.HeatmapTile(t)),
                 FrequencyText = freqText,
             };
         }).ToList();
@@ -480,23 +562,6 @@ public partial class HemViewModel(DatabaseService db, IHealthService health, ISe
         return items;
     }
 
-    private static int CalculateStreak(List<WorkoutSession> sessions)
-    {
-        var completedDates = sessions
-            .Where(s => s.CompletedAt.HasValue)
-            .Select(s => s.CompletedAt!.Value.Date)
-            .ToHashSet();
-
-        int streak = 0;
-        var check  = DateTime.Today;
-        while (completedDates.Contains(check))
-        {
-            streak++;
-            check = check.AddDays(-1);
-        }
-        return streak;
-    }
-
     /// <summary>Formaterar sömnstadier. Över 60 min ⇒ "1h 23m"; annars "47m".</summary>
     private static string FormatSleepDuration(double minutes)
     {
@@ -551,8 +616,10 @@ public partial class HemViewModel(DatabaseService db, IHealthService health, ISe
         return points / 3.0;
     }
 
+    /// <param name="recoveryPct">null = ingen återhämtningsdata (ingen Apple Watch) → inga
+    /// återhämtningsbaserade råd, bara det som följer av loggade pass.</param>
     private static (string Headline, string Detail) BuildRecommendation(
-        double recoveryPct,
+        double? recoveryPct,
         IReadOnlyList<WorkoutSession> recentSessions)
     {
         var completed = recentSessions
@@ -573,14 +640,18 @@ public partial class HemViewModel(DatabaseService db, IHealthService health, ISe
         if (hoursSinceLast > 120)
             return (AppResources.Hem_Rec_LongBreak_Head, AppResources.Hem_Rec_LongBreak_Body);
 
+        // Utan återhämtningsdata ges inga råd om intensitet
+        if (recoveryPct is not double recovery)
+            return (AppResources.Hem_Rec_NoData_Head, AppResources.Hem_Rec_NoData_Body);
+
         // Konsekutiva dagar med låg återhämtning
         int streak = CountConsecutiveTrainingDays(completed);
-        if (streak >= 3 && recoveryPct < 50)
+        if (streak >= 3 && recovery < 50)
             return (AppResources.Hem_Rec_PlanRest_Head,
                 string.Format(AppResources.Hem_Rec_PlanRest_Body, streak));
 
         // Basscenario på återhämtning
-        string headline = recoveryPct switch
+        string headline = recovery switch
         {
             < 33 => AppResources.Hem_Rec_Head_RestPriority,
             < 50 => AppResources.Hem_Rec_Head_LightMove,
@@ -589,7 +660,7 @@ public partial class HemViewModel(DatabaseService db, IHealthService health, ISe
             _    => AppResources.Hem_Rec_Head_PeakForm,
         };
 
-        string body = recoveryPct switch
+        string body = recovery switch
         {
             < 33 => AppResources.Hem_Rec_Body_RestPriority,
             < 50 => AppResources.Hem_Rec_Body_LightMove,
@@ -598,7 +669,7 @@ public partial class HemViewModel(DatabaseService db, IHealthService health, ISe
             _    => AppResources.Hem_Rec_Body_PeakForm,
         };
 
-        if (lastSession is not null && hoursSinceLast < 48 && recoveryPct >= 50)
+        if (lastSession is not null && hoursSinceLast < 48 && recovery >= 50)
             body += AppResources.Hem_Rec_DifferentMuscle;
 
         return (headline, body);
@@ -665,6 +736,11 @@ public class DayStreakItem
     public Color DayAbbrColor => IsToday
         ? DesignTokens.TextSecondary
         : DesignTokens.TextMuted;
+
+    // Tränad dag visas med färg/ring — säg det även till VoiceOver.
+    public string AccessibilityLabel => IsCompleted
+        ? $"{DayAbbr} {DayNum}, {AppResources.Hem_StreakDay_Trained_A11y}"
+        : $"{DayAbbr} {DayNum}";
 }
 
 public class MuscleTrendItem
@@ -672,4 +748,8 @@ public class MuscleTrendItem
     public string Name { get; set; } = "";
     public Color Color { get; set; } = Colors.White;
     public double[] Values { get; set; } = [];
+
+    // Values: äldst först, senaste veckan sist.
+    public string AccessibilityLabel => Values.Length == 0 ? Name
+        : string.Format(AppResources.Hem_MuscleTrend_A11y, Name, $"{Values[^1]:N0}", $"{Values[0]:N0}");
 }

@@ -38,16 +38,14 @@ public partial class MuscleGroupOption : ObservableObject
 public partial class EquipmentOption : ObservableObject
 {
     private static readonly Color s_dim    = Color.FromArgb("#323240");
-    private static readonly Color s_active = Color.FromArgb("#B8B8BC");
-    private static readonly Color s_textDim    = Color.FromArgb("#71717A");
-    private static readonly Color s_textActive = Color.FromArgb("#E4E4E7");
 
     public string Label { get; }
     public EquipmentType Equipment { get; }
 
     [ObservableProperty] private bool _isSelected;
     [ObservableProperty] private Color _borderColor = s_dim;
-    [ObservableProperty] private Color _textColor = s_textDim;
+    // Ovald text: TextSecondary (#A2A2A2, 7:1) — tidigare #71717A gav 3,7:1
+    [ObservableProperty] private Color _textColor = DesignTokens.TextSecondary;
 
     public EquipmentOption(string label, EquipmentType equipment)
     {
@@ -57,18 +55,24 @@ public partial class EquipmentOption : ObservableObject
 
     partial void OnIsSelectedChanged(bool value)
     {
-        BorderColor = value ? s_active : s_dim;
-        TextColor   = value ? s_textActive : s_textDim;
+        BorderColor = value ? DesignTokens.Accent : s_dim;
+        TextColor   = value ? DesignTokens.Text : DesignTokens.TextSecondary;
     }
 }
 
+[QueryProperty(nameof(CallbackAction), "CallbackAction")]
 public partial class CreateExerciseViewModel : ObservableObject
 {
     private readonly IExerciseRepository _exerciseRepo;
-    private readonly ActiveWorkoutStateService _state;
-    private readonly ActiveWorkoutViewModel _activeVm;
     private readonly List<MuscleGroupOption> _muscleGroups;
     private readonly List<EquipmentOption> _equipmentOptions;
+    private bool _isSaving;
+
+    /// <summary>
+    /// Övningsväljarens callback när sidan öppnas därifrån. Den nya övningen går samma väg
+    /// som ett val i listan — läggs till i passet, eller ersätter vid "Byt övning".
+    /// </summary>
+    public Action<Exercise>? CallbackAction { get; set; }
 
     [ObservableProperty] private string _name = "";
     [ObservableProperty] private int _restSeconds = 120;
@@ -78,24 +82,23 @@ public partial class CreateExerciseViewModel : ObservableObject
     public IReadOnlyList<MuscleGroupOption> MuscleGroups => _muscleGroups;
     public IReadOnlyList<EquipmentOption> EquipmentOptions => _equipmentOptions;
 
-    public CreateExerciseViewModel(IExerciseRepository exerciseRepo, ActiveWorkoutStateService state, ActiveWorkoutViewModel activeVm)
+    public CreateExerciseViewModel(IExerciseRepository exerciseRepo)
     {
         _exerciseRepo = exerciseRepo;
-        _state = state;
-        _activeVm = activeVm;
 
+        // Samma färger som i passet och övningsväljaren (DesignTokens.MuscleColor)
         _muscleGroups =
         [
-            new(AppResources.Library_Muscle_Chest,     MuscleGroup.Chest,     Color.FromArgb("#FB7185")),
-            new(AppResources.Library_Muscle_Back,      MuscleGroup.Back,      Color.FromArgb("#38BDF8")),
-            new(AppResources.Library_Muscle_Shoulders, MuscleGroup.Shoulders, Color.FromArgb("#A78BFA")),
-            new(AppResources.Library_Muscle_Biceps,    MuscleGroup.Biceps,    Color.FromArgb("#4ADE80")),
-            new(AppResources.Library_Muscle_Triceps,   MuscleGroup.Triceps,   Color.FromArgb("#FBBF24")),
-            new(AppResources.Library_Muscle_Forearms,  MuscleGroup.Forearms,  Color.FromArgb("#34D399")),
-            new(AppResources.Library_Muscle_Legs,      MuscleGroup.Legs,      Color.FromArgb("#F97316")),
-            new(AppResources.Library_Muscle_Core,      MuscleGroup.Core,      Color.FromArgb("#EC4899")),
-            new(AppResources.Library_Muscle_FullBody,  MuscleGroup.FullBody,  Color.FromArgb("#EF4444")),
-            new(AppResources.Library_Muscle_Other,     MuscleGroup.Other,     Color.FromArgb("#94A3B8")),
+            new(AppResources.Library_Muscle_Chest,     MuscleGroup.Chest,     DesignTokens.MuscleColor(MuscleGroup.Chest)),
+            new(AppResources.Library_Muscle_Back,      MuscleGroup.Back,      DesignTokens.MuscleColor(MuscleGroup.Back)),
+            new(AppResources.Library_Muscle_Shoulders, MuscleGroup.Shoulders, DesignTokens.MuscleColor(MuscleGroup.Shoulders)),
+            new(AppResources.Library_Muscle_Biceps,    MuscleGroup.Biceps,    DesignTokens.MuscleColor(MuscleGroup.Biceps)),
+            new(AppResources.Library_Muscle_Triceps,   MuscleGroup.Triceps,   DesignTokens.MuscleColor(MuscleGroup.Triceps)),
+            new(AppResources.Library_Muscle_Forearms,  MuscleGroup.Forearms,  DesignTokens.MuscleColor(MuscleGroup.Forearms)),
+            new(AppResources.Library_Muscle_Legs,      MuscleGroup.Legs,      DesignTokens.MuscleColor(MuscleGroup.Legs)),
+            new(AppResources.Library_Muscle_Core,      MuscleGroup.Core,      DesignTokens.MuscleColor(MuscleGroup.Core)),
+            new(AppResources.Library_Muscle_FullBody,  MuscleGroup.FullBody,  DesignTokens.MuscleColor(MuscleGroup.FullBody)),
+            new(AppResources.Library_Muscle_Other,     MuscleGroup.Other,     DesignTokens.MuscleColor(MuscleGroup.Other)),
         ];
         _muscleGroups[0].IsSelected = true;
 
@@ -139,33 +142,51 @@ public partial class CreateExerciseViewModel : ObservableObject
     [RelayCommand]
     private async Task SaveAsync()
     {
-        if (!IsNameValid) return;
-
-        var selectedGroup     = _muscleGroups.FirstOrDefault(m => m.IsSelected)?.Group ?? MuscleGroup.Other;
-        var selectedEquipment = _equipmentOptions.FirstOrDefault(e => e.IsSelected)?.Equipment ?? EquipmentType.Other;
-
-        var exercise = new Exercise
+        if (!IsNameValid || _isSaving) return;
+        _isSaving = true;
+        try
         {
-            Name              = Name.Trim(),
-            IsCustom          = true,
-            MuscleGroup       = selectedGroup,
-            Equipment         = selectedEquipment,
-            DefaultRestSeconds = RestSeconds,
-            Notes             = Notes.Trim()
-        };
-        await _exerciseRepo.SaveAsync(exercise);
+            var selectedGroup     = _muscleGroups.FirstOrDefault(m => m.IsSelected)?.Group ?? MuscleGroup.Other;
+            var selectedEquipment = _equipmentOptions.FirstOrDefault(e => e.IsSelected)?.Equipment ?? EquipmentType.Other;
 
-        if (_state.IsActive)
-        {
-            await _activeVm.AddExerciseFromPickerAsync(exercise);
-            await Shell.Current.GoToAsync(AppRoutes.BackTwoLevels);
+            var exercise = new Exercise
+            {
+                Name              = Name.Trim(),
+                IsCustom          = true,
+                MuscleGroup       = selectedGroup,
+                Equipment         = selectedEquipment,
+                DefaultRestSeconds = RestSeconds,
+                Notes             = Notes.Trim()
+            };
+            await _exerciseRepo.SaveAsync(exercise);
+
+            if (CallbackAction is { } callback)
+            {
+                // Öppnad från övningsväljaren: gör samma sak som ett val där och hoppa förbi väljaren
+                callback(exercise);
+                await Shell.Current.GoToAsync(AppRoutes.BackTwoLevels);
+            }
+            else
+            {
+                await Shell.Current.GoToAsync(AppRoutes.Back);
+            }
         }
-        else
+        catch (Exception ex)
         {
-            await Shell.Current.GoToAsync(AppRoutes.Back);
+            System.Diagnostics.Debug.WriteLine($"[CreateExercise] Save: {ex}");
+            try { await Shell.Current.DisplayAlertAsync("", AppResources.Common_ErrorRetry, AppResources.Common_OK); }
+            catch { /* felvisningen får inte själv fälla sidan */ }
+        }
+        finally
+        {
+            _isSaving = false;
         }
     }
 
     [RelayCommand]
-    private static async Task CancelAsync() => await Shell.Current.GoToAsync(AppRoutes.Back);
+    private static async Task CancelAsync()
+    {
+        try { await Shell.Current.GoToAsync(AppRoutes.Back); }
+        catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"[CreateExercise] Cancel: {ex}"); }
+    }
 }

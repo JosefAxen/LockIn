@@ -12,7 +12,6 @@ public class AppDelegate : MauiUIApplicationDelegate
 	public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
 	{
 		var result = base.FinishedLaunching(application, launchOptions);
-		ConfigureTabBarAppearance();
 		ConfigureNavBarAppearance();
 		// Window background and quick actions are handled by SceneDelegate: with the
 		// UIScene life cycle the window doesn't exist yet here, launchOptions carries no
@@ -85,40 +84,9 @@ public class AppDelegate : MauiUIApplicationDelegate
 	}
 
 	// Called from SceneDelegate.WillConnect once the scene's UIWindow exists.
+	// Same color as splash, the startup page and AtmosphericBackgroundView (DesignTokens.SK_Background).
 	internal static void ConfigureWindowBackground(UIWindow window)
 	{
-		window.BackgroundColor = UIColor.FromDynamicProvider(t =>
-			t.UserInterfaceStyle == UIUserInterfaceStyle.Dark
-				? UIColor.FromRGB(0x1E, 0x1E, 0x26)
-				: UIColor.FromRGB(0xFC, 0xFC, 0xFC));
-	}
-
-	internal static void ConfigureTabBarAppearance()
-	{
-		var accent = UIColor.FromRGB(0xFF, 0x5A, 0x1F);
-		var unselected = UIColor.FromDynamicProvider(t =>
-			t.UserInterfaceStyle == UIUserInterfaceStyle.Dark
-				? UIColor.FromRGB(0xA0, 0xA0, 0xA8)
-				: UIColor.FromRGB(0x8E, 0x8E, 0x93));
-
-		var appearance = new UITabBarAppearance();
-		// Transparent background — content bleeds behind the tab bar
-		appearance.ConfigureWithTransparentBackground();
-		appearance.BackgroundColor = UIColor.Clear;
-		appearance.ShadowColor     = UIColor.Clear;  // remove top separator line
-
-		var item = new UITabBarItemAppearance();
-		item.Normal.IconColor = unselected;
-		item.Normal.TitleTextAttributes = new UIStringAttributes { ForegroundColor = unselected };
-		item.Selected.IconColor = accent;
-		item.Selected.TitleTextAttributes = new UIStringAttributes { ForegroundColor = accent };
-
-		appearance.StackedLayoutAppearance       = item;
-		appearance.InlineLayoutAppearance        = item;
-		appearance.CompactInlineLayoutAppearance = item;
-
-		UITabBar.Appearance.StandardAppearance = appearance;
-		if (UIDevice.CurrentDevice.CheckSystemVersion(15, 0))
-			UITabBar.Appearance.ScrollEdgeAppearance = appearance;
+		window.BackgroundColor = UIColor.FromRGB(0x1E, 0x1E, 0x26);
 	}
 }

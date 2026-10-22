@@ -44,28 +44,43 @@ public partial class ExercisePickerViewModel(IExerciseRepository exerciseRepo, I
     public async Task LoadAsync()
     {
         IsLoading = true;
-        _allExercises = await exerciseRepo.GetAllAsync();
-
-        MuscleChips.Clear();
-        MuscleChips.Add(new MuscleGroupChip { Label = AppResources.Library_Chip_All, MuscleGroup = null, IsSelected = true });
-        var groups = _allExercises.Select(e => e.MuscleGroup).Distinct().OrderBy(g => g.ToString());
-        foreach (var g in groups)
-            MuscleChips.Add(new MuscleGroupChip { Label = MuscleGroupLabel(g), MuscleGroup = g });
-
-        EquipmentChips.Clear();
-        EquipmentChips.Add(new EquipmentChip { Label = AppResources.Library_Chip_All, Equipment = null, IsSelected = true });
-        foreach (var eq in _allExercises
-            .Select(e => e.Equipment)
-            .Where(e => e != EquipmentType.Other)
-            .Distinct()
-            .OrderBy(e => e.ToString()))
+        try
         {
-            EquipmentChips.Add(new EquipmentChip { Label = EquipmentTypeLabel(eq), Equipment = eq });
-        }
+            _allExercises = await exerciseRepo.GetAllAsync();
 
-        ApplyMuscleQueryFilter();
-        ApplyFilter();
-        IsLoading = false;
+            MuscleChips.Clear();
+            MuscleChips.Add(new MuscleGroupChip { Label = AppResources.Library_Chip_All, MuscleGroup = null, IsSelected = true });
+            // Etiketterna täcker alla muskelgrupper (även underarmar, quads m.fl.) — annars blir det flera "Övrigt"-chips
+            var groups = _allExercises.Select(e => e.MuscleGroup).Distinct().OrderBy(g => MuscleGroupLabel(g));
+            foreach (var g in groups)
+                MuscleChips.Add(new MuscleGroupChip { Label = MuscleGroupLabel(g), MuscleGroup = g });
+
+            EquipmentChips.Clear();
+            EquipmentChips.Add(new EquipmentChip { Label = AppResources.Library_Chip_All, Equipment = null, IsSelected = true });
+            foreach (var eq in _allExercises
+                .Select(e => e.Equipment)
+                .Where(e => e != EquipmentType.Other)
+                .Distinct()
+                .OrderBy(e => e.ToString()))
+            {
+                EquipmentChips.Add(new EquipmentChip { Label = EquipmentTypeLabel(eq), Equipment = eq });
+            }
+            _selectedEquipment = null;
+
+            ApplyMuscleQueryFilter();
+            ApplyFilter();
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private static async Task ShowErrorAsync(Exception ex, string context)
+    {
+        System.Diagnostics.Debug.WriteLine($"[ExercisePicker] {context}: {ex}");
+        try { await CommunityToolkit.Maui.Alerts.Toast.Make(AppResources.Common_ErrorRetry).Show(); }
+        catch { /* felvisningen får inte själv fälla sidan */ }
     }
 
     private void ApplyMuscleQueryFilter()
@@ -85,36 +100,40 @@ public partial class ExercisePickerViewModel(IExerciseRepository exerciseRepo, I
     [RelayCommand]
     private async Task RecommendAsync()
     {
-        var selectedMuscle = MuscleChips.FirstOrDefault(c => c.IsSelected)?.MuscleGroup;
-        if (selectedMuscle is null)
+        try
         {
-            await CommunityToolkit.Maui.Alerts.Toast.Make(AppResources.ExercisePicker_Recommend_NoMuscle).Show();
-            return;
+            var selectedMuscle = MuscleChips.FirstOrDefault(c => c.IsSelected)?.MuscleGroup;
+            if (selectedMuscle is null)
+            {
+                await CommunityToolkit.Maui.Alerts.Toast.Make(AppResources.ExercisePicker_Recommend_NoMuscle).Show();
+                return;
+            }
+            var picks = await recommend.RecommendForMuscleAsync(
+                selectedMuscle.Value,
+                MusclePriorityLevel.Grow,
+                new List<int>(),
+                0, 0);
+            if (picks.Count == 0)
+            {
+                await CommunityToolkit.Maui.Alerts.Toast.Make(AppResources.ExercisePicker_Recommend_None).Show();
+                return;
+            }
+            var top3 = picks.Take(3).ToList();
+            var options = top3.Select(e => e.DisplayName).ToArray();
+            var page = Shell.Current?.CurrentPage;
+            if (page is null) return;
+            var choice = await page.DisplayActionSheet(
+                AppResources.ExercisePicker_Recommend_Title,
+                AppResources.ExercisePicker_Recommend_Cancel,
+                null,
+                options);
+            if (string.IsNullOrEmpty(choice) || choice == AppResources.ExercisePicker_Recommend_Cancel) return;
+            var picked = top3.FirstOrDefault(e => e.DisplayName == choice);
+            if (picked is null) return;
+            CallbackAction?.Invoke(picked);
+            await Shell.Current!.GoToAsync(AppRoutes.Back);
         }
-        var picks = await recommend.RecommendForMuscleAsync(
-            selectedMuscle.Value,
-            MusclePriorityLevel.Grow,
-            new List<int>(),
-            0, 0);
-        if (picks.Count == 0)
-        {
-            await CommunityToolkit.Maui.Alerts.Toast.Make(AppResources.ExercisePicker_Recommend_None).Show();
-            return;
-        }
-        var top3 = picks.Take(3).ToList();
-        var options = top3.Select(e => e.Name).ToArray();
-        var page = Shell.Current?.CurrentPage;
-        if (page is null) return;
-        var choice = await page.DisplayActionSheet(
-            AppResources.ExercisePicker_Recommend_Title,
-            AppResources.ExercisePicker_Recommend_Cancel,
-            null,
-            options);
-        if (string.IsNullOrEmpty(choice) || choice == AppResources.ExercisePicker_Recommend_Cancel) return;
-        var picked = top3.FirstOrDefault(e => e.Name == choice);
-        if (picked is null) return;
-        CallbackAction?.Invoke(picked);
-        await Shell.Current!.GoToAsync(AppRoutes.Back);
+        catch (Exception ex) { await ShowErrorAsync(ex, "Recommend"); }
     }
 
     [RelayCommand]
@@ -146,9 +165,10 @@ public partial class ExercisePickerViewModel(IExerciseRepository exerciseRepo, I
             source = source.Where(e => e.Equipment == _selectedEquipment.Value);
         if (!string.IsNullOrEmpty(q))
             source = source.Where(e => e.Name.ToLowerInvariant().Contains(q)
-                                    || e.SwedishName.ToLowerInvariant().Contains(q));
+                                    || e.SwedishName.ToLowerInvariant().Contains(q)
+                                    || e.DisplayName.ToLowerInvariant().Contains(q));
 
-        var desired = source.OrderBy(e => e.Name).ToList();
+        var desired = source.OrderBy(e => e.DisplayName).ToList();
 
         // Aldrig Clear() — det avfyrar CollectionChanged.Reset → iOS ReloadData()
         // → Entry förlorar focus → tangentbordet stängs.
@@ -174,35 +194,19 @@ public partial class ExercisePickerViewModel(IExerciseRepository exerciseRepo, I
     [RelayCommand]
     private async Task SelectExerciseAsync(ExercisePickerRow row)
     {
-        CallbackAction?.Invoke(row.Exercise);
-        await Shell.Current.GoToAsync(AppRoutes.Back);
+        try
+        {
+            CallbackAction?.Invoke(row.Exercise);
+            await Shell.Current.GoToAsync(AppRoutes.Back);
+        }
+        catch (Exception ex) { await ShowErrorAsync(ex, "SelectExercise"); }
     }
 
-    private static string MuscleGroupLabel(MuscleGroup mg) => mg switch
-    {
-        MuscleGroup.Chest     => AppResources.Library_Muscle_Chest,
-        MuscleGroup.Back      => AppResources.Library_Muscle_Back,
-        MuscleGroup.Shoulders => AppResources.Library_Muscle_Shoulders,
-        MuscleGroup.Biceps    => AppResources.Library_Muscle_Biceps,
-        MuscleGroup.Triceps   => AppResources.Library_Muscle_Triceps,
-        MuscleGroup.Legs      => AppResources.Library_Muscle_Legs,
-        MuscleGroup.Core      => AppResources.Library_Muscle_Core,
-        MuscleGroup.FullBody  => AppResources.Library_Muscle_FullBody,
-        _                     => AppResources.Library_Muscle_Other
-    };
+    // Samma etikett som i resten av appen — täcker alla MuscleGroup-värden
+    private static string MuscleGroupLabel(MuscleGroup mg) => mg.ToLocalizedLabel();
 
-    private static Color GetMuscleColor(MuscleGroup mg) => mg switch
-    {
-        MuscleGroup.Chest     => Color.FromArgb("#FB7185"),
-        MuscleGroup.Back      => Color.FromArgb("#38BDF8"),
-        MuscleGroup.Shoulders => Color.FromArgb("#A78BFA"),
-        MuscleGroup.Biceps    => Color.FromArgb("#4ADE80"),
-        MuscleGroup.Triceps   => Color.FromArgb("#FBBF24"),
-        MuscleGroup.Legs      => Color.FromArgb("#F97316"),
-        MuscleGroup.Core      => Color.FromArgb("#EC4899"),
-        MuscleGroup.FullBody  => Color.FromArgb("#EF4444"),
-        _                     => Color.FromArgb("#52525E"),
-    };
+    // Samma färger som passets sektioner; #52525E för "Övrigt" gav 2,6:1 som textfärg
+    private static Color GetMuscleColor(MuscleGroup mg) => DesignTokens.MuscleColor(mg);
 
     private static string EquipmentTypeLabel(EquipmentType e) => e switch
     {
@@ -223,7 +227,7 @@ public partial class ExercisePickerViewModel(IExerciseRepository exerciseRepo, I
 public class ExercisePickerRow
 {
     public Exercise Exercise { get; }
-    public string Name => Exercise.Name;
+    public string Name => Exercise.DisplayName;
     public bool IsCustom => Exercise.IsCustom;
     public string MuscleLabel { get; }
     public Color MuscleColor { get; }

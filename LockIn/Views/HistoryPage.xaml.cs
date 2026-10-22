@@ -1,5 +1,6 @@
 using LockIn;
 using LockIn.Navigation;
+using LockIn.Resources.Strings;
 using LockIn.Services;
 using LockIn.ViewModels;
 
@@ -7,6 +8,11 @@ namespace LockIn.Views;
 
 public partial class HistoryPage : ContentPage
 {
+    // Bottenpadding för scrollinnehållet: tab-baren, plus "PASS PÅGÅR"-bannern
+    // (Margin 96 + ca 59 pt hög) när den visas.
+    private const double BottomInset = 120;
+    private const double BottomInsetWithBanner = 176;
+
     private readonly HistoryViewModel _vm;
     private readonly ActiveWorkoutStateService _state;
     private bool _hasLoaded;
@@ -21,42 +27,69 @@ public partial class HistoryPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        WorkoutBanner.IsVisible = _state.IsActive;
-        if (_state.IsActive) StartBannerPulse();
+        UpdateBannerState();
+        _state.StateChanged += OnWorkoutStateChanged;
         _vm.CalendarChanged += RebuildCalendar;
         _vm.PropertyChanged += OnHistoryVmPropertyChanged;
 
-        StickyHeader.Opacity = 0;
+        // Scrollpositionen behålls mellan besök — headern ska spegla den.
+        UpdateStickyHeader(MainScroll.ScrollY);
 
-        if (!_hasLoaded)
+        bool animate = !AnimationHelper.ReduceMotion;
+        try
         {
-            Content.Opacity = 0;
-            Content.TranslationY = 16;
-            await _vm.LoadAsync();
-            _hasLoaded = true;
-            await Task.WhenAll(
-                Content.FadeTo(1, 400, Easing.CubicOut),
-                Content.TranslateTo(0, 0, 400, Easing.CubicOut)
-            );
-        }
-        else
-        {
-            Content.Opacity = 0;
-            Content.TranslationY = 12;
-            await Task.WhenAll(
-                _vm.LoadAsync(),
-                Content.FadeTo(1, 320, Easing.CubicOut),
-                Content.TranslateTo(0, 0, 320, Easing.CubicOut)
-            );
-        }
+            if (!_hasLoaded)
+            {
+                if (animate)
+                {
+                    Content.Opacity = 0;
+                    Content.TranslationY = 16;
+                }
+                await _vm.LoadAsync();
+                _hasLoaded = true;
+                if (animate)
+                    await Task.WhenAll(
+                        Content.FadeTo(1, 400, Easing.CubicOut),
+                        Content.TranslateTo(0, 0, 400, Easing.CubicOut)
+                    );
+            }
+            else
+            {
+                // Tyst uppdatering: ingen laddningsvy och listan nollställs inte.
+                if (animate)
+                {
+                    Content.Opacity = 0;
+                    Content.TranslationY = 12;
+                    await Task.WhenAll(
+                        _vm.RefreshAsync(),
+                        Content.FadeTo(1, 320, Easing.CubicOut),
+                        Content.TranslateTo(0, 0, 320, Easing.CubicOut)
+                    );
+                }
+                else
+                {
+                    await _vm.RefreshAsync();
+                }
+            }
 
-        UpdatePeriodIndicator(animated: false);
-        UpdateSortIndicator(animated: false);
+            UpdatePeriodIndicator(animated: false);
+            UpdateSortIndicator(animated: false);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[HistoryPage] OnAppearing failed: {ex}");
+            await DisplayAlert(null, AppResources.Common_ErrorRetry, AppResources.Common_OK);
+        }
+        finally
+        {
+            Content.Opacity = 1;
+            Content.TranslationY = 0;
+        }
     }
 
     private void OnScrolled(object sender, ScrolledEventArgs e)
     {
-        StickyHeader.Opacity = Math.Clamp((e.ScrollY - 80.0) / 40.0, 0, 1);
+        UpdateStickyHeader(e.ScrollY);
 
         // Ladda fler sessions när användaren scrollat nära botten (300px buffer).
         if (sender is ScrollView sv && sv.ContentSize.Height > 0)
@@ -65,6 +98,13 @@ public partial class HistoryPage : ContentPage
             if (distanceFromBottom < 300)
                 _vm.LoadMoreSessionsCommand.Execute(null);
         }
+    }
+
+    private void UpdateStickyHeader(double scrollY)
+    {
+        StickyHeader.Opacity = Math.Clamp((scrollY - 80.0) / 40.0, 0, 1);
+        // Osynlig header får inte svälja tryck i toppen av sidan.
+        StickyAchievementsButton.InputTransparent = StickyHeader.Opacity < 0.5;
     }
 
     private double _periodColumnWidth;
@@ -90,7 +130,7 @@ public partial class HistoryPage : ContentPage
     {
         if (_periodColumnWidth <= 0) return;
         var targetX = _vm.SelectedPeriod * _periodColumnWidth;
-        if (animated)
+        if (animated && !AnimationHelper.ReduceMotion)
             PeriodIndicator.TranslateTo(targetX, 0, 280, Easing.SpringOut);
         else
             PeriodIndicator.TranslationX = targetX;
@@ -100,7 +140,7 @@ public partial class HistoryPage : ContentPage
     {
         if (_sortColumnWidth <= 0) return;
         var targetX = _vm.SelectedSort * _sortColumnWidth;
-        if (animated)
+        if (animated && !AnimationHelper.ReduceMotion)
             SortIndicator.TranslateTo(targetX, 0, 280, Easing.SpringOut);
         else
             SortIndicator.TranslationX = targetX;
@@ -117,9 +157,25 @@ public partial class HistoryPage : ContentPage
     protected override void OnDisappearing()
     {
         base.OnDisappearing();
+        _state.StateChanged -= OnWorkoutStateChanged;
         _vm.CalendarChanged -= RebuildCalendar;
         _vm.PropertyChanged -= OnHistoryVmPropertyChanged;
         BannerPulseRing.StopPulse();
+    }
+
+    private void OnWorkoutStateChanged()
+        => MainThread.BeginInvokeOnMainThread(UpdateBannerState);
+
+    private void UpdateBannerState()
+    {
+        var active = _state.IsActive;
+        WorkoutBanner.IsVisible = active;
+        if (active) StartBannerPulse();
+        else BannerPulseRing.StopPulse();
+
+        // Sista kortet ska kunna scrollas fram ovanför bannern och tab-baren.
+        var p = ScrollContent.Padding;
+        ScrollContent.Padding = new Thickness(p.Left, p.Top, p.Right, active ? BottomInsetWithBanner : BottomInset);
     }
 
     private void StartBannerPulse() => BannerPulseRing.StartPulse();
@@ -167,13 +223,14 @@ public partial class HistoryPage : ContentPage
             var border = new Border
             {
                 StrokeShape = new Microsoft.Maui.Controls.Shapes.Ellipse(),
-                BackgroundColor = (trained || selected) ? Color.FromArgb("#3E3E44") : Colors.Transparent,
+                BackgroundColor = (trained || selected) ? DesignTokens.Primary : Colors.Transparent,
                 Stroke = (today && !trained && !selected) ? DesignTokens.CalTodayStroke : Colors.Transparent,
                 StrokeThickness = (today && !trained && !selected) ? 1.5 : 0,
                 Margin = new Thickness(3),
                 Padding = new Thickness(0),
                 HorizontalOptions = LayoutOptions.Fill,
                 VerticalOptions = LayoutOptions.Fill,
+                InputTransparent = true,
             };
 
             var label = new Label
@@ -189,8 +246,19 @@ public partial class HistoryPage : ContentPage
             };
             border.Content = label;
 
+            // Tryckytan är hela cellen (44 pt hög), inte bara cirkeln innanför marginalen.
+            var cellView = new Grid();
+            cellView.Add(border);
+            if (trained)
+            {
+                // Tränad dag visas med fylld cirkel — säg det även till VoiceOver.
+                SemanticProperties.SetDescription(cellView, string.Format(
+                    AppResources.History_Cal_TrainedDay_A11y,
+                    new DateTime(_vm.CalendarYear, _vm.CalendarMonth, day).ToString("d MMMM")));
+            }
+
             var capturedDay = day;
-            border.GestureRecognizers.Add(new TapGestureRecognizer
+            cellView.GestureRecognizers.Add(new TapGestureRecognizer
             {
                 Command = new Command(() =>
                 {
@@ -199,8 +267,8 @@ public partial class HistoryPage : ContentPage
                 })
             });
 
-            Grid.SetRow(border, r); Grid.SetColumn(border, c);
-            grid.Children.Add(border);
+            Grid.SetRow(cellView, r); Grid.SetColumn(cellView, c);
+            grid.Children.Add(cellView);
             day++;
         }
     }
@@ -219,13 +287,15 @@ public partial class HistoryPage : ContentPage
 
     private static async void OnButtonPointerPressed(object? sender, PointerEventArgs e)
     {
-        HapticFeedback.Default.Perform(HapticFeedbackType.Click);
+        AnimationHelper.Haptic(HapticFeedbackType.Click);
+        if (AnimationHelper.ReduceMotion) return;
         if (sender is PointerGestureRecognizer pgr && pgr.Parent is VisualElement ve)
             await ve.ScaleTo(0.93, 65, Easing.CubicOut);
     }
 
     private static async void OnButtonPointerReleased(object? sender, PointerEventArgs e)
     {
+        if (AnimationHelper.ReduceMotion) return;
         if (sender is PointerGestureRecognizer pgr && pgr.Parent is VisualElement ve)
             await ve.ScaleTo(1.0, 230, Easing.SpringOut);
     }

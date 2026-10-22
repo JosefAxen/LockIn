@@ -18,18 +18,14 @@
 
     <Grid RowDefinitions="Auto,*" SafeAreaEdges="None">
 
-        <!-- Atmosf�risk bakgrund -->
+        <!-- Atmosfärisk bakgrund -->
         <controls:AtmosphericBackgroundView Grid.RowSpan="2" InputTransparent="True"/>
 
         <!-- Header -->
         <Grid Grid.Row="0" Padding="16,56,16,8" ColumnDefinitions="48,*,48">
             <Border Grid.Column="0"
-                    WidthRequest="36" HeightRequest="36"
-                    StrokeShape="Ellipse"
-                    BackgroundColor="#17FFFFFF"
-                    Stroke="#29FFFFFF"
-                    StrokeThickness="0.5"
-                    VerticalOptions="Center">
+                    Style="{StaticResource IconCircleButton}"
+                    SemanticProperties.Description="{loc:Localize A11y_Back}">
                 <Path Style="{StaticResource BackChevron}"/>
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Tapped="OnBackClicked"/>
@@ -43,13 +39,9 @@
                        Style="{StaticResource MutedLabel}"/>
             </StackLayout>
             <Border Grid.Column="2"
-                    WidthRequest="36" HeightRequest="36"
-                    StrokeShape="Ellipse"
-                    BackgroundColor="#17FFFFFF"
-                    Stroke="#29FFFFFF"
-                    StrokeThickness="0.5"
-                    VerticalOptions="Center"
+                    Style="{StaticResource IconCircleButton}"
                     HorizontalOptions="End"
+                    SemanticProperties.Description="{loc:Localize A11y_Share}"
                     IsEnabled="{Binding IsSharing, Converter={StaticResource InvertedBoolConverter}}">
                 <Label Text="↗"
                        TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
@@ -63,7 +55,8 @@
         </Grid>
 
         <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Never">
-            <VerticalStackLayout Padding="16,4,16,40" Spacing="12">
+            <!-- Bottenpadding 120: tab-baren är synlig och genomskinlig på push-sidor -->
+            <VerticalStackLayout Padding="16,4,16,120" Spacing="12">
 
                 <!-- Chart card -->
                 <Border Style="{StaticResource CardFrame}" Padding="12,14,12,10">
@@ -71,7 +64,8 @@
                         <Label Text="{loc:Localize ExerciseProgress_Chart_1RM}"
                                Style="{StaticResource SectionLabel}"
                                Margin="4,0,0,0"/>
-                        <controls:LineChartView Points="{Binding ChartPoints}" StrokeColor="#B8B8BC" HeightRequest="200" BackgroundColor="Transparent"/>
+                        <controls:LineChartView Points="{Binding ChartPoints}" StrokeColor="#B8B8BC" HeightRequest="200" BackgroundColor="Transparent"
+                                                SemanticProperties.Description="{Binding ChartDescription}"/>
                     </VerticalStackLayout>
                 </Border>
 
@@ -119,7 +113,7 @@
                     </VerticalStackLayout>
                 </Border>
 
-                <!-- Metadata (utrustning, niv�, typ) -->
+                <!-- Metadata (utrustning, nivå, typ) -->
                 <Border Style="{StaticResource CardFrame}" Padding="16,14"
                         IsVisible="{Binding HasMetadata}">
                     <VerticalStackLayout Spacing="10">

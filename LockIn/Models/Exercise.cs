@@ -61,4 +61,9 @@ public class Exercise
     public ExerciseMechanic Mechanic { get; set; }
 
     public string SwedishName { get; set; } = "";
+
+    /// <summary>Visningsnamn i UI — svenska när det finns. Bind till detta, inte Name.</summary>
+    [Ignore]
+    public string DisplayName =>
+        !string.IsNullOrEmpty(SwedishName) ? SwedishName : LockIn.Services.SwedishExerciseNames.Display(Name);
 }

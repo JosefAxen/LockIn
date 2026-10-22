@@ -78,7 +78,7 @@ public partial class OnboardingViewModel(DatabaseService db, IHealthService heal
     public bool CanGoNext => CurrentStep switch
     {
         0 => UserNameInput.Trim().Length > 0,
-        1 => SelectedWeeklyGoal >= 2,
+        1 => SelectedWeeklyGoal >= 1,
         2 => SelectedExperience >= 0,
         3 => SelectedGoal >= 0,
         4 => true,   // Step 4 = Rekommendation — alltid möjligt att gå vidare
@@ -100,7 +100,7 @@ public partial class OnboardingViewModel(DatabaseService db, IHealthService heal
             CurrentStep--;
     }
 
-    // ── Weekly goal selection (2–6) ────────────────────────────────────────
+    // ── Weekly goal selection (1–7, samma intervall som Inställningar) ─────
 
     [RelayCommand]
     private async Task SelectWeeklyGoalAsync(int days)
@@ -138,10 +138,15 @@ public partial class OnboardingViewModel(DatabaseService db, IHealthService heal
 
     // ── Universal skip (alla steg) ─────────────────────────────────────────
 
+    // Onboardingen är Window.Page utan Shell — Shell.Current är null här.
+    private static Page? CurrentPage => Application.Current?.Windows.FirstOrDefault()?.Page;
+
     [RelayCommand]
     private async Task SkipOnboardingAsync()
     {
-        var ok = await Shell.Current.DisplayAlert(
+        var page = CurrentPage;
+        if (page is null) return;
+        var ok = await page.DisplayAlert(
             AppResources.Onboarding_SkipDialogTitle,
             AppResources.Onboarding_SkipDialogBody,
             AppResources.Onboarding_SkipLink,
@@ -215,34 +220,65 @@ public partial class OnboardingViewModel(DatabaseService db, IHealthService heal
 
     // ── Completion ─────────────────────────────────────────────────────────
 
-    // Steg 4 → steg 5 (equipment). Program-koncept ersatt av template-flöde (Task 21).
+    // Steg 4 → steg 5 (equipment). Programmet aktiveras inte här (program-koncept ersatt
+    // av template-flöde, Task 21) — texten på steg 4 säger var programmet finns.
     [RelayCommand]
-    private void ActivateProgram() => CurrentStep = 5;
-
-    [RelayCommand]
-    private void SkipProgram() => CurrentStep = 5;
+    private void ContinueFromRecommendation() => CurrentStep = 5;
 
     // Steg 5: Klar-knapp
     [RelayCommand]
     private async Task FinishAsync()
     {
-        await SaveEquipmentAsync();
+        try
+        {
+            await SaveEquipmentAsync();
 
-        var settings = await settingsRepo.GetAsync();
-        settings.UserName               = UserNameInput.Trim();
-        settings.WeeklyWorkoutGoal      = SelectedWeeklyGoal;
-        settings.HasCompletedOnboarding = true;
-        await settingsRepo.SaveAsync(settings);
+            var settings = await settingsRepo.GetAsync();
+            settings.UserName               = UserNameInput.Trim();
+            settings.WeeklyWorkoutGoal      = SelectedWeeklyGoal;
+            settings.HasCompletedOnboarding = true;
+            await settingsRepo.SaveAsync(settings);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[Onboarding] Kunde inte spara inställningar: {ex}");
+            if (CurrentPage is { } errorPage)
+                await errorPage.DisplayAlert(null, AppResources.Common_ErrorRetry, AppResources.Common_OK);
+            return;
+        }
 
-        var granted = await health.RequestPermissionsAsync();
-        if (granted)
-            Preferences.Default.Set("healthkit_sync_enabled", true);
+        await RequestHealthAccessAsync();
 
         MainThread.BeginInvokeOnMainThread(() =>
         {
             var shell = IPlatformApplication.Current!.Services.GetRequiredService<AppShell>();
             Application.Current!.Windows[0].Page = shell;
         });
+    }
+
+    // Förklara först varför appen vill läsa Hälsa-data, fråga sedan systemet.
+    // Får aldrig stoppa onboardingen: saknas Hälsa returnerar tjänsten false.
+    private async Task RequestHealthAccessAsync()
+    {
+        try
+        {
+            var page = CurrentPage;
+            if (page is null) return;
+            var proceed = await page.DisplayAlert(
+                AppResources.Onboarding_Health_Title,
+                AppResources.Onboarding_Health_Body,
+                AppResources.Onboarding_Health_Allow,
+                AppResources.Onboarding_Health_NotNow);
+            if (!proceed) return;
+
+            var granted = await health.RequestPermissionsAsync();
+            if (granted)
+                Preferences.Default.Set("healthkit_sync_enabled", true);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[Onboarding] Hälsa-behörighet misslyckades: {ex}");
+        }
     }
 
     // ── Card colors ────────────────────────────────────────────────────────
@@ -252,25 +288,31 @@ public partial class OnboardingViewModel(DatabaseService db, IHealthService heal
     private static Color IdleBg => DesignTokens.Surface2;
     private static Color IdleFg => DesignTokens.Text;
 
-    // Weekly goal (2–6)
+    // Weekly goal (1–7)
+    public Color Wk1Bg => SelectedWeeklyGoal == 1 ? SelBg : IdleBg;
     public Color Wk2Bg => SelectedWeeklyGoal == 2 ? SelBg : IdleBg;
     public Color Wk3Bg => SelectedWeeklyGoal == 3 ? SelBg : IdleBg;
     public Color Wk4Bg => SelectedWeeklyGoal == 4 ? SelBg : IdleBg;
     public Color Wk5Bg => SelectedWeeklyGoal == 5 ? SelBg : IdleBg;
     public Color Wk6Bg => SelectedWeeklyGoal == 6 ? SelBg : IdleBg;
+    public Color Wk7Bg => SelectedWeeklyGoal == 7 ? SelBg : IdleBg;
+    public Color Wk1Fg => SelectedWeeklyGoal == 1 ? SelFg : IdleFg;
     public Color Wk2Fg => SelectedWeeklyGoal == 2 ? SelFg : IdleFg;
     public Color Wk3Fg => SelectedWeeklyGoal == 3 ? SelFg : IdleFg;
     public Color Wk4Fg => SelectedWeeklyGoal == 4 ? SelFg : IdleFg;
     public Color Wk5Fg => SelectedWeeklyGoal == 5 ? SelFg : IdleFg;
     public Color Wk6Fg => SelectedWeeklyGoal == 6 ? SelFg : IdleFg;
+    public Color Wk7Fg => SelectedWeeklyGoal == 7 ? SelFg : IdleFg;
 
     private void RefreshWeeklyGoalColors()
     {
+        OnPropertyChanged(nameof(Wk1Bg)); OnPropertyChanged(nameof(Wk1Fg));
         OnPropertyChanged(nameof(Wk2Bg)); OnPropertyChanged(nameof(Wk2Fg));
         OnPropertyChanged(nameof(Wk3Bg)); OnPropertyChanged(nameof(Wk3Fg));
         OnPropertyChanged(nameof(Wk4Bg)); OnPropertyChanged(nameof(Wk4Fg));
         OnPropertyChanged(nameof(Wk5Bg)); OnPropertyChanged(nameof(Wk5Fg));
         OnPropertyChanged(nameof(Wk6Bg)); OnPropertyChanged(nameof(Wk6Fg));
+        OnPropertyChanged(nameof(Wk7Bg)); OnPropertyChanged(nameof(Wk7Fg));
     }
 
     // Experience level

@@ -23,20 +23,20 @@
 
     <Grid SafeAreaEdges="None">
 
-        <!-- Atmosf�risk bakgrund -->
+        <!-- Atmosfärisk bakgrund -->
         <controls:AtmosphericBackgroundView InputTransparent="True"/>
 
         <!-- Permanent status bar gradient (alltid synlig, fyller Dynamic Island-zonen) -->
         <BoxView VerticalOptions="Start" HeightRequest="90" InputTransparent="True" ZIndex="19">
             <BoxView.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <GradientStop Color="{AppThemeBinding Light=#28FCFCFC, Dark=#28141418}" Offset="0.0"/>
-                    <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark=#00141418}" Offset="1.0"/>
+                    <GradientStop Color="{AppThemeBinding Light=#28FCFCFC, Dark={StaticResource ForgeStatusBarOverlay}}" Offset="0.0"/>
+                    <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark={StaticResource ForgeStatusBarOverlayClear}}" Offset="1.0"/>
                 </LinearGradientBrush>
             </BoxView.Background>
         </BoxView>
 
-        <!-- Loading indicator � Forge st�lband -->
+        <!-- Loading indicator — Forge stålband -->
         <VerticalStackLayout IsVisible="{Binding IsLoading}"
                              HorizontalOptions="Center"
                              VerticalOptions="Center"
@@ -53,9 +53,9 @@
                         TranslationX="-40">
                     <Border.Background>
                         <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
-                            <GradientStop Color="#00B8B8BC" Offset="0"/>
+                            <GradientStop Color="{StaticResource ForgeAccentGlow}" Offset="0"/>
                             <GradientStop Color="{StaticResource ForgeAccent}" Offset="0.5"/>
-                            <GradientStop Color="#00B8B8BC" Offset="1"/>
+                            <GradientStop Color="{StaticResource ForgeAccentGlow}" Offset="1"/>
                         </LinearGradientBrush>
                     </Border.Background>
                 </Border>
@@ -66,8 +66,7 @@
                    FontSize="12"
                    CharacterSpacing="4"
                    TextColor="{StaticResource ForgeMuted}"
-                   HorizontalOptions="Center"
-                   Opacity="0.6"/>
+                   HorizontalOptions="Center"/>
         </VerticalStackLayout>
 
         <!-- Tab 0: Exercises -->
@@ -81,7 +80,7 @@
                         VerticalScrollBarVisibility="Never">
             <CollectionView.Header>
                 <VerticalStackLayout Spacing="0">
-                    <!-- Sidrubrik � scrollar bort med inneh�llet -->
+                    <!-- Sidrubrik — scrollar bort med innehållet -->
                     <Grid ColumnDefinitions="*,Auto" Padding="16,56,16,8">
                         <Label Grid.Column="0" Text="{loc:Localize Library_Title}"
                                FontFamily="BebasNeue" FontSize="34" CharacterSpacing="1"
@@ -91,18 +90,18 @@
                                 IsVisible="{Binding ShowActionButton}"
                                 Text="{loc:Localize Library_AddButton}"
                                 Style="{StaticResource SecondaryButton}"
-                                Padding="12,8" HeightRequest="36"
+                                Padding="12,8"
                                 Command="{Binding ActionButtonCommand}"
                                 VerticalOptions="Center"/>
                     </Grid>
-                    <!-- Tab-pill � scrollar med inneh�llet -->
+                    <!-- Tab-pill — scrollar med innehållet -->
                     <Border x:Name="TabSegmentExercises"
                             BackgroundColor="{StaticResource ForgePillTrack}"
                             StrokeThickness="0"
                             StrokeShape="RoundRectangle 50"
                             Margin="16,0,16,12"
                             Padding="2">
-                        <Grid ColumnDefinitions="*,*,*,*" HeightRequest="40"
+                        <Grid ColumnDefinitions="*,*,*,*" HeightRequest="44"
                               SizeChanged="OnTabContainerSizeChanged">
                             <Border x:Name="TabIndicatorExercises" Grid.ColumnSpan="4"
                                     BackgroundColor="{StaticResource ForgePillIndicator}"
@@ -144,7 +143,7 @@
                             </Border>
                         </Grid>
                     </Border>
-                    <!-- Pill-formad s�kruta -->
+                    <!-- Pill-formad sökruta -->
                     <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface2}}"
                             StrokeShape="RoundRectangle 26"
                             StrokeThickness="0"
@@ -152,11 +151,12 @@
                             HeightRequest="46"
                             Margin="16,0,16,10">
                         <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
-                            <Label Grid.Column="0"
-                                   Text="🔍"
-                                   FontSize="20"
-                                   TextColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"
-                                   VerticalOptions="Center"/>
+                            <Path Grid.Column="0"
+                                  Data="M 11,11 L 15,15 M 12,6.5 A 5.5,5.5 0 1 1 1,6.5 A 5.5,5.5 0 1 1 12,6.5 Z"
+                                  Stroke="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"
+                                  StrokeThickness="1.8" StrokeLineCap="Round"
+                                  WidthRequest="16" HeightRequest="16"
+                                  VerticalOptions="Center"/>
                             <Entry Grid.Column="1"
                                    Text="{Binding Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}}, Path=SearchText}"
                                    Placeholder="{loc:Localize Library_SearchPlaceholder}"
@@ -228,6 +228,10 @@
                            Padding="16,12,16,4"/>
                 </DataTemplate>
             </CollectionView.GroupHeaderTemplate>
+            <CollectionView.Footer>
+                <!-- Sista kortet ska kunna scrollas fram ovanför tab-baren (och bannern) -->
+                <BoxView x:Name="ExercisesFooter" HeightRequest="120" Color="Transparent" InputTransparent="True"/>
+            </CollectionView.Footer>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:Exercise">
                     <Border Margin="16,0,16,8"
@@ -249,7 +253,7 @@
                                      Fill="{Binding MuscleGroup, Converter={StaticResource MuscleGroupColorConverter}}"
                                      VerticalOptions="Center"/>
                             <VerticalStackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center">
-                                <Label Text="{Binding Name}"
+                                <Label Text="{Binding DisplayName}"
                                        FontFamily="DMSansMedium" FontSize="15"/>
                                 <Label Text="{Binding MuscleGroup, Converter={StaticResource MuscleGroupLabelConverter}}"
                                        FontSize="12"
@@ -282,8 +286,8 @@
         <!-- Tab 1: Templates -->
         <ScrollView IsVisible="{Binding ShowTemplates}" VerticalScrollBarVisibility="Never"
                     Scrolled="OnTemplatesScrolled">
-            <VerticalStackLayout Spacing="0">
-                <!-- Sidrubrik � scrollar bort med inneh�llet -->
+            <VerticalStackLayout x:Name="TemplatesContent" Spacing="0" Padding="0,0,0,120">
+                <!-- Sidrubrik — scrollar bort med innehållet -->
                 <Grid ColumnDefinitions="*,Auto" Padding="16,56,16,8">
                     <Label Grid.Column="0" Text="{loc:Localize Library_Title}"
                            FontFamily="BebasNeue" FontSize="34" CharacterSpacing="1"
@@ -293,18 +297,18 @@
                             IsVisible="{Binding ShowActionButton}"
                             Text="{loc:Localize Library_AddButton}"
                             Style="{StaticResource SecondaryButton}"
-                            Padding="12,8" HeightRequest="36"
+                            Padding="12,8"
                             Command="{Binding ActionButtonCommand}"
                             VerticalOptions="Center"/>
                 </Grid>
-                <!-- Tab-pill � scrollar med inneh�llet -->
+                <!-- Tab-pill — scrollar med innehållet -->
                 <Border x:Name="TabSegmentTemplates"
                         BackgroundColor="{StaticResource ForgePillTrack}"
                         StrokeThickness="0"
                         StrokeShape="RoundRectangle 50"
                         Margin="16,0,16,12"
                         Padding="2">
-                    <Grid ColumnDefinitions="*,*,*,*" HeightRequest="40"
+                    <Grid ColumnDefinitions="*,*,*,*" HeightRequest="44"
                           SizeChanged="OnTabContainerSizeChanged">
                         <Border x:Name="TabIndicatorTemplates" Grid.ColumnSpan="4"
                                 BackgroundColor="{StaticResource ForgePillIndicator}"
@@ -376,10 +380,11 @@
                                             WidthRequest="44" HeightRequest="44"
                                             BackgroundColor="{StaticResource ForgeAccentCoral}"
                                             StrokeShape="Ellipse" StrokeThickness="0"
-                                            VerticalOptions="Center">
+                                            VerticalOptions="Center"
+                                            SemanticProperties.Description="{loc:Localize A11y_Start}">
                                         <views:AppIcon Source="ic_play.png"
                                                        WidthRequest="18" HeightRequest="18"
-                                                       ForceTint="White"
+                                                       ForceTint="{StaticResource ForgeFabForeground}"
                                                        HorizontalOptions="Center"
                                                        VerticalOptions="Center"/>
                                         <Border.GestureRecognizers>
@@ -388,15 +393,22 @@
                                                 CommandParameter="{Binding .}"/>
                                         </Border.GestureRecognizers>
                                     </Border>
-                                    <Button Grid.Column="3"
-                                            Text="+"
-                                            BackgroundColor="Transparent"
-                                            TextColor="{StaticResource ForgeMuted}"
-                                            FontSize="16" HeightRequest="44"
-                                            MinimumWidthRequest="44"
-                                            Padding="0"
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}}, Path=DuplicateTemplateCommand}"
-                                            CommandParameter="{Binding .}"/>
+                                    <!-- Duplicera: ritad kopiera-symbol ("+" lästes som "lägg till").
+                                         Transparent Button överst tar trycket så att kortets egen tap inte triggas. -->
+                                    <Grid Grid.Column="3" WidthRequest="44" HeightRequest="44" VerticalOptions="Center">
+                                        <Path Data="M 7,5 L 13,5 Q 15,5 15,7 L 15,13 Q 15,15 13,15 L 7,15 Q 5,15 5,13 L 5,7 Q 5,5 7,5 Z M 11,3 Q 11,1 9,1 L 3,1 Q 1,1 1,3 L 1,9 Q 1,11 3,11"
+                                              Stroke="{StaticResource ForgeTextSecondary}"
+                                              StrokeThickness="1.6" StrokeLineJoin="Round" StrokeLineCap="Round"
+                                              WidthRequest="16" HeightRequest="16"
+                                              HorizontalOptions="Center" VerticalOptions="Center"
+                                              InputTransparent="True"/>
+                                        <Button BackgroundColor="Transparent"
+                                                BorderWidth="0" Padding="0"
+                                                WidthRequest="44" HeightRequest="44"
+                                                SemanticProperties.Description="{loc:Localize A11y_Duplicate}"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}}, Path=DuplicateTemplateCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                    </Grid>
                                     <Button Grid.Column="4"
                                             Text="×"
                                             BackgroundColor="Transparent"
@@ -404,6 +416,7 @@
                                             FontSize="15" HeightRequest="44"
                                             MinimumWidthRequest="44"
                                             Padding="0"
+                                            SemanticProperties.Description="{loc:Localize A11y_Delete}"
                                             Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}}, Path=DeleteTemplateCommand}"
                                             CommandParameter="{Binding .}"/>
                                 </Grid>
@@ -429,22 +442,22 @@
         <!-- Tab 2: Programs -->
         <ScrollView IsVisible="{Binding ShowPrograms}" VerticalScrollBarVisibility="Never"
                     Scrolled="OnProgramsScrolled">
-            <VerticalStackLayout Spacing="0">
-                <!-- Sidrubrik � scrollar bort med inneh�llet -->
+            <VerticalStackLayout x:Name="ProgramsContent" Spacing="0" Padding="0,0,0,120">
+                <!-- Sidrubrik — scrollar bort med innehållet -->
                 <Grid ColumnDefinitions="*,Auto" Padding="16,56,16,8">
                     <Label Grid.Column="0" Text="{loc:Localize Library_Title}"
                            FontFamily="BebasNeue" FontSize="34" CharacterSpacing="1"
                            TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
                            VerticalOptions="Center"/>
                 </Grid>
-                <!-- Tab-pill � scrollar med inneh�llet -->
+                <!-- Tab-pill — scrollar med innehållet -->
                 <Border x:Name="TabSegmentPrograms"
                         BackgroundColor="{StaticResource ForgePillTrack}"
                         StrokeThickness="0"
                         StrokeShape="RoundRectangle 50"
                         Margin="16,0,16,12"
                         Padding="2">
-                    <Grid ColumnDefinitions="*,*,*,*" HeightRequest="40"
+                    <Grid ColumnDefinitions="*,*,*,*" HeightRequest="44"
                           SizeChanged="OnTabContainerSizeChanged">
                         <Border x:Name="TabIndicatorPrograms" Grid.ColumnSpan="4"
                                 BackgroundColor="{StaticResource ForgePillIndicator}"
@@ -487,7 +500,7 @@
                     </Grid>
                 </Border>
                 <!-- Programs content -->
-                <StackLayout Margin="16,0,16,40" Spacing="12"
+                <StackLayout Margin="16,0,16,0" Spacing="12"
                              BindableLayout.ItemsSource="{Binding Programs}">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate x:DataType="data:WorkoutProgram">
@@ -536,7 +549,7 @@
         <!-- Tab 3: Cykler -->
         <ScrollView IsVisible="{Binding ShowCycles}" VerticalScrollBarVisibility="Never"
                     Scrolled="OnCyclesScrolled">
-            <VerticalStackLayout Spacing="0">
+            <VerticalStackLayout x:Name="CyclesContent" Spacing="0" Padding="0,0,0,120">
                 <!-- Sidrubrik — scrollar bort med innehållet -->
                 <Grid ColumnDefinitions="*,Auto" Padding="16,56,16,8">
                     <Label Grid.Column="0" Text="{loc:Localize Library_Title}"
@@ -547,7 +560,7 @@
                             IsVisible="{Binding ShowActionButton}"
                             Text="{loc:Localize Library_AddButton}"
                             Style="{StaticResource SecondaryButton}"
-                            Padding="12,8" HeightRequest="36"
+                            Padding="12,8"
                             Command="{Binding ActionButtonCommand}"
                             VerticalOptions="Center"/>
                 </Grid>
@@ -558,7 +571,7 @@
                         StrokeShape="RoundRectangle 50"
                         Margin="16,0,16,12"
                         Padding="2">
-                    <Grid ColumnDefinitions="*,*,*,*" HeightRequest="40"
+                    <Grid ColumnDefinitions="*,*,*,*" HeightRequest="44"
                           SizeChanged="OnTabContainerSizeChanged">
                         <Border x:Name="TabIndicatorCycles" Grid.ColumnSpan="4"
                                 BackgroundColor="{StaticResource ForgePillIndicator}"
@@ -600,8 +613,39 @@
                         </Border>
                     </Grid>
                 </Border>
-                <!-- Cykel-lista — byggs om i Task 19/PeriodizationPage om-design -->
-                <StackLayout Padding="24,40" Spacing="8">
+                <!-- Aktiv cykel (namn + vecka). Hantering av cykler sker i PeriodizationPage. -->
+                <Border IsVisible="{Binding HasActiveCycle}"
+                        Margin="16,0,16,0"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
+                        StrokeShape="RoundRectangle 18"
+                        StrokeThickness="0"
+                        Padding="18,14"
+                        SemanticProperties.Description="{Binding ActiveCycleAccessibilityLabel}">
+                    <Border.Shadow>
+                        <Shadow Brush="Black" Offset="0,2" Radius="10" Opacity="0.18"/>
+                    </Border.Shadow>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding OpenPeriodizationCommand}" Tapped="OnPillTapped"/>
+                    </Border.GestureRecognizers>
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                        <StackLayout Grid.Column="0" Spacing="6" VerticalOptions="Center">
+                            <Border HorizontalOptions="Start"
+                                    BackgroundColor="{StaticResource ForgeAccentDim}"
+                                    StrokeShape="RoundRectangle 8" StrokeThickness="0" Padding="8,3">
+                                <Label Text="{loc:Localize Periodization_Active_Badge}"
+                                       FontFamily="BebasNeue" FontSize="11" CharacterSpacing="1.5"
+                                       TextColor="{StaticResource ForgeAccent}"/>
+                            </Border>
+                            <Label Text="{Binding ActiveCycleName}"
+                                   FontFamily="BebasNeue" FontSize="22" CharacterSpacing="1"/>
+                            <Label Text="{Binding ActiveCycleWeekText}"
+                                   Style="{StaticResource MutedLabel}"/>
+                        </StackLayout>
+                        <Path Grid.Column="1" Style="{StaticResource ForwardChevron}"/>
+                    </Grid>
+                </Border>
+                <StackLayout Padding="24,40" Spacing="8"
+                             IsVisible="{Binding HasActiveCycle, Converter={x:Static vm:InverseBoolConverter.Instance}}">
                     <Label Text="{loc:Localize Periodization_NoCycles_Title}"
                            Style="{StaticResource DisplayLabel}"
                            FontSize="22"
@@ -614,34 +658,39 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- Sticky header (fades in on scroll) -->
+        <!-- Sticky header (fades in on scroll). Bara knappen tar emot tryck,
+             och bara när headern syns (styrs i UpdateStickyHeader). -->
         <Grid x:Name="StickyHeader" VerticalOptions="Start" ZIndex="20" Opacity="0"
-              HeightRequest="150" SafeAreaEdges="None">
+              HeightRequest="150" SafeAreaEdges="None"
+              InputTransparent="True" CascadeInputTransparent="False">
             <BoxView InputTransparent="True">
                 <BoxView.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                        <GradientStop Color="{AppThemeBinding Light=#D8FCFCFC, Dark=#D8141418}" Offset="0.0"/>
-                        <GradientStop Color="{AppThemeBinding Light=#90FCFCFC, Dark=#90141418}" Offset="0.35"/>
-                        <GradientStop Color="{AppThemeBinding Light=#38FCFCFC, Dark=#38141418}" Offset="0.65"/>
-                        <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark=#00141418}" Offset="1.0"/>
+                        <GradientStop Color="{AppThemeBinding Light=#D8FCFCFC, Dark={StaticResource ForgeStickyHeaderTop}}" Offset="0.0"/>
+                        <GradientStop Color="{AppThemeBinding Light=#90FCFCFC, Dark={StaticResource ForgeStickyHeaderMid1}}" Offset="0.35"/>
+                        <GradientStop Color="{AppThemeBinding Light=#38FCFCFC, Dark={StaticResource ForgeStickyHeaderMid2}}" Offset="0.65"/>
+                        <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark={StaticResource ForgeStatusBarOverlayClear}}" Offset="1.0"/>
                     </LinearGradientBrush>
                 </BoxView.Background>
             </BoxView>
-            <Grid Padding="20,14,16,12" VerticalOptions="Start">
+            <Grid Padding="20,14,16,12" VerticalOptions="Start"
+                  InputTransparent="True" CascadeInputTransparent="False">
                 <Label Text="{loc:Localize Library_Title}"
                        HorizontalOptions="Center" HorizontalTextAlignment="Center"
                        Style="{StaticResource DisplayLabel}" FontSize="18"
-                       VerticalOptions="Center"/>
-                <Button HorizontalOptions="End" VerticalOptions="Center"
+                       VerticalOptions="Center" InputTransparent="True"/>
+                <Button x:Name="StickyActionButton"
+                        HorizontalOptions="End" VerticalOptions="Center"
+                        InputTransparent="True"
                         IsVisible="{Binding ShowActionButton}"
                         Text="{loc:Localize Library_AddButton}"
                         Style="{StaticResource SecondaryButton}"
-                        Padding="12,8" HeightRequest="36"
+                        Padding="12,8"
                         Command="{Binding ActionButtonCommand}"/>
             </Grid>
         </Grid>
 
-        <!-- = WORKOUT BANNER � Live Forge Capsule = -->
+        <!-- = WORKOUT BANNER — Live Forge Capsule = -->
         <Grid x:Name="WorkoutBanner"
               IsVisible="False"
               VerticalOptions="End"
@@ -656,7 +705,8 @@
             <Border StrokeThickness="1"
                     Stroke="{StaticResource ForgeBannerStroke}"
                     StrokeShape="RoundRectangle 22"
-                    Padding="16,9,18,10">
+                    Padding="16,9,18,10"
+                    SemanticProperties.Description="{loc:Localize A11y_ActiveWorkout}">
                 <Border.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                         <GradientStop Color="{StaticResource ForgeSurface2}" Offset="0"/>
@@ -686,10 +736,10 @@
         <BoxView InputTransparent="True" VerticalOptions="End" HeightRequest="150">
             <BoxView.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark=#00141418}" Offset="0.0"/>
-                    <GradientStop Color="{AppThemeBinding Light=#38FCFCFC, Dark=#38141418}" Offset="0.35"/>
-                    <GradientStop Color="{AppThemeBinding Light=#90FCFCFC, Dark=#90141418}" Offset="0.65"/>
-                    <GradientStop Color="{AppThemeBinding Light=#FCFCFC, Dark=#141418}" Offset="1.0"/>
+                    <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark={StaticResource ForgeStatusBarOverlayClear}}" Offset="0.0"/>
+                    <GradientStop Color="{AppThemeBinding Light=#38FCFCFC, Dark={StaticResource ForgeBottomFadeMid1}}" Offset="0.35"/>
+                    <GradientStop Color="{AppThemeBinding Light=#90FCFCFC, Dark={StaticResource ForgeBottomFadeMid2}}" Offset="0.65"/>
+                    <GradientStop Color="{AppThemeBinding Light=#FCFCFC, Dark={StaticResource ForgeBottomFadeBottom}}" Offset="1.0"/>
                 </LinearGradientBrush>
             </BoxView.Background>
         </BoxView>

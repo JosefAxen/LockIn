@@ -10,270 +10,336 @@
     CanBeDismissedByTappingOutsideOfPopup="True"
     BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource ForgeSurface2}}">
 
+    <toolkit:Popup.Resources>
+        <!-- Gemensamt utseende för svarsalternativen. Valt alternativ markeras med färg,
+             tjockare ram OCH en bock — inte bara med färg. -->
+        <Style x:Key="FeedbackOption" TargetType="Border">
+            <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+            <Setter Property="StrokeThickness" Value="1.5" />
+            <Setter Property="Padding" Value="14,8" />
+            <Setter Property="MinimumHeightRequest" Value="48" />
+            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface3}}" />
+            <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorder}}" />
+        </Style>
+        <Style x:Key="FeedbackOptionText" TargetType="Label">
+            <Setter Property="FontFamily" Value="DMSansMedium" />
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="VerticalOptions" Value="Center" />
+            <Setter Property="LineBreakMode" Value="WordWrap" />
+            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}" />
+        </Style>
+        <Style x:Key="FeedbackCheck" TargetType="Label">
+            <Setter Property="Text" Value="✓" />
+            <Setter Property="FontFamily" Value="DMSansMedium" />
+            <Setter Property="FontSize" Value="17" />
+            <Setter Property="VerticalOptions" Value="Center" />
+        </Style>
+        <!-- Spara: färgerna ligger i stilen så att triggern säkert vinner. Inaktiv Spara ska se
+             inaktiv ut — iOS dimmar inte en färgad knapp själv. -->
+        <Style x:Key="FeedbackSaveButton" TargetType="Button">
+            <Setter Property="FontFamily" Value="DMSansMedium" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="HeightRequest" Value="48" />
+            <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccent}" />
+            <Setter Property="TextColor" Value="{StaticResource ForgeFabForeground}" />
+            <Style.Triggers>
+                <Trigger TargetType="Button" Property="IsEnabled" Value="False">
+                    <Setter Property="BackgroundColor" Value="{StaticResource ForgeSurface3}" />
+                    <Setter Property="TextColor" Value="{StaticResource ForgeTextSecondary}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="FeedbackSectionTitle" TargetType="Label">
+            <Setter Property="FontFamily" Value="DMSansMedium" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="CharacterSpacing" Value="1.5" />
+            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}" />
+        </Style>
+    </toolkit:Popup.Resources>
+
     <Border StrokeShape="RoundRectangle 24,24,0,0"
             BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface2}}"
             StrokeThickness="0"
-            Padding="24,20,24,32"
+            Padding="20,20,20,28"
             MinimumWidthRequest="320">
 
-        <ScrollView MaximumHeightRequest="720">
-        <VerticalStackLayout Spacing="18">
+        <!-- Frågorna scrollar vid behov; knapparna ligger alltid synliga under -->
+        <Grid RowDefinitions="Auto,Auto" RowSpacing="14">
 
-            <BoxView WidthRequest="36" HeightRequest="4" CornerRadius="2"
-                     HorizontalOptions="Center"
-                     BackgroundColor="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorder}}"/>
+        <ScrollView Grid.Row="0" MaximumHeightRequest="500" VerticalScrollBarVisibility="Never">
+        <VerticalStackLayout Spacing="14">
 
             <Label Text="{Binding Question}"
                    FontFamily="BebasNeue" FontSize="26" CharacterSpacing="0.5"
                    LineHeight="1"
-                   Margin="0,4,0,0"
                    TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
 
             <!-- PUMP -->
-            <VerticalStackLayout Spacing="10">
+            <VerticalStackLayout Spacing="8">
                 <Label Text="{x:Static strings:AppResources.Feedback_Muscle_Pump_Title}"
-                       FontFamily="DMSansMedium" FontSize="12"
-                       CharacterSpacing="1.5"
-                       TextColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"/>
+                       Style="{StaticResource FeedbackSectionTitle}"/>
 
-                <Border StrokeShape="RoundRectangle 12" StrokeThickness="1.5" Padding="16,14"
-                        BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface3}}"
-                        Stroke="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorder}}">
+                <Border Style="{StaticResource FeedbackOption}">
                     <Border.Triggers>
                         <DataTrigger TargetType="Border" Binding="{Binding IsPumpLow}" Value="True">
                             <Setter Property="Stroke" Value="{StaticResource ForgeAccentAmber}"/>
                             <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccentAmberDim}"/>
+                            <Setter Property="StrokeThickness" Value="2.5"/>
                         </DataTrigger>
                     </Border.Triggers>
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding SelectPumpCommand}" CommandParameter="1"/>
                     </Border.GestureRecognizers>
-                    <Label Text="{x:Static strings:AppResources.Feedback_Muscle_Pump_Low}"
-                           FontFamily="DMSansMedium" FontSize="16"
-                           TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                        <Label Text="{x:Static strings:AppResources.Feedback_Muscle_Pump_Low}" Style="{StaticResource FeedbackOptionText}"/>
+                        <Label Grid.Column="1" Style="{StaticResource FeedbackCheck}"
+                               TextColor="{StaticResource ForgeAccentAmber}"
+                               IsVisible="{Binding IsPumpLow}"
+                               SemanticProperties.Description="{x:Static strings:AppResources.A11y_Selected}"/>
+                    </Grid>
                 </Border>
 
-                <Border StrokeShape="RoundRectangle 12" StrokeThickness="1.5" Padding="16,14"
-                        BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface3}}"
-                        Stroke="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorder}}">
+                <Border Style="{StaticResource FeedbackOption}">
                     <Border.Triggers>
                         <DataTrigger TargetType="Border" Binding="{Binding IsPumpModerate}" Value="True">
                             <Setter Property="Stroke" Value="{StaticResource ForgeAccentAmber}"/>
                             <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccentAmberDim}"/>
+                            <Setter Property="StrokeThickness" Value="2.5"/>
                         </DataTrigger>
                     </Border.Triggers>
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding SelectPumpCommand}" CommandParameter="2"/>
                     </Border.GestureRecognizers>
-                    <Label Text="{x:Static strings:AppResources.Feedback_Muscle_Pump_Moderate}"
-                           FontFamily="DMSansMedium" FontSize="16"
-                           TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                        <Label Text="{x:Static strings:AppResources.Feedback_Muscle_Pump_Moderate}" Style="{StaticResource FeedbackOptionText}"/>
+                        <Label Grid.Column="1" Style="{StaticResource FeedbackCheck}"
+                               TextColor="{StaticResource ForgeAccentAmber}"
+                               IsVisible="{Binding IsPumpModerate}"
+                               SemanticProperties.Description="{x:Static strings:AppResources.A11y_Selected}"/>
+                    </Grid>
                 </Border>
 
-                <Border StrokeShape="RoundRectangle 12" StrokeThickness="1.5" Padding="16,14"
-                        BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface3}}"
-                        Stroke="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorder}}">
+                <Border Style="{StaticResource FeedbackOption}">
                     <Border.Triggers>
                         <DataTrigger TargetType="Border" Binding="{Binding IsPumpAmazing}" Value="True">
                             <Setter Property="Stroke" Value="{StaticResource ForgeAccentAmber}"/>
                             <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccentAmberDim}"/>
+                            <Setter Property="StrokeThickness" Value="2.5"/>
                         </DataTrigger>
                     </Border.Triggers>
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding SelectPumpCommand}" CommandParameter="3"/>
                     </Border.GestureRecognizers>
-                    <Label Text="{x:Static strings:AppResources.Feedback_Muscle_Pump_Amazing}"
-                           FontFamily="DMSansMedium" FontSize="16"
-                           TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                        <Label Text="{x:Static strings:AppResources.Feedback_Muscle_Pump_Amazing}" Style="{StaticResource FeedbackOptionText}"/>
+                        <Label Grid.Column="1" Style="{StaticResource FeedbackCheck}"
+                               TextColor="{StaticResource ForgeAccentAmber}"
+                               IsVisible="{Binding IsPumpAmazing}"
+                               SemanticProperties.Description="{x:Static strings:AppResources.A11y_Selected}"/>
+                    </Grid>
                 </Border>
             </VerticalStackLayout>
 
-            <!-- VOLUME -->
-            <VerticalStackLayout Spacing="10">
+            <!-- VOLUME — 2 × 2 för att hålla rutan kompakt -->
+            <VerticalStackLayout Spacing="8">
                 <Label Text="{x:Static strings:AppResources.Feedback_Muscle_Volume_Title}"
-                       FontFamily="DMSansMedium" FontSize="12"
-                       CharacterSpacing="1.5"
-                       TextColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"/>
+                       Style="{StaticResource FeedbackSectionTitle}"/>
 
-                <Border StrokeShape="RoundRectangle 12" StrokeThickness="1.5" Padding="16,14"
-                        BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface3}}"
-                        Stroke="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorder}}">
-                    <Border.Triggers>
-                        <DataTrigger TargetType="Border" Binding="{Binding IsVolNotEnough}" Value="True">
-                            <Setter Property="Stroke" Value="{StaticResource ForgeAccentBlue}"/>
-                            <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccentBlueDim}"/>
-                        </DataTrigger>
-                    </Border.Triggers>
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding SelectVolumeCommand}" CommandParameter="1"/>
-                    </Border.GestureRecognizers>
-                    <Label Text="{x:Static strings:AppResources.Feedback_Muscle_Volume_NotEnough}"
-                           FontFamily="DMSansMedium" FontSize="16"
-                           TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
-                </Border>
+                <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="8" RowSpacing="8">
+                    <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource FeedbackOption}">
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border" Binding="{Binding IsVolNotEnough}" Value="True">
+                                <Setter Property="Stroke" Value="{StaticResource ForgeAccentBlue}"/>
+                                <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccentBlueDim}"/>
+                                <Setter Property="StrokeThickness" Value="2.5"/>
+                            </DataTrigger>
+                        </Border.Triggers>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectVolumeCommand}" CommandParameter="1"/>
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="6">
+                            <Label Text="{x:Static strings:AppResources.Feedback_Muscle_Volume_NotEnough}" Style="{StaticResource FeedbackOptionText}"/>
+                            <Label Grid.Column="1" Style="{StaticResource FeedbackCheck}"
+                                   TextColor="{StaticResource ForgeAccentBlue}"
+                                   IsVisible="{Binding IsVolNotEnough}"
+                                   SemanticProperties.Description="{x:Static strings:AppResources.A11y_Selected}"/>
+                        </Grid>
+                    </Border>
 
-                <Border StrokeShape="RoundRectangle 12" StrokeThickness="1.5" Padding="16,14"
-                        BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface3}}"
-                        Stroke="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorder}}">
-                    <Border.Triggers>
-                        <DataTrigger TargetType="Border" Binding="{Binding IsVolJustRight}" Value="True">
-                            <Setter Property="Stroke" Value="{StaticResource ForgeAccentBlue}"/>
-                            <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccentBlueDim}"/>
-                        </DataTrigger>
-                    </Border.Triggers>
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding SelectVolumeCommand}" CommandParameter="2"/>
-                    </Border.GestureRecognizers>
-                    <Label Text="{x:Static strings:AppResources.Feedback_Muscle_Volume_JustRight}"
-                           FontFamily="DMSansMedium" FontSize="16"
-                           TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
-                </Border>
+                    <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource FeedbackOption}">
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border" Binding="{Binding IsVolJustRight}" Value="True">
+                                <Setter Property="Stroke" Value="{StaticResource ForgeAccentBlue}"/>
+                                <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccentBlueDim}"/>
+                                <Setter Property="StrokeThickness" Value="2.5"/>
+                            </DataTrigger>
+                        </Border.Triggers>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectVolumeCommand}" CommandParameter="2"/>
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="6">
+                            <Label Text="{x:Static strings:AppResources.Feedback_Muscle_Volume_JustRight}" Style="{StaticResource FeedbackOptionText}"/>
+                            <Label Grid.Column="1" Style="{StaticResource FeedbackCheck}"
+                                   TextColor="{StaticResource ForgeAccentBlue}"
+                                   IsVisible="{Binding IsVolJustRight}"
+                                   SemanticProperties.Description="{x:Static strings:AppResources.A11y_Selected}"/>
+                        </Grid>
+                    </Border>
 
-                <Border StrokeShape="RoundRectangle 12" StrokeThickness="1.5" Padding="16,14"
-                        BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface3}}"
-                        Stroke="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorder}}">
-                    <Border.Triggers>
-                        <DataTrigger TargetType="Border" Binding="{Binding IsVolPushed}" Value="True">
-                            <Setter Property="Stroke" Value="{StaticResource ForgeAccentBlue}"/>
-                            <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccentBlueDim}"/>
-                        </DataTrigger>
-                    </Border.Triggers>
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding SelectVolumeCommand}" CommandParameter="3"/>
-                    </Border.GestureRecognizers>
-                    <Label Text="{x:Static strings:AppResources.Feedback_Muscle_Volume_Pushed}"
-                           FontFamily="DMSansMedium" FontSize="16"
-                           TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
-                </Border>
+                    <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource FeedbackOption}">
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border" Binding="{Binding IsVolPushed}" Value="True">
+                                <Setter Property="Stroke" Value="{StaticResource ForgeAccentBlue}"/>
+                                <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccentBlueDim}"/>
+                                <Setter Property="StrokeThickness" Value="2.5"/>
+                            </DataTrigger>
+                        </Border.Triggers>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectVolumeCommand}" CommandParameter="3"/>
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="6">
+                            <Label Text="{x:Static strings:AppResources.Feedback_Muscle_Volume_Pushed}" Style="{StaticResource FeedbackOptionText}"/>
+                            <Label Grid.Column="1" Style="{StaticResource FeedbackCheck}"
+                                   TextColor="{StaticResource ForgeAccentBlue}"
+                                   IsVisible="{Binding IsVolPushed}"
+                                   SemanticProperties.Description="{x:Static strings:AppResources.A11y_Selected}"/>
+                        </Grid>
+                    </Border>
 
-                <Border StrokeShape="RoundRectangle 12" StrokeThickness="1.5" Padding="16,14"
-                        BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface3}}"
-                        Stroke="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorder}}">
-                    <Border.Triggers>
-                        <DataTrigger TargetType="Border" Binding="{Binding IsVolTooMuch}" Value="True">
-                            <Setter Property="Stroke" Value="{StaticResource ForgeAccentCoral}"/>
-                            <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccentCoralDim}"/>
-                        </DataTrigger>
-                    </Border.Triggers>
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding SelectVolumeCommand}" CommandParameter="4"/>
-                    </Border.GestureRecognizers>
-                    <Label Text="{x:Static strings:AppResources.Feedback_Muscle_Volume_TooMuch}"
-                           FontFamily="DMSansMedium" FontSize="16"
-                           TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
-                </Border>
+                    <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource FeedbackOption}">
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border" Binding="{Binding IsVolTooMuch}" Value="True">
+                                <Setter Property="Stroke" Value="{StaticResource ForgeAccentCoral}"/>
+                                <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccentCoralDim}"/>
+                                <Setter Property="StrokeThickness" Value="2.5"/>
+                            </DataTrigger>
+                        </Border.Triggers>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectVolumeCommand}" CommandParameter="4"/>
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="6">
+                            <Label Text="{x:Static strings:AppResources.Feedback_Muscle_Volume_TooMuch}" Style="{StaticResource FeedbackOptionText}"/>
+                            <Label Grid.Column="1" Style="{StaticResource FeedbackCheck}"
+                                   TextColor="{StaticResource ForgeAccentCoral}"
+                                   IsVisible="{Binding IsVolTooMuch}"
+                                   SemanticProperties.Description="{x:Static strings:AppResources.A11y_Selected}"/>
+                        </Grid>
+                    </Border>
+                </Grid>
             </VerticalStackLayout>
 
             <!-- JOINT PAIN (optional) -->
-            <VerticalStackLayout Spacing="10" IsVisible="{Binding ShowJointPain}">
+            <VerticalStackLayout Spacing="8" IsVisible="{Binding ShowJointPain}">
                 <Label Text="{x:Static strings:AppResources.Feedback_Muscle_JointPain_Title}"
-                       FontFamily="DMSansMedium" FontSize="12"
-                       CharacterSpacing="1.5"
-                       TextColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"/>
+                       Style="{StaticResource FeedbackSectionTitle}"/>
 
-                <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="10" RowSpacing="10">
-                    <Border Grid.Row="0" Grid.Column="0"
-                            StrokeShape="RoundRectangle 12" StrokeThickness="1.5" Padding="12,12"
-                            BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface3}}"
-                            Stroke="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorder}}">
+                <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="8" RowSpacing="8">
+                    <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource FeedbackOption}">
                         <Border.Triggers>
                             <DataTrigger TargetType="Border" Binding="{Binding IsJpNone}" Value="True">
                                 <Setter Property="Stroke" Value="{StaticResource ForgeAccentAmber}"/>
                                 <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccentAmberDim}"/>
+                                <Setter Property="StrokeThickness" Value="2.5"/>
                             </DataTrigger>
                         </Border.Triggers>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding SelectJointPainCommand}" CommandParameter="0"/>
                         </Border.GestureRecognizers>
-                        <Label Text="{x:Static strings:AppResources.Feedback_JointPain_None}"
-                               FontFamily="DMSansMedium" FontSize="14"
-                               HorizontalOptions="Center"
-                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="6">
+                            <Label Text="{x:Static strings:AppResources.Feedback_JointPain_None}" Style="{StaticResource FeedbackOptionText}"/>
+                            <Label Grid.Column="1" Style="{StaticResource FeedbackCheck}"
+                                   TextColor="{StaticResource ForgeAccentAmber}"
+                                   IsVisible="{Binding IsJpNone}"
+                                   SemanticProperties.Description="{x:Static strings:AppResources.A11y_Selected}"/>
+                        </Grid>
                     </Border>
 
-                    <Border Grid.Row="0" Grid.Column="1"
-                            StrokeShape="RoundRectangle 12" StrokeThickness="1.5" Padding="12,12"
-                            BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface3}}"
-                            Stroke="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorder}}">
+                    <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource FeedbackOption}">
                         <Border.Triggers>
                             <DataTrigger TargetType="Border" Binding="{Binding IsJpLow}" Value="True">
                                 <Setter Property="Stroke" Value="{StaticResource ForgeAccentAmber}"/>
                                 <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccentAmberDim}"/>
+                                <Setter Property="StrokeThickness" Value="2.5"/>
                             </DataTrigger>
                         </Border.Triggers>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding SelectJointPainCommand}" CommandParameter="1"/>
                         </Border.GestureRecognizers>
-                        <Label Text="{x:Static strings:AppResources.Feedback_JointPain_Low}"
-                               FontFamily="DMSansMedium" FontSize="14"
-                               HorizontalOptions="Center"
-                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="6">
+                            <Label Text="{x:Static strings:AppResources.Feedback_JointPain_Low}" Style="{StaticResource FeedbackOptionText}"/>
+                            <Label Grid.Column="1" Style="{StaticResource FeedbackCheck}"
+                                   TextColor="{StaticResource ForgeAccentAmber}"
+                                   IsVisible="{Binding IsJpLow}"
+                                   SemanticProperties.Description="{x:Static strings:AppResources.A11y_Selected}"/>
+                        </Grid>
                     </Border>
 
-                    <Border Grid.Row="1" Grid.Column="0"
-                            StrokeShape="RoundRectangle 12" StrokeThickness="1.5" Padding="12,12"
-                            BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface3}}"
-                            Stroke="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorder}}">
+                    <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource FeedbackOption}">
                         <Border.Triggers>
                             <DataTrigger TargetType="Border" Binding="{Binding IsJpModerate}" Value="True">
                                 <Setter Property="Stroke" Value="{StaticResource ForgeAccentAmber}"/>
                                 <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccentAmberDim}"/>
+                                <Setter Property="StrokeThickness" Value="2.5"/>
                             </DataTrigger>
                         </Border.Triggers>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding SelectJointPainCommand}" CommandParameter="2"/>
                         </Border.GestureRecognizers>
-                        <Label Text="{x:Static strings:AppResources.Feedback_JointPain_Moderate}"
-                               FontFamily="DMSansMedium" FontSize="14"
-                               HorizontalOptions="Center"
-                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="6">
+                            <Label Text="{x:Static strings:AppResources.Feedback_JointPain_Moderate}" Style="{StaticResource FeedbackOptionText}"/>
+                            <Label Grid.Column="1" Style="{StaticResource FeedbackCheck}"
+                                   TextColor="{StaticResource ForgeAccentAmber}"
+                                   IsVisible="{Binding IsJpModerate}"
+                                   SemanticProperties.Description="{x:Static strings:AppResources.A11y_Selected}"/>
+                        </Grid>
                     </Border>
 
-                    <Border Grid.Row="1" Grid.Column="1"
-                            StrokeShape="RoundRectangle 12" StrokeThickness="1.5" Padding="12,12"
-                            BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface3}}"
-                            Stroke="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorder}}">
+                    <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource FeedbackOption}">
                         <Border.Triggers>
                             <DataTrigger TargetType="Border" Binding="{Binding IsJpALotOf}" Value="True">
                                 <Setter Property="Stroke" Value="{StaticResource ForgeAccentCoral}"/>
                                 <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccentCoralDim}"/>
+                                <Setter Property="StrokeThickness" Value="2.5"/>
                             </DataTrigger>
                         </Border.Triggers>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding SelectJointPainCommand}" CommandParameter="3"/>
                         </Border.GestureRecognizers>
-                        <Label Text="{x:Static strings:AppResources.Feedback_JointPain_ALotOf}"
-                               FontFamily="DMSansMedium" FontSize="14"
-                               HorizontalOptions="Center"
-                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="6">
+                            <Label Text="{x:Static strings:AppResources.Feedback_JointPain_ALotOf}" Style="{StaticResource FeedbackOptionText}"/>
+                            <Label Grid.Column="1" Style="{StaticResource FeedbackCheck}"
+                                   TextColor="{StaticResource ForgeAccentCoral}"
+                                   IsVisible="{Binding IsJpALotOf}"
+                                   SemanticProperties.Description="{x:Static strings:AppResources.A11y_Selected}"/>
+                        </Grid>
                     </Border>
                 </Grid>
             </VerticalStackLayout>
 
-            <!-- Actions -->
-            <Grid ColumnDefinitions="*,*" ColumnSpacing="12" Margin="0,8,0,0">
-                <Button Grid.Column="0"
-                        Text="{x:Static strings:AppResources.Feedback_Muscle_Skip}"
-                        Command="{Binding SkipCommand}"
-                        FontFamily="DMSansMedium" FontSize="14"
-                        BackgroundColor="Transparent"
-                        BorderColor="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorder}}"
-                        BorderWidth="1"
-                        TextColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"
-                        CornerRadius="12"
-                        HeightRequest="48"/>
-                <Button Grid.Column="1"
-                        Text="{x:Static strings:AppResources.Feedback_Muscle_Save}"
-                        Command="{Binding SaveCommand}"
-                        IsEnabled="{Binding CanSave}"
-                        FontFamily="DMSansMedium" FontSize="14"
-                        BackgroundColor="{StaticResource ForgeAccent}"
-                        TextColor="#161618"
-                        CornerRadius="12"
-                        HeightRequest="48"/>
-            </Grid>
-
         </VerticalStackLayout>
         </ScrollView>
+
+        <!-- Actions — alltid synliga, utanför ScrollView -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,*" ColumnSpacing="12">
+            <Button Grid.Column="0"
+                    Text="{x:Static strings:AppResources.Feedback_Muscle_Skip}"
+                    Command="{Binding SkipCommand}"
+                    FontFamily="DMSansMedium" FontSize="14"
+                    BackgroundColor="Transparent"
+                    BorderColor="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorder}}"
+                    BorderWidth="1"
+                    TextColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"
+                    CornerRadius="12"
+                    HeightRequest="48"/>
+            <!-- Spara kräver pump och volym (CanSave) -->
+            <Button Grid.Column="1"
+                    Text="{x:Static strings:AppResources.Feedback_Muscle_Save}"
+                    Command="{Binding SaveCommand}"
+                    IsEnabled="{Binding CanSave}"
+                    Style="{StaticResource FeedbackSaveButton}"/>
+        </Grid>
+
+        </Grid>
     </Border>
 </toolkit:Popup>

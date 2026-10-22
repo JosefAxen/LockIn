@@ -24,6 +24,9 @@ public partial class SettingsViewModel(DatabaseService db, IHealthService health
     [ObservableProperty] private int _reminderDays;
     [ObservableProperty] private int _reminderTimeMinutes;
     [ObservableProperty] private string _reminderLabels = "";
+    // Bunden till TimePicker (ersätter fritext HH:MM)
+    [ObservableProperty] private TimeSpan? _reminderTime;
+    private bool _isLoadingReminderTime;
 
     public string WeeklyGoalDisplay =>
         string.Format(AppResources.Settings_WeeklyGoal_Format, WeeklyGoal);
@@ -92,6 +95,37 @@ public partial class SettingsViewModel(DatabaseService db, IHealthService health
     public Color Day5Fg => (ReminderDays & (1 << 5)) != 0 ? DesignTokens.FabForeground : DesignTokens.Text;
     public Color Day6Fg => (ReminderDays & (1 << 6)) != 0 ? DesignTokens.FabForeground : DesignTokens.Text;
 
+    // VoiceOver: dagens namn + om påminnelsen är på/av (valet syns annars bara som färg)
+    public string Day0A11y => DayA11y(0);
+    public string Day1A11y => DayA11y(1);
+    public string Day2A11y => DayA11y(2);
+    public string Day3A11y => DayA11y(3);
+    public string Day4A11y => DayA11y(4);
+    public string Day5A11y => DayA11y(5);
+    public string Day6A11y => DayA11y(6);
+    public string Day0LabelA11y => string.Format(AppResources.Settings_Reminders_LabelA11y_Format, DayName(0));
+    public string Day1LabelA11y => string.Format(AppResources.Settings_Reminders_LabelA11y_Format, DayName(1));
+    public string Day2LabelA11y => string.Format(AppResources.Settings_Reminders_LabelA11y_Format, DayName(2));
+    public string Day3LabelA11y => string.Format(AppResources.Settings_Reminders_LabelA11y_Format, DayName(3));
+    public string Day4LabelA11y => string.Format(AppResources.Settings_Reminders_LabelA11y_Format, DayName(4));
+    public string Day5LabelA11y => string.Format(AppResources.Settings_Reminders_LabelA11y_Format, DayName(5));
+    public string Day6LabelA11y => string.Format(AppResources.Settings_Reminders_LabelA11y_Format, DayName(6));
+
+    private string DayA11y(int bit) => string.Format(
+        (ReminderDays & (1 << bit)) != 0 ? AppResources.Settings_Reminders_DayOn_Format : AppResources.Settings_Reminders_DayOff_Format,
+        DayName(bit));
+
+    private static string DayName(int bit) => bit switch
+    {
+        0 => AppResources.Settings_Reminders_Day_0,
+        1 => AppResources.Settings_Reminders_Day_1,
+        2 => AppResources.Settings_Reminders_Day_2,
+        3 => AppResources.Settings_Reminders_Day_3,
+        4 => AppResources.Settings_Reminders_Day_4,
+        5 => AppResources.Settings_Reminders_Day_5,
+        _ => AppResources.Settings_Reminders_Day_6,
+    };
+
     public async Task LoadAsync()
     {
         var settings = await settingsRepo.GetAsync();
@@ -106,6 +140,10 @@ public partial class SettingsViewModel(DatabaseService db, IHealthService health
         ReminderDays        = settings.ReminderDays;
         ReminderTimeMinutes = settings.ReminderTimeMinutes;
         ReminderLabels = settings.ReminderLabels ?? "";
+
+        _isLoadingReminderTime = true;
+        ReminderTime = TimeSpan.FromMinutes(ReminderTimeMinutes > 0 ? ReminderTimeMinutes : 480);
+        _isLoadingReminderTime = false;
     }
 
     partial void OnWeeklyGoalChanged(int value) =>
@@ -123,6 +161,10 @@ public partial class SettingsViewModel(DatabaseService db, IHealthService health
         OnPropertyChanged(nameof(Day4Bg)); OnPropertyChanged(nameof(Day4Fg));
         OnPropertyChanged(nameof(Day5Bg)); OnPropertyChanged(nameof(Day5Fg));
         OnPropertyChanged(nameof(Day6Bg)); OnPropertyChanged(nameof(Day6Fg));
+        OnPropertyChanged(nameof(Day0A11y)); OnPropertyChanged(nameof(Day1A11y));
+        OnPropertyChanged(nameof(Day2A11y)); OnPropertyChanged(nameof(Day3A11y));
+        OnPropertyChanged(nameof(Day4A11y)); OnPropertyChanged(nameof(Day5A11y));
+        OnPropertyChanged(nameof(Day6A11y));
         OnPropertyChanged(nameof(ReminderDisplay));
     }
 
@@ -130,6 +172,29 @@ public partial class SettingsViewModel(DatabaseService db, IHealthService health
     {
         OnPropertyChanged(nameof(ReminderTimeDisplay));
         OnPropertyChanged(nameof(ReminderDisplay));
+    }
+
+    // TimePicker → spara och schemalägg om (inte vid laddning)
+    partial void OnReminderTimeChanged(TimeSpan? value)
+    {
+        if (_isLoadingReminderTime || value is not TimeSpan t) return;
+        var mins = (int)t.TotalMinutes;
+        if (mins == ReminderTimeMinutes) return;
+        ReminderTimeMinutes = mins;
+        _ = SaveAndRescheduleSafeAsync();
+    }
+
+    private async Task SaveAndRescheduleSafeAsync()
+    {
+        try
+        {
+            await SaveAndRescheduleAsync();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[Settings] Kunde inte spara påminnelsetid: {ex}");
+            await Toast.Make(AppResources.Common_ErrorRetry).Show();
+        }
     }
 
     partial void OnReminderLabelsChanged(string value)
@@ -217,30 +282,6 @@ public partial class SettingsViewModel(DatabaseService db, IHealthService health
     private async Task ToggleReminderDayAsync(int bitIndex)
     {
         ReminderDays ^= (1 << bitIndex);
-        await SaveAndRescheduleAsync();
-    }
-
-    [RelayCommand]
-    private async Task EditReminderTimeAsync()
-    {
-        var currentMins = ReminderTimeMinutes > 0 ? ReminderTimeMinutes : 480;
-        var current = $"{currentMins / 60:D2}:{currentMins % 60:D2}";
-        var result = await Shell.Current.DisplayPromptAsync(
-            AppResources.Settings_Reminders_TimePrompt_Title,
-            AppResources.Settings_Reminders_TimePrompt_Body,
-            keyboard: Keyboard.Default,
-            initialValue: current,
-            maxLength: 5);
-        if (result is null) return;
-        var parts = result.Trim().Split(':');
-        if (parts.Length != 2
-            || !int.TryParse(parts[0], out var h) || h < 0 || h > 23
-            || !int.TryParse(parts[1], out var m) || m < 0 || m > 59)
-        {
-            await Shell.Current.DisplayAlert(null, AppResources.Settings_Reminders_TimeInvalid, "OK");
-            return;
-        }
-        ReminderTimeMinutes = h * 60 + m;
         await SaveAndRescheduleAsync();
     }
 

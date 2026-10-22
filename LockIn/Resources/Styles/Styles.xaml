@@ -17,8 +17,8 @@
         <Setter Property="Shell.UnselectedColor" Value="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeTextSecondary}}" />
         <Setter Property="Shell.NavBarHasShadow" Value="False" />
         <Setter Property="Shell.TabBarBackgroundColor" Value="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}" />
-        <Setter Property="Shell.TabBarForegroundColor" Value="{AppThemeBinding Light={StaticResource LightAccent}, Dark={StaticResource ForgeAccent}}" />
-        <Setter Property="Shell.TabBarTitleColor" Value="{AppThemeBinding Light={StaticResource LightAccent}, Dark={StaticResource ForgeAccent}}" />
+        <Setter Property="Shell.TabBarForegroundColor" Value="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}" />
+        <Setter Property="Shell.TabBarTitleColor" Value="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}" />
         <Setter Property="Shell.TabBarUnselectedColor" Value="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeTextSecondary}}" />
     </Style>
 
@@ -99,7 +99,7 @@
 
     <Style x:Key="DestructiveButton" TargetType="Button">
         <Setter Property="BackgroundColor" Value="Transparent" />
-        <Setter Property="TextColor" Value="{StaticResource ForgeDestructive}" />
+        <Setter Property="TextColor" Value="{StaticResource ForgeDestructiveText}" />
         <Setter Property="FontFamily" Value="DMSansMedium" />
         <Setter Property="FontSize" Value="14" />
         <Setter Property="BorderWidth" Value="0" />
@@ -175,6 +175,18 @@
         <Setter Property="Margin" Value="0,0,2,0" />
         <Setter Property="WidthRequest" Value="10" />
         <Setter Property="HeightRequest" Value="16" />
+    </Style>
+
+    <!-- Rund ikonknapp (tillbaka, stäng, inställningar …): 44pt tryckyta enligt HIG.
+         Sätt SemanticProperties.Description på varje instans. -->
+    <Style x:Key="IconCircleButton" TargetType="Border">
+        <Setter Property="WidthRequest" Value="44" />
+        <Setter Property="HeightRequest" Value="44" />
+        <Setter Property="StrokeShape" Value="Ellipse" />
+        <Setter Property="BackgroundColor" Value="{StaticResource ForgeOverlayWeak}" />
+        <Setter Property="Stroke" Value="{StaticResource ForgeOverlayStroke}" />
+        <Setter Property="StrokeThickness" Value="0.5" />
+        <Setter Property="VerticalOptions" Value="Center" />
     </Style>
 
     <!-- Spegelvänd: forward chevron — matchar SF Symbol chevron.forward. Default-färg dimmad. -->

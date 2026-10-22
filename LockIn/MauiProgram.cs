@@ -12,6 +12,15 @@ public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
+        // Appen är på svenska oavsett telefonens språk/region: strängar, decimalkomma och datum.
+        // (AppResources.en.resx är ofullständig och gav blandat språk på engelska telefoner.)
+        var sv = new System.Globalization.CultureInfo("sv-SE");
+        System.Globalization.CultureInfo.DefaultThreadCurrentCulture   = sv;
+        System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = sv;
+        System.Globalization.CultureInfo.CurrentCulture   = sv;
+        System.Globalization.CultureInfo.CurrentUICulture = sv;
+        Resources.Strings.AppResources.Culture = sv;
+
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()

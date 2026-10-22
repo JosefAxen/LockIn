@@ -35,6 +35,8 @@ public sealed class ConfettiView : SKCanvasView
 
     public void Start()
     {
+        // "Minska rörelse": ingen konfetti alls.
+        if (LockIn.Views.AnimationHelper.ReduceMotion) return;
         if (_running) Stop();
         SpawnParticles();
         _startMs = Environment.TickCount64;

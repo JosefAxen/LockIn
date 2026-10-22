@@ -33,41 +33,65 @@ public partial class CardioViewModel(ISessionRepository sessionRepo, IHealthServ
     [RelayCommand]
     private void SelectActivity(ActivityOption opt) => SelectedActivity = opt;
 
+    // "5,2" och "5.2" ska båda bli 5,2 km. Aldrig NumberStyles.Any med InvariantCulture —
+    // då tolkas kommat som tusentalsavgränsare och "5,2" blir 52.
+    private static decimal ParseNumber(string? text) =>
+        decimal.TryParse((text ?? "").Trim().Replace(',', '.'),
+            System.Globalization.NumberStyles.Number,
+            System.Globalization.CultureInfo.InvariantCulture, out var value) && value > 0
+            ? value
+            : 0m;
+
+    private bool _isSaving;
+
     [RelayCommand]
     private async Task SaveAsync()
     {
-        if (SelectedActivity is null) return;
+        if (SelectedActivity is null || _isSaving) return;
+        _isSaving = true;
 
-        int.TryParse(DurationText, out var duration);
-        double.TryParse(DistanceText, System.Globalization.NumberStyles.Any,
-            System.Globalization.CultureInfo.InvariantCulture, out var distance);
-        int.TryParse(HeartRateText, out var hr);
-        int.TryParse(CaloriesText, out var cal);
-
-        var session = new CardioSession
+        try
         {
-            ActivityType       = SelectedActivity.Type,
-            CustomActivityName = IsCustom ? CustomName : "",
-            StartedAt          = DateTime.Now,
-            DurationMinutes    = duration,
-            DistanceKm         = distance,
-            AvgHeartRate       = hr,
-            CaloriesBurned     = cal,
-            Notes              = Notes,
-        };
+            var session = new CardioSession
+            {
+                ActivityType       = SelectedActivity.Type,
+                CustomActivityName = IsCustom ? CustomName : "",
+                StartedAt          = DateTime.Now,
+                DurationMinutes    = (int)Math.Round(ParseNumber(DurationText)),
+                DistanceKm         = (double)ParseNumber(DistanceText),
+                AvgHeartRate       = (int)Math.Round(ParseNumber(HeartRateText)),
+                CaloriesBurned     = (int)Math.Round(ParseNumber(CaloriesText)),
+                Notes              = Notes,
+            };
 
-        await sessionRepo.SaveCardioSessionAsync(session);
+            await sessionRepo.SaveCardioSessionAsync(session);
 
-        var hkStart = session.StartedAt;
-        var hkEnd   = hkStart.AddMinutes(session.DurationMinutes > 0 ? session.DurationMinutes : 1);
-        await health.SaveCardioWorkoutAsync(
-            session.ActivityType,
-            hkStart,
-            hkEnd,
-            session.CaloriesBurned,
-            session.DistanceKm * 1000.0);
+            // Apple Hälsa är en bonus — ett fel där ska inte stoppa att passet sparats lokalt
+            try
+            {
+                var hkStart = session.StartedAt;
+                var hkEnd   = hkStart.AddMinutes(session.DurationMinutes > 0 ? session.DurationMinutes : 1);
+                await health.SaveCardioWorkoutAsync(
+                    session.ActivityType,
+                    hkStart,
+                    hkEnd,
+                    session.CaloriesBurned,
+                    session.DistanceKm * 1000.0);
+            }
+            catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"[Cardio] HealthKit: {ex}"); }
 
-        await Shell.Current.GoToAsync(AppRoutes.Back);
+            await Shell.Current.GoToAsync(AppRoutes.Back);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[Cardio] Save: {ex}");
+            try { await Shell.Current.DisplayAlertAsync("", AppResources.Common_ErrorRetry, AppResources.Common_OK); }
+            catch { /* felvisningen får inte själv fälla sidan */ }
+        }
+        finally
+        {
+            _isSaving = false;
+        }
     }
 
     private static string ActivityTypeLabel(CardioActivityType t) => t switch

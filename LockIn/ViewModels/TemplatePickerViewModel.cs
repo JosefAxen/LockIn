@@ -15,6 +15,7 @@ public partial class TemplatePickerViewModel : ObservableObject
 {
     private readonly ITemplateService _templates;
     private readonly IMesoBuilderService _builder;
+    private readonly IMesocycleService _mesocycles;
 
     public ObservableCollection<TemplateCard> Templates { get; } = new();
 
@@ -29,6 +30,8 @@ public partial class TemplatePickerViewModel : ObservableObject
 
     public bool IsConfigOpen => SelectedTemplate is not null;
     public bool CanCreate => !IsBusy && !string.IsNullOrWhiteSpace(MesocycleName);
+    // Förklarar varför SKAPA MESOCYKEL är inaktiv
+    public bool ShowNameRequiredHint => string.IsNullOrWhiteSpace(MesocycleName);
 
     // Toggle-hjälpar för XAML-binding (samma pattern som MesoBuilderViewModel)
     public bool IsWeeks4 => WeekCount == 4;
@@ -40,10 +43,11 @@ public partial class TemplatePickerViewModel : ObservableObject
     public bool IsUnitKg => Unit == UnitSystem.Kg;
     public bool IsUnitLb => Unit == UnitSystem.Lb;
 
-    public TemplatePickerViewModel(ITemplateService templates, IMesoBuilderService builder)
+    public TemplatePickerViewModel(ITemplateService templates, IMesoBuilderService builder, IMesocycleService mesocycles)
     {
         _templates = templates;
         _builder = builder;
+        _mesocycles = mesocycles;
     }
 
     partial void OnSelectedTemplateChanged(TemplateCard? value)
@@ -54,6 +58,7 @@ public partial class TemplatePickerViewModel : ObservableObject
     partial void OnMesocycleNameChanged(string value)
     {
         OnPropertyChanged(nameof(CanCreate));
+        OnPropertyChanged(nameof(ShowNameRequiredHint));
     }
 
     partial void OnIsBusyChanged(bool value)
@@ -136,6 +141,9 @@ public partial class TemplatePickerViewModel : ObservableObject
         IsBusy = true;
         try
         {
+            // Den nya cykeln aktiveras och avaktiverar den aktiva — fråga först.
+            if (!await MesoBuilderViewModel.ConfirmReplaceActiveAsync(_mesocycles)) return;
+
             var detail = await _templates.GetDetailAsync(SelectedTemplate.TemplateId);
             var priorities = new Dictionary<MuscleGroup, MusclePriorityLevel>();
             if (detail is not null)
@@ -163,7 +171,8 @@ public partial class TemplatePickerViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            await Toast.Make($"Fel: {ex.Message}").Show();
+            System.Diagnostics.Debug.WriteLine($"[TemplatePicker] Kunde inte skapa cykel: {ex}");
+            await Toast.Make(AppResources.Common_ErrorRetry).Show();
         }
         finally
         {

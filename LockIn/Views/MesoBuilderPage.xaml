@@ -10,6 +10,7 @@
              x:DataType="vm:MesoBuilderViewModel"
              Title="{loc:Localize MesoBuilder_Title}"
              Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False"
              BackgroundColor="Transparent">
 
     <Grid SafeAreaEdges="None">
@@ -39,16 +40,23 @@
 
             <!-- Header: avbryt + progress -->
             <Grid Grid.Row="0" Padding="16,56,16,10" ColumnDefinitions="Auto,*,Auto">
-                <Label Grid.Column="0"
-                       Text="{loc:Localize MesoBuilder_Cancel}"
-                       FontFamily="DMSansMedium" FontSize="13"
-                       CharacterSpacing="1.2"
-                       TextColor="{StaticResource ForgeMuted}"
-                       VerticalOptions="Center">
-                    <Label.GestureRecognizers>
+                <Border Grid.Column="0"
+                        BackgroundColor="Transparent"
+                        StrokeThickness="0"
+                        MinimumWidthRequest="44"
+                        MinimumHeightRequest="44"
+                        Padding="0,0,12,0"
+                        VerticalOptions="Center"
+                        SemanticProperties.Description="{loc:Localize MesoBuilder_Cancel}">
+                    <Label Text="{loc:Localize MesoBuilder_Cancel}"
+                           FontFamily="DMSansMedium" FontSize="13"
+                           CharacterSpacing="1.2"
+                           TextColor="{StaticResource ForgeMuted}"
+                           VerticalOptions="Center"/>
+                    <Border.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding CancelCommand}"/>
-                    </Label.GestureRecognizers>
-                </Label>
+                    </Border.GestureRecognizers>
+                </Border>
 
                 <Label Grid.Column="1"
                        Text="{Binding ProgressLabel}"
@@ -188,24 +196,28 @@
                                                    VerticalOptions="Center"
                                                    TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
                                             <Button Grid.Column="1" Text="III"
+                                                    SemanticProperties.Description="{loc:Localize MesoBuilder_Emphasize}"
+                                                    SemanticProperties.Hint="{loc:Localize A11y_Selected}"
                                                     FontFamily="BebasNeue" FontSize="13"
                                                     BackgroundColor="{StaticResource ForgeAccent}"
-                                                    TextColor="White"
-                                                    Padding="10,4" HeightRequest="32" MinimumWidthRequest="44"
+                                                    TextColor="{StaticResource ForgeFabForeground}"
+                                                    Padding="10,4" HeightRequest="44" MinimumWidthRequest="44"
                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MesoBuilderViewModel}}, Path=MoveToEmphasizeCommand}"
                                                     CommandParameter="{Binding .}"/>
                                             <Button Grid.Column="2" Text="II"
+                                                    SemanticProperties.Description="{loc:Localize MesoBuilder_Grow}"
                                                     FontFamily="BebasNeue" FontSize="13"
                                                     BackgroundColor="Transparent"
                                                     TextColor="{StaticResource ForgeMuted}"
-                                                    Padding="10,4" HeightRequest="32" MinimumWidthRequest="44"
+                                                    Padding="10,4" HeightRequest="44" MinimumWidthRequest="44"
                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MesoBuilderViewModel}}, Path=MoveToGrowCommand}"
                                                     CommandParameter="{Binding .}"/>
                                             <Button Grid.Column="3" Text="I"
+                                                    SemanticProperties.Description="{loc:Localize MesoBuilder_Maintain}"
                                                     FontFamily="BebasNeue" FontSize="13"
                                                     BackgroundColor="Transparent"
                                                     TextColor="{StaticResource ForgeMuted}"
-                                                    Padding="10,4" HeightRequest="32" MinimumWidthRequest="44"
+                                                    Padding="10,4" HeightRequest="44" MinimumWidthRequest="44"
                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MesoBuilderViewModel}}, Path=MoveToMaintainCommand}"
                                                     CommandParameter="{Binding .}"/>
                                         </Grid>
@@ -232,24 +244,28 @@
                                                    VerticalOptions="Center"
                                                    TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
                                             <Button Grid.Column="1" Text="III"
+                                                    SemanticProperties.Description="{loc:Localize MesoBuilder_Emphasize}"
                                                     FontFamily="BebasNeue" FontSize="13"
                                                     BackgroundColor="Transparent"
                                                     TextColor="{StaticResource ForgeMuted}"
-                                                    Padding="10,4" HeightRequest="32" MinimumWidthRequest="44"
+                                                    Padding="10,4" HeightRequest="44" MinimumWidthRequest="44"
                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MesoBuilderViewModel}}, Path=MoveToEmphasizeCommand}"
                                                     CommandParameter="{Binding .}"/>
                                             <Button Grid.Column="2" Text="II"
+                                                    SemanticProperties.Description="{loc:Localize MesoBuilder_Grow}"
+                                                    SemanticProperties.Hint="{loc:Localize A11y_Selected}"
                                                     FontFamily="BebasNeue" FontSize="13"
                                                     BackgroundColor="{StaticResource ForgeAccent}"
-                                                    TextColor="White"
-                                                    Padding="10,4" HeightRequest="32" MinimumWidthRequest="44"
+                                                    TextColor="{StaticResource ForgeFabForeground}"
+                                                    Padding="10,4" HeightRequest="44" MinimumWidthRequest="44"
                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MesoBuilderViewModel}}, Path=MoveToGrowCommand}"
                                                     CommandParameter="{Binding .}"/>
                                             <Button Grid.Column="3" Text="I"
+                                                    SemanticProperties.Description="{loc:Localize MesoBuilder_Maintain}"
                                                     FontFamily="BebasNeue" FontSize="13"
                                                     BackgroundColor="Transparent"
                                                     TextColor="{StaticResource ForgeMuted}"
-                                                    Padding="10,4" HeightRequest="32" MinimumWidthRequest="44"
+                                                    Padding="10,4" HeightRequest="44" MinimumWidthRequest="44"
                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MesoBuilderViewModel}}, Path=MoveToMaintainCommand}"
                                                     CommandParameter="{Binding .}"/>
                                         </Grid>
@@ -276,24 +292,28 @@
                                                    VerticalOptions="Center"
                                                    TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
                                             <Button Grid.Column="1" Text="III"
+                                                    SemanticProperties.Description="{loc:Localize MesoBuilder_Emphasize}"
                                                     FontFamily="BebasNeue" FontSize="13"
                                                     BackgroundColor="Transparent"
                                                     TextColor="{StaticResource ForgeMuted}"
-                                                    Padding="10,4" HeightRequest="32" MinimumWidthRequest="44"
+                                                    Padding="10,4" HeightRequest="44" MinimumWidthRequest="44"
                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MesoBuilderViewModel}}, Path=MoveToEmphasizeCommand}"
                                                     CommandParameter="{Binding .}"/>
                                             <Button Grid.Column="2" Text="II"
+                                                    SemanticProperties.Description="{loc:Localize MesoBuilder_Grow}"
                                                     FontFamily="BebasNeue" FontSize="13"
                                                     BackgroundColor="Transparent"
                                                     TextColor="{StaticResource ForgeMuted}"
-                                                    Padding="10,4" HeightRequest="32" MinimumWidthRequest="44"
+                                                    Padding="10,4" HeightRequest="44" MinimumWidthRequest="44"
                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MesoBuilderViewModel}}, Path=MoveToGrowCommand}"
                                                     CommandParameter="{Binding .}"/>
                                             <Button Grid.Column="3" Text="I"
+                                                    SemanticProperties.Description="{loc:Localize MesoBuilder_Maintain}"
+                                                    SemanticProperties.Hint="{loc:Localize A11y_Selected}"
                                                     FontFamily="BebasNeue" FontSize="13"
                                                     BackgroundColor="{StaticResource ForgeAccent}"
-                                                    TextColor="White"
-                                                    Padding="10,4" HeightRequest="32" MinimumWidthRequest="44"
+                                                    TextColor="{StaticResource ForgeFabForeground}"
+                                                    Padding="10,4" HeightRequest="44" MinimumWidthRequest="44"
                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MesoBuilderViewModel}}, Path=MoveToMaintainCommand}"
                                                     CommandParameter="{Binding .}"/>
                                         </Grid>
@@ -324,6 +344,12 @@
                                    FontFamily="DMSansRegular" FontSize="15"
                                    BackgroundColor="Transparent"/>
                         </Border>
+                        <!-- Förklarar varför SKAPA CYKEL är inaktiv -->
+                        <Label Text="{loc:Localize MesoBuilder_Error_NameRequired}"
+                               IsVisible="{Binding ShowNameRequiredHint}"
+                               FontFamily="DMSansRegular" FontSize="12"
+                               TextColor="{StaticResource ForgeTextSecondary}"
+                               Margin="0,6,0,0"/>
 
                         <!-- Veckor -->
                         <Label Text="{loc:Localize MesoBuilder_Weeks_Label}"
@@ -450,7 +476,7 @@
                         IsEnabled="{Binding CanContinueStep0}"
                         FontFamily="BebasNeue" FontSize="17" CharacterSpacing="2"
                         BackgroundColor="{StaticResource ForgeAccent}"
-                        TextColor="White"
+                        TextColor="{StaticResource ForgeFabForeground}"
                         HeightRequest="56"
                         CornerRadius="14"
                         Command="{Binding ContinueToPrioritiesCommand}"/>
@@ -472,7 +498,7 @@
                             Text="{loc:Localize MesoBuilder_Continue}"
                             FontFamily="BebasNeue" FontSize="17" CharacterSpacing="2"
                             BackgroundColor="{StaticResource ForgeAccent}"
-                            TextColor="White"
+                            TextColor="{StaticResource ForgeFabForeground}"
                             HeightRequest="56"
                             CornerRadius="14"
                             Command="{Binding ContinueToFinalizeCommand}"/>
@@ -496,7 +522,7 @@
                             IsEnabled="{Binding CanCreate}"
                             FontFamily="BebasNeue" FontSize="17" CharacterSpacing="2"
                             BackgroundColor="{StaticResource ForgeAccent}"
-                            TextColor="White"
+                            TextColor="{StaticResource ForgeFabForeground}"
                             HeightRequest="56"
                             CornerRadius="14"
                             Command="{Binding CreateCommand}"/>

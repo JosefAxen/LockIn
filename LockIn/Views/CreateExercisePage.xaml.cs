@@ -13,6 +13,7 @@ public partial class CreateExercisePage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        await AnimationHelper.PageEntryAsync(this);
+        try { await AnimationHelper.PageEntryAsync(this); }
+        catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"[CreateExercisePage] OnAppearing: {ex}"); }
     }
 }

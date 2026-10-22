@@ -13,21 +13,18 @@
 
     <Grid SafeAreaEdges="None">
 
-        <!-- Atmosf�risk bakgrund -->
+        <!-- Atmosfärisk bakgrund -->
         <controls:AtmosphericBackgroundView InputTransparent="True"/>
 
         <ScrollView>
-            <VerticalStackLayout Padding="16,0,16,8" Spacing="12">
+            <!-- Bottenpadding: tab-baren kan vara synlig och får inte dölja anteckningsfältet -->
+            <VerticalStackLayout Padding="16,0,16,120" Spacing="12">
 
                 <!-- Header -->
                 <Grid Padding="0,56,0,4" ColumnDefinitions="48,*,Auto">
                     <Border Grid.Column="0"
-                            WidthRequest="36" HeightRequest="36"
-                            StrokeShape="Ellipse"
-                            BackgroundColor="#17FFFFFF"
-                            Stroke="#29FFFFFF"
-                            StrokeThickness="0.5"
-                            VerticalOptions="Center">
+                            Style="{StaticResource IconCircleButton}"
+                            SemanticProperties.Description="{loc:Localize A11y_Back}">
                         <Path Style="{StaticResource BackChevron}"/>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding CancelCommand}"/>
@@ -39,7 +36,7 @@
                     <Button Grid.Column="2"
                             Text="{loc:Localize Common_Save}"
                             Style="{StaticResource SecondaryButton}"
-                            Padding="12,8" HeightRequest="36"
+                            Padding="12,8" HeightRequest="44"
                             IsEnabled="{Binding IsNameValid}"
                             Command="{Binding SaveCommand}"
                             VerticalOptions="Center"/>
@@ -62,9 +59,11 @@
                 <Border Style="{StaticResource CardFrame}" Padding="16,14">
                     <VerticalStackLayout Spacing="10">
                         <Label Text="{loc:Localize CreateExercise_MuscleGroupLabel}" Style="{StaticResource SectionLabel}"/>
+                        <!-- 10 val / 4 kolumner = 3 rader à ~49 pt + 2 × 8 radavstånd ≈ 163 pt.
+                             112 pt dolde sista raden (Helkropp, Övrigt). -->
                         <CollectionView ItemsSource="{Binding MuscleGroups}"
                                         SelectionMode="None"
-                                        HeightRequest="112">
+                                        HeightRequest="172">
                             <CollectionView.ItemsLayout>
                                 <GridItemsLayout Orientation="Vertical" Span="4"
                                                  HorizontalItemSpacing="8" VerticalItemSpacing="8"/>
@@ -81,7 +80,7 @@
                                                      Fill="{Binding AccentColor}"
                                                      HorizontalOptions="Center"/>
                                             <Label Text="{Binding Label}"
-                                                   FontFamily="BebasNeue" FontSize="9" CharacterSpacing="0.5"
+                                                   FontFamily="BebasNeue" FontSize="11" CharacterSpacing="0.5"
                                                    TextColor="{Binding AccentColor}"
                                                    HorizontalOptions="Center"/>
                                         </VerticalStackLayout>
@@ -103,7 +102,7 @@
                         <Label Text="{loc:Localize CreateExercise_EquipmentLabel}" Style="{StaticResource SectionLabel}"/>
                         <CollectionView ItemsSource="{Binding EquipmentOptions}"
                                         SelectionMode="None"
-                                        HeightRequest="40">
+                                        HeightRequest="44">
                             <CollectionView.ItemsLayout>
                                 <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8"/>
                             </CollectionView.ItemsLayout>
@@ -113,7 +112,8 @@
                                             Stroke="{Binding BorderColor}"
                                             StrokeShape="RoundRectangle 10"
                                             StrokeThickness="1.5"
-                                            Padding="12,8">
+                                            Padding="12,0"
+                                            HeightRequest="44">
                                         <Label Text="{Binding Label}"
                                                TextColor="{Binding TextColor}"
                                                FontFamily="BebasNeue" FontSize="11"

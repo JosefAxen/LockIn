@@ -19,7 +19,8 @@ public partial class PostWorkoutViewModel(
     ISettingsRepository settingsRepo,
     IBodyRepository bodyRepo,
     IExerciseRepository exerciseRepo,
-    ISessionRepository sessionRepo) : ObservableObject
+    ISessionRepository sessionRepo,
+    ICycleContextService cycleContext) : ObservableObject
 {
     [ObservableProperty] private int _sessionId;
     [ObservableProperty] private string _templateName = "";
@@ -30,8 +31,12 @@ public partial class PostWorkoutViewModel(
     [ObservableProperty] private string _notes = "";
     [ObservableProperty] private bool _isLoading;
     [ObservableProperty] private bool _isSharing;
+    [ObservableProperty] private bool _hasMesocycle;
 
+    // true när passet är avgjort (sparat eller ångrat) — inget mer ska hända med det
     private bool _committed;
+    // Spärr mot dubbeltryck på KLAR / Ångra
+    private bool _isLeaving;
     private WorkoutSession? _loadedSession;
 
     public ObservableCollection<MuscleGroupRow> MuscleGroups { get; } = new();
@@ -45,87 +50,109 @@ public partial class PostWorkoutViewModel(
         _ = LoadAsync(value);
     }
 
+    private static async Task ShowErrorAsync(Exception ex, string context)
+    {
+        System.Diagnostics.Debug.WriteLine($"[PostWorkout] {context}: {ex}");
+        try
+        {
+            if (Shell.Current is not null)
+                await Shell.Current.DisplayAlertAsync("", AppResources.Common_ErrorRetry, AppResources.Common_OK);
+        }
+        catch { /* felvisningen får inte själv fälla sidan */ }
+    }
+
     private async Task LoadAsync(int sessionId)
     {
         IsLoading = true;
-
-        var session = await sessionRepo.GetSessionAsync(sessionId);
-        if (session is null) { IsLoading = false; return; }
-
-        _loadedSession = session;
-        Notes = session.Notes ?? "";
-
-        // TemplateName: slå upp via TemplateDayId om satt
-        TemplateName = "";
-
+        try
         {
-            var elapsed = session.CompletedAt.HasValue
-                ? session.CompletedAt.Value - session.StartedAt
-                : DateTime.Now - session.StartedAt;
-            Duration = $"{(int)elapsed.TotalMinutes}m";
-        }
+            var session = await sessionRepo.GetSessionAsync(sessionId);
+            if (session is null) return;
 
-        var muscleTask = sessionRepo.GetSessionVolumeByMuscleGroupAsync(sessionId);
-        var setsTask   = sessionRepo.GetAllSetsForSessionAsync(sessionId);
-        await Task.WhenAll(muscleTask, setsTask);
-        var muscleVolume = muscleTask.Result;
-        var allSets = setsTask.Result;
+            _loadedSession = session;
+            Notes = session.Notes ?? "";
 
-        var totalVol = allSets.Sum(s => s.WeightKg * s.Reps);
-        TotalVolume = totalVol >= 1000
-            ? $"{totalVol / 1000:F1}k"
-            : totalVol.ToString("F0");
-        TotalSets = allSets.Count.ToString();
+            // Passnamnet finns inte på WorkoutSession — hämta det från det pågående passet
+            TemplateName = activeWorkout.TemplateName;
 
-        MuscleGroups.Clear();
-        if (muscleVolume.Any())
-        {
-            var maxVol = muscleVolume.Values.Max(v => v.Volume);
-            foreach (var kv in muscleVolume.OrderByDescending(kv => kv.Value.Volume))
+            // Mesocykelkortet ("DU AVANCERAR …") visas bara när en cykel faktiskt är aktiv
+            HasMesocycle = await cycleContext.GetCurrentAsync() is not null;
+
             {
-                MuscleGroups.Add(new MuscleGroupRow
-                {
-                    Name = MuscleGroupName(kv.Key),
-                    Volume = kv.Value.Volume,
-                    Sets = kv.Value.Sets,
-                    ProgressFraction = maxVol > 0 ? (double)(kv.Value.Volume / maxVol) : 0
-                });
+                var elapsed = session.CompletedAt.HasValue
+                    ? session.CompletedAt.Value - session.StartedAt
+                    : DateTime.Now - session.StartedAt;
+                Duration = $"{(int)elapsed.TotalMinutes}m";
             }
-        }
 
-        var prSets = await sessionRepo.GetPRsForSessionAsync(sessionId);
-        PrCount = prSets.Count.ToString();
-        PRs.Clear();
-        if (prSets.Count > 0)
-        {
-            var seTask  = sessionRepo.GetSessionExercisesAsync(sessionId);
-            var exTask  = exerciseRepo.GetAllAsync();
-            await Task.WhenAll(seTask, exTask);
-            var seById      = seTask.Result.ToDictionary(se => se.Id);
-            var exerciseById = exTask.Result.ToDictionary(e => e.Id);
-            foreach (var ps in prSets)
+            var muscleTask = sessionRepo.GetSessionVolumeByMuscleGroupAsync(sessionId);
+            var setsTask   = sessionRepo.GetAllSetsForSessionAsync(sessionId);
+            await Task.WhenAll(muscleTask, setsTask);
+            var muscleVolume = muscleTask.Result;
+            var allSets = setsTask.Result;
+
+            var totalVol = allSets.Sum(s => s.WeightKg * s.Reps);
+            TotalVolume = totalVol >= 1000
+                ? $"{totalVol / 1000:F1}k"
+                : totalVol.ToString("F0");
+            TotalSets = allSets.Count.ToString();
+
+            MuscleGroups.Clear();
+            if (muscleVolume.Any())
             {
-                seById.TryGetValue(ps.SessionExerciseId, out var seRow);
-                var exercise = seRow is not null && exerciseById.TryGetValue(seRow.ExerciseId, out var ex) ? ex : null;
-                PRs.Add(new PRRow
+                var maxVol = muscleVolume.Values.Max(v => v.Volume);
+                foreach (var kv in muscleVolume.OrderByDescending(kv => kv.Value.Volume))
                 {
-                    ExerciseName = exercise?.Name ?? "",
-                    Display = $"{ps.WeightKg} kg × {ps.Reps}",
-                    Epley1RM = string.Format(AppResources.PostWorkout_Epley1RM_Format, $"{PRService.CalculateEpley1RM(ps.WeightKg, ps.Reps):F0}")
-                });
+                    MuscleGroups.Add(new MuscleGroupRow
+                    {
+                        Name = kv.Key.ToLocalizedLabel(),
+                        Volume = kv.Value.Volume,
+                        Sets = kv.Value.Sets,
+                        ProgressFraction = maxVol > 0 ? (double)(kv.Value.Volume / maxVol) : 0
+                    });
+                }
             }
+
+            var prSets = await sessionRepo.GetPRsForSessionAsync(sessionId);
+            PrCount = prSets.Count.ToString();
+            PRs.Clear();
+            if (prSets.Count > 0)
+            {
+                var seTask  = sessionRepo.GetSessionExercisesAsync(sessionId);
+                var exTask  = exerciseRepo.GetAllAsync();
+                await Task.WhenAll(seTask, exTask);
+                var seById      = seTask.Result.ToDictionary(se => se.Id);
+                var exerciseById = exTask.Result.ToDictionary(e => e.Id);
+                foreach (var ps in prSets)
+                {
+                    seById.TryGetValue(ps.SessionExerciseId, out var seRow);
+                    var exercise = seRow is not null && exerciseById.TryGetValue(seRow.ExerciseId, out var ex) ? ex : null;
+                    PRs.Add(new PRRow
+                    {
+                        ExerciseName = exercise?.DisplayName ?? "",
+                        Display = $"{ps.WeightKg:0.##} kg × {ps.Reps}",
+                        Epley1RM = string.Format(AppResources.PostWorkout_Epley1RM_Format, $"{PRService.CalculateEpley1RM(ps.WeightKg, ps.Reps):F0}")
+                    });
+                }
+            }
+
+            // Meriter kontrolleras efter att passet sparats som avslutat (sker när AVSLUTA PASS
+            // bekräftas), så att "Första passet" m.fl. räknar med det här passet.
+            await CheckAchievementsAsync(session, allSets);
+
+            // HealthKit-sync sker i DoneAsync när passet släpps — en gång per pass.
+
+            // Load photos
+            await RefreshPhotosAsync();
         }
-
-        // Check achievements
-        await CheckAchievementsAsync(session, allSets);
-
-        // HealthKit-sync sker INTE här — CompletedAt är null tills CommitFinishAsync anropas.
-        // Synken sker i DoneAsync efter att CommitFinishAsync har körts.
-
-        // Load photos
-        await RefreshPhotosAsync();
-
-        IsLoading = false;
+        catch (Exception ex)
+        {
+            await ShowErrorAsync(ex, "LoadAsync");
+        }
+        finally
+        {
+            IsLoading = false;
+        }
     }
 
     private async Task CheckAchievementsAsync(WorkoutSession session, List<LoggedSet> allSets)
@@ -182,7 +209,7 @@ public partial class PostWorkoutViewModel(
 
         NewAchievements.Clear();
         foreach (var def in newlyUnlocked)
-            NewAchievements.Add(new NewAchievementRow { Emoji = def.Emoji, Title = def.Title });
+            NewAchievements.Add(new NewAchievementRow { Emoji = def.Emoji, Title = def.Title, Description = def.Description });
     }
 
     private async Task RefreshPhotosAsync()
@@ -199,16 +226,16 @@ public partial class PostWorkoutViewModel(
     {
         if (_loadedSession is null) return;
 
-        var action = await Shell.Current.DisplayActionSheetAsync(
-            AppResources.PostWorkout_AddPhoto_Title,
-            AppResources.Common_Cancel, null,
-            AppResources.PostWorkout_Photo_TakePhoto,
-            AppResources.PostWorkout_Photo_PickLibrary);
-        var dir = Path.Combine(FileSystem.AppDataDirectory, "photos");
-        Directory.CreateDirectory(dir);
-
         try
         {
+            var action = await Shell.Current.DisplayActionSheetAsync(
+                AppResources.PostWorkout_AddPhoto_Title,
+                AppResources.Common_Cancel, null,
+                AppResources.PostWorkout_Photo_TakePhoto,
+                AppResources.PostWorkout_Photo_PickLibrary);
+            var dir = Path.Combine(FileSystem.AppDataDirectory, "photos");
+            Directory.CreateDirectory(dir);
+
             if (action == AppResources.PostWorkout_Photo_TakePhoto)
             {
                 var file = await MediaPicker.Default.CapturePhotoAsync();
@@ -223,23 +250,27 @@ public partial class PostWorkoutViewModel(
                         if (file is not null)
                             await photos.SaveAsync(file, _loadedSession.Id, dir);
             }
-        }
-        catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"[Photos] Fel vid fotoval: {ex.Message}"); return; }
 
-        await RefreshPhotosAsync();
+            await RefreshPhotosAsync();
+        }
+        catch (Exception ex) { await ShowErrorAsync(ex, "AddPhoto"); }
     }
 
     [RelayCommand]
     private async Task DeletePhotoAsync(PhotoRow row)
     {
-        var confirmed = await Shell.Current.DisplayAlertAsync(
-            AppResources.PostWorkout_DeletePhoto_Title,
-            AppResources.PostWorkout_DeletePhoto_Body,
-            AppResources.Common_Delete,
-            AppResources.Common_Cancel);
-        if (!confirmed) return;
-        await bodyRepo.DeletePhotoAsync(row.Photo);
-        Photos.Remove(row);
+        try
+        {
+            var confirmed = await Shell.Current.DisplayAlertAsync(
+                AppResources.PostWorkout_DeletePhoto_Title,
+                AppResources.PostWorkout_DeletePhoto_Body,
+                AppResources.Common_Delete,
+                AppResources.Common_Cancel);
+            if (!confirmed) return;
+            await bodyRepo.DeletePhotoAsync(row.Photo);
+            Photos.Remove(row);
+        }
+        catch (Exception ex) { await ShowErrorAsync(ex, "DeletePhoto"); }
     }
 
     [RelayCommand]
@@ -283,60 +314,109 @@ public partial class PostWorkoutViewModel(
         }
     }
 
+    // Pushas ovanpå efter-passet-sidan. Sidan sparar inte passet vid push (se PostWorkoutPage).
     [RelayCommand]
     private async Task ViewMesocycleStatsAsync()
-        => await Shell.Current.GoToAsync(AppRoutes.MesocycleStats);
+    {
+        try { await Shell.Current.GoToAsync(AppRoutes.MesocycleStats); }
+        catch (Exception ex) { await ShowErrorAsync(ex, "ViewMesocycleStats"); }
+    }
 
     [RelayCommand]
     private async Task UndoFinishAsync()
     {
-        _committed = true;  // markera som "hanterad" — ingen commit
-        activeWorkout.ResumeFromPostWorkout();
-        await Shell.Current.GoToAsync(AppRoutes.Back);
+        if (_isLeaving) return;
+        _isLeaving = true;
+        try
+        {
+            if (await activeWorkout.ResumeFromPostWorkoutAsync(SessionId))
+            {
+                _committed = true;  // markera som "hanterad" — ingen commit
+                await Shell.Current.GoToAsync(AppRoutes.Back);
+            }
+            else
+            {
+                // Passet är redan sparat och släppt — det finns inget pass att återgå till
+                _committed = true;
+                await Shell.Current.Navigation.PopToRootAsync(false);
+                await Shell.Current.GoToAsync(AppRoutes.TrainTab);
+            }
+        }
+        catch (Exception ex) { await ShowErrorAsync(ex, "UndoFinish"); }
+        finally { _isLeaving = false; }
     }
 
     [RelayCommand]
     private async Task DoneAsync()
     {
-        if (_committed) return;
-        _committed = true;
-        await activeWorkout.CommitFinishAsync(Notes);
-
-        // Sync till Apple Health efter commit — CompletedAt är nu satt.
-        if (_loadedSession is not null &&
-            Preferences.Default.Get("healthkit_sync_enabled", false))
+        if (_isLeaving) return;
+        _isLeaving = true;
+        try
         {
-            var completedAt = DateTime.Now;
-            var durationMinutes = (completedAt - _loadedSession.StartedAt).TotalMinutes;
-            var activeKcal = durationMinutes * 6.0; // ~6 kcal/min för styrketräning
-            _ = health.SaveWorkoutAsync(_loadedSession.StartedAt, completedAt, activeKcal)
-                .ContinueWith(t => System.Diagnostics.Debug.WriteLine($"[HealthKit] Sync misslyckades: {t.Exception?.GetBaseException().Message}"),
-                              TaskContinuationOptions.OnlyOnFaulted);
+            var committedNow = await CommitIfNotDoneAsync();
+            // Redan sparat (t.ex. efter ett tidigare misslyckat försök) — anteckningarna ska ändå med
+            if (!committedNow)
+                await SaveNotesAsync();
+
+            // Sync till Apple Health efter commit — CompletedAt är satt. Bara en gång per pass.
+            if (committedNow && _loadedSession is not null &&
+                Preferences.Default.Get("healthkit_sync_enabled", false))
+            {
+                var completedAt = _loadedSession.CompletedAt ?? DateTime.Now;
+                var durationMinutes = (completedAt - _loadedSession.StartedAt).TotalMinutes;
+                var activeKcal = durationMinutes * 6.0; // ~6 kcal/min för styrketräning
+                _ = health.SaveWorkoutAsync(_loadedSession.StartedAt, completedAt, activeKcal)
+                    .ContinueWith(t => System.Diagnostics.Debug.WriteLine($"[HealthKit] Sync misslyckades: {t.Exception?.GetBaseException().Message}"),
+                                  TaskContinuationOptions.OnlyOnFaulted);
+            }
+
+            await Shell.Current.Navigation.PopToRootAsync(false);
+            await Shell.Current.GoToAsync(AppRoutes.TrainTab);
         }
-
-        await Shell.Current.Navigation.PopToRootAsync(false);
-        await Shell.Current.GoToAsync(AppRoutes.TrainTab);
+        catch (Exception ex) { await ShowErrorAsync(ex, "Done"); }
+        finally { _isLeaving = false; }
     }
 
-    public async Task CommitIfNotDoneAsync()
+    /// <summary>Släpper passet med anteckningarna. True om det sparades nu, false om det redan var avgjort.</summary>
+    public async Task<bool> CommitIfNotDoneAsync()
     {
-        if (_committed) return;
+        if (_committed) return false;
         _committed = true;
-        await activeWorkout.CommitFinishAsync(Notes);
+        return await activeWorkout.CommitFinishAsync(SessionId, Notes);
     }
 
-    private static string MuscleGroupName(MuscleGroup mg) => mg switch
+    private async Task SaveNotesAsync()
     {
-        MuscleGroup.Chest     => AppResources.Library_Muscle_Chest,
-        MuscleGroup.Back      => AppResources.Library_Muscle_Back,
-        MuscleGroup.Shoulders => AppResources.Library_Muscle_Shoulders,
-        MuscleGroup.Biceps    => AppResources.Library_Muscle_Biceps,
-        MuscleGroup.Triceps   => AppResources.Library_Muscle_Triceps,
-        MuscleGroup.Legs      => AppResources.Library_Muscle_Legs,
-        MuscleGroup.Core      => AppResources.Library_Muscle_Core,
-        MuscleGroup.FullBody  => AppResources.Library_Muscle_FullBody,
-        _                     => AppResources.Library_Muscle_Other
-    };
+        // Läs om passet — den laddade kopian kan ha inaktuellt CompletedAt
+        var session = await sessionRepo.GetSessionAsync(SessionId);
+        if (session is null || session.Notes == Notes) return;
+        session.Notes = Notes;
+        await sessionRepo.SaveSessionAsync(session);
+    }
+
+    /// <summary>
+    /// Sidan lämnades utan KLAR eller Ångra (svep bakåt, systemnavigering). Tillbaka till
+    /// passet betyder ångra; allt annat sparar passet med anteckningarna.
+    /// </summary>
+    public async Task HandleLeftPageAsync(bool returnedToWorkout)
+    {
+        if (_committed || _isLeaving) return;
+        try
+        {
+            if (returnedToWorkout && await activeWorkout.ResumeFromPostWorkoutAsync(SessionId))
+            {
+                _committed = true;
+                return;
+            }
+            // Passet är redan släppt (eller ett nytt har startats) — spara åtminstone anteckningarna
+            if (!await CommitIfNotDoneAsync())
+                await SaveNotesAsync();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[PostWorkout] HandleLeftPage: {ex}");
+        }
+    }
 }
 
 public class MuscleGroupRow
@@ -360,6 +440,7 @@ public class NewAchievementRow
 {
     public string Emoji { get; set; } = "";
     public string Title { get; set; } = "";
+    public string Description { get; set; } = "";
 }
 
 public class PhotoRow(WorkoutPhoto photo)

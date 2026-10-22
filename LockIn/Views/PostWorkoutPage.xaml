@@ -18,14 +18,14 @@
 
     <Grid SafeAreaEdges="None">
 
-        <!-- Atmosf�risk bakgrund -->
+        <!-- Atmosfärisk bakgrund -->
         <controls:AtmosphericBackgroundView InputTransparent="True"/>
 
-        <!-- Celebration gradient � edge-to-edge inkl. Dynamic Island -->
+        <!-- Toppgradient — edge-to-edge inkl. Dynamic Island -->
         <BoxView VerticalOptions="Start" HeightRequest="200" InputTransparent="True" ZIndex="1">
             <BoxView.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <GradientStop Color="#1AB8B8BC" Offset="0.0"/>
+                    <GradientStop Color="{StaticResource ForgeAccentDim}" Offset="0.0"/>
                     <GradientStop Color="Transparent" Offset="1.0"/>
                 </LinearGradientBrush>
             </BoxView.Background>
@@ -35,22 +35,22 @@
         <BoxView VerticalOptions="Start" HeightRequest="90" InputTransparent="True" ZIndex="19">
             <BoxView.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <GradientStop Color="#28141418" Offset="0.0"/>
-                    <GradientStop Color="#00141418" Offset="1.0"/>
+                    <GradientStop Color="{StaticResource ForgeStatusBarOverlay}" Offset="0.0"/>
+                    <GradientStop Color="{StaticResource ForgeStatusBarOverlayClear}" Offset="1.0"/>
                 </LinearGradientBrush>
             </BoxView.Background>
         </BoxView>
 
         <!-- Sticky header gradient + compact namn (fades in on scroll) -->
         <Grid x:Name="StickyHeader" VerticalOptions="Start" ZIndex="20" Opacity="0"
-              HeightRequest="150" SafeAreaEdges="None">
+              HeightRequest="150" SafeAreaEdges="None" InputTransparent="True">
             <BoxView InputTransparent="True">
                 <BoxView.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                        <GradientStop Color="#D8141418" Offset="0.0"/>
-                        <GradientStop Color="#90141418" Offset="0.35"/>
-                        <GradientStop Color="#38141418" Offset="0.65"/>
-                        <GradientStop Color="#00141418" Offset="1.0"/>
+                        <GradientStop Color="{StaticResource ForgeStickyHeaderTop}" Offset="0.0"/>
+                        <GradientStop Color="{StaticResource ForgeStickyHeaderMid1}" Offset="0.35"/>
+                        <GradientStop Color="{StaticResource ForgeStickyHeaderMid2}" Offset="0.65"/>
+                        <GradientStop Color="{StaticResource ForgeStatusBarOverlayClear}" Offset="1.0"/>
                     </LinearGradientBrush>
                 </BoxView.Background>
             </BoxView>
@@ -67,9 +67,10 @@
     <Grid ZIndex="2" SafeAreaEdges="None">
 
         <ScrollView VerticalScrollBarVisibility="Never" Scrolled="OnScrolled">
-            <StackLayout Padding="16,0,16,120" Spacing="16">
+            <!-- Bottenpadding: plats för Ångra-länken (44) och knappraden (56 + 40) -->
+            <StackLayout Padding="16,0,16,160" Spacing="16">
 
-                <!-- Header � scrollar med inneh�llet -->
+                <!-- Header — scrollar med innehållet -->
                 <VerticalStackLayout Padding="4,56,4,4" Spacing="4">
                     <Label Text="{loc:Localize PostWorkout_GreatJob}"
                            Style="{StaticResource SectionLabel}"
@@ -149,8 +150,9 @@
                     </StackLayout>
                 </Border>
 
-                <!-- RP Mesocykel-info card -->
+                <!-- RP Mesocykel-info card — bara när en mesocykel är aktiv -->
                 <Border Style="{StaticResource CardFrame}"
+                        IsVisible="{Binding HasMesocycle}"
                         BackgroundColor="{StaticResource ForgeAccentBlueDim}"
                         Padding="18,16">
                     <StackLayout Spacing="8">
@@ -164,7 +166,9 @@
                         <Label Text="{loc:Localize PostWorkout_MesocycleStats_Link}"
                                TextColor="{StaticResource ForgeAccentBlue}"
                                FontFamily="DMSansMedium" FontSize="13"
-                               TextDecorations="Underline">
+                               TextDecorations="Underline"
+                               MinimumHeightRequest="44"
+                               VerticalTextAlignment="Center">
                             <Label.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding ViewMesocycleStatsCommand}"/>
                             </Label.GestureRecognizers>
@@ -186,36 +190,26 @@
                             Margin="12,6"/>
                 </Border>
 
-                <!-- New achievements -->
+                <!-- New achievements — saklig lista, ingen konfetti eller ljud (PRODUCT.md) -->
                 <Label Text="{loc:Localize PostWorkout_NewAchievements}" Style="{StaticResource SectionLabel}"
                        IsVisible="{Binding NewAchievements.Count, Converter={StaticResource GtzConverter}}"/>
-                <StackLayout BindableLayout.ItemsSource="{Binding NewAchievements}" Spacing="8"
-                             IsVisible="{Binding NewAchievements.Count, Converter={StaticResource GtzConverter}}">
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate x:DataType="vm:NewAchievementRow">
-                            <Border BackgroundColor="{StaticResource ForgeAccentAmberDim}"
-                                    StrokeThickness="1"
-                                    Stroke="{StaticResource ForgeAccentAmber}"
-                                    StrokeShape="RoundRectangle 12"
-                                    Padding="16,12">
-                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
-                                    <Label Grid.Column="0" Text="{Binding Emoji}"
-                                           FontSize="26" VerticalOptions="Center"/>
-                                    <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                                        <Label Text="{loc:Localize PostWorkout_Achievement_Unlocked}"
-                                               Style="{StaticResource SectionLabel}"
-                                               TextColor="{StaticResource ForgeAccentAmber}"
-                                               FontSize="10"/>
-                                        <Label Text="{Binding Title}"
-                                               FontFamily="BebasNeue" FontSize="18"
-                                               TextColor="{StaticResource ForgeAccentAmber}"
-                                               CharacterSpacing="0.5"/>
-                                    </StackLayout>
-                                </Grid>
-                            </Border>
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
-                </StackLayout>
+                <Border Style="{StaticResource CardFrame}" Padding="16,4"
+                        IsVisible="{Binding NewAchievements.Count, Converter={StaticResource GtzConverter}}">
+                    <StackLayout BindableLayout.ItemsSource="{Binding NewAchievements}" Spacing="0">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="vm:NewAchievementRow">
+                                <StackLayout Spacing="2" Padding="0,10">
+                                    <Label Text="{Binding Title}"
+                                           FontFamily="DMSansMedium" FontSize="14"
+                                           TextColor="{StaticResource ForgeText}"/>
+                                    <Label Text="{Binding Description}"
+                                           Style="{StaticResource MutedLabel}"
+                                           LineBreakMode="WordWrap"/>
+                                </StackLayout>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </StackLayout>
+                </Border>
 
                 <!-- Photos -->
                 <Grid ColumnDefinitions="*,Auto" Margin="0,4,0,0">
@@ -225,7 +219,7 @@
                             Style="{StaticResource SecondaryButton}"
                             FontFamily="BebasNeue" FontSize="13"
                             Padding="12,4"
-                            HeightRequest="32"
+                            HeightRequest="44"
                             Command="{Binding AddPhotoCommand}"/>
                 </Grid>
                 <CollectionView ItemsSource="{Binding Photos}"
@@ -245,20 +239,26 @@
                                     <Image Source="{Binding Source}"
                                            Aspect="AspectFill"
                                            WidthRequest="120" HeightRequest="120"/>
-                                    <Border BackgroundColor="#CC000000"
-                                            StrokeThickness="0"
-                                            VerticalOptions="End"
-                                            Padding="6,4">
-                                        <Label Text="✕"
-                                               TextColor="White" FontSize="14"
-                                               HorizontalOptions="End">
-                                            <Label.GestureRecognizers>
-                                                <TapGestureRecognizer
-                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:PostWorkoutViewModel}}, Path=DeletePhotoCommand}"
-                                                    CommandParameter="{Binding .}"/>
-                                            </Label.GestureRecognizers>
-                                        </Label>
-                                    </Border>
+                                    <!-- Ta bort: 44×44 träffyta i hörnet, mörk platta så ✕ syns på ljusa foton -->
+                                    <Grid WidthRequest="44" HeightRequest="44"
+                                          HorizontalOptions="End" VerticalOptions="End"
+                                          BackgroundColor="Transparent"
+                                          SemanticProperties.Description="{loc:Localize A11y_Delete}">
+                                        <Border BackgroundColor="#CC000000"
+                                                StrokeShape="Ellipse"
+                                                StrokeThickness="0"
+                                                WidthRequest="28" HeightRequest="28"
+                                                HorizontalOptions="Center" VerticalOptions="Center">
+                                            <Label Text="✕"
+                                                   TextColor="White" FontSize="14"
+                                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                                        </Border>
+                                        <Grid.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:PostWorkoutViewModel}}, Path=DeletePhotoCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                        </Grid.GestureRecognizers>
+                                    </Grid>
                                 </Grid>
                             </Border>
                         </DataTemplate>
@@ -299,7 +299,7 @@
 
     </Grid>
 
-    <!-- Ångra-länk ovanför KLAR-knappen -->
+    <!-- Ångra-länk ovanför KLAR-knappen — 44 pt hög träffyta -->
     <Label Text="{loc:Localize PostWorkout_UndoFinish}"
            TextColor="{StaticResource ForgeMuted}"
            FontFamily="DMSansRegular"
@@ -307,7 +307,10 @@
            TextDecorations="Underline"
            HorizontalOptions="Center"
            VerticalOptions="End"
-           Margin="16,0,16,104"
+           MinimumHeightRequest="44"
+           VerticalTextAlignment="Center"
+           Padding="12,0"
+           Margin="16,0,16,98"
            ZIndex="22">
         <Label.GestureRecognizers>
             <TapGestureRecognizer Command="{Binding UndoFinishCommand}"/>
@@ -328,7 +331,8 @@
                 StrokeThickness="1"
                 Stroke="{StaticResource ForgeBorder}"
                 HeightRequest="56"
-                WidthRequest="56">
+                WidthRequest="56"
+                SemanticProperties.Description="{loc:Localize A11y_Share}">
             <Grid>
                 <ActivityIndicator IsRunning="{Binding IsSharing}"
                                    IsVisible="{Binding IsSharing}"
@@ -346,15 +350,16 @@
             </Border.GestureRecognizers>
         </Border>
 
-        <!-- Nästa pass-knapp (röd primär, Grid.Column="2") -->
+        <!-- Nästa pass-knapp (röd primär, Grid.Column="2"). Mörk text: vit på korall ger bara 2,7:1 -->
         <Border Grid.Column="2"
                 BackgroundColor="{StaticResource ForgeAccentCoral}"
                 StrokeShape="RoundRectangle 26"
                 StrokeThickness="0"
                 HeightRequest="56"
-                HorizontalOptions="Fill">
+                HorizontalOptions="Fill"
+                SemanticProperties.Description="{loc:Localize PostWorkout_NextSession}">
             <Label Text="{loc:Localize PostWorkout_NextSession}"
-                   TextColor="White"
+                   TextColor="{StaticResource ForgeFabForeground}"
                    FontFamily="BebasNeue"
                    FontSize="20"
                    CharacterSpacing="3"
@@ -366,8 +371,6 @@
         </Border>
 
     </Grid>
-
-    <controls:ConfettiView x:Name="ConfettiOverlay"/>
 
     </Grid>
 

@@ -40,11 +40,13 @@ public class LineChartView : SKCanvasView
 
         float w = e.Info.Width;
         float h = e.Info.Height;
+        // Canvasen är i fysiska pixlar — skala alla mått från punkter (som MetricRingView).
+        float s = Width > 0 ? w / (float)Width : 1f;
 
-        const float leftMargin   = 44f;
-        const float bottomMargin = 22f;
-        const float topMargin    = 8f;
-        const float rightMargin  = 8f;
+        float leftMargin   = 44f * s;
+        float bottomMargin = 22f * s;
+        float topMargin    = 8f * s;
+        float rightMargin  = 8f * s;
 
         float plotW = w - leftMargin - rightMargin;
         float plotH = h - topMargin - bottomMargin;
@@ -74,14 +76,14 @@ public class LineChartView : SKCanvasView
         using var sepPaint = new SKPaint
         {
             Color       = separatorColor,
-            StrokeWidth = 1f,
+            StrokeWidth = 1f * s,
             IsAntialias = false,
             Style       = SKPaintStyle.Stroke,
         };
         using var yLabelPaint = new SKPaint
         {
             Color     = labelColor,
-            TextSize  = 9f,
+            TextSize  = 11f * s,
             IsAntialias = true,
             TextAlign = SKTextAlign.Right,
         };
@@ -93,7 +95,7 @@ public class LineChartView : SKCanvasView
             canvas.DrawLine(leftMargin, y, leftMargin + plotW, y, sepPaint);
 
             double labelVal = minVal + t * valRange;
-            canvas.DrawText($"{(int)labelVal}", leftMargin - 4f, y + 3.5f, yLabelPaint);
+            canvas.DrawText($"{(int)labelVal}", leftMargin - 4f * s, y + 4f * s, yLabelPaint);
         }
 
         // Compute pixel coordinates for all points
@@ -111,7 +113,7 @@ public class LineChartView : SKCanvasView
         using var xLabelPaint = new SKPaint
         {
             Color       = labelColor,
-            TextSize    = 9f,
+            TextSize    = 11f * s,
             IsAntialias = true,
             TextAlign   = SKTextAlign.Center,
         };
@@ -120,7 +122,7 @@ public class LineChartView : SKCanvasView
         {
             int idx = (int)Math.Round(i * (pts.Count - 1.0) / (labelCount - 1.0));
             float lx = xCoords[idx];
-            float ly = topMargin + plotH + bottomMargin - 4f;
+            float ly = topMargin + plotH + bottomMargin - 4f * s;
             canvas.DrawText(pts[idx].Date.ToString("d/M"), lx, ly, xLabelPaint);
         }
 
@@ -150,7 +152,7 @@ public class LineChartView : SKCanvasView
         using var linePaint = new SKPaint
         {
             Color       = sk,
-            StrokeWidth = 2f,
+            StrokeWidth = 2f * s,
             IsAntialias = true,
             Style       = SKPaintStyle.Stroke,
             StrokeCap   = SKStrokeCap.Round,
@@ -168,14 +170,14 @@ public class LineChartView : SKCanvasView
         using var dotStroke = new SKPaint
         {
             Color       = dotBorder,
-            StrokeWidth = 1.5f,
+            StrokeWidth = 1.5f * s,
             IsAntialias = true,
             Style       = SKPaintStyle.Stroke,
         };
         for (int i = 0; i < pts.Count; i++)
         {
-            canvas.DrawCircle(xCoords[i], yCoords[i], 4f, dotFill);
-            canvas.DrawCircle(xCoords[i], yCoords[i], 4f, dotStroke);
+            canvas.DrawCircle(xCoords[i], yCoords[i], 4f * s, dotFill);
+            canvas.DrawCircle(xCoords[i], yCoords[i], 4f * s, dotStroke);
         }
     }
 }

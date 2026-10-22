@@ -108,10 +108,10 @@ public class ProgressReportService
         using (var paint = new SKPaint
         {
             IsAntialias = true, Typeface  = tfMedium, TextSize  = 24f,
-            Color       = SKColor.Parse("#FF6B2C"),   TextAlign = SKTextAlign.Right
+            Color       = SKColor.Parse("#B8B8BC"),   TextAlign = SKTextAlign.Right
         })
         {
-            canvas.DrawText("PROGRESS", Width - 60f, 100f, paint);
+            canvas.DrawText("PROGRESSION", Width - 60f, 100f, paint);
         }
 
         using var linePaint = new SKPaint
@@ -187,7 +187,7 @@ public class ProgressReportService
             using var fillPaint = new SKPaint
             {
                 IsAntialias = true,
-                Color = SKColor.Parse("#FF6B2C").WithAlpha(40),
+                Color = SKColor.Parse("#B8B8BC").WithAlpha(40),
                 Style = SKPaintStyle.Fill
             };
             canvas.DrawPath(fillPath, fillPaint);
@@ -202,7 +202,7 @@ public class ProgressReportService
 
             using var linePaint = new SKPaint
             {
-                IsAntialias = true, Color = SKColor.Parse("#FF6B2C"),
+                IsAntialias = true, Color = SKColor.Parse("#B8B8BC"),
                 StrokeWidth = 3f, Style = SKPaintStyle.Stroke,
                 StrokeCap = SKStrokeCap.Round, StrokeJoin = SKStrokeJoin.Round
             };
@@ -212,7 +212,7 @@ public class ProgressReportService
         // Last point dot
         float lastX = XAt(history.Count - 1);
         float lastY = YAt(history[history.Count - 1].Value);
-        using (var dotPaint = new SKPaint { IsAntialias = true, Color = SKColor.Parse("#FF6B2C"), Style = SKPaintStyle.Fill })
+        using (var dotPaint = new SKPaint { IsAntialias = true, Color = SKColor.Parse("#B8B8BC"), Style = SKPaintStyle.Fill })
             canvas.DrawCircle(lastX, lastY, 10f, dotPaint);
 
         // X-axis labels (max 5)
@@ -224,12 +224,12 @@ public class ProgressReportService
         };
         int step = Math.Max(1, (history.Count - 1) / 4);
         for (int i = 0; i < history.Count; i += step)
-            canvas.DrawText(history[i].Date.ToString("MMM d"), XAt(i), chartBottom + 40f, lblPaint);
+            canvas.DrawText(history[i].Date.ToString("d MMM"), XAt(i), chartBottom + 40f, lblPaint);
 
         // Visa alltid sista punktens datum
         int lastIdx = history.Count - 1;
         if (lastIdx > 0 && lastIdx % step != 0)
-            canvas.DrawText(history[lastIdx].Date.ToString("MMM d"), XAt(lastIdx), chartBottom + 40f, lblPaint);
+            canvas.DrawText(history[lastIdx].Date.ToString("d MMM"), XAt(lastIdx), chartBottom + 40f, lblPaint);
     }
 
     // ─── DrawStats (y: 820–1050) ──────────────────────────────────────────────
@@ -259,7 +259,7 @@ public class ProgressReportService
 
         (string Value, string Label, string Color)[] cards =
         [
-            (bestRmStr, "BÄSTA 1RM",    "#FF6B2C"),
+            (bestRmStr, "BÄSTA 1RM",    "#B8B8BC"),
             (improvStr, "FÖRBÄTTRING",  "#38BDF8")
         ];
 
@@ -313,9 +313,9 @@ public class ProgressReportService
         using var tfMedium  = LoadTypeface("DMSansMedium");
 
         string dateRange = data.History.Count >= 2
-            ? $"{data.History[0].Date:MMM d, yyyy} → {data.History[data.History.Count - 1].Date:MMM d, yyyy}"
+            ? $"{data.History[0].Date:d MMM yyyy} → {data.History[data.History.Count - 1].Date:d MMM yyyy}"
             : data.History.Count == 1
-                ? data.History[0].Date.ToString("MMM d, yyyy")
+                ? data.History[0].Date.ToString("d MMM yyyy")
                 : "";
 
         using (var paint = new SKPaint

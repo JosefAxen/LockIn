@@ -25,6 +25,7 @@ public partial class TrainViewModel(DatabaseService db, ActiveWorkoutStateServic
     [ObservableProperty] private int _streak;
     [ObservableProperty] private int _totalCount;
     [ObservableProperty] private bool _showDeloadBanner;
+    [ObservableProperty] private string _deloadBodyText = "";
 
     public async Task LoadAsync()
     {
@@ -121,6 +122,11 @@ public partial class TrainViewModel(DatabaseService db, ActiveWorkoutStateServic
             ShowDeloadBanner = false;
             return;
         }
+        // Texten ska beskriva det som faktiskt utlöste bannern: sjunkande eller hög volym.
+        // volumes[0] = senaste hela veckan; tre sjunkande veckor = minskning två veckor i rad.
+        DeloadBodyText = decreasing
+            ? AppResources.Train_Deload_Body
+            : AppResources.Train_Deload_Body_HighVolume;
         ShowDeloadBanner = true;
     }
 

@@ -24,18 +24,18 @@ public static class DesignTokens
     // ─── Text ────────────────────────────────────────────────────────────────
     public static Color Text          => Color.FromArgb(IsDark ? "#E2E8F0" : "#171717");
     public static Color TextSecondary => Color.FromArgb(IsDark ? "#A2A2A2" : "#606060");
-    public static Color TextMuted     => Color.FromArgb(IsDark ? "#52525E" : "#9090A0");
+    public static Color TextMuted     => Color.FromArgb(IsDark ? "#8E8E9A" : "#606060");
 
     // ─── Graph (IDrawable) ───────────────────────────────────────────────────
     public static Color GraphGrid      => Color.FromArgb(IsDark ? "#272732" : "#DCDCE8");
-    public static Color GraphAxisText  => Color.FromArgb(IsDark ? "#52525E" : "#9090A0");
+    public static Color GraphAxisText  => Color.FromArgb(IsDark ? "#8E8E9A" : "#606060");
     public static Color GraphDotStroke => Color.FromArgb(IsDark ? "#0A0A0C" : "#FFFFFF");
 
     // ─── Chips / Segment buttons ─────────────────────────────────────────────
     public static readonly Color ChipActiveBg  = Color.FromArgb("#3E3E44");
     public static readonly Color ChipActiveFg  = Colors.White;
     public static Color ChipInactiveBg => Color.FromArgb(IsDark ? "#1C1C24" : "#E8E8F0");
-    public static Color ChipInactiveFg => Color.FromArgb(IsDark ? "#52525E" : "#70707A");
+    public static Color ChipInactiveFg => Color.FromArgb(IsDark ? "#A2A2A2" : "#606060");
 
     // ─── Streak calendar days ────────────────────────────────────────────────
     public static readonly Color CalTrainedStroke = Color.FromArgb("#B8B8BC");
@@ -44,19 +44,22 @@ public static class DesignTokens
     public static readonly Color CalTodayStroke   = Color.FromArgb("#FBBF24");
     public static Color          CalTodayFill     => Color.FromArgb(IsDark ? "#222228" : "#FFF8E6");
     public static readonly Color CalTodayText     = Color.FromArgb("#FBBF24");
-    public static Color          CalNormalText    => Color.FromArgb(IsDark ? "#424250" : "#A0A0AE");
+    public static Color          CalNormalText    => Color.FromArgb(IsDark ? "#8E8E9A" : "#606060");
 
     // ─── Set types ───────────────────────────────────────────────────────────
     public static readonly Color SetWarmup  = Color.FromArgb("#FBBF24");
     public static readonly Color SetDropset = Color.FromArgb("#FB7185");
     public static readonly Color SetTime    = Color.FromArgb("#38BDF8");
-    public static Color          SetNormal  => Color.FromArgb(IsDark ? "#52525E" : "#70707A");
+    public static Color          SetNormal  => Color.FromArgb(IsDark ? "#A2A2A2" : "#606060");
 
     // ─── FAB foreground (dark text on silver metallic button) ────────────────
     public static readonly Color FabForeground = Color.FromArgb("#0E0E10");
 
-    // ─── Low-emphasis text (barely visible, for empty/inactive states) ───────
-    public static readonly Color TextDim = Color.FromArgb("#303038");
+    // ─── Low-emphasis text (empty/inactive states) — still ≥4.5:1 on surfaces ─
+    public static readonly Color TextDim = Color.FromArgb("#8E8E9A");
+
+    // ─── Destructive text (on dark surfaces; ForgeDestructive is for fills) ──
+    public static readonly Color DestructiveText = Color.FromArgb("#F87171");
 
     // ─── Filter pills ────────────────────────────────────────────────────────
     public static readonly Color PillTrack      = Color.FromArgb("#33787882");
@@ -83,14 +86,11 @@ public static class DesignTokens
     // ─── Primary foreground (text on primary buttons) ────────────────────────
     public static readonly Color PrimaryForeground = Color.FromArgb("#FAFAFA");
 
-    // ─── SkiaSharp surface / spark tokens ────────────────────────────────────
+    // ─── SkiaSharp background tokens ─────────────────────────────────────────
     public static readonly SKColor SK_Background  = SKColor.Parse("#1E1E26");
     public static readonly SKColor SK_AccentGlow1 = new SKColor(226, 232, 240, 28);  // cool silver-blue, diffus bloom
     public static readonly SKColor SK_AccentGlow2 = new SKColor(255, 255, 255, 26);  // vit spotlight
     public static readonly SKColor SK_Vignette    = SKColor.Parse("#38000000");
-    public static readonly SKColor SK_SparkCore   = SKColor.Parse("#F0F8FF");  // is-vit
-    public static readonly SKColor SK_SparkMid    = SKColor.Parse("#94A3B8");  // stålgrå
-    public static readonly SKColor SK_SparkOuter  = SKColor.Parse("#475569");  // mörk stål
 
     // ─── Icon tinting ────────────────────────────────────────────────────────
     public static Color IconTint => Color.FromArgb(IsDark ? "#C8C8D2" : "#3A3A44");

@@ -31,6 +31,7 @@ public partial class TemplatePlanningBoardViewModel : ObservableObject, IQueryAt
         _templates = templates;
         _recommendation = recommendation;
         _exerciseRepo = exerciseRepo;
+        Days.CollectionChanged += (_, _) => OnPropertyChanged(nameof(CanRemoveDay));
     }
 
     [ObservableProperty] private string _templateName = "";
@@ -40,6 +41,12 @@ public partial class TemplatePlanningBoardViewModel : ObservableObject, IQueryAt
 
     public ObservableCollection<TemplateDayViewModel> Days { get; } = new();
 
+    // En mall behöver minst en dag — dagmenyn (⋯) visas bara när det finns fler.
+    public bool CanRemoveDay => Days.Count > 1;
+
+    // Ögonblicksbild av senast laddade/sparade läge — används för "Släng ändringar?".
+    private string? _savedSnapshot;
+
     // ── IQueryAttributable ────────────────────────────────────────────
     public void ApplyQueryAttributes(IDictionary<string, object> query)
     {
@@ -47,7 +54,21 @@ public partial class TemplatePlanningBoardViewModel : ObservableObject, IQueryAt
             _templateId = id;
         else
             _templateId = null;
-        _ = LoadAsync();
+        _ = LoadSafeAsync();
+    }
+
+    private async Task LoadSafeAsync()
+    {
+        try
+        {
+            await LoadAsync();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[TemplateBoard] Laddning misslyckades: {ex}");
+            if (Shell.Current?.CurrentPage is { } page)
+                await page.DisplayAlert(null, AppResources.Common_ErrorRetry, AppResources.Common_OK);
+        }
     }
 
     // ── Load ──────────────────────────────────────────────────────────
@@ -66,12 +87,13 @@ public partial class TemplatePlanningBoardViewModel : ObservableObject, IQueryAt
                     Days.Add(new TemplateDayViewModel
                     {
                         DayIndex = i,
-                        Label = $"Day {i + 1}",
+                        Label = string.Format(AppResources.TemplateBoard_DayLabel_Format, i + 1),
                         DefaultDayOfWeek = null,
                     });
                 }
                 SelectedDay = Days.FirstOrDefault();
                 DefaultDaysPerWeek = Days.Count;
+                _savedSnapshot = Snapshot();
                 return;
             }
 
@@ -81,7 +103,7 @@ public partial class TemplatePlanningBoardViewModel : ObservableObject, IQueryAt
             TemplateName = detail.Template.Name;
 
             var exerciseNameById = (await _exerciseRepo.GetAllAsync())
-                .ToDictionary(e => e.Id, e => e.Name);
+                .ToDictionary(e => e.Id, e => e.DisplayName);
 
             foreach (var d in detail.Days.OrderBy(x => x.DayIndex))
             {
@@ -126,6 +148,7 @@ public partial class TemplatePlanningBoardViewModel : ObservableObject, IQueryAt
 
             SelectedDay = Days.FirstOrDefault();
             DefaultDaysPerWeek = Days.Count;
+            _savedSnapshot = Snapshot();
         }
         finally
         {
@@ -148,7 +171,7 @@ public partial class TemplatePlanningBoardViewModel : ObservableObject, IQueryAt
         var d = new TemplateDayViewModel
         {
             DayIndex = idx,
-            Label = $"Day {idx + 1}",
+            Label = string.Format(AppResources.TemplateBoard_DayLabel_Format, idx + 1),
             DefaultDayOfWeek = null,
         };
         Days.Add(d);
@@ -160,6 +183,7 @@ public partial class TemplatePlanningBoardViewModel : ObservableObject, IQueryAt
     private async Task RemoveDayAsync(TemplateDayViewModel? day)
     {
         if (day is null) return;
+        if (!CanRemoveDay) return;
         var body = string.Format(AppResources.TemplateBoard_RemoveDay_Confirm, day.Label);
         var ok = await Shell.Current.DisplayAlert(
             AppResources.Common_Confirm,
@@ -176,6 +200,20 @@ public partial class TemplatePlanningBoardViewModel : ObservableObject, IQueryAt
             Days[i].DayIndex = i;
 
         if (wasSelected) SelectedDay = Days.FirstOrDefault();
+    }
+
+    // Dagens ⋯-meny (vald dag). Borttagning bekräftas i RemoveDayAsync.
+    [RelayCommand]
+    private async Task OpenDayMenuAsync()
+    {
+        var day = SelectedDay;
+        if (day is null || !CanRemoveDay) return;
+        var choice = await Shell.Current.CurrentPage.DisplayActionSheet(
+            day.Label,
+            AppResources.Common_Cancel,
+            AppResources.TemplateBoard_DayMenu_Remove);
+        if (choice == AppResources.TemplateBoard_DayMenu_Remove)
+            await RemoveDayAsync(day);
     }
 
     [RelayCommand]
@@ -238,7 +276,7 @@ public partial class TemplatePlanningBoardViewModel : ObservableObject, IQueryAt
             slot.Exercises.Add(new ExerciseRowViewModel
             {
                 ExerciseId = ex.Id,
-                ExerciseName = ex.Name,
+                ExerciseName = ex.DisplayName,
                 SortOrder = slot.Exercises.Count,
                 TargetRepsMin = 8,
                 TargetRepsMax = 12,
@@ -338,7 +376,7 @@ public partial class TemplatePlanningBoardViewModel : ObservableObject, IQueryAt
             var template = new WorkoutTemplate
             {
                 Id = _templateId ?? 0,
-                Name = string.IsNullOrWhiteSpace(TemplateName) ? "Namnlös template" : TemplateName.Trim(),
+                Name = string.IsNullOrWhiteSpace(TemplateName) ? AppResources.TemplateBoard_UnnamedTemplate : TemplateName.Trim(),
                 IsCustom = true,
                 DefaultDaysPerWeek = Days.Count,
                 CreatedAt = DateTime.Now,
@@ -381,8 +419,14 @@ public partial class TemplatePlanningBoardViewModel : ObservableObject, IQueryAt
             }
 
             await _templates.SaveAsync(template, days, slotsByDayIndex, exercisesBySlot);
+            _savedSnapshot = Snapshot();
             await Toast.Make(AppResources.Template_Saved_Toast).Show();
             await Shell.Current.GoToAsync(AppRoutes.Back);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[TemplateBoard] Kunde inte spara: {ex}");
+            await Toast.Make(AppResources.Common_ErrorRetry).Show();
         }
         finally
         {
@@ -390,8 +434,29 @@ public partial class TemplatePlanningBoardViewModel : ObservableObject, IQueryAt
         }
     }
 
+    // Tillbaka med osparade ändringar: fråga innan de kastas.
     [RelayCommand]
-    private async Task GoBackAsync() => await Shell.Current.GoToAsync(AppRoutes.Back);
+    private async Task GoBackAsync()
+    {
+        if (HasUnsavedChanges)
+        {
+            var discard = await Shell.Current.CurrentPage.DisplayAlert(
+                AppResources.Common_Discard_Title,
+                AppResources.Common_Discard_Body,
+                AppResources.Common_Discard_Confirm,
+                AppResources.Common_Cancel);
+            if (!discard) return;
+        }
+        await Shell.Current.GoToAsync(AppRoutes.Back);
+    }
+
+    public bool HasUnsavedChanges => _savedSnapshot is not null && Snapshot() != _savedSnapshot;
+
+    private string Snapshot() =>
+        (TemplateName ?? "").Trim() + "|" + string.Join("|", Days.Select(d =>
+            d.Label + ":" + string.Join(",", d.Slots.Select(s =>
+                (int)s.Muscle + "[" + string.Join(";", s.Exercises.Select(e =>
+                    $"{e.ExerciseId}-{e.TargetRepsMin}-{e.TargetRepsMax}")) + "]"))));
 
     // ── Muscle label ──────────────────────────────────────────────────
     private static readonly MuscleGroup[] _allMuscles = new[]
@@ -423,9 +488,17 @@ public partial class MuscleSlotViewModel : ObservableObject
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(PriorityTag))]
+    [NotifyPropertyChangedFor(nameof(PriorityA11y))]
     private MusclePriorityLevel _priority = MusclePriorityLevel.Grow;
 
     public string PriorityTag => Priority.ToRomanNumeral();
+    // VoiceOver: läs "Prioritera/Bygg/Behåll" i stället för "III/II/I"
+    public string PriorityA11y => Priority switch
+    {
+        MusclePriorityLevel.Emphasize => AppResources.MesoBuilder_Emphasize,
+        MusclePriorityLevel.Maintain  => AppResources.MesoBuilder_Maintain,
+        _                             => AppResources.MesoBuilder_Grow,
+    };
 
     public ObservableCollection<ExerciseRowViewModel> Exercises { get; } = new();
 }

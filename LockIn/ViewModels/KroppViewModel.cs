@@ -8,6 +8,7 @@ using LockIn.Resources.Strings;
 using LockIn.Services;
 using LockIn.Views;
 using System.Collections.ObjectModel;
+using System.Globalization;
 
 namespace LockIn.ViewModels;
 
@@ -22,6 +23,7 @@ public partial class KroppViewModel(DatabaseService db, IBodyRepository bodyRepo
     [ObservableProperty] private string _latestWeightDate = "";
     [ObservableProperty] private bool _hasWeightData;
     [ObservableProperty] private IReadOnlyList<ChartPoint> _weightChartPoints = [];
+    [ObservableProperty] private string _weightChartAccessibilityLabel = "";
 
     // KROPP
     public ObservableCollection<BodyCompositionEntry> CompositionEntries { get; } = new();
@@ -44,12 +46,13 @@ public partial class KroppViewModel(DatabaseService db, IBodyRepository bodyRepo
     private static readonly Color _segPillActive = DesignTokens.GlassActiveBg;
     private static readonly Color _segTextDim    = DesignTokens.GlassInactiveFg;
 
+    // Vald flik: ljus text på indikatorn (blått/lila på #525260 gav bara 3,6:1 resp. 2,8:1).
     public Color Tab0Bg => SelectedTab == 0 ? _segPillActive : DesignTokens.GlassInactiveBg;
-    public Color Tab0Fg => SelectedTab == 0 ? DesignTokens.AccentBlue   : _segTextDim;
+    public Color Tab0Fg => SelectedTab == 0 ? DesignTokens.GlassActiveFg : _segTextDim;
     public Color Tab1Bg => SelectedTab == 1 ? _segPillActive : DesignTokens.GlassInactiveBg;
-    public Color Tab1Fg => SelectedTab == 1 ? DesignTokens.AccentPurple : _segTextDim;
+    public Color Tab1Fg => SelectedTab == 1 ? DesignTokens.GlassActiveFg : _segTextDim;
     public Color Tab2Bg => SelectedTab == 2 ? _segPillActive : DesignTokens.GlassInactiveBg;
-    public Color Tab2Fg => SelectedTab == 2 ? DesignTokens.PrimaryForeground : _segTextDim;
+    public Color Tab2Fg => SelectedTab == 2 ? DesignTokens.GlassActiveFg : _segTextDim;
 
     partial void OnSelectedTabChanged(int value)
     {
@@ -93,11 +96,15 @@ public partial class KroppViewModel(DatabaseService db, IBodyRepository bodyRepo
         if (HasWeightData)
         {
             var latest = entries[0];
-            LatestWeight = $"{latest.WeightKg:F1} kg";
+            LatestWeight = $"{latest.WeightKg.ToString("0.##")} kg";
             LatestWeightDate = latest.LoggedAt.ToString("d MMM yyyy");
             WeightChartPoints = entries.OrderBy(e => e.LoggedAt)
                 .Select(e => new ChartPoint(e.LoggedAt, (double)e.WeightKg))
                 .ToList();
+            WeightChartAccessibilityLabel = string.Format(AppResources.Kropp_WeightChart_A11y,
+                entries.Count,
+                entries[^1].WeightKg.ToString("0.##"),
+                latest.WeightKg.ToString("0.##"));
         }
     }
 
@@ -113,11 +120,11 @@ public partial class KroppViewModel(DatabaseService db, IBodyRepository bodyRepo
         if (HasCompositionData)
         {
             var l = entries[0];
-            LatestWaist = l.WaistCm.HasValue ? $"{l.WaistCm:F1}" : "—";
-            LatestChest = l.ChestCm.HasValue ? $"{l.ChestCm:F1}" : "—";
-            LatestHip   = l.HipCm.HasValue   ? $"{l.HipCm:F1}"   : "—";
-            LatestArm   = l.ArmCm.HasValue   ? $"{l.ArmCm:F1}"   : "—";
-            LatestThigh = l.ThighCm.HasValue ? $"{l.ThighCm:F1}" : "—";
+            LatestWaist = l.WaistCm?.ToString("0.##") ?? "—";
+            LatestChest = l.ChestCm?.ToString("0.##") ?? "—";
+            LatestHip   = l.HipCm?.ToString("0.##")   ?? "—";
+            LatestArm   = l.ArmCm?.ToString("0.##")   ?? "—";
+            LatestThigh = l.ThighCm?.ToString("0.##") ?? "—";
         }
     }
 
@@ -146,7 +153,7 @@ public partial class KroppViewModel(DatabaseService db, IBodyRepository bodyRepo
                 Name = name,
                 Score = score,
                 TileColor = DesignTokens.HeatmapTile(t),
-                TextColor = DesignTokens.HeatmapText(t),
+                TextColor = HeatmapTile.TextOn(DesignTokens.HeatmapTile(t)),
             });
         }
         HeatmapReady?.Invoke();
@@ -155,16 +162,47 @@ public partial class KroppViewModel(DatabaseService db, IBodyRepository bodyRepo
     [RelayCommand]
     private async Task LogWeightAsync()
     {
-        var result = await Shell.Current.DisplayPromptAsync(
+        var (cancelled, kg) = await PromptPositiveDecimalAsync(
             AppResources.Kropp_LogWeight_Title, AppResources.Kropp_LogWeight_Body,
-            keyboard: Keyboard.Numeric, placeholder: AppResources.Kropp_LogWeight_Placeholder);
-        if (string.IsNullOrWhiteSpace(result)) return;
-        if (!decimal.TryParse(result.Replace(',', '.'),
-            System.Globalization.NumberStyles.Any,
-            System.Globalization.CultureInfo.InvariantCulture, out var kg) || kg <= 0) return;
+            AppResources.Common_Save, AppResources.Kropp_LogWeight_Placeholder);
+        if (cancelled || kg is null) return;
 
-        await bodyRepo.SaveWeightEntryAsync(new BodyWeightEntry { WeightKg = kg, LoggedAt = DateTime.Now });
-        await LoadWeightDataAsync();
+        try
+        {
+            await bodyRepo.SaveWeightEntryAsync(new BodyWeightEntry { WeightKg = kg.Value, LoggedAt = DateTime.Now });
+            await LoadWeightDataAsync();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[Kropp] LogWeightAsync failed: {ex}");
+            await Shell.Current.DisplayAlert(null, AppResources.Common_ErrorRetry, AppResources.Common_OK);
+        }
+    }
+
+    /// <summary>
+    /// Frågar efter ett positivt decimaltal ("82,5" och "82.5" fungerar). Ogiltig inmatning
+    /// (t.ex. "80 kg") ger samma fråga igen med ett felmeddelande och texten kvar.
+    /// Cancelled = användaren tryckte Avbryt. Value = null betyder tomt fält.
+    /// </summary>
+    private static async Task<(bool Cancelled, decimal? Value)> PromptPositiveDecimalAsync(
+        string title, string message, string accept, string placeholder)
+    {
+        var body = message;
+        var initial = "";
+        while (true)
+        {
+            var input = await Shell.Current.DisplayPromptAsync(
+                title, body, accept, AppResources.Common_Cancel,
+                placeholder, keyboard: Keyboard.Numeric, initialValue: initial);
+            if (input is null) return (true, null);
+            if (string.IsNullOrWhiteSpace(input)) return (false, null);
+            if (decimal.TryParse(input.Trim().Replace(',', '.'), NumberStyles.Number,
+                    CultureInfo.InvariantCulture, out var value) && value > 0)
+                return (false, value);
+
+            body = $"{AppResources.Kropp_InvalidNumber}\n\n{message}";
+            initial = input;
+        }
     }
 
     [RelayCommand]
@@ -172,7 +210,7 @@ public partial class KroppViewModel(DatabaseService db, IBodyRepository bodyRepo
     {
         var confirmed = await Shell.Current.DisplayAlert(
             AppResources.Common_Delete,
-            string.Format(AppResources.Kropp_DeleteWeight_Body_Format, $"{entry.WeightKg} kg", entry.LoggedAt.ToString("d MMM")),
+            string.Format(AppResources.Kropp_DeleteWeight_Body_Format, entry.WeightKg.ToString("0.##"), entry.LoggedAt.ToString("d MMM")),
             AppResources.Common_Delete, AppResources.Common_Cancel);
         if (!confirmed) return;
         await bodyRepo.DeleteWeightEntryAsync(entry);
@@ -184,31 +222,38 @@ public partial class KroppViewModel(DatabaseService db, IBodyRepository bodyRepo
     {
         var entry = new BodyCompositionEntry { LoggedAt = DateTime.Now };
 
-        var w = await Shell.Current.DisplayPromptAsync(AppResources.Kropp_Measurement_Waist, AppResources.Kropp_Prompt_Waist_Body, keyboard: Keyboard.Numeric, placeholder: "cm");
-        if (w != null && decimal.TryParse(w.Replace(',', '.'), System.Globalization.NumberStyles.Any,
-            System.Globalization.CultureInfo.InvariantCulture, out var wv) && wv > 0) entry.WaistCm = wv;
+        var steps = new (string Title, string Body, Action<decimal> Set)[]
+        {
+            (AppResources.Kropp_Measurement_Waist,  AppResources.Kropp_Prompt_Waist_Body,  v => entry.WaistCm = v),
+            (AppResources.Kropp_Measurement_Chest,  AppResources.Kropp_Prompt_Chest_Body,  v => entry.ChestCm = v),
+            (AppResources.Kropp_Measurement_Hips,   AppResources.Kropp_Prompt_Hips_Body,   v => entry.HipCm = v),
+            (AppResources.Kropp_Measurement_Arms,   AppResources.Kropp_Prompt_Arms_Body,   v => entry.ArmCm = v),
+            (AppResources.Kropp_Measurement_Thighs, AppResources.Kropp_Prompt_Thighs_Body, v => entry.ThighCm = v),
+        };
 
-        var c = await Shell.Current.DisplayPromptAsync(AppResources.Kropp_Measurement_Chest, AppResources.Kropp_Prompt_Chest_Body, keyboard: Keyboard.Numeric, placeholder: "cm");
-        if (c != null && decimal.TryParse(c.Replace(',', '.'), System.Globalization.NumberStyles.Any,
-            System.Globalization.CultureInfo.InvariantCulture, out var cv) && cv > 0) entry.ChestCm = cv;
-
-        var h = await Shell.Current.DisplayPromptAsync(AppResources.Kropp_Measurement_Hips, AppResources.Kropp_Prompt_Hips_Body, keyboard: Keyboard.Numeric, placeholder: "cm");
-        if (h != null && decimal.TryParse(h.Replace(',', '.'), System.Globalization.NumberStyles.Any,
-            System.Globalization.CultureInfo.InvariantCulture, out var hv) && hv > 0) entry.HipCm = hv;
-
-        var a = await Shell.Current.DisplayPromptAsync(AppResources.Kropp_Measurement_Arms, AppResources.Kropp_Prompt_Arms_Body, keyboard: Keyboard.Numeric, placeholder: "cm");
-        if (a != null && decimal.TryParse(a.Replace(',', '.'), System.Globalization.NumberStyles.Any,
-            System.Globalization.CultureInfo.InvariantCulture, out var av) && av > 0) entry.ArmCm = av;
-
-        var th = await Shell.Current.DisplayPromptAsync(AppResources.Kropp_Measurement_Thighs, AppResources.Kropp_Prompt_Thighs_Body, keyboard: Keyboard.Numeric, placeholder: "cm");
-        if (th != null && decimal.TryParse(th.Replace(',', '.'), System.Globalization.NumberStyles.Any,
-            System.Globalization.CultureInfo.InvariantCulture, out var tv) && tv > 0) entry.ThighCm = tv;
+        for (int i = 0; i < steps.Length; i++)
+        {
+            var (title, body, set) = steps[i];
+            var accept = i == steps.Length - 1 ? AppResources.Common_Save : AppResources.Common_Continue;
+            var (cancelled, value) = await PromptPositiveDecimalAsync(title, body, accept, "cm");
+            // Avbryt avbryter hela flödet — inget sparas. Tomt fält hoppar över måttet.
+            if (cancelled) return;
+            if (value.HasValue) set(value.Value);
+        }
 
         if (entry.WaistCm.HasValue || entry.ChestCm.HasValue || entry.HipCm.HasValue
             || entry.ArmCm.HasValue || entry.ThighCm.HasValue)
         {
-            await bodyRepo.SaveCompositionEntryAsync(entry);
-            await LoadCompositionDataAsync();
+            try
+            {
+                await bodyRepo.SaveCompositionEntryAsync(entry);
+                await LoadCompositionDataAsync();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[Kropp] LogCompositionAsync failed: {ex}");
+                await Shell.Current.DisplayAlert(null, AppResources.Common_ErrorRetry, AppResources.Common_OK);
+            }
         }
     }
 
@@ -237,4 +282,16 @@ public class HeatmapTile
     public Color TextColor { get; set; } = Colors.White;
     public string FrequencyText { get; set; } = "";
     public string ScoreText => Score >= 0.05 ? Score.ToString("F1") : "—";
+
+    /// <summary>Textfärgen med bäst kontrast mot rutan: mörk på de ljusgröna rutorna, annars vit.</summary>
+    public static Color TextOn(Color tile)
+    {
+        static double Ch(float v) => v <= 0.03928 ? v / 12.92 : Math.Pow((v + 0.055) / 1.055, 2.4);
+        static double Lum(Color c) => 0.2126 * Ch(c.Red) + 0.7152 * Ch(c.Green) + 0.0722 * Ch(c.Blue);
+
+        double bg = Lum(tile);
+        double onWhite = 1.05 / (bg + 0.05);
+        double onDark  = (bg + 0.05) / (Lum(DesignTokens.FabForeground) + 0.05);
+        return onDark > onWhite ? DesignTokens.FabForeground : Colors.White;
+    }
 }

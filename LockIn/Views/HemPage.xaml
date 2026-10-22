@@ -15,29 +15,30 @@
 
     <Grid SafeAreaEdges="None">
 
-        <!-- Atmosf�risk bakgrund � renderas under allt annat -->
+        <!-- Atmosfärisk bakgrund — renderas under allt annat -->
         <controls:AtmosphericBackgroundView InputTransparent="True"/>
 
         <!-- Permanent status bar gradient (alltid synlig, fyller Dynamic Island-zonen) -->
         <BoxView VerticalOptions="Start" HeightRequest="90" InputTransparent="True" ZIndex="19">
             <BoxView.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <GradientStop Color="{AppThemeBinding Light=#28FCFCFC, Dark=#28141418}" Offset="0.0"/>
-                    <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark=#00141418}" Offset="1.0"/>
+                    <GradientStop Color="{AppThemeBinding Light=#28FCFCFC, Dark={StaticResource ForgeStatusBarOverlay}}" Offset="0.0"/>
+                    <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark={StaticResource ForgeStatusBarOverlayClear}}" Offset="1.0"/>
                 </LinearGradientBrush>
             </BoxView.Background>
         </BoxView>
 
-        <!-- Sticky header (fades in on scroll) -->
+        <!-- Sticky header (fades in on scroll). Bara dekor — tar inte emot tryck. -->
         <Grid x:Name="StickyHeader" VerticalOptions="Start" ZIndex="20" Opacity="0"
-              HeightRequest="150" SafeAreaEdges="None">
+              HeightRequest="150" SafeAreaEdges="None"
+              InputTransparent="True">
             <BoxView InputTransparent="True">
                 <BoxView.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                        <GradientStop Color="{AppThemeBinding Light=#D8FCFCFC, Dark=#D8141418}" Offset="0.0"/>
-                        <GradientStop Color="{AppThemeBinding Light=#90FCFCFC, Dark=#90141418}" Offset="0.35"/>
-                        <GradientStop Color="{AppThemeBinding Light=#38FCFCFC, Dark=#38141418}" Offset="0.65"/>
-                        <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark=#00141418}" Offset="1.0"/>
+                        <GradientStop Color="{AppThemeBinding Light=#D8FCFCFC, Dark={StaticResource ForgeStickyHeaderTop}}" Offset="0.0"/>
+                        <GradientStop Color="{AppThemeBinding Light=#90FCFCFC, Dark={StaticResource ForgeStickyHeaderMid1}}" Offset="0.35"/>
+                        <GradientStop Color="{AppThemeBinding Light=#38FCFCFC, Dark={StaticResource ForgeStickyHeaderMid2}}" Offset="0.65"/>
+                        <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark={StaticResource ForgeStatusBarOverlayClear}}" Offset="1.0"/>
                     </LinearGradientBrush>
                 </BoxView.Background>
             </BoxView>
@@ -51,7 +52,7 @@
         </Grid>
 
         <ScrollView VerticalScrollBarVisibility="Never" Scrolled="OnScrolled">
-            <VerticalStackLayout Spacing="0" Padding="0,0,0,120">
+            <VerticalStackLayout x:Name="ScrollContent" Spacing="0" Padding="0,0,0,120">
 
                 <!-- = HEADER = -->
                 <Grid Padding="22,56,22,4" ColumnDefinitions="*,48">
@@ -69,7 +70,8 @@
                             BackgroundColor="{AppThemeBinding Light={StaticResource LightAccent}, Dark={StaticResource ForgeAccentDim}}"
                             Stroke="{AppThemeBinding Light={StaticResource LightAccent}, Dark={StaticResource ForgeAccent}}"
                             StrokeThickness="1.5"
-                            VerticalOptions="End">
+                            VerticalOptions="End"
+                            SemanticProperties.Description="{loc:Localize Hem_Avatar_A11y}">
                         <Label Text="{Binding UserInitial}"
                                FontFamily="BebasNeue" FontSize="22"
                                TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeAccent}}"
@@ -132,7 +134,7 @@
                 <CollectionView ItemsSource="{Binding CoachChips}"
                                 IsVisible="{Binding HasCoachChips}"
                                 Margin="16,10,0,0"
-                                HeightRequest="40"
+                                HeightRequest="48"
                                 HorizontalScrollBarVisibility="Never"
                                 VerticalScrollBarVisibility="Never">
                     <CollectionView.ItemsLayout>
@@ -142,8 +144,9 @@
                         <DataTemplate x:DataType="models:CoachChip">
                             <Border StrokeShape="RoundRectangle 10"
                                     Padding="14,0"
-                                    HeightRequest="36"
+                                    HeightRequest="44"
                                     VerticalOptions="Center"
+                                    SemanticProperties.Description="{Binding ChipText}"
                                     BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}"
                                     Stroke="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorderLight}}"
                                     StrokeThickness="1">
@@ -159,7 +162,7 @@
                     </CollectionView.ItemTemplate>
                 </CollectionView>
 
-                <!-- = STRAIN / RECOVERY / S�MN-RINGAR = -->
+                <!-- = STRAIN / RECOVERY / SÖMN-RINGAR = -->
                 <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8" Margin="16,18,16,4">
                     <StackLayout Grid.Column="0" Spacing="8" HorizontalOptions="Center">
                         <controls:MetricRingView Progress="{Binding StrainProgress}"
@@ -173,7 +176,6 @@
                         <Label Text="{Binding StrainTargetText}"
                                FontFamily="BebasNeue" FontSize="10" CharacterSpacing="1.5"
                                TextColor="{StaticResource ForgeAccentAmber}"
-                               Opacity="0.7"
                                HorizontalTextAlignment="Center"/>
                     </StackLayout>
                     <StackLayout Grid.Column="1" Spacing="8" HorizontalOptions="Center">
@@ -187,7 +189,6 @@
                         <Label Text="{Binding RecoveryStatusText}"
                                FontFamily="BebasNeue" FontSize="9" CharacterSpacing="1.5"
                                TextColor="{StaticResource ForgeAccent}"
-                               Opacity="0.7"
                                HorizontalTextAlignment="Center"/>
                     </StackLayout>
                     <StackLayout Grid.Column="2" Spacing="8" HorizontalOptions="Center">
@@ -201,7 +202,6 @@
                         <Label Text="{Binding SleepStatusText}"
                                FontFamily="BebasNeue" FontSize="9" CharacterSpacing="1.5"
                                TextColor="{StaticResource ForgeAccentBlue}"
-                               Opacity="0.7"
                                HorizontalTextAlignment="Center"/>
                     </StackLayout>
                 </Grid>
@@ -212,7 +212,7 @@
                        HorizontalTextAlignment="Center"
                        Margin="16,6,16,0"/>
 
-                <!-- = S�MN-DETALJER = -->
+                <!-- = SÖMN-DETALJER = -->
                 <Label Text="{loc:Localize Hem_Sleep_Label}" Style="{StaticResource SectionLabel}" Margin="22,18,0,10"/>
                 <Border Margin="16,0,16,0"
                         BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface}}"
@@ -262,15 +262,19 @@
                                FontFamily="DMSansMedium" FontSize="13"
                                TextColor="{AppThemeBinding Light={StaticResource LightAccent}, Dark={StaticResource ForgeAccentAmber}}"/>
                     </VerticalStackLayout>
-                    <Label Grid.Column="1"
-                           Text="{loc:Localize Hem_SeeAll}"
-                           Style="{StaticResource SectionLabel}"
-                           VerticalOptions="End"
-                           TextColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}">
-                        <Label.GestureRecognizers>
+                    <Grid Grid.Column="1"
+                          VerticalOptions="End"
+                          MinimumHeightRequest="44" MinimumWidthRequest="44"
+                          Padding="12,0,0,0"
+                          SemanticProperties.Description="{loc:Localize Hem_SeeAll_A11y}">
+                        <Label Text="{loc:Localize Hem_SeeAll}"
+                               Style="{StaticResource SectionLabel}"
+                               VerticalOptions="Center"
+                               TextColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"/>
+                        <Grid.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnSeAllaHistorik"/>
-                        </Label.GestureRecognizers>
-                    </Label>
+                        </Grid.GestureRecognizers>
+                    </Grid>
                 </Grid>
 
                 <!-- = DAY STREAK TRACKER = -->
@@ -284,7 +288,8 @@
                     </CollectionView.ItemsLayout>
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="vm:DayStreakItem">
-                            <VerticalStackLayout Spacing="5" HorizontalOptions="Center" Margin="2,0">
+                            <VerticalStackLayout Spacing="5" HorizontalOptions="Center" Margin="2,0"
+                                                 SemanticProperties.Description="{Binding AccessibilityLabel}">
                                 <Border WidthRequest="46" HeightRequest="46"
                                         StrokeShape="Ellipse"
                                         BackgroundColor="{Binding CircleFill}"
@@ -307,7 +312,7 @@
                 <!-- = STATS HEADER = -->
                 <Label Text="{loc:Localize Hem_Activity_Label}" Style="{StaticResource SectionLabel}" Margin="22,18,0,10"/>
 
-                <!-- = DATA CARDS 2�2 = -->
+                <!-- = DATA CARDS 2×2 = -->
                 <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto"
                       ColumnSpacing="8" RowSpacing="8" Margin="16,0">
 
@@ -427,7 +432,8 @@
                                         <controls:SparklineView Values="{Binding Values}"
                                                                StrokeColor="{Binding Color}"
                                                                HeightRequest="44"
-                                                               BackgroundColor="Transparent"/>
+                                                               BackgroundColor="Transparent"
+                                                               SemanticProperties.Description="{Binding AccessibilityLabel}"/>
                                     </VerticalStackLayout>
                                 </Border>
                             </DataTemplate>
@@ -438,7 +444,7 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- = WORKOUT BANNER � Live Forge Capsule = -->
+        <!-- = WORKOUT BANNER — Live Forge Capsule = -->
         <Grid x:Name="WorkoutBanner"
               IsVisible="False"
               VerticalOptions="End"
@@ -446,7 +452,7 @@
               Margin="0,0,0,96"
               ZIndex="10">
 
-            <!-- Soft silver halo bakom kapseln � "upplyst inifr�n" -->
+            <!-- Soft silver halo bakom kapseln — "upplyst inifrån" -->
             <Border StrokeThickness="0"
                     StrokeShape="RoundRectangle 36"
                     BackgroundColor="{StaticResource ForgeAccentGlow}"
@@ -456,9 +462,10 @@
             <!-- Kapselkropp -->
             <Border x:Name="WorkoutBannerCapsule"
                     StrokeThickness="1"
-                    Stroke="#55B8B8BC"
+                    Stroke="{StaticResource ForgeBannerStroke}"
                     StrokeShape="RoundRectangle 22"
-                    Padding="16,9,18,10">
+                    Padding="16,9,18,10"
+                    SemanticProperties.Description="{loc:Localize A11y_ActiveWorkout}">
                 <Border.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                         <GradientStop Color="{StaticResource ForgeSurface2}" Offset="0"/>
@@ -493,14 +500,14 @@
                 </Border.GestureRecognizers>
             </Border>
         </Grid>
-    <!-- Bottom gradient fade behind floating tab bar � matchar topp-gradienten spegelv�nt -->
+    <!-- Bottom gradient fade behind floating tab bar — matchar topp-gradienten spegelvänt -->
     <BoxView Grid.RowSpan="99" InputTransparent="True" VerticalOptions="End" HeightRequest="150">
         <BoxView.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark=#00141418}" Offset="0.0"/>
-                <GradientStop Color="{AppThemeBinding Light=#38FCFCFC, Dark=#38141418}" Offset="0.35"/>
-                <GradientStop Color="{AppThemeBinding Light=#90FCFCFC, Dark=#90141418}" Offset="0.65"/>
-                <GradientStop Color="{AppThemeBinding Light=#FCFCFC, Dark=#141418}" Offset="1.0"/>
+                <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark={StaticResource ForgeStatusBarOverlayClear}}" Offset="0.0"/>
+                <GradientStop Color="{AppThemeBinding Light=#38FCFCFC, Dark={StaticResource ForgeBottomFadeMid1}}" Offset="0.35"/>
+                <GradientStop Color="{AppThemeBinding Light=#90FCFCFC, Dark={StaticResource ForgeBottomFadeMid2}}" Offset="0.65"/>
+                <GradientStop Color="{AppThemeBinding Light=#FCFCFC, Dark={StaticResource ForgeBottomFadeBottom}}" Offset="1.0"/>
             </LinearGradientBrush>
         </BoxView.Background>
     </BoxView>

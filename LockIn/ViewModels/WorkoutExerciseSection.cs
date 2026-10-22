@@ -38,10 +38,22 @@ public partial class WorkoutExerciseSection : ObservableObject
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(PriorityTag))]
     [NotifyPropertyChangedFor(nameof(PriorityTagColor))]
+    [NotifyPropertyChangedFor(nameof(PriorityTagTextColor))]
+    [NotifyPropertyChangedFor(nameof(PriorityA11y))]
     private MusclePriorityLevel _priority = MusclePriorityLevel.Grow;
 
     public string PriorityTag => Priority.ToRomanNumeral();
     public Color PriorityTagColor => Priority.ToTagColor();
+    // Vit text på orange (Emphasize) ger bara 2,3:1 — mörk text där, vit på de grå taggarna.
+    public Color PriorityTagTextColor => Priority == MusclePriorityLevel.Emphasize
+        ? DesignTokens.FabForeground
+        : Colors.White;
+    public string PriorityA11y => Priority switch
+    {
+        MusclePriorityLevel.Emphasize => Resources.Strings.AppResources.MesoBuilder_Emphasize,
+        MusclePriorityLevel.Maintain  => Resources.Strings.AppResources.MesoBuilder_Maintain,
+        _                             => Resources.Strings.AppResources.MesoBuilder_Grow,
+    };
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasNotes))]
@@ -60,6 +72,7 @@ public partial class WorkoutExerciseSection : ObservableObject
 
     public string TimerDisplay => Services.RestTimerService.Format(TimerSecondsRemaining);
     public string RestDisplay => Services.RestTimerService.Format(RestSeconds);
+    public string RestA11y => $"{Resources.Strings.AppResources.A11y_RestTimer} {RestDisplay}";
 
     public void RefreshTimerDisplay()
     {
@@ -76,6 +89,9 @@ public partial class WorkoutExerciseSection : ObservableObject
         OnPropertyChanged(nameof(AccentBrush));
     }
 
-    partial void OnRestSecondsChanged(int value) =>
+    partial void OnRestSecondsChanged(int value)
+    {
         OnPropertyChanged(nameof(RestDisplay));
+        OnPropertyChanged(nameof(RestA11y));
+    }
 }

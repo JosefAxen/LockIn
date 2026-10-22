@@ -13,6 +13,8 @@ public class ForgeLiveDotView : SKCanvasView
     private static readonly SKColor s_coral = SKColor.Parse("#FB7185");
     private static readonly SKMaskFilter s_blur = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 4f);
     private readonly SKPaint _paint = new() { IsAntialias = true, MaskFilter = s_blur };
+    // Kärnan ritas skarp (utan blur) ovanpå ringen.
+    private readonly SKPaint _corePaint = new() { IsAntialias = true };
 
     private IDispatcherTimer? _timer;
     private DateTime _pulseStart;
@@ -30,7 +32,8 @@ public class ForgeLiveDotView : SKCanvasView
 
     public void StartPulse()
     {
-        if (_isPulsing) return;
+        // "Minska rörelse": visa bara den statiska punkten.
+        if (_isPulsing || LockIn.Views.AnimationHelper.ReduceMotion) return;
         _isPulsing = true;
         _pulseStart = DateTime.Now;
 
@@ -74,8 +77,8 @@ public class ForgeLiveDotView : SKCanvasView
             canvas.DrawCircle(cx, cy, ringR, _paint);
         }
 
-        // Statisk glowande kärna — alltid synlig när vyn renderas
-        _paint.Color = s_coral.WithAlpha(230);
-        canvas.DrawCircle(cx, cy, coreR, _paint);
+        // Statisk skarp kärna — alltid synlig när vyn renderas, ritas sist
+        _corePaint.Color = s_coral.WithAlpha(230);
+        canvas.DrawCircle(cx, cy, coreR, _corePaint);
     }
 }

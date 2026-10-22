@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:strings="clr-namespace:LockIn.Resources.Strings"
     x:Class="LockIn.Views.CoachChipSheet"
     CanBeDismissedByTappingOutsideOfPopup="True"
     BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource ForgeSurface2}}">
@@ -15,31 +16,24 @@
 
         <VerticalStackLayout Spacing="12">
 
-            <!-- Drag handle -->
-            <BoxView WidthRequest="36" HeightRequest="4" CornerRadius="2"
-                     HorizontalOptions="Center"
-                     BackgroundColor="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorder}}"/>
-
-            <!-- Header row -->
-            <Grid ColumnDefinitions="*,36" Margin="0,8,0,0">
+            <!-- Header row (inget draghandtag — rutan går inte att dra) -->
+            <Grid ColumnDefinitions="*,44" ColumnSpacing="8">
                 <Label Grid.Column="0"
                        x:Name="HeaderLabel"
                        FontFamily="BebasNeue" FontSize="28" CharacterSpacing="0.5"
                        LineHeight="1"
+                       VerticalOptions="Center"
                        TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                <!-- Stäng: hela 44 pt-cirkeln är tryckyta -->
                 <Border Grid.Column="1"
-                        WidthRequest="32" HeightRequest="32"
-                        StrokeShape="Ellipse"
-                        BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface3}}"
-                        StrokeThickness="0"
-                        VerticalOptions="Center">
-                    <Label Text="×" FontFamily="DMSansRegular" FontSize="18"
+                        Style="{StaticResource IconCircleButton}"
+                        SemanticProperties.Description="{x:Static strings:AppResources.A11y_Close}">
+                    <Label Text="×" FontFamily="DMSansRegular" FontSize="20"
                            TextColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"
-                           HorizontalOptions="Center" VerticalOptions="Center">
-                        <Label.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnCloseTapped"/>
-                        </Label.GestureRecognizers>
-                    </Label>
+                           HorizontalOptions="Center" VerticalOptions="Center"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnCloseTapped"/>
+                    </Border.GestureRecognizers>
                 </Border>
             </Grid>
 

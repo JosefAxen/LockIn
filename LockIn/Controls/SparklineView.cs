@@ -39,6 +39,8 @@ public class SparklineView : SKCanvasView
 
         float w = e.Info.Width;
         float h = e.Info.Height;
+        // Canvasen är i fysiska pixlar — skala linjebredden från punkter.
+        float s = Width > 0 ? w / (float)Width : 1f;
 
         double min = pts[0], max = pts[0];
         foreach (var v in pts) { if (v < min) min = v; if (v > max) max = v; }
@@ -88,7 +90,7 @@ public class SparklineView : SKCanvasView
         using var strokePaint = new SKPaint
         {
             Color       = sk,
-            StrokeWidth = 1.8f,
+            StrokeWidth = 1.8f * s,
             IsAntialias = true,
             Style       = SKPaintStyle.Stroke,
             StrokeCap   = SKStrokeCap.Round,

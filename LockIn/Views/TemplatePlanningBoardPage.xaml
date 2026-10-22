@@ -8,6 +8,7 @@
              x:Class="LockIn.Views.TemplatePlanningBoardPage"
              x:DataType="vm:TemplatePlanningBoardViewModel"
              Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False"
              ios:Page.UseSafeArea="False"
              BackgroundColor="Transparent">
 
@@ -20,12 +21,8 @@
         <Grid Grid.Row="0" Padding="16,56,16,10" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
             <!-- Back -->
             <Border Grid.Column="0"
-                    WidthRequest="36" HeightRequest="36"
-                    StrokeShape="Ellipse"
-                    BackgroundColor="{StaticResource ForgeOverlayWeak}"
-                    Stroke="{StaticResource ForgeOverlayStroke}"
-                    StrokeThickness="0.5"
-                    VerticalOptions="Center">
+                    Style="{StaticResource IconCircleButton}"
+                    SemanticProperties.Description="{loc:Localize A11y_Back}">
                 <Path Style="{StaticResource BackChevron}"/>
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding GoBackCommand}"/>
@@ -56,7 +53,8 @@
                     StrokeThickness="0"
                     HeightRequest="44"
                     Padding="18,0"
-                    VerticalOptions="Center">
+                    VerticalOptions="Center"
+                    SemanticProperties.Description="{loc:Localize TemplateBoard_Save}">
                 <Label Text="{loc:Localize TemplateBoard_Save}"
                        FontFamily="BebasNeue"
                        FontSize="16"
@@ -70,18 +68,20 @@
             </Border>
         </Grid>
 
-        <!-- Day tab-bar -->
-        <ScrollView Grid.Row="1"
+        <!-- Day tab-bar + dagens ⋯-meny (ta bort dag) -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,Auto" Padding="0,4,16,10">
+        <ScrollView Grid.Column="0"
                     Orientation="Horizontal"
                     HorizontalScrollBarVisibility="Never"
-                    Padding="16,4,16,10">
+                    Padding="16,0,8,0">
             <HorizontalStackLayout Spacing="8" BindableLayout.ItemsSource="{Binding Days}">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate x:DataType="vm:TemplateDayViewModel">
-                        <Border StrokeShape="RoundRectangle 20"
+                        <Border StrokeShape="RoundRectangle 22"
                                 StrokeThickness="1"
                                 Padding="14,8"
-                                HeightRequest="40"
+                                HeightRequest="44"
+                                MinimumWidthRequest="44"
                                 BackgroundColor="{StaticResource ForgeSurface2}"
                                 Stroke="{StaticResource ForgeBorder}">
                             <Border.Triggers>
@@ -90,6 +90,7 @@
                                              Value="{Binding .}">
                                     <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccent}"/>
                                     <Setter Property="Stroke" Value="{StaticResource ForgeAccent}"/>
+                                    <Setter Property="SemanticProperties.Hint" Value="{loc:Localize A11y_Selected}"/>
                                 </DataTrigger>
                             </Border.Triggers>
                             <Label Text="{Binding Label}"
@@ -97,7 +98,16 @@
                                    FontSize="13"
                                    VerticalOptions="Center"
                                    HorizontalOptions="Center"
-                                   TextColor="{StaticResource ForgeText}"/>
+                                   TextColor="{StaticResource ForgeText}">
+                                <!-- Vald flik = silverfylld, alltså mörk text (ljus text gav 1,60:1) -->
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label"
+                                                 Binding="{Binding Source={RelativeSource AncestorType={x:Type vm:TemplatePlanningBoardViewModel}}, Path=SelectedDay}"
+                                                 Value="{Binding .}">
+                                        <Setter Property="TextColor" Value="{StaticResource ForgeFabForeground}"/>
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer
                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TemplatePlanningBoardViewModel}}, Path=SelectDayCommand}"
@@ -108,6 +118,21 @@
                 </BindableLayout.ItemTemplate>
             </HorizontalStackLayout>
         </ScrollView>
+            <Border Grid.Column="1"
+                    Style="{StaticResource IconCircleButton}"
+                    IsVisible="{Binding CanRemoveDay}"
+                    SemanticProperties.Description="{loc:Localize A11y_More}">
+                <Label Text="⋯"
+                       FontFamily="DMSansMedium"
+                       FontSize="18"
+                       TextColor="{StaticResource ForgeText}"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"/>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding OpenDayMenuCommand}"/>
+                </Border.GestureRecognizers>
+            </Border>
+        </Grid>
 
         <!-- Content: slots for selected day + add day inline -->
         <ScrollView Grid.Row="2" VerticalScrollBarVisibility="Never">
@@ -132,17 +157,15 @@
                                     </Border>
                                     <Label Grid.Column="1"
                                            Text="{Binding PriorityTag}"
+                                           SemanticProperties.Description="{Binding PriorityA11y}"
                                            FontFamily="BebasNeue"
                                            FontSize="12"
                                            CharacterSpacing="2"
                                            TextColor="{StaticResource ForgeMuted}"
                                            VerticalOptions="Center"/>
                                     <Border Grid.Column="3"
-                                            WidthRequest="32" HeightRequest="32"
-                                            BackgroundColor="{StaticResource ForgeSurface2}"
-                                            StrokeShape="Ellipse"
-                                            StrokeThickness="0"
-                                            VerticalOptions="Center">
+                                            Style="{StaticResource IconCircleButton}"
+                                            SemanticProperties.Description="{loc:Localize A11y_Delete}">
                                         <Label Text="×"
                                                FontFamily="DMSansMedium"
                                                FontSize="20"
@@ -161,7 +184,7 @@
                                 <VerticalStackLayout BindableLayout.ItemsSource="{Binding Exercises}" Spacing="6">
                                     <BindableLayout.ItemTemplate>
                                         <DataTemplate x:DataType="vm:ExerciseRowViewModel">
-                                            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8" Padding="0,4">
+                                            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8" Padding="0">
                                                 <Label Grid.Column="0"
                                                        Text="{Binding ExerciseName}"
                                                        FontFamily="DMSansMedium"
@@ -177,10 +200,11 @@
                                                        VerticalOptions="Center"
                                                        Margin="0,0,4,0"/>
                                                 <Border Grid.Column="2"
-                                                        WidthRequest="28" HeightRequest="28"
+                                                        WidthRequest="44" HeightRequest="44"
                                                         StrokeThickness="0"
                                                         BackgroundColor="Transparent"
-                                                        VerticalOptions="Center">
+                                                        VerticalOptions="Center"
+                                                        SemanticProperties.Description="{loc:Localize A11y_More}">
                                                     <Label Text="⋯"
                                                            FontFamily="DMSansMedium"
                                                            FontSize="18"
@@ -202,7 +226,8 @@
                                             BackgroundColor="{StaticResource ForgeSurface2}"
                                             StrokeShape="RoundRectangle 12"
                                             StrokeThickness="0"
-                                            HeightRequest="40">
+                                            HeightRequest="44"
+                                            SemanticProperties.Description="{loc:Localize TemplateBoard_AddExercise}">
                                         <Label Text="{loc:Localize TemplateBoard_AddExercise}"
                                                FontFamily="DMSansMedium"
                                                FontSize="13"
@@ -220,7 +245,8 @@
                                             Stroke="{StaticResource ForgeAccent}"
                                             StrokeThickness="1"
                                             StrokeShape="RoundRectangle 12"
-                                            HeightRequest="40">
+                                            HeightRequest="44"
+                                            SemanticProperties.Description="{loc:Localize TemplateBoard_AutoFill}">
                                         <Label Text="{loc:Localize TemplateBoard_AutoFill}"
                                                FontFamily="DMSansMedium"
                                                FontSize="13"
@@ -242,11 +268,13 @@
         </ScrollView>
 
         <!-- Bottom actions -->
-        <VerticalStackLayout Grid.Row="3" Padding="16,8,16,24" Spacing="8">
+        <!-- Tab-baren är dold på sidan (Shell.TabBarIsVisible); 34 = hemindikatorn -->
+        <VerticalStackLayout Grid.Row="3" Padding="16,8,16,34" Spacing="8">
             <Border BackgroundColor="{StaticResource ForgeAccent}"
                     StrokeShape="RoundRectangle 22"
                     StrokeThickness="0"
-                    HeightRequest="52">
+                    HeightRequest="52"
+                    SemanticProperties.Description="{loc:Localize TemplateBoard_AddMuscle}">
                 <Label Text="{loc:Localize TemplateBoard_AddMuscle}"
                        FontFamily="BebasNeue"
                        FontSize="18"
@@ -263,7 +291,8 @@
                     Stroke="{StaticResource ForgeBorder}"
                     StrokeThickness="1"
                     StrokeShape="RoundRectangle 20"
-                    HeightRequest="44">
+                    HeightRequest="44"
+                    SemanticProperties.Description="{loc:Localize TemplateBoard_AutoFillAll}">
                 <Label Text="{loc:Localize TemplateBoard_AutoFillAll}"
                        FontFamily="DMSansMedium"
                        FontSize="13"
@@ -276,10 +305,13 @@
             </Border>
             <Border BackgroundColor="Transparent"
                     StrokeThickness="0"
-                    HeightRequest="32">
+                    HeightRequest="44"
+                    MinimumWidthRequest="120"
+                    HorizontalOptions="Center"
+                    SemanticProperties.Description="{loc:Localize TemplateBoard_AddDay}">
                 <Label Text="{loc:Localize TemplateBoard_AddDay}"
                        FontFamily="DMSansMedium"
-                       FontSize="12"
+                       FontSize="13"
                        TextColor="{StaticResource ForgeMuted}"
                        HorizontalOptions="Center"
                        VerticalOptions="Center"/>
