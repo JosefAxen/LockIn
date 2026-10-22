@@ -3,6 +3,7 @@ using LockIn.Services;
 using LockIn.ViewModels;
 using LockIn.Views;
 using Microsoft.Extensions.Logging;
+using Microsoft.Maui.LifecycleEvents;
 using SkiaSharp.Views.Maui.Controls.Hosting;
 
 namespace LockIn;
@@ -27,6 +28,14 @@ public static class MauiProgram
             {
                 handlers.AddHandler<LockIn.Views.AppIcon, LockIn.Platforms.iOS.AppIconHandler>();
             })
+            // Home Screen quick actions. With the UIScene life cycle MauiUISceneDelegate raises
+            // this for cold starts (connectionOptions.ShortcutItem) and while running.
+            .ConfigureLifecycleEvents(events => events.AddiOS(ios => ios
+                .PerformActionForShortcutItem((_, shortcutItem, completionHandler) =>
+                {
+                    AppDelegate.HandleShortcut(shortcutItem.Type);
+                    completionHandler(true);
+                })))
 #endif
             ;
 

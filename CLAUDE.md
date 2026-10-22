@@ -9,7 +9,7 @@ iOS-träningsapp byggd med **.NET MAUI 10**, target `net10.0-ios`. CI publicerar
 ## Bygga och köra
 
 ```bash
-# Bygga för iOS (Release) — kräver Mac med Xcode 26.x
+# Bygga för iOS (Release) — kräver Mac med Xcode 27.1 (låst i codemagic.yaml)
 dotnet build LockIn/LockIn.csproj -f net10.0-ios -c Release
 
 # Bygga Debug (för simulator)
@@ -124,7 +124,8 @@ Alla custom canvas-kontroller i `Controls/` ärver `SKCanvasView` och renderar i
 - `HealthKitService` — `RequestAuthorizationToShareAsync(null, new NSSet<HKObjectType>(...))` med try-catch (binding kan saknas i SDK-versioner)
 - `SoundService` — `AVAudioPlayer` för ljud vid timer-klar
 - `AppIconHandler` — anpassad handler för färgade ikoner i tab-bar
-- `AppDelegate` — konfigurerar UITabBar-utseende + tema-ändringar
+- `AppDelegate` — konfigurerar UITabBar-utseende + tema-ändringar, registrerar hemskärmsgenvägar
+- `SceneDelegate` — UIScene-livscykeln (krävs från Xcode 27-SDK:n, registrerad i `Info.plist` → `UIApplicationSceneManifest`). Skapar UIWindow; fönsterbakgrund sätts i `WillConnect`. Genvägar tas emot av `MauiUISceneDelegate` och hanteras via `PerformActionForShortcutItem`-lifecycle-eventet i `MauiProgram`
 - `Entitlements.plist` — har `com.apple.developer.healthkit`
 
 ### Animationer
