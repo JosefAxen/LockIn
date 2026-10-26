@@ -19,12 +19,8 @@
         <!-- Header -->
         <Grid Grid.Row="0" Padding="16,56,16,8" ColumnDefinitions="Auto,*,Auto">
             <Border Grid.Column="0"
-                    WidthRequest="36" HeightRequest="36"
-                    StrokeShape="Ellipse"
-                    BackgroundColor="{AppThemeBinding Light=#1A000000, Dark=#17FFFFFF}"
-                    Stroke="{AppThemeBinding Light=#0D000000, Dark=#29FFFFFF}"
-                    StrokeThickness="0.5"
-                    VerticalOptions="Center">
+                    Style="{StaticResource IconCircleButton}"
+                    SemanticProperties.Description="{loc:Localize A11y_Back}">
                 <Path Style="{StaticResource BackChevron}"/>
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Tapped="OnBackTapped"/>
@@ -41,11 +37,14 @@
                     BackgroundColor="Transparent"
                     TextColor="{StaticResource ForgeAccent}"
                     FontFamily="DMSansMedium"
-                    Padding="12,6"/>
+                    Padding="12,6"
+                    MinimumHeightRequest="44"
+                    MinimumWidthRequest="44"/>
         </Grid>
 
         <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Never">
-            <VerticalStackLayout Padding="16,4,16,48" Spacing="12">
+            <!-- Bottenpadding 120: tab-baren är synlig och genomskinlig på push-sidor -->
+            <VerticalStackLayout Padding="16,4,16,120" Spacing="12">
 
                 <!-- Onboarding-förklaring -->
                 <Border Style="{StaticResource CardFrame}" Padding="18,16">
@@ -83,19 +82,23 @@
                                            TextColor="{StaticResource ForgeText}"
                                            VerticalOptions="Center"/>
                                     <Entry Grid.Column="1" Text="{Binding MevText}"
+                                           SemanticProperties.Description="{loc:Localize MuscleVolume_Col_Mev}"
+                                           SemanticProperties.Hint="{Binding DisplayName}"
                                            Keyboard="Numeric"
                                            HorizontalTextAlignment="Center"
                                            BackgroundColor="{StaticResource ForgeSurface2}"
                                            TextColor="{StaticResource ForgeText}"
                                            FontFamily="BebasNeue" FontSize="18"
-                                           HeightRequest="40"/>
+                                           HeightRequest="44"/>
                                     <Entry Grid.Column="2" Text="{Binding MrvText}"
+                                           SemanticProperties.Description="{loc:Localize MuscleVolume_Col_Mrv}"
+                                           SemanticProperties.Hint="{Binding DisplayName}"
                                            Keyboard="Numeric"
                                            HorizontalTextAlignment="Center"
                                            BackgroundColor="{StaticResource ForgeSurface2}"
                                            TextColor="{StaticResource ForgeText}"
                                            FontFamily="BebasNeue" FontSize="18"
-                                           HeightRequest="40"/>
+                                           HeightRequest="44"/>
                                 </Grid>
                             </DataTemplate>
                         </BindableLayout.ItemTemplate>

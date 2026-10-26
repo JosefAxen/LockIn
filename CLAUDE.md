@@ -6,10 +6,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 iOS-träningsapp byggd med **.NET MAUI 10**, target `net10.0-ios`. CI publicerar till GitHub Releases via GitHub Actions. SDK `10.0.x` + `dotnet workload install maui-ios`. Appen är på svenska.
 
+**Låsta val:**
+- **Bara mörkt läge:** `Info.plist` UIUserInterfaceStyle=Dark + `UserAppTheme=Dark`. Ljust läge är inte designat; bakgrunden är alltid mörk.
+- **Bara iPhone, stående läge.**
+- **Kulturen är tvingad till sv-SE** i `MauiProgram`, så `ToString()` ger decimalkomma.
+  - Parsa inmatning med `text.Replace(',', '.')` + `CultureInfo.InvariantCulture`.
+  - Skriv CSV med InvariantCulture.
+- **Övningsnamn i UI:** `Exercise.DisplayName` / `SwedishExerciseNames.Display(name)`.
+
 ## Bygga och köra
 
 ```bash
-# Bygga för iOS (Release) — kräver Mac med Xcode 26.x
+# Bygga för iOS (Release) — kräver Mac med Xcode 27.1 (låst i codemagic.yaml)
 dotnet build LockIn/LockIn.csproj -f net10.0-ios -c Release
 
 # Bygga Debug (för simulator)
@@ -124,10 +132,18 @@ Alla custom canvas-kontroller i `Controls/` ärver `SKCanvasView` och renderar i
 - `HealthKitService` — `RequestAuthorizationToShareAsync(null, new NSSet<HKObjectType>(...))` med try-catch (binding kan saknas i SDK-versioner)
 - `SoundService` — `AVAudioPlayer` för ljud vid timer-klar
 - `AppIconHandler` — anpassad handler för färgade ikoner i tab-bar
-- `AppDelegate` — konfigurerar UITabBar-utseende + tema-ändringar
+- `AppDelegate` — konfigurerar UITabBar-utseende + tema-ändringar, registrerar hemskärmsgenvägar
+- `SceneDelegate` — UIScene-livscykeln (krävs från Xcode 27-SDK:n, registrerad i `Info.plist` → `UIApplicationSceneManifest`). Skapar UIWindow; fönsterbakgrund sätts i `WillConnect`. Genvägar tas emot av `MauiUISceneDelegate` och hanteras via `PerformActionForShortcutItem`-lifecycle-eventet i `MauiProgram`
 - `Entitlements.plist` — har `com.apple.developer.healthkit`
 
 ### Animationer
+- **Minska rörelse:**
+  - Kolla `AnimationHelper.ReduceMotion` före varje icke-nödvändig animation.
+  - Haptik går via `AnimationHelper.Haptic()`, som respekterar inställningen.
+  - Bakgrunden (`AtmosphericBackgroundView`) är statisk.
+- **Tillgänglighet:**
+  - Tryckytor ska vara ≥ 44 pt. Runda ikonknappar använder stilen `IconCircleButton`.
+  - Varje tappbar yta utan text får `SemanticProperties.Description` (nycklarna `A11y_*`).
 - **Knappar:** `AnimatedButtonBehavior` (Pressed/Released → ScaleTo)
 - **Gester på Border/custom views:** `PointerGestureRecognizer` med `OnElemPointerPressed/Released` i code-behind (scale 0.93)
 - **Sidövergångar (tabs):** `TranslateTo` + `FadeTo` i `OnAppearing` i varje tab-sidas code-behind

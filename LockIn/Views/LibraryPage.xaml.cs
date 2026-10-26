@@ -1,4 +1,5 @@
 using LockIn.Navigation;
+using LockIn.Resources.Strings;
 using LockIn.Services;
 using LockIn.ViewModels;
 using Microsoft.Maui.Devices;
@@ -7,6 +8,11 @@ namespace LockIn.Views;
 
 public partial class LibraryPage : ContentPage
 {
+    // Bottenpadding för listorna: tab-baren, plus "PASS PÅGÅR"-bannern
+    // (Margin 96 + ca 59 pt hög) när den visas.
+    private const double BottomInset = 120;
+    private const double BottomInsetWithBanner = 176;
+
     private readonly LibraryViewModel _vm;
     private readonly ActiveWorkoutStateService _state;
     private bool _hasLoaded;
@@ -22,28 +28,39 @@ public partial class LibraryPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        WorkoutBanner.IsVisible = _state.IsActive;
-        if (_state.IsActive) StartBannerPulse();
+        UpdateBannerState();
         _state.StateChanged += OnWorkoutStateChanged;
         _vm.PropertyChanged += OnVmPropertyChanged;
 
-        StickyHeader.Opacity = 0;
+        UpdateStickyHeader(0);
 
         // Ladda direkt utan att dölja Content — atmosfärisk bakgrund + stålband-loader
         // är synliga under laddning så användaren får omedelbar feedback.
-        if (!_hasLoaded)
+        try
         {
-            StartLoaderAnimation();
-            await _vm.LoadAsync();
-            StopLoaderAnimation();
-            _hasLoaded = true;
-        }
-        else
-        {
-            await _vm.LoadAsync();
-        }
+            if (!_hasLoaded)
+            {
+                StartLoaderAnimation();
+                await _vm.LoadAsync();
+                _hasLoaded = true;
+            }
+            else
+            {
+                await _vm.LoadAsync();
+            }
 
-        UpdateAllTabIndicators(animated: false);
+            UpdateAllTabIndicators(animated: false);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[LibraryPage] OnAppearing failed: {ex}");
+            _vm.IsLoading = false;
+            await DisplayAlert(null, AppResources.Common_ErrorRetry, AppResources.Common_OK);
+        }
+        finally
+        {
+            StopLoaderAnimation();
+        }
     }
 
     protected override void OnDisappearing()
@@ -60,6 +77,15 @@ public partial class LibraryPage : ContentPage
     private void StartLoaderAnimation()
     {
         _loaderCts?.Cancel();
+
+        // "Minska rörelse": statiskt band och text i stället för svep och puls.
+        if (AnimationHelper.ReduceMotion)
+        {
+            LoaderHighlight.TranslationX = 50;
+            LoaderLabel.Opacity = 1;
+            return;
+        }
+
         _loaderCts = new CancellationTokenSource();
         var token = _loaderCts.Token;
 
@@ -70,10 +96,10 @@ public partial class LibraryPage : ContentPage
         highlightAnim.Commit(this, "LoaderHighlight",
             length: 1400, repeat: () => !token.IsCancellationRequested);
 
-        // Label: opacity-puls 0.4 → 1.0 → 0.4 på 1.0s
+        // Label: opacity-puls 0.8 → 1.0 → 0.8 på 1.0s (lägre opacitet ger under 4,5:1 kontrast)
         var pulseAnim = new Animation();
-        pulseAnim.Add(0.0, 0.5, new Animation(v => LoaderLabel.Opacity = v, 0.4, 1.0, Easing.SinInOut));
-        pulseAnim.Add(0.5, 1.0, new Animation(v => LoaderLabel.Opacity = v, 1.0, 0.4, Easing.SinInOut));
+        pulseAnim.Add(0.0, 0.5, new Animation(v => LoaderLabel.Opacity = v, 0.8, 1.0, Easing.SinInOut));
+        pulseAnim.Add(0.5, 1.0, new Animation(v => LoaderLabel.Opacity = v, 1.0, 0.8, Easing.SinInOut));
         pulseAnim.Commit(this, "LoaderLabel",
             length: 1000, repeat: () => !token.IsCancellationRequested);
     }
@@ -83,6 +109,7 @@ public partial class LibraryPage : ContentPage
         _loaderCts?.Cancel();
         this.AbortAnimation("LoaderHighlight");
         this.AbortAnimation("LoaderLabel");
+        LoaderLabel.Opacity = 1;
     }
 
     private double _tabColumnWidth;
@@ -91,7 +118,7 @@ public partial class LibraryPage : ContentPage
     {
         if (e.PropertyName == nameof(LibraryViewModel.SelectedTab))
         {
-            StickyHeader.Opacity = 0;
+            UpdateStickyHeader(0);
             UpdateAllTabIndicators(animated: true);
         }
     }
@@ -113,7 +140,7 @@ public partial class LibraryPage : ContentPage
     {
         if (_tabColumnWidth <= 0) return;
         var targetX = _vm.SelectedTab * _tabColumnWidth;
-        if (animated)
+        if (animated && !AnimationHelper.ReduceMotion)
         {
             TabIndicatorExercises.TranslateTo(targetX, 0, 280, Easing.SpringOut);
             TabIndicatorTemplates.TranslateTo(targetX, 0, 280, Easing.SpringOut);
@@ -130,24 +157,41 @@ public partial class LibraryPage : ContentPage
     }
 
     private void OnWorkoutStateChanged()
-        => MainThread.BeginInvokeOnMainThread(() =>
-        {
-            WorkoutBanner.IsVisible = _state.IsActive;
-            if (_state.IsActive) StartBannerPulse();
-            else BannerPulseRing.StopPulse();
-        });
+        => MainThread.BeginInvokeOnMainThread(UpdateBannerState);
+
+    private void UpdateBannerState()
+    {
+        var active = _state.IsActive;
+        WorkoutBanner.IsVisible = active;
+        if (active) StartBannerPulse();
+        else BannerPulseRing.StopPulse();
+
+        // Sista kortet i varje flik ska kunna scrollas fram ovanför bannern och tab-baren.
+        var inset = active ? BottomInsetWithBanner : BottomInset;
+        ExercisesFooter.HeightRequest = inset;
+        TemplatesContent.Padding = new Thickness(0, 0, 0, inset);
+        ProgramsContent.Padding  = new Thickness(0, 0, 0, inset);
+        CyclesContent.Padding    = new Thickness(0, 0, 0, inset);
+    }
+
+    private void UpdateStickyHeader(double scrollY)
+    {
+        StickyHeader.Opacity = Math.Clamp((scrollY - 80.0) / 40.0, 0, 1);
+        // Osynlig header får inte svälja tryck i toppen av sidan.
+        StickyActionButton.InputTransparent = StickyHeader.Opacity < 0.5;
+    }
 
     private void OnExercisesScrolled(object sender, ItemsViewScrolledEventArgs e)
-        => StickyHeader.Opacity = Math.Clamp((e.VerticalOffset - 80.0) / 40.0, 0, 1);
+        => UpdateStickyHeader(e.VerticalOffset);
 
     private void OnTemplatesScrolled(object sender, ScrolledEventArgs e)
-        => StickyHeader.Opacity = Math.Clamp((e.ScrollY - 80.0) / 40.0, 0, 1);
+        => UpdateStickyHeader(e.ScrollY);
 
     private void OnProgramsScrolled(object sender, ScrolledEventArgs e)
-        => StickyHeader.Opacity = Math.Clamp((e.ScrollY - 80.0) / 40.0, 0, 1);
+        => UpdateStickyHeader(e.ScrollY);
 
     private void OnCyclesScrolled(object sender, ScrolledEventArgs e)
-        => StickyHeader.Opacity = Math.Clamp((e.ScrollY - 80.0) / 40.0, 0, 1);
+        => UpdateStickyHeader(e.ScrollY);
 
     private async void OnPillTapped(object sender, TappedEventArgs e)
         => await AnimationHelper.PressAsync(sender);

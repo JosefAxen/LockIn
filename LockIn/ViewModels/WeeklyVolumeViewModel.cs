@@ -43,7 +43,7 @@ public partial class WeeklyVolumeViewModel(IWeeklyVolumeService volumes) : Obser
         MuscleGroup.Legs      => AppResources.Library_Muscle_Legs,
         MuscleGroup.Core      => AppResources.Library_Muscle_Core,
         MuscleGroup.Forearms  => AppResources.Library_Muscle_Forearms,
-        _                     => AppResources.Library_Muscle_Other,
+        _                     => mg.ToLocalizedLabel(),   // Quads, Hamstrings, Glutes m.fl.
     };
 }
 
@@ -56,7 +56,11 @@ public class WeeklyVolumeRow
     public string RangeText => string.Format(AppResources.WeeklyVolume_Range_Format, Report.MEV, Report.MRV);
     public double ProgressFraction => Report.MRV > 0 ? Math.Min(1.0, (double)Report.SetsThisWeek / Report.MRV) : 0;
 
-    public Color ZoneColor => Report.Zone switch
+    public Color ZoneColor => ZoneColorFor(Report.Zone);
+    public string ZoneLabel => ZoneLabelFor(Report.Zone);
+
+    // Delas med MesocycleStats (VolumeBarRow) så zonerna ser likadana ut överallt.
+    public static Color ZoneColorFor(VolumeZone zone) => zone switch
     {
         VolumeZone.UnderMEV => Color.FromArgb("#A2A2A2"),  // grå
         VolumeZone.InMAV    => Color.FromArgb("#4ADE80"),  // grön
@@ -65,7 +69,7 @@ public class WeeklyVolumeRow
         _                   => Color.FromArgb("#A2A2A2"),
     };
 
-    public string ZoneLabel => Report.Zone switch
+    public static string ZoneLabelFor(VolumeZone zone) => zone switch
     {
         VolumeZone.UnderMEV => AppResources.WeeklyVolume_Zone_UnderMEV,
         VolumeZone.InMAV    => AppResources.WeeklyVolume_Zone_InMAV,

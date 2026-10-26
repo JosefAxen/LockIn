@@ -1,3 +1,4 @@
+using LockIn.Resources.Strings;
 using LockIn.ViewModels;
 
 namespace LockIn.Views;
@@ -15,13 +16,21 @@ public partial class AchievementsPage : ContentPage
         base.OnAppearing();
         StickyHeader.Opacity = 0;
         var vm = BindingContext as AchievementsViewModel;
-        Content.Opacity = 0;
-        Content.TranslationY = 14;
-        await Task.WhenAll(
-            vm?.LoadAsync() ?? Task.CompletedTask,
-            Content.FadeTo(1, 280, Easing.CubicOut),
-            Content.TranslateTo(0, 0, 280, Easing.CubicOut)
-        );
+        try
+        {
+            // PageEntryAsync hoppar över inglidningen vid "Minska rörelse"
+            await Task.WhenAll(
+                vm?.LoadAsync() ?? Task.CompletedTask,
+                AnimationHelper.PageEntryAsync(this)
+            );
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[Achievements] Laddning misslyckades: {ex}");
+            Content.Opacity = 1;
+            Content.TranslationY = 0;
+            await DisplayAlert(null, AppResources.Common_ErrorRetry, AppResources.Common_OK);
+        }
     }
 
     private void OnScrolled(object sender, ItemsViewScrolledEventArgs e)

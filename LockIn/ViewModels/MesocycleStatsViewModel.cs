@@ -22,6 +22,8 @@ public partial class MesocycleStatsViewModel : ObservableObject, IQueryAttributa
     [ObservableProperty] private string _mesocycleName = "";
     [ObservableProperty] private string _statusBadge = "";
     [ObservableProperty] private Color _statusBadgeColor = Colors.Gray;
+    [ObservableProperty] private Color _statusBadgeTextColor = Colors.White;
+    [ObservableProperty] private bool _isRunning;
     [ObservableProperty] private string _weekProgressText = "";
     [ObservableProperty] private double _weekProgressPercent;
     [ObservableProperty] private bool _isBusy;
@@ -92,37 +94,53 @@ public partial class MesocycleStatsViewModel : ObservableObject, IQueryAttributa
 
             MesocycleName = string.IsNullOrWhiteSpace(meso.Name) ? "—" : meso.Name;
 
-            var currentWeek = await _mesocycles.GetCurrentWeekAsync();
-            int currentWeekNumber = 0;
-            if (currentWeek is not null && currentWeek.MesocycleId == meso.Id)
-                currentWeekNumber = currentWeek.WeekNumber;
-
+            // Status räknas från cykelns egna datum (inte bara den aktiva cykeln), så att
+            // en avslutad eller ersatt cykel aldrig visar "Vecka 0 av N".
             var elapsedDays = (DateTime.Today - meso.StartDate.Date).Days;
+            bool isUpcoming = elapsedDays < 0;
+            bool isFinished = !isUpcoming && (!meso.IsActive || elapsedDays >= meso.WeekCount * 7);
+            IsRunning = !isUpcoming && !isFinished;
+            int currentWeekNumber = IsRunning ? elapsedDays / 7 + 1 : 0;
 
-            if (meso.IsActive)
+            if (IsRunning)
             {
                 StatusBadge = AppResources.MesoStats_Status_Active;
                 StatusBadgeColor = Color.FromArgb("#4ADE80");
+                StatusBadgeTextColor = DesignTokens.FabForeground;   // mörk text på grönt
             }
-            else if (elapsedDays < 0)
+            else if (isUpcoming)
             {
                 StatusBadge = AppResources.MesoStats_Status_Upcoming;
                 StatusBadgeColor = Color.FromArgb("#71717A");
+                StatusBadgeTextColor = Colors.White;
             }
             else
             {
                 StatusBadge = AppResources.MesoStats_Status_Done;
                 StatusBadgeColor = Color.FromArgb("#52525B");
+                StatusBadgeTextColor = Colors.White;
             }
 
-            var displayWeek = currentWeekNumber > 0 ? currentWeekNumber : 0;
-            WeekProgressText = string.Format(
-                AppResources.MesoStats_WeekProgress_Format,
-                displayWeek,
-                meso.WeekCount);
-            WeekProgressPercent = meso.WeekCount > 0
-                ? Math.Clamp((double)displayWeek / meso.WeekCount, 0.0, 1.0)
-                : 0;
+            if (IsRunning)
+            {
+                WeekProgressText = string.Format(
+                    AppResources.MesoStats_WeekProgress_Format,
+                    currentWeekNumber,
+                    meso.WeekCount);
+                WeekProgressPercent = meso.WeekCount > 0
+                    ? Math.Clamp((double)currentWeekNumber / meso.WeekCount, 0.0, 1.0)
+                    : 0;
+            }
+            else if (isUpcoming)
+            {
+                WeekProgressText = string.Format(AppResources.MesoStats_StartsOn_Format, meso.StartDate.ToString("d MMM yyyy"));
+                WeekProgressPercent = 0;
+            }
+            else
+            {
+                WeekProgressText = string.Format(AppResources.MesoStats_Finished_Format, meso.WeekCount);
+                WeekProgressPercent = 1;
+            }
 
             Weeks.Clear();
             foreach (var w in detail.Weeks.OrderBy(x => x.WeekNumber))
@@ -169,8 +187,8 @@ public partial class MesocycleStatsViewModel : ObservableObject, IQueryAttributa
                 });
             }
 
-            // Deload-status
-            var deloadWeek = detail.Weeks.FirstOrDefault(w => w.IsDeload);
+            // Deload-status — bara meningsfull medan cykeln pågår
+            var deloadWeek = IsRunning ? detail.Weeks.FirstOrDefault(w => w.IsDeload) : null;
             HasDeload = deloadWeek is not null;
             if (deloadWeek is not null)
             {
@@ -188,6 +206,12 @@ public partial class MesocycleStatsViewModel : ObservableObject, IQueryAttributa
                 DeloadStatusText = "";
             }
         }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[MesoStats] Laddning misslyckades: {ex}");
+            if (Shell.Current?.CurrentPage is { } page)
+                await page.DisplayAlert(null, AppResources.Common_ErrorRetry, AppResources.Common_OK);
+        }
         finally
         {
             IsBusy = false;
@@ -197,9 +221,10 @@ public partial class MesocycleStatsViewModel : ObservableObject, IQueryAttributa
     [RelayCommand]
     private async Task GoBackAsync() => await Shell.Current.GoToAsync(AppRoutes.Back);
 
+    // PeriodizationPage är en global route (Routing.RegisterRoute) — får inte prefixas med "//".
     [RelayCommand]
     private async Task OpenPeriodizationAsync()
-        => await Shell.Current.GoToAsync("//" + AppRoutes.Periodization);
+        => await Shell.Current.GoToAsync(AppRoutes.Periodization);
 
 }
 
@@ -228,14 +253,9 @@ public partial class VolumeBarRow : ObservableObject
     public int MEV { get; set; }
     public int MRV { get; set; }
     public VolumeZone Zone { get; set; }
-    public Color ZoneColor => Zone switch
-    {
-        VolumeZone.UnderMEV => Color.FromArgb("#71717A"),
-        VolumeZone.InMAV    => Color.FromArgb("#4ADE80"),
-        VolumeZone.NearMRV  => Color.FromArgb("#FBBF24"),
-        VolumeZone.OverMRV  => Color.FromArgb("#EF4444"),
-        _                   => Color.FromArgb("#71717A"),
-    };
+    // Samma färger och etiketter som WeeklyVolume — zonen anges även i text, inte bara färg.
+    public Color ZoneColor => WeeklyVolumeRow.ZoneColorFor(Zone);
+    public string ZoneLabel => WeeklyVolumeRow.ZoneLabelFor(Zone);
     public string SetsDisplay => $"{SetsThisWeek} / {PlannedSets} sets";
     public string LandmarksDisplay => $"MEV {MEV} · MRV {MRV}";
     public double SetsProgress => MRV > 0

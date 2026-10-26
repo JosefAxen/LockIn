@@ -630,4 +630,11 @@ public static class SwedishExerciseNames
         ["Zottman Curl"]                                                    = "Zottman curl",
         ["Zottman Preacher Curl"]                                           = "Zottman preachers curl",
     };
+
+    /// <summary>
+    /// Namnet som ska visas i UI: svensk översättning om den finns, annars originalnamnet
+    /// (egna övningar har redan svenska namn).
+    /// </summary>
+    public static string Display(string? name) =>
+        string.IsNullOrEmpty(name) ? "" : Map.TryGetValue(name, out var sv) ? sv : name;
 }

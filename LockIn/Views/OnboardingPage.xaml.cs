@@ -34,13 +34,30 @@ public partial class OnboardingPage : ContentPage
         };
         if (target is null) return;
 
+        // "Minska rörelse": byt steg direkt utan inglidning.
+        if (AnimationHelper.ReduceMotion)
+        {
+            target.Opacity = 1;
+            target.TranslationX = 0;
+            return;
+        }
+
         // Bindningen sätter precis IsVisible på det nya steget. Vi börjar dolt
         // (Opacity 0, lite förskjutet i riktningen) och slidear in.
-        target.Opacity = 0;
-        target.TranslationX = direction * 24;
-        await Task.WhenAll(
-            target.FadeTo(1, 300, Easing.CubicOut),
-            target.TranslateTo(0, 0, 300, Easing.CubicOut)
-        );
+        try
+        {
+            target.Opacity = 0;
+            target.TranslationX = direction * 24;
+            await Task.WhenAll(
+                target.FadeTo(1, 300, Easing.CubicOut),
+                target.TranslateTo(0, 0, 300, Easing.CubicOut)
+            );
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[Onboarding] Steganimation misslyckades: {ex}");
+            target.Opacity = 1;
+            target.TranslationX = 0;
+        }
     }
 }

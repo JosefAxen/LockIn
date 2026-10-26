@@ -3,6 +3,7 @@ using LockIn.Services;
 using LockIn.ViewModels;
 using LockIn.Views;
 using Microsoft.Extensions.Logging;
+using Microsoft.Maui.LifecycleEvents;
 using SkiaSharp.Views.Maui.Controls.Hosting;
 
 namespace LockIn;
@@ -11,6 +12,15 @@ public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
+        // Appen är på svenska oavsett telefonens språk/region: strängar, decimalkomma och datum.
+        // (AppResources.en.resx är ofullständig och gav blandat språk på engelska telefoner.)
+        var sv = new System.Globalization.CultureInfo("sv-SE");
+        System.Globalization.CultureInfo.DefaultThreadCurrentCulture   = sv;
+        System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = sv;
+        System.Globalization.CultureInfo.CurrentCulture   = sv;
+        System.Globalization.CultureInfo.CurrentUICulture = sv;
+        Resources.Strings.AppResources.Culture = sv;
+
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
@@ -27,6 +37,14 @@ public static class MauiProgram
             {
                 handlers.AddHandler<LockIn.Views.AppIcon, LockIn.Platforms.iOS.AppIconHandler>();
             })
+            // Home Screen quick actions. With the UIScene life cycle MauiUISceneDelegate raises
+            // this for cold starts (connectionOptions.ShortcutItem) and while running.
+            .ConfigureLifecycleEvents(events => events.AddiOS(ios => ios
+                .PerformActionForShortcutItem((_, shortcutItem, completionHandler) =>
+                {
+                    AppDelegate.HandleShortcut(shortcutItem.Type);
+                    completionHandler(true);
+                })))
 #endif
             ;
 

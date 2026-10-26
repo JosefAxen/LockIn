@@ -12,21 +12,12 @@ public class AppDelegate : MauiUIApplicationDelegate
 	public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
 	{
 		var result = base.FinishedLaunching(application, launchOptions);
-		ConfigureTabBarAppearance();
 		ConfigureNavBarAppearance();
-		ConfigureWindowBackground(application);
+		// Window background and quick actions are handled by SceneDelegate: with the
+		// UIScene life cycle the window doesn't exist yet here, launchOptions carries no
+		// shortcut item and PerformActionForShortcutItem is never called on the app delegate.
 		RegisterShortcutItems(application);
-		HandleColdStartShortcut(launchOptions);
 		return result;
-	}
-
-	public override void PerformActionForShortcutItem(
-		UIApplication application,
-		UIApplicationShortcutItem shortcutItem,
-		UIOperationHandler completionHandler)
-	{
-		HandleShortcut(shortcutItem.Type);
-		completionHandler(true);
 	}
 
 	private static void RegisterShortcutItems(UIApplication application)
@@ -54,30 +45,28 @@ public class AppDelegate : MauiUIApplicationDelegate
 		};
 	}
 
-	private static void HandleColdStartShortcut(NSDictionary? launchOptions)
-	{
-		if (launchOptions == null) return;
-		if (!launchOptions.TryGetValue(UIApplication.LaunchOptionsShortcutItemKey, out var val)) return;
-		if (val is not UIApplicationShortcutItem item) return;
-		var type = item.Type;
-		// Shell is not yet initialized at FinishedLaunching time; defer navigation.
-		Task.Delay(500).ContinueWith(_ => HandleShortcut(type));
-	}
-
-	private static void HandleShortcut(string type)
+	// Called from the PerformActionForShortcutItem lifecycle event (see MauiProgram), which
+	// MauiUISceneDelegate raises for both cold starts and quick actions while running.
+	internal static void HandleShortcut(string type)
 	{
 		MainThread.BeginInvokeOnMainThread(async () =>
 		{
+			// On a cold start AppShell is set only after App.InitNavigationAsync has
+			// initialized the database; wait for it (it never appears during onboarding).
+			for (var i = 0; i < 50 && Shell.Current is null; i++)
+				await Task.Delay(100);
+			if (Shell.Current is not { } shell) return;
+
 			switch (type)
 			{
 				case "com.josefaxen.lockin.startfreeworkout":
-					await Shell.Current.GoToAsync(AppRoutes.TrainTab);
+					await shell.GoToAsync(AppRoutes.TrainTab);
 					break;
 				case "com.josefaxen.lockin.logweight":
-					await Shell.Current.GoToAsync(AppRoutes.BodyWeight);
+					await shell.GoToAsync(AppRoutes.BodyWeight);
 					break;
 				case "com.josefaxen.lockin.history":
-					await Shell.Current.GoToAsync(AppRoutes.HistoryTab);
+					await shell.GoToAsync(AppRoutes.HistoryTab);
 					break;
 			}
 		});
@@ -94,51 +83,10 @@ public class AppDelegate : MauiUIApplicationDelegate
 			UINavigationBar.Appearance.CompactScrollEdgeAppearance = appearance;
 	}
 
-	private static void ConfigureWindowBackground(UIApplication application)
+	// Called from SceneDelegate.WillConnect once the scene's UIWindow exists.
+	// Same color as splash, the startup page and AtmosphericBackgroundView (DesignTokens.SK_Background).
+	internal static void ConfigureWindowBackground(UIWindow window)
 	{
-		var bgColor = UIColor.FromDynamicProvider(t =>
-			t.UserInterfaceStyle == UIUserInterfaceStyle.Dark
-				? UIColor.FromRGB(0x1E, 0x1E, 0x26)
-				: UIColor.FromRGB(0xFC, 0xFC, 0xFC));
-
-		// application.Windows is deprecated and empty in scene-based apps at
-		// FinishedLaunching time. Use ConnectedScenes instead, deferred to the next
-		// run loop when scene connection may have completed.
-		MainThread.BeginInvokeOnMainThread(() =>
-		{
-			foreach (var scene in application.ConnectedScenes)
-				if (scene is UIWindowScene ws)
-					foreach (var win in ws.Windows)
-						win.BackgroundColor = bgColor;
-		});
-	}
-
-	internal static void ConfigureTabBarAppearance()
-	{
-		var accent = UIColor.FromRGB(0xFF, 0x5A, 0x1F);
-		var unselected = UIColor.FromDynamicProvider(t =>
-			t.UserInterfaceStyle == UIUserInterfaceStyle.Dark
-				? UIColor.FromRGB(0xA0, 0xA0, 0xA8)
-				: UIColor.FromRGB(0x8E, 0x8E, 0x93));
-
-		var appearance = new UITabBarAppearance();
-		// Transparent background — content bleeds behind the tab bar
-		appearance.ConfigureWithTransparentBackground();
-		appearance.BackgroundColor = UIColor.Clear;
-		appearance.ShadowColor     = UIColor.Clear;  // remove top separator line
-
-		var item = new UITabBarItemAppearance();
-		item.Normal.IconColor = unselected;
-		item.Normal.TitleTextAttributes = new UIStringAttributes { ForegroundColor = unselected };
-		item.Selected.IconColor = accent;
-		item.Selected.TitleTextAttributes = new UIStringAttributes { ForegroundColor = accent };
-
-		appearance.StackedLayoutAppearance       = item;
-		appearance.InlineLayoutAppearance        = item;
-		appearance.CompactInlineLayoutAppearance = item;
-
-		UITabBar.Appearance.StandardAppearance = appearance;
-		if (UIDevice.CurrentDevice.CheckSystemVersion(15, 0))
-			UITabBar.Appearance.ScrollEdgeAppearance = appearance;
+		window.BackgroundColor = UIColor.FromRGB(0x1E, 0x1E, 0x26);
 	}
 }

@@ -13,18 +13,14 @@
 
     <Grid RowDefinitions="Auto,*" SafeAreaEdges="None">
 
-        <!-- Atmosf�risk bakgrund -->
+        <!-- Atmosfärisk bakgrund -->
         <controls:AtmosphericBackgroundView Grid.RowSpan="2" InputTransparent="True"/>
 
         <!-- Header -->
         <Grid Grid.Row="0" Padding="16,56,16,8" ColumnDefinitions="Auto,*">
             <Border Grid.Column="0"
-                    WidthRequest="36" HeightRequest="36"
-                    StrokeShape="Ellipse"
-                    BackgroundColor="{AppThemeBinding Light=#1A000000, Dark=#17FFFFFF}"
-                    Stroke="{AppThemeBinding Light=#0D000000, Dark=#29FFFFFF}"
-                    StrokeThickness="0.5"
-                    VerticalOptions="Center">
+                    Style="{StaticResource IconCircleButton}"
+                    SemanticProperties.Description="{loc:Localize A11y_Back}">
                 <Path Style="{StaticResource BackChevron}"/>
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding GoBackCommand}"/>
@@ -44,7 +40,7 @@
                 <Border Style="{StaticResource CardFrame}" Padding="16,14">
                     <VerticalStackLayout Spacing="16">
 
-                        <!-- M�lvikt -->
+                        <!-- Målvikt -->
                         <VerticalStackLayout Spacing="6">
                             <Label Text="{loc:Localize PlateCalculator_TargetWeight}" Style="{StaticResource SectionLabel}"/>
                             <Border BackgroundColor="{StaticResource ForgeSurface2}"
@@ -72,7 +68,7 @@
                         <BoxView BackgroundColor="{StaticResource ForgeBorder}"
                                  HeightRequest="1" Margin="0"/>
 
-                        <!-- St�ngvikt -->
+                        <!-- Stångvikt -->
                         <VerticalStackLayout Spacing="6">
                             <Label Text="{loc:Localize PlateCalculator_BarWeight}" Style="{StaticResource SectionLabel}"/>
                             <Border BackgroundColor="{StaticResource ForgeSurface2}"
@@ -115,7 +111,8 @@
                                TextColor="{StaticResource ForgeAccent}"
                                Margin="20,0"/>
                         <GraphicsView x:Name="BarbellView"
-                                      HeightRequest="160"/>
+                                      HeightRequest="160"
+                                      SemanticProperties.Description="{Binding ResultText}"/>
                         <Label x:Name="ResultLabel"
                                Text="{Binding ResultText}"
                                FontFamily="BebasNeue" FontSize="18"
@@ -169,14 +166,14 @@
                             <Border Grid.Row="1" Grid.Column="1"
                                     BackgroundColor="{StaticResource ForgeSurface2}"
                                     StrokeShape="RoundRectangle 8" StrokeThickness="0" Padding="0,10">
-                                <Label Text="2.5 kg" FontFamily="BebasNeue" FontSize="17"
+                                <Label Text="2,5 kg" FontFamily="BebasNeue" FontSize="17"
                                        TextColor="{StaticResource ForgeMuted}"
                                        HorizontalOptions="Center"/>
                             </Border>
                             <Border Grid.Row="1" Grid.Column="2"
                                     BackgroundColor="{StaticResource ForgeSurface2}"
                                     StrokeShape="RoundRectangle 8" StrokeThickness="0" Padding="0,10">
-                                <Label Text="1.25 kg" FontFamily="BebasNeue" FontSize="17"
+                                <Label Text="1,25 kg" FontFamily="BebasNeue" FontSize="17"
                                        TextColor="{StaticResource ForgeMuted}"
                                        HorizontalOptions="Center"/>
                             </Border>

@@ -14,6 +14,7 @@ public interface IWeightProgressionService
 // RP-baserad vikt-progression (plan sektion C):
 //  - Alla reps nådda + sista sets RIR ≥ 1 → +2.5 kg compound / +1.25 kg isolation
 //  - Alla reps nådda men RIR = 0 → behåll vikt (extra rep först)
+//  - Alla reps nådda men ingen RIR loggad → behåll vikt (set utan RIR ignoreras)
 //  - Ej alla reps nådda → behåll vikt
 //  - Deload-vecka override: peak × 0.80, RIR-target 4
 public class WeightProgressionService : IWeightProgressionService
@@ -38,25 +39,32 @@ public class WeightProgressionService : IWeightProgressionService
             .ToList();
         if (working.Count == 0) return null;
 
-        // Deload-override: om aktiv mesocykel-vecka är deload → 80 % av peak
-        var currentWeek = await _mesocycles.GetCurrentWeekAsync();
-        if (currentWeek?.IsDeload == true)
-        {
-            var peakWeight = working.Max(s => s.WeightKg);
-            var deloadWeight = Math.Round(peakWeight * 0.80m, 2);
-            return new WeightSuggestion(deloadWeight, AppResources.WeightSuggestion_Reason_Deload);
-        }
-
         var exercise = await _exerciseRepo.GetAsync(exerciseId);
         var isIsolation = exercise?.Mechanic == ExerciseMechanic.Isolation;
         var increment = isIsolation ? 1.25m : 2.5m;
 
+        decimal RoundToStep(decimal w) => Math.Round(w / increment) * increment;
+
+        // Deload-override: om aktiv mesocykel-vecka är deload → 80 % av peak, avrundat till lastbar vikt
+        var currentWeek = await _mesocycles.GetCurrentWeekAsync();
+        if (currentWeek?.IsDeload == true)
+        {
+            var peakWeight = working.Max(s => s.WeightKg);
+            var deloadWeight = RoundToStep(peakWeight * 0.80m);
+            return new WeightSuggestion(deloadWeight, AppResources.WeightSuggestion_Reason_Deload);
+        }
+
         var lastSet = working[^1];
         var hitAllReps = targetReps <= 0 || working.All(s => s.Reps >= targetReps);
 
-        decimal RoundToStep(decimal w) => Math.Round(w / increment) * increment;
+        // Set utan loggad RIR (null) ignoreras — de säger inget om marginalen till failure.
+        var lastRated = working.LastOrDefault(s => s.RIR is not null);
 
-        if (hitAllReps && lastSet.RIR >= 1)
+        if (hitAllReps && lastRated is null)
+        {
+            return new WeightSuggestion(lastSet.WeightKg, AppResources.WeightSuggestion_Reason_NoRir);
+        }
+        if (hitAllReps && lastRated!.RIR >= 1)
         {
             var next = RoundToStep(lastSet.WeightKg + increment);
             return new WeightSuggestion(next, AppResources.WeightSuggestion_Reason_HitAllReps);

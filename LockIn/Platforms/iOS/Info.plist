@@ -7,7 +7,6 @@
 	<key>UIDeviceFamily</key>
 	<array>
 		<integer>1</integer>
-		<integer>2</integer>
 	</array>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
@@ -16,16 +15,9 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>UISupportedInterfaceOrientations~ipad</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
+	<key>UIUserInterfaceStyle</key>
+	<string>Dark</string>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/appicon.appiconset</string>
 	<key>LSApplicationQueriesSchemes</key>
@@ -33,14 +25,31 @@
 		<string>x-apple-health</string>
 	</array>
 	<key>NSHealthShareUsageDescription</key>
-	<string>LockIn läser steg, kalorier och pulsvärden för att visa din dagliga aktivitetsöversikt på hemsidan.</string>
+	<string>Vana Strength läser steg, aktiv energi, puls, vilopuls, HRV, sömn och VO2max för att visa din dagsform och återhämtning på Hem-fliken.</string>
 	<key>NSHealthUpdateUsageDescription</key>
-	<string>LockIn skriver träningspass till Hälsa för att spåra din aktivitet och kalorier.</string>
+	<string>Vana Strength sparar dina träningspass med förbrukad energi och kroppsvikten du loggar i Hälsa.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>LockIn använder kameran för att ta progressfoton kopplade till dina pass.</string>
+	<string>Vana Strength använder kameran när du tar progressbilder till dina pass.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>LockIn behöver tillgång till bildbiblioteket för att välja progressfoton.</string>
+	<string>Vana Strength behöver åtkomst till bildbiblioteket så att du kan välja progressbilder.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>LockIn sparar progressfoton i ditt bildbibliotek.</string>
+	<string>Vana Strength sparar progressbilder i ditt bildbibliotek.</string>
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<false/>
+		<key>UISceneConfigurations</key>
+		<dict>
+			<key>UIWindowSceneSessionRoleApplication</key>
+			<array>
+				<dict>
+					<key>UISceneConfigurationName</key>
+					<string>__MAUI_DEFAULT_SCENE_CONFIGURATION__</string>
+					<key>UISceneDelegateClassName</key>
+					<string>SceneDelegate</string>
+				</dict>
+			</array>
+		</dict>
+	</dict>
 </dict>
 </plist>

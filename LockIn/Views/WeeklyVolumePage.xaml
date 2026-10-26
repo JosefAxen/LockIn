@@ -19,12 +19,8 @@
         <!-- Header -->
         <Grid Grid.Row="0" Padding="16,56,16,8" ColumnDefinitions="Auto,*">
             <Border Grid.Column="0"
-                    WidthRequest="36" HeightRequest="36"
-                    StrokeShape="Ellipse"
-                    BackgroundColor="{AppThemeBinding Light=#1A000000, Dark=#17FFFFFF}"
-                    Stroke="{AppThemeBinding Light=#0D000000, Dark=#29FFFFFF}"
-                    StrokeThickness="0.5"
-                    VerticalOptions="Center">
+                    Style="{StaticResource IconCircleButton}"
+                    SemanticProperties.Description="{loc:Localize A11y_Back}">
                 <Path Style="{StaticResource BackChevron}"/>
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Tapped="OnBackTapped"/>
@@ -38,7 +34,8 @@
         </Grid>
 
         <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Never">
-            <VerticalStackLayout Padding="16,4,16,48" Spacing="12">
+            <!-- Bottenpadding 120: tab-baren är synlig och genomskinlig på push-sidor -->
+            <VerticalStackLayout Padding="16,4,16,120" Spacing="12">
 
                 <!-- Förklaring -->
                 <Border Style="{StaticResource CardFrame}" Padding="18,14">

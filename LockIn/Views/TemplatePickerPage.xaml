@@ -10,6 +10,7 @@
              x:DataType="vm:TemplatePickerViewModel"
              Title="{loc:Localize TemplatePicker_Title}"
              Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False"
              BackgroundColor="Transparent">
 
     <Grid SafeAreaEdges="None">
@@ -43,16 +44,9 @@
                 <!-- Header med tillbaka-pil -->
                 <Grid Padding="16,56,16,10" ColumnDefinitions="Auto,*" ColumnSpacing="12">
                     <Border Grid.Column="0"
-                            WidthRequest="36" HeightRequest="36"
-                            StrokeShape="Ellipse"
-                            BackgroundColor="{AppThemeBinding Light=#1A000000, Dark=#17FFFFFF}"
-                            Stroke="{AppThemeBinding Light=#0D000000, Dark=#29FFFFFF}"
-                            StrokeThickness="0.5"
-                            VerticalOptions="Center">
-                        <Label Text="←"
-                               FontFamily="BebasNeue" FontSize="22"
-                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
-                               HorizontalOptions="Center" VerticalOptions="Center"/>
+                            Style="{StaticResource IconCircleButton}"
+                            SemanticProperties.Description="{loc:Localize A11y_Back}">
+                        <Path Style="{StaticResource BackChevron}"/>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnBackTapped"/>
                         </Border.GestureRecognizers>
@@ -122,12 +116,8 @@
                 <!-- Header: stäng + titel -->
                 <Grid Grid.Row="0" Padding="16,56,16,10" ColumnDefinitions="Auto,*">
                     <Border Grid.Column="0"
-                            WidthRequest="36" HeightRequest="36"
-                            StrokeShape="Ellipse"
-                            BackgroundColor="{AppThemeBinding Light=#1A000000, Dark=#17FFFFFF}"
-                            Stroke="{AppThemeBinding Light=#0D000000, Dark=#29FFFFFF}"
-                            StrokeThickness="0.5"
-                            VerticalOptions="Center">
+                            Style="{StaticResource IconCircleButton}"
+                            SemanticProperties.Description="{loc:Localize A11y_Close}">
                         <Label Text="✕"
                                FontFamily="BebasNeue" FontSize="18"
                                TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
@@ -163,6 +153,12 @@
                                    FontFamily="DMSansRegular" FontSize="15"
                                    BackgroundColor="Transparent"/>
                         </Border>
+                        <!-- Förklarar varför SKAPA MESOCYKEL är inaktiv -->
+                        <Label Text="{loc:Localize MesoBuilder_Error_NameRequired}"
+                               IsVisible="{Binding ShowNameRequiredHint}"
+                               FontFamily="DMSansRegular" FontSize="12"
+                               TextColor="{StaticResource ForgeTextSecondary}"
+                               Margin="0,6,0,0"/>
 
                         <!-- Startdatum -->
                         <Label Text="{loc:Localize TemplatePicker_StartDate_Label}"
@@ -297,7 +293,7 @@
                             IsEnabled="{Binding CanCreate}"
                             FontFamily="BebasNeue" FontSize="17" CharacterSpacing="2"
                             BackgroundColor="{StaticResource ForgeAccent}"
-                            TextColor="White"
+                            TextColor="{StaticResource ForgeFabForeground}"
                             HeightRequest="56"
                             CornerRadius="14"
                             Command="{Binding CreateCommand}"/>

@@ -10,6 +10,46 @@
     CanBeDismissedByTappingOutsideOfPopup="True"
     BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource ForgeSurface2}}">
 
+    <toolkit:Popup.Resources>
+        <!-- Valt alternativ markeras med färg, tjockare ram OCH en bock — inte bara med färg. -->
+        <Style x:Key="FeedbackOption" TargetType="Border">
+            <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+            <Setter Property="StrokeThickness" Value="1.5" />
+            <Setter Property="Padding" Value="16,10" />
+            <Setter Property="MinimumHeightRequest" Value="48" />
+            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface3}}" />
+            <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorder}}" />
+        </Style>
+        <Style x:Key="FeedbackOptionText" TargetType="Label">
+            <Setter Property="FontFamily" Value="DMSansMedium" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="VerticalOptions" Value="Center" />
+            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}" />
+        </Style>
+        <Style x:Key="FeedbackCheck" TargetType="Label">
+            <Setter Property="Text" Value="✓" />
+            <Setter Property="FontFamily" Value="DMSansMedium" />
+            <Setter Property="FontSize" Value="17" />
+            <Setter Property="VerticalOptions" Value="Center" />
+        </Style>
+        <!-- Spara: färgerna ligger i stilen så att triggern säkert vinner. Inaktiv Spara ska se
+             inaktiv ut — iOS dimmar inte en färgad knapp själv. -->
+        <Style x:Key="FeedbackSaveButton" TargetType="Button">
+            <Setter Property="FontFamily" Value="DMSansMedium" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="HeightRequest" Value="48" />
+            <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccent}" />
+            <Setter Property="TextColor" Value="{StaticResource ForgeFabForeground}" />
+            <Style.Triggers>
+                <Trigger TargetType="Button" Property="IsEnabled" Value="False">
+                    <Setter Property="BackgroundColor" Value="{StaticResource ForgeSurface3}" />
+                    <Setter Property="TextColor" Value="{StaticResource ForgeTextSecondary}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </toolkit:Popup.Resources>
+
     <Border StrokeShape="RoundRectangle 24,24,0,0"
             BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource ForgeSurface2}}"
             StrokeThickness="0"
@@ -18,93 +58,92 @@
 
         <VerticalStackLayout Spacing="16">
 
-            <BoxView WidthRequest="36" HeightRequest="4" CornerRadius="2"
-                     HorizontalOptions="Center"
-                     BackgroundColor="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorder}}"/>
-
             <Label Text="{Binding Question}"
                    FontFamily="BebasNeue" FontSize="26" CharacterSpacing="0.5"
                    LineHeight="1"
-                   Margin="0,4,0,0"
                    TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
 
             <!-- Option rows -->
             <VerticalStackLayout Spacing="10">
 
-                <Border StrokeShape="RoundRectangle 12"
-                        StrokeThickness="1.5"
-                        Padding="16,14"
-                        BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface3}}"
-                        Stroke="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorder}}">
+                <Border Style="{StaticResource FeedbackOption}">
                     <Border.Triggers>
                         <DataTrigger TargetType="Border" Binding="{Binding IsNoneSelected}" Value="True">
                             <Setter Property="Stroke" Value="{StaticResource ForgeAccentAmber}"/>
                             <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccentAmberDim}"/>
+                            <Setter Property="StrokeThickness" Value="2.5"/>
                         </DataTrigger>
                     </Border.Triggers>
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding SelectCommand}" CommandParameter="0"/>
                     </Border.GestureRecognizers>
-                    <Label Text="{x:Static strings:AppResources.Feedback_JointPain_None}"
-                           FontFamily="DMSansMedium" FontSize="16"
-                           TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                        <Label Text="{x:Static strings:AppResources.Feedback_JointPain_None}" Style="{StaticResource FeedbackOptionText}"/>
+                        <Label Grid.Column="1" Style="{StaticResource FeedbackCheck}"
+                               TextColor="{StaticResource ForgeAccentAmber}"
+                               IsVisible="{Binding IsNoneSelected}"
+                               SemanticProperties.Description="{x:Static strings:AppResources.A11y_Selected}"/>
+                    </Grid>
                 </Border>
 
-                <Border StrokeShape="RoundRectangle 12"
-                        StrokeThickness="1.5"
-                        Padding="16,14"
-                        BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface3}}"
-                        Stroke="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorder}}">
+                <Border Style="{StaticResource FeedbackOption}">
                     <Border.Triggers>
                         <DataTrigger TargetType="Border" Binding="{Binding IsLowSelected}" Value="True">
                             <Setter Property="Stroke" Value="{StaticResource ForgeAccentAmber}"/>
                             <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccentAmberDim}"/>
+                            <Setter Property="StrokeThickness" Value="2.5"/>
                         </DataTrigger>
                     </Border.Triggers>
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding SelectCommand}" CommandParameter="1"/>
                     </Border.GestureRecognizers>
-                    <Label Text="{x:Static strings:AppResources.Feedback_JointPain_Low}"
-                           FontFamily="DMSansMedium" FontSize="16"
-                           TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                        <Label Text="{x:Static strings:AppResources.Feedback_JointPain_Low}" Style="{StaticResource FeedbackOptionText}"/>
+                        <Label Grid.Column="1" Style="{StaticResource FeedbackCheck}"
+                               TextColor="{StaticResource ForgeAccentAmber}"
+                               IsVisible="{Binding IsLowSelected}"
+                               SemanticProperties.Description="{x:Static strings:AppResources.A11y_Selected}"/>
+                    </Grid>
                 </Border>
 
-                <Border StrokeShape="RoundRectangle 12"
-                        StrokeThickness="1.5"
-                        Padding="16,14"
-                        BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface3}}"
-                        Stroke="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorder}}">
+                <Border Style="{StaticResource FeedbackOption}">
                     <Border.Triggers>
                         <DataTrigger TargetType="Border" Binding="{Binding IsModerateSelected}" Value="True">
                             <Setter Property="Stroke" Value="{StaticResource ForgeAccentAmber}"/>
                             <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccentAmberDim}"/>
+                            <Setter Property="StrokeThickness" Value="2.5"/>
                         </DataTrigger>
                     </Border.Triggers>
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding SelectCommand}" CommandParameter="2"/>
                     </Border.GestureRecognizers>
-                    <Label Text="{x:Static strings:AppResources.Feedback_JointPain_Moderate}"
-                           FontFamily="DMSansMedium" FontSize="16"
-                           TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                        <Label Text="{x:Static strings:AppResources.Feedback_JointPain_Moderate}" Style="{StaticResource FeedbackOptionText}"/>
+                        <Label Grid.Column="1" Style="{StaticResource FeedbackCheck}"
+                               TextColor="{StaticResource ForgeAccentAmber}"
+                               IsVisible="{Binding IsModerateSelected}"
+                               SemanticProperties.Description="{x:Static strings:AppResources.A11y_Selected}"/>
+                    </Grid>
                 </Border>
 
-                <Border StrokeShape="RoundRectangle 12"
-                        StrokeThickness="1.5"
-                        Padding="16,14"
-                        BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface3}}"
-                        Stroke="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource ForgeBorder}}">
+                <Border Style="{StaticResource FeedbackOption}">
                     <Border.Triggers>
                         <DataTrigger TargetType="Border" Binding="{Binding IsALotOfSelected}" Value="True">
                             <Setter Property="Stroke" Value="{StaticResource ForgeAccentCoral}"/>
                             <Setter Property="BackgroundColor" Value="{StaticResource ForgeAccentCoralDim}"/>
+                            <Setter Property="StrokeThickness" Value="2.5"/>
                         </DataTrigger>
                     </Border.Triggers>
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding SelectCommand}" CommandParameter="3"/>
                     </Border.GestureRecognizers>
-                    <Label Text="{x:Static strings:AppResources.Feedback_JointPain_ALotOf}"
-                           FontFamily="DMSansMedium" FontSize="16"
-                           TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"/>
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                        <Label Text="{x:Static strings:AppResources.Feedback_JointPain_ALotOf}" Style="{StaticResource FeedbackOptionText}"/>
+                        <Label Grid.Column="1" Style="{StaticResource FeedbackCheck}"
+                               TextColor="{StaticResource ForgeAccentCoral}"
+                               IsVisible="{Binding IsALotOfSelected}"
+                               SemanticProperties.Description="{x:Static strings:AppResources.A11y_Selected}"/>
+                    </Grid>
                 </Border>
 
             </VerticalStackLayout>
@@ -125,11 +164,7 @@
                         Text="{x:Static strings:AppResources.Feedback_JointPain_Save}"
                         Command="{Binding SaveCommand}"
                         IsEnabled="{Binding CanSave}"
-                        FontFamily="DMSansMedium" FontSize="14"
-                        BackgroundColor="{StaticResource ForgeAccent}"
-                        TextColor="#161618"
-                        CornerRadius="12"
-                        HeightRequest="48"/>
+                        Style="{StaticResource FeedbackSaveButton}"/>
             </Grid>
 
         </VerticalStackLayout>

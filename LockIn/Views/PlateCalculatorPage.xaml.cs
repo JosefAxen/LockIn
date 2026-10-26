@@ -21,6 +21,7 @@ public partial class PlateCalculatorPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        await AnimationHelper.PageEntryAsync(this);
+        try { await AnimationHelper.PageEntryAsync(this); }
+        catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"[PlateCalculatorPage] OnAppearing: {ex}"); }
     }
 }

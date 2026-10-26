@@ -50,6 +50,8 @@
     <Color x:Key="ForgeSuccessDim">#1F4ADE80</Color>
 
     <Color x:Key="ForgeDestructive">#CA3214</Color>
+    <!-- Destruktiv TEXT på mörka ytor (≥5.7:1). ForgeDestructive är för fyllda ytor med vit text. -->
+    <Color x:Key="ForgeDestructiveText">#F87171</Color>
     <!-- Dark foreground for use on light/metallic surfaces (e.g. FAB silver button) -->
     <Color x:Key="ForgeFabForeground">#0E0E10</Color>
     <!-- Very low-emphasis text, barely visible (empty/inactive states) -->

@@ -68,6 +68,9 @@ public partial class PeriodizationViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task GoBackAsync() => await Shell.Current.GoToAsync(AppRoutes.Back);
+
+    [RelayCommand]
     private async Task OpenMesoBuilderAsync()
         => await Shell.Current.GoToAsync(AppRoutes.MesoBuilder);
 
@@ -113,6 +116,7 @@ public partial class MesocycleRow : ObservableObject
     public double ProgressPercent { get; set; }
 
     public string StartDateDisplay => StartDate.ToString("d MMM yyyy");
+    public string DeleteA11y => $"{AppResources.Common_Delete} {Name}";
     public string WeeksDisplay =>
         string.Format(AppResources.Periodization_WeeksCount_Format, WeekCount);
     public string ProgressDisplay => IsActive

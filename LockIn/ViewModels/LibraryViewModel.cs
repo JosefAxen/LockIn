@@ -12,7 +12,7 @@ using System.Collections.ObjectModel;
 
 namespace LockIn.ViewModels;
 
-public partial class LibraryViewModel(IExerciseRepository exerciseRepo, ITemplateService templates) : ObservableObject
+public partial class LibraryViewModel(IExerciseRepository exerciseRepo, ITemplateService templates, ICycleContextService cycleContext) : ObservableObject
 {
     // ── Tab control ────────────────────────────────────────────────────────
 
@@ -55,7 +55,7 @@ public partial class LibraryViewModel(IExerciseRepository exerciseRepo, ITemplat
         OnPropertyChanged(nameof(Tab2Bg)); OnPropertyChanged(nameof(Tab2Fg));
         OnPropertyChanged(nameof(Tab3Bg)); OnPropertyChanged(nameof(Tab3Fg));
         if (value == 1) _ = LoadTemplatesAsync();
-        // Cycles-tab (index 3) stubbad tills Etapp 2 Task 19 (PeriodizationPage om-design)
+        if (value == 3) _ = LoadActiveCycleAsync();
     }
 
     [RelayCommand]
@@ -66,7 +66,7 @@ public partial class LibraryViewModel(IExerciseRepository exerciseRepo, ITemplat
     {
         if (SelectedTab == 0) await AddCustomExerciseAsync();
         else if (SelectedTab == 1) await NewTemplateAsync();
-        else if (SelectedTab == 3) await Shell.Current.GoToAsync(AppRoutes.Periodization);
+        else if (SelectedTab == 3) await OpenPeriodizationAsync();
     }
 
     // ── Exercises tab ──────────────────────────────────────────────────────
@@ -124,6 +124,7 @@ public partial class LibraryViewModel(IExerciseRepository exerciseRepo, ITemplat
 
         ApplyFilter();
         if (SelectedTab == 1) await LoadTemplatesAsync();
+        if (SelectedTab == 3) await LoadActiveCycleAsync();
         RefreshTabColors();
         IsLoading = false;
     }
@@ -164,12 +165,14 @@ public partial class LibraryViewModel(IExerciseRepository exerciseRepo, ITemplat
             source = source.Where(e => e.Equipment == _selectedEquipment.Value);
         if (!string.IsNullOrEmpty(q))
             source = source.Where(e => e.Name.ToLowerInvariant().Contains(q)
-                                    || e.SwedishName.ToLowerInvariant().Contains(q));
+                                    || e.DisplayName.ToLowerInvariant().Contains(q));
 
+        // Sorteras på visningsnamnet (svenska när det finns) så listan följer det användaren läser.
         var allDesired = source
             .GroupBy(e => e.MuscleGroup)
             .OrderBy(g => g.Key.ToString())
-            .Select(g => (Title: MuscleGroupLabel(g.Key), Items: g.OrderBy(e => e.Name).ToList()))
+            .Select(g => (Title: MuscleGroupLabel(g.Key),
+                          Items: g.OrderBy(e => e.DisplayName, StringComparer.CurrentCulture).ToList()))
             .ToList();
 
         // Visa endast första N grupper; resten ligger i kö tills användaren scrollar.
@@ -217,7 +220,7 @@ public partial class LibraryViewModel(IExerciseRepository exerciseRepo, ITemplat
             // Reset → ReloadData → tangentbord stängs).
             //   1. Ta bort övningar som inte matchar filtret (bakåt, O(n))
             //   2. Merge-infoga saknade övningar med tvåpekar-metod (O(n))
-            // Båda group och items är sorterade på Name → rak in-order-pass.
+            // Båda group och items är sorterade på DisplayName → rak in-order-pass.
             var keepSet = items.ToHashSet();
             for (int j = group.Count - 1; j >= 0; j--)
                 if (!keepSet.Contains(group[j])) group.RemoveAt(j);
@@ -323,8 +326,35 @@ public partial class LibraryViewModel(IExerciseRepository exerciseRepo, ITemplat
         });
     }
 
-    // ── Cycles tab: stubbad efter RP full-klon Task 3 (TrainingCycle raderad).
-    //     Byggs om i Etapp 2 Task 19 (PeriodizationPage → mesocykel-hub).
+    // ── Cycles tab ─────────────────────────────────────────────────────────
+    // Visar bara den aktiva cykeln (namn + vecka). All hantering sker i PeriodizationPage.
+
+    [ObservableProperty] private bool _hasActiveCycle;
+    [ObservableProperty] private string _activeCycleName = "";
+    [ObservableProperty] private string _activeCycleWeekText = "";
+    [ObservableProperty] private string _activeCycleAccessibilityLabel = "";
+
+    private async Task LoadActiveCycleAsync()
+    {
+        try
+        {
+            var ctx = await cycleContext.GetCurrentAsync();
+            HasActiveCycle = ctx is not null;
+            if (ctx is null) return;
+            ActiveCycleName     = ctx.CycleName;
+            ActiveCycleWeekText = string.Format(AppResources.Periodization_Week_Format, ctx.WeekNumber, ctx.TotalWeeks);
+            ActiveCycleAccessibilityLabel = $"{ctx.CycleName}, {ActiveCycleWeekText}";
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[Library] LoadActiveCycleAsync failed: {ex}");
+            HasActiveCycle = false;
+        }
+    }
+
+    [RelayCommand]
+    private async Task OpenPeriodizationAsync()
+        => await Shell.Current.GoToAsync(AppRoutes.Periodization);
 
     // ── Helpers ────────────────────────────────────────────────────────────
 

@@ -13,8 +13,12 @@ public partial class SessionDetailPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        StickyHeader.Opacity = 0;
-        await AnimationHelper.PageEntryAsync(this);
+        try
+        {
+            StickyHeader.Opacity = 0;
+            await AnimationHelper.PageEntryAsync(this);
+        }
+        catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"[SessionDetailPage] OnAppearing: {ex}"); }
     }
 
     private void OnScrolled(object sender, ScrolledEventArgs e)

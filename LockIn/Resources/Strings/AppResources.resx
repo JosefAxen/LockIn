@@ -46,7 +46,7 @@
   <data name="Cardio_Activity_IndoorCycling" xml:space="preserve"><value>Spinningcykel</value></data>
   <data name="Cardio_Activity_Rowing" xml:space="preserve"><value>Roddmaskin</value></data>
   <data name="Cardio_Activity_Stairmaster" xml:space="preserve"><value>Stairmaster</value></data>
-  <data name="Cardio_Activity_Elliptical" xml:space="preserve"><value>Elliptical</value></data>
+  <data name="Cardio_Activity_Elliptical" xml:space="preserve"><value>Crosstrainer</value></data>
   <data name="Cardio_Activity_Walking" xml:space="preserve"><value>Gång</value></data>
   <data name="Cardio_Activity_Swimming" xml:space="preserve"><value>Simning</value></data>
   <data name="Cardio_Activity_JumpRope" xml:space="preserve"><value>Hopprep</value></data>
@@ -185,7 +185,7 @@
 
   <!-- Onboarding — Step 4 -->
   <data name="Onboarding_Step4_Title" xml:space="preserve">
-    <value>PERFEKT MATCH</value>
+    <value>FÖRSLAG</value>
   </data>
   <data name="Onboarding_Step4_Subtitle" xml:space="preserve">
     <value>Vi rekommenderar:</value>
@@ -206,13 +206,13 @@
   </data>
 
   <!-- Hem — XAML-labels -->
-  <data name="Hem_ScoreCard_Title" xml:space="preserve"><value>TRÄNINGSSCORE · IDAG</value></data>
+  <data name="Hem_ScoreCard_Title" xml:space="preserve"><value>VECKANS TRÄNINGSMÅL</value></data>
   <data name="Hem_Recommendation_Label" xml:space="preserve"><value>REKOMMENDATION</value></data>
   <data name="Hem_Strain_Label" xml:space="preserve"><value>ANSTRÄNGNING</value></data>
   <data name="Hem_Recovery_Label" xml:space="preserve"><value>ÅTERHÄMTNING</value></data>
   <data name="Hem_Sleep_Label" xml:space="preserve"><value>SÖMN</value></data>
   <data name="Hem_SleepStage_Awake" xml:space="preserve"><value>VAKEN</value></data>
-  <data name="Hem_Streak_Label" xml:space="preserve"><value>STREAK</value></data>
+  <data name="Hem_Streak_Label" xml:space="preserve"><value>SVIT</value></data>
   <data name="Hem_SeeAll" xml:space="preserve"><value>SE ALLA ›</value></data>
   <data name="Hem_Activity_Label" xml:space="preserve"><value>AKTIVITET</value></data>
   <data name="Hem_Steps_Sub" xml:space="preserve"><value>steg idag</value></data>
@@ -232,13 +232,13 @@
   <data name="Hem_Greeting_Evening" xml:space="preserve"><value>GOD KVÄLL</value></data>
 
   <!-- Hem — Streak -->
-  <data name="Hem_StreakDays_One" xml:space="preserve"><value>{0} DAGS STREAK</value></data>
-  <data name="Hem_StreakDays_Many" xml:space="preserve"><value>{0} DAGARS STREAK</value></data>
-  <data name="Hem_NoStreak" xml:space="preserve"><value>INGEN STREAK</value></data>
+  <data name="Hem_StreakDays_One" xml:space="preserve"><value>{0} DAG I RAD</value></data>
+  <data name="Hem_StreakDays_Many" xml:space="preserve"><value>{0} DAGAR I RAD</value></data>
+  <data name="Hem_NoStreak" xml:space="preserve"><value>INGEN SVIT</value></data>
 
   <!-- Hem — Motivation (score-tiers) -->
   <data name="Hem_Motivation_Complete" xml:space="preserve"><value>Vecka klar — 100% av träningsmålet.</value></data>
-  <data name="Hem_Motivation_Strong" xml:space="preserve"><value>Stark vecka — du har klarat {0}% av veckans träningsmål.</value></data>
+  <data name="Hem_Motivation_Strong" xml:space="preserve"><value>{0}% av veckans träningsmål klart.</value></data>
   <data name="Hem_Motivation_Halfway" xml:space="preserve"><value>Halvvägs — du har klarat {0}% av veckans träningsmål.</value></data>
   <data name="Hem_Motivation_Going" xml:space="preserve"><value>Igång — du har klarat {0}% av veckans träningsmål.</value></data>
   <data name="Hem_Motivation_Started" xml:space="preserve"><value>Påbörjad — {0}% av veckans träningsmål.</value></data>
@@ -258,12 +258,12 @@
   <!-- Hem — Misc VM strings -->
   <data name="Hem_Loading_Data" xml:space="preserve"><value>Hämtar data…</value></data>
   <data name="Hem_Recovery_NoWatch" xml:space="preserve"><value>Anslut Apple Watch för riktig återhämtningsdata</value></data>
-  <data name="Hem_Recovery_Components" xml:space="preserve"><value>HRV {0}ms · VILOPULS {1}bpm · SÖMN {2}h</value></data>
+  <data name="Hem_Recovery_Components" xml:space="preserve"><value>HRV {0} ms · VILOPULS {1} slag/min · SÖMN {2} h</value></data>
   <data name="Hem_StrainTarget_Format" xml:space="preserve"><value>MÅL {0}</value></data>
 
   <!-- Hem — Recommendation headlines -->
-  <data name="Hem_Rec_JustTrained_Head" xml:space="preserve"><value>VÄLKÖRT!</value></data>
-  <data name="Hem_Rec_JustTrained_Body" xml:space="preserve"><value>Bra pass! Prioritera mat och vila de kommande timmarna.</value></data>
+  <data name="Hem_Rec_JustTrained_Head" xml:space="preserve"><value>PASS LOGGAT</value></data>
+  <data name="Hem_Rec_JustTrained_Body" xml:space="preserve"><value>Prioritera mat och vila de kommande timmarna.</value></data>
   <data name="Hem_Rec_LongBreak_Head" xml:space="preserve"><value>DAGS ATT TRÄNA</value></data>
   <data name="Hem_Rec_LongBreak_Body" xml:space="preserve"><value>Du har tagit ett uppehåll — dags att komma igång. Börja lugnt.</value></data>
   <data name="Hem_Rec_PlanRest_Head" xml:space="preserve"><value>PLANERA VILA</value></data>
@@ -283,10 +283,10 @@
   <!-- Train — XAML labels -->
   <data name="Train_PageTitle" xml:space="preserve"><value>TRÄNA</value></data>
   <data name="Train_ThisWeek" xml:space="preserve"><value>DENNA VECKA</value></data>
-  <data name="Train_DaysStreak" xml:space="preserve"><value>DAGAR STREAK</value></data>
+  <data name="Train_DaysStreak" xml:space="preserve"><value>DAGAR I RAD</value></data>
   <data name="Train_TotalSessions" xml:space="preserve"><value>TOTALT PASS</value></data>
   <data name="Train_Deload_Title" xml:space="preserve"><value>DAGS FÖR DELOAD?</value></data>
-  <data name="Train_Deload_Body" xml:space="preserve"><value>Din volym har minskat 3 veckor i rad. Minska vikterna med 40–50% i veckan.</value></data>
+  <data name="Train_Deload_Body" xml:space="preserve"><value>Din veckovolym har minskat två veckor i rad. Minska vikterna med 40–50% i veckan.</value></data>
   <data name="Train_Volume_Title" xml:space="preserve"><value>TRÄNINGSVOLYM · 7 DAGAR</value></data>
   <data name="Train_Volume_Max" xml:space="preserve"><value>MAX 10</value></data>
   <data name="Train_NoTemplates_Title" xml:space="preserve"><value>INGA MALLAR</value></data>
@@ -339,15 +339,15 @@
   <data name="Train_Muscle_Biceps" xml:space="preserve"><value>BICEPS</value></data>
   <data name="Train_Muscle_Triceps" xml:space="preserve"><value>TRICEPS</value></data>
   <data name="Train_Muscle_Legs" xml:space="preserve"><value>BEN</value></data>
-  <data name="Train_Muscle_Core" xml:space="preserve"><value>CORE</value></data>
+  <data name="Train_Muscle_Core" xml:space="preserve"><value>BÅL</value></data>
   <data name="Train_Muscle_Forearms" xml:space="preserve"><value>UNDERARMAR</value></data>
 
   <!-- Hem — Accessibility labels -->
-  <data name="Hem_Accessibility_GaugeLoading" xml:space="preserve"><value>Träningsscore laddas</value></data>
+  <data name="Hem_Accessibility_GaugeLoading" xml:space="preserve"><value>Veckans träningsmål laddas</value></data>
   <data name="Hem_Accessibility_StrainLoading" xml:space="preserve"><value>Ansträngning laddas</value></data>
   <data name="Hem_Accessibility_RecoveryLoading" xml:space="preserve"><value>Återhämtning laddas</value></data>
   <data name="Hem_Accessibility_SleepLoading" xml:space="preserve"><value>Sömn laddas</value></data>
-  <data name="Hem_Accessibility_Gauge" xml:space="preserve"><value>Träningsscore: {0} av 100</value></data>
+  <data name="Hem_Accessibility_Gauge" xml:space="preserve"><value>Veckans träningsmål: {0} procent klart</value></data>
   <data name="Hem_Accessibility_Strain" xml:space="preserve"><value>Ansträngning: {0} av 100</value></data>
   <data name="Hem_Accessibility_StrainNoData" xml:space="preserve"><value>Ansträngning: ingen data</value></data>
   <data name="Hem_Accessibility_Recovery" xml:space="preserve"><value>Återhämtning: {0} av 100</value></data>
@@ -403,7 +403,7 @@
     <value>{0} pass · {1:N0} kg total volym</value>
   </data>
   <data name="Hem_Chip_StreakWeeks_Header" xml:space="preserve">
-    <value>Veckostreak</value>
+    <value>Veckor i rad</value>
   </data>
   <data name="Hem_Chip_StreakWeeks_Body" xml:space="preserve">
     <value>{0} veckor i rad med minst ett pass.</value>
@@ -466,7 +466,7 @@
   <data name="Library_Muscle_Triceps" xml:space="preserve"><value>Triceps</value></data>
   <data name="Library_Muscle_Forearms" xml:space="preserve"><value>Underarmar</value></data>
   <data name="Library_Muscle_Legs" xml:space="preserve"><value>Ben</value></data>
-  <data name="Library_Muscle_Core" xml:space="preserve"><value>Core</value></data>
+  <data name="Library_Muscle_Core" xml:space="preserve"><value>Bål</value></data>
   <data name="Library_Muscle_FullBody" xml:space="preserve"><value>Helkropp</value></data>
   <data name="Library_Muscle_Other" xml:space="preserve"><value>Övrigt</value></data>
 
@@ -474,7 +474,7 @@
   <data name="Kropp_Title" xml:space="preserve"><value>KROPP</value></data>
   <data name="Kropp_Tab_Weight" xml:space="preserve"><value>VIKT</value></data>
   <data name="Kropp_Tab_Body" xml:space="preserve"><value>KROPP</value></data>
-  <data name="Kropp_Tab_Heatmap" xml:space="preserve"><value>HEATMAP</value></data>
+  <data name="Kropp_Tab_Heatmap" xml:space="preserve"><value>MUSKLER</value></data>
   <data name="Kropp_NoWeightData" xml:space="preserve"><value>Ingen data ännu – logga din vikt nedan</value></data>
   <data name="Kropp_WeightProgress" xml:space="preserve"><value>VIKTUTVECKLING</value></data>
   <data name="Kropp_RecentLogs" xml:space="preserve"><value>SENASTE LOGGNINGAR</value></data>
@@ -493,7 +493,7 @@
   <!-- Kropp — VM strings -->
   <data name="Kropp_LogWeight_Title" xml:space="preserve"><value>Logga vikt</value></data>
   <data name="Kropp_LogWeight_Body" xml:space="preserve"><value>Ange din kroppsvikt i kg:</value></data>
-  <data name="Kropp_LogWeight_Placeholder" xml:space="preserve"><value>t.ex. 80.5</value></data>
+  <data name="Kropp_LogWeight_Placeholder" xml:space="preserve"><value>t.ex. 80,5</value></data>
   <data name="Kropp_DeleteWeight_Body_Format" xml:space="preserve"><value>Ta bort {0} kg ({1})?</value></data>
   <data name="Kropp_Prompt_Waist_Body" xml:space="preserve"><value>Midjemått i cm (valfritt):</value></data>
   <data name="Kropp_Prompt_Chest_Body" xml:space="preserve"><value>Bröstkorgsmått i cm (valfritt):</value></data>
@@ -503,7 +503,7 @@
   <data name="Kropp_DeleteMeasurement_Body_Format" xml:space="preserve"><value>Ta bort mätning ({0})?</value></data>
 
   <!-- PostWorkout — XAML labels -->
-  <data name="PostWorkout_GreatJob" xml:space="preserve"><value>BRA JOBBAT</value></data>
+  <data name="PostWorkout_GreatJob" xml:space="preserve"><value>PASS KLART</value></data>
   <data name="PostWorkout_Stats_Volume" xml:space="preserve"><value>KG VOLYM</value></data>
   <data name="PostWorkout_Stats_Sets" xml:space="preserve"><value>SET</value></data>
   <data name="PostWorkout_Stats_PR" xml:space="preserve"><value>PR</value></data>
@@ -518,8 +518,8 @@
   <data name="PostWorkout_Performance_Question" xml:space="preserve"><value>Hur presterade du?</value></data>
   <data name="PostWorkout_Scale_Low" xml:space="preserve"><value>Låg</value></data>
   <data name="PostWorkout_Scale_High" xml:space="preserve"><value>Hög</value></data>
-  <data name="PostWorkout_NewAchievements" xml:space="preserve"><value>NYA ACHIEVEMENTS</value></data>
-  <data name="PostWorkout_Achievement_Unlocked" xml:space="preserve"><value>ACHIEVEMENT UPPLÅST</value></data>
+  <data name="PostWorkout_NewAchievements" xml:space="preserve"><value>NYA MERITER</value></data>
+  <data name="PostWorkout_Achievement_Unlocked" xml:space="preserve"><value>MERIT UPPLÅST</value></data>
   <data name="PostWorkout_Photos" xml:space="preserve"><value>FOTON</value></data>
   <data name="PostWorkout_AddPhoto" xml:space="preserve"><value>+ FOTO</value></data>
   <data name="PostWorkout_PersonalRecords" xml:space="preserve"><value>PERSONLIGA REKORD</value></data>
@@ -532,11 +532,11 @@
   <data name="PostWorkout_DeletePhoto_Body" xml:space="preserve"><value>Ta bort det här fotot?</value></data>
   <data name="PostWorkout_VolumeDisplay_Format" xml:space="preserve"><value>{0} kg</value></data>
   <data name="PostWorkout_SetsDisplay_Format" xml:space="preserve"><value>{0} set</value></data>
-  <data name="PostWorkout_Epley1RM_Format" xml:space="preserve"><value>Est. 1RM {0} kg</value></data>
+  <data name="PostWorkout_Epley1RM_Format" xml:space="preserve"><value>Beräknat 1RM {0} kg</value></data>
   <data name="PostWorkout_UndoFinish" xml:space="preserve"><value>Ångra — återgå till passet</value></data>
   <data name="PostWorkout_Share" xml:space="preserve"><value>Dela</value></data>
   <data name="PostWorkout_Share_Error" xml:space="preserve"><value>Kunde inte skapa bild</value></data>
-  <data name="PostWorkout_Share_ImageTitle" xml:space="preserve"><value>LockIn pass</value></data>
+  <data name="PostWorkout_Share_ImageTitle" xml:space="preserve"><value>Vana Strength – pass</value></data>
   <data name="PostWorkout_Advancing_Title" xml:space="preserve"><value>DU AVANCERAR I DIN MESOCYKEL</value></data>
   <data name="PostWorkout_Advancing_Body" xml:space="preserve"><value>Vila 24-72 timmar innan nästa muskelgrupp tränas igen. Din nästa vecka har lite mer volym.</value></data>
   <data name="PostWorkout_MesocycleStats_Link" xml:space="preserve"><value>Visa mesocykel-statistik</value></data>
@@ -545,14 +545,14 @@
     <value>Kunde inte skapa bild</value>
   </data>
   <data name="ExerciseProgress_Share_ImageTitle" xml:space="preserve">
-    <value>LockIn progression</value>
+    <value>Vana Strength – progression</value>
   </data>
   <data name="Share_Footer_Tagline" xml:space="preserve"><value>Vana Strength</value></data>
 
   <!-- SessionDetail — XAML labels -->
   <data name="SessionDetail_Col_Volume" xml:space="preserve"><value>VOLYM</value></data>
   <data name="SessionDetail_Col_Duration" xml:space="preserve"><value>TID</value></data>
-  <data name="SessionDetail_Col_PRs" xml:space="preserve"><value>PRs</value></data>
+  <data name="SessionDetail_Col_PRs" xml:space="preserve"><value>PR</value></data>
   <data name="SessionDetail_Notes" xml:space="preserve"><value>ANTECKNINGAR</value></data>
   <data name="SessionDetail_Photos" xml:space="preserve"><value>FOTON</value></data>
   <data name="SessionDetail_AddPhoto" xml:space="preserve"><value>+ FOTO</value></data>
@@ -568,7 +568,7 @@
   <data name="ExercisePicker_PageTitle" xml:space="preserve"><value>VÄLJ ÖVNING</value></data>
   <data name="ExercisePicker_Title" xml:space="preserve"><value>VÄLJ ÖVNING</value></data>
   <data name="ExercisePicker_SearchPlaceholder" xml:space="preserve"><value>Sök övning...</value></data>
-  <data name="ExercisePicker_CreateCustom" xml:space="preserve"><value>Lägg till custom övning</value></data>
+  <data name="ExercisePicker_CreateCustom" xml:space="preserve"><value>Skapa egen övning</value></data>
   <data name="ExercisePicker_Recommend_Button" xml:space="preserve"><value>Rekommendera</value></data>
   <data name="ExercisePicker_Recommend_Title" xml:space="preserve"><value>Toppval</value></data>
   <data name="ExercisePicker_Recommend_Cancel" xml:space="preserve"><value>Avbryt</value></data>
@@ -598,9 +598,9 @@
   <data name="TemplateEdit_ClearExercise" xml:space="preserve"><value>TÖM</value></data>
 
   <!-- ExerciseProgress — XAML labels -->
-  <data name="ExerciseProgress_Chart_1RM" xml:space="preserve"><value>EST. 1RM PROGRESSION</value></data>
+  <data name="ExerciseProgress_Chart_1RM" xml:space="preserve"><value>BERÄKNAT 1RM</value></data>
   <data name="ExerciseProgress_BestLift" xml:space="preserve"><value>BÄSTA LYFT</value></data>
-  <data name="ExerciseProgress_Est1RM_Prefix" xml:space="preserve"><value>Est. 1RM: </value></data>
+  <data name="ExerciseProgress_Est1RM_Prefix" xml:space="preserve"><value>Beräknat 1RM: </value></data>
   <data name="ExerciseProgress_TotalVolume" xml:space="preserve"><value>TOTAL VOLYM</value></data>
   <data name="ExerciseProgress_LoggedSessions" xml:space="preserve"><value>loggade träningar</value></data>
   <data name="ExerciseProgress_Empty_Title" xml:space="preserve"><value>Ingen historik ännu</value></data>
@@ -649,14 +649,15 @@
   <data name="ActiveWorkout_RestTime_Body_Format" xml:space="preserve"><value>Ange vilotid i sekunder för {0}:</value></data>
   <data name="ActiveWorkout_Toast_EnterDuration" xml:space="preserve"><value>Ange duration i sekunder.</value></data>
   <data name="ActiveWorkout_Toast_EnterReps" xml:space="preserve"><value>Ange antal reps.</value></data>
-  <data name="ActiveWorkout_PR_Message_Format" xml:space="preserve"><value>Nytt PR — {0}&#10;{1} kg × {2} reps · Est. 1RM {3} kg</value></data>
+  <data name="ActiveWorkout_PR_Message_Format" xml:space="preserve"><value>Nytt PR — {0}
+{1} kg × {2} reps · Beräknat 1RM {3} kg</value></data>
   <data name="ActiveWorkout_AutoProgress_WeightUp_Format" xml:space="preserve"><value>Nästa {0}-pass: {1} kg × {2} reps</value></data>
-  <data name="ActiveWorkout_AutoProgress_RepsUp_Format" xml:space="preserve"><value>Bra jobbat! Nästa mål: {0} reps @ {1} kg</value></data>
+  <data name="ActiveWorkout_AutoProgress_RepsUp_Format" xml:space="preserve"><value>Nästa mål: {0} reps @ {1} kg</value></data>
 
   <!-- RP MuscleVolumePage -->
   <data name="MuscleVolume_Title" xml:space="preserve"><value>VOLYMINSTÄLLNINGAR</value></data>
   <data name="MuscleVolume_Explainer_Header" xml:space="preserve"><value>MEV / MRV per muskelgrupp</value></data>
-  <data name="MuscleVolume_Explainer_Body" xml:space="preserve"><value>MEV = minsta effektiva volym per vecka. MRV = maxvolym du klarar återhämta från. Värdena är individuella — justera efter hur du reagerar. Standardvärdena är RP:s illustrativa exempelintervall.</value></data>
+  <data name="MuscleVolume_Explainer_Body" xml:space="preserve"><value>MEV = minsta effektiva volym per vecka. MRV = maxvolym du klarar återhämta från. Värdena är individuella — justera efter hur du reagerar. Standardvärdena är allmänna riktvärden.</value></data>
   <data name="MuscleVolume_Col_Muscle" xml:space="preserve"><value>MUSKELGRUPP</value></data>
   <data name="MuscleVolume_Col_Mev" xml:space="preserve"><value>MEV</value></data>
   <data name="MuscleVolume_Col_Mrv" xml:space="preserve"><value>MRV</value></data>
@@ -686,7 +687,7 @@
   <data name="MesoBuilder_WeekCount_Hint" xml:space="preserve"><value>Sista veckan är alltid deload. Nybörjare: 4v. Avancerade: 6–8v.</value></data>
   <data name="MesoBuilder_StartDate_Label" xml:space="preserve"><value>STARTDATUM</value></data>
   <data name="MesoBuilder_Build_Button" xml:space="preserve"><value>SKAPA CYKEL</value></data>
-  <data name="MesoBuilder_Error_NameRequired" xml:space="preserve"><value>Ange ett cykelnamn</value></data>
+  <data name="MesoBuilder_Error_NameRequired" xml:space="preserve"><value>Ange ett namn för att skapa cykeln.</value></data>
   <data name="MesoBuilder_Success_Toast" xml:space="preserve"><value>Cykeln har skapats</value></data>
   <data name="MesoBuilder_Week_Accum" xml:space="preserve"><value>V{0} – Accumulation</value></data>
   <data name="MesoBuilder_Week_Deload" xml:space="preserve"><value>Deload</value></data>
@@ -697,10 +698,10 @@
   <data name="MesoBuilder_Step0_Subtitle" xml:space="preserve"><value>Välj hur ofta du kan träna</value></data>
   <data name="MesoBuilder_Days_Format" xml:space="preserve"><value>{0} dagar</value></data>
   <data name="MesoBuilder_Step1_Title" xml:space="preserve"><value>PRIORITERA MUSKELGRUPPER</value></data>
-  <data name="MesoBuilder_Step1_Subtitle" xml:space="preserve"><value>Emphasize = mer volym, Maintain = mindre</value></data>
-  <data name="MesoBuilder_Emphasize" xml:space="preserve"><value>EMPHASIZE</value></data>
-  <data name="MesoBuilder_Grow" xml:space="preserve"><value>GROW</value></data>
-  <data name="MesoBuilder_Maintain" xml:space="preserve"><value>MAINTAIN</value></data>
+  <data name="MesoBuilder_Step1_Subtitle" xml:space="preserve"><value>Prioritera = mer volym, Behåll = mindre</value></data>
+  <data name="MesoBuilder_Emphasize" xml:space="preserve"><value>PRIORITERA</value></data>
+  <data name="MesoBuilder_Grow" xml:space="preserve"><value>BYGG</value></data>
+  <data name="MesoBuilder_Maintain" xml:space="preserve"><value>BEHÅLL</value></data>
   <data name="MesoBuilder_Step2_Title" xml:space="preserve"><value>NAMN &amp; VECKOR</value></data>
   <data name="MesoBuilder_Weeks_Label" xml:space="preserve"><value>Veckor</value></data>
   <data name="MesoBuilder_Weeks_Format" xml:space="preserve"><value>{0}</value></data>
@@ -737,13 +738,13 @@
   <data name="ActiveWorkout_FinishConfirm_Yes" xml:space="preserve"><value>Ja, avsluta</value></data>
 
   <!-- ActiveWorkout — RP-header + set-rad + kebab-meny (Task 23-25) -->
-  <data name="ActiveWorkout_Week_Day_Format" xml:space="preserve"><value>WEEK {0} DAY {1}</value></data>
+  <data name="ActiveWorkout_Week_Day_Format" xml:space="preserve"><value>VECKA {0} · DAG {1}</value></data>
   <data name="ActiveWorkout_DayLabel_Format" xml:space="preserve"><value>{0} · {1}</value></data>
   <data name="ActiveWorkout_RecommendedRir_Format" xml:space="preserve"><value>Rekommenderat: {0} RIR</value></data>
   <data name="StartWeight_Guide_Title" xml:space="preserve"><value>Hur väljer jag startvikt?</value></data>
-  <data name="StartWeight_Guide_Body" xml:space="preserve"><value>RP rekommenderar: välj en vikt du klarar med minst 3 reps kvar (3 RIR) i första setet. Om osäker: börja lätt — det är bättre att öka nästa pass än att missa reps.</value></data>
+  <data name="StartWeight_Guide_Body" xml:space="preserve"><value>Välj en vikt du klarar med minst 3 reps kvar (3 RIR) i första setet. Om du är osäker: börja lätt — det är bättre att öka nästa pass än att missa reps.</value></data>
   <data name="StartWeight_Hint_Title" xml:space="preserve"><value>Hur väljer jag startvikt?</value></data>
-  <data name="StartWeight_Hint_Sub" xml:space="preserve"><value>Tap för RP:s vägledning</value></data>
+  <data name="StartWeight_Hint_Sub" xml:space="preserve"><value>Tryck för vägledning</value></data>
   <data name="ExerciseMenu_Title" xml:space="preserve"><value>Vad vill du göra?</value></data>
   <data name="ExerciseMenu_AddNote" xml:space="preserve"><value>Lägg till notering</value></data>
   <data name="ExerciseMenu_AddNote_Body_Format" xml:space="preserve"><value>Notering för {0}</value></data>
@@ -752,7 +753,7 @@
   <data name="ExerciseMenu_MoveDown" xml:space="preserve"><value>Flytta ned</value></data>
   <data name="ExerciseMenu_Replace" xml:space="preserve"><value>Byt övning</value></data>
   <data name="ExerciseMenu_JointPain" xml:space="preserve"><value>Ledsmärta</value></data>
-  <data name="ExerciseMenu_JointPain_ComingSoon" xml:space="preserve"><value>Ledsmärta-flöde kommer i Task 26</value></data>
+  <data name="ExerciseMenu_JointPain_ComingSoon" xml:space="preserve"><value>Ledsmärta kan inte loggas härifrån ännu.</value></data>
   <data name="ExerciseMenu_AddSet" xml:space="preserve"><value>Lägg till set</value></data>
   <data name="ExerciseMenu_SkipSets" xml:space="preserve"><value>Skippa återstående set</value></data>
   <data name="ExerciseMenu_SkipSets_Toast" xml:space="preserve"><value>Återstående set skippade</value></data>
@@ -782,7 +783,7 @@
   <data name="ProgramDetail_Toast_Created_Format" xml:space="preserve"><value>{0} mallar skapade! Hitta dem under Mallar i Bibliotek.</value></data>
 
   <!-- Achievements — XAML labels -->
-  <data name="Achievements_Title" xml:space="preserve"><value>ACHIEVEMENTS</value></data>
+  <data name="Achievements_Title" xml:space="preserve"><value>MERITER</value></data>
 
   <!-- Achievements — VM strings -->
   <data name="Achievements_Unlocked" xml:space="preserve"><value>UPPLÅSTA</value></data>
@@ -799,7 +800,7 @@
   <data name="Settings_Vibration_Title" xml:space="preserve"><value>Vibration</value></data>
   <data name="Settings_Vibration_Description" xml:space="preserve"><value>Vibrera när vilotimern är klar</value></data>
   <data name="Settings_Sound_Title" xml:space="preserve"><value>Ljud</value></data>
-  <data name="Settings_Sound_Description" xml:space="preserve"><value>Vilotimer + achievement-ljud</value></data>
+  <data name="Settings_Sound_Description" xml:space="preserve"><value>Vilotimer och meriter</value></data>
   <data name="Settings_Height_Title" xml:space="preserve"><value>Längd</value></data>
   <data name="Settings_Section_Health" xml:space="preserve"><value>HÄLSA</value></data>
   <data name="Settings_HealthSync_Title" xml:space="preserve"><value>Synka till Apple Hälsa</value></data>
@@ -825,7 +826,7 @@
 
   <!-- Export -->
   <data name="Settings_ExportData_Title" xml:space="preserve"><value>Exportera träningsdata</value></data>
-  <data name="Settings_ExportData_Subtitle" xml:space="preserve"><value>Ladda ner all din historik som CSV</value></data>
+  <data name="Settings_ExportData_Subtitle" xml:space="preserve"><value>Exportera all historik som CSV-filer i en ZIP</value></data>
   <data name="Settings_ExportData_Error" xml:space="preserve"><value>Exporten misslyckades</value></data>
 
   <data name="Settings_WeeklyGoal_Format" xml:space="preserve"><value>{0} pass / vecka</value></data>
@@ -838,7 +839,7 @@
   <data name="CreateExercise_MuscleGroupLabel" xml:space="preserve"><value>MUSKELGRUPP</value></data>
   <data name="CreateExercise_EquipmentLabel" xml:space="preserve"><value>UTRUSTNING</value></data>
   <data name="CreateExercise_RestLabel" xml:space="preserve"><value>VILA</value></data>
-  <data name="CreateExercise_RestUnit" xml:space="preserve"><value>SEK</value></data>
+  <data name="CreateExercise_RestUnit" xml:space="preserve"><value>SEK.</value></data>
   <data name="CreateExercise_NotesLabel" xml:space="preserve"><value>ANTECKNINGAR (VALFRITT)</value></data>
   <data name="CreateExercise_NotesPlaceholder" xml:space="preserve"><value>Tekniknoteringar, varianter...</value></data>
 
@@ -876,7 +877,7 @@
   <!-- BodyWeight — VM strings -->
   <data name="BodyWeight_Prompt_Title" xml:space="preserve"><value>Logga vikt</value></data>
   <data name="BodyWeight_Prompt_Body" xml:space="preserve"><value>Ange din kroppsvikt i kg:</value></data>
-  <data name="BodyWeight_EntryPlaceholder" xml:space="preserve"><value>t.ex. 80.5</value></data>
+  <data name="BodyWeight_EntryPlaceholder" xml:space="preserve"><value>t.ex. 80,5</value></data>
   <data name="BodyWeight_DeleteBody_Format" xml:space="preserve"><value>Ta bort {0} kg ({1})?</value></data>
 
   <!-- ProgressPhotos — XAML labels + VM strings -->
@@ -893,15 +894,15 @@
   <data name="Hem_HeartRate_Label" xml:space="preserve"><value>MAXPULS</value></data>
 
   <!-- Hem — Sleep stage labels -->
-  <data name="Hem_Sleep_Core" xml:space="preserve"><value>CORE</value></data>
+  <data name="Hem_Sleep_Core" xml:space="preserve"><value>KÄRNA</value></data>
   <data name="Hem_Sleep_Deep" xml:space="preserve"><value>DJUP</value></data>
   <data name="Hem_Sleep_Rem" xml:space="preserve"><value>REM</value></data>
 
   <!-- History — PR label -->
-  <data name="History_Card_PRs" xml:space="preserve"><value>PRs</value></data>
+  <data name="History_Card_PRs" xml:space="preserve"><value>PR</value></data>
 
   <!-- Library — loading animation label -->
-  <data name="Library_LoadingIn" xml:space="preserve"><value>LOCKING IN</value></data>
+  <data name="Library_LoadingIn" xml:space="preserve"><value>LADDAR</value></data>
 
   <!-- Hem — weekday abbreviations -->
   <data name="Hem_Weekday_Mon" xml:space="preserve"><value>MÅN</value></data>
@@ -913,46 +914,46 @@
   <data name="Hem_Weekday_Sun" xml:space="preserve"><value>SÖN</value></data>
 
   <!-- Achievements -->
-  <data name="Achievement_FirstWorkout_Title" xml:space="preserve"><value>Första steget</value></data>
-  <data name="Achievement_FirstWorkout_Description" xml:space="preserve"><value>Du klarade ditt allra första pass!</value></data>
-  <data name="Achievement_Sessions5_Title" xml:space="preserve"><value>Varm i kläderna</value></data>
-  <data name="Achievement_Sessions5_Description" xml:space="preserve"><value>5 pass avklarade.</value></data>
-  <data name="Achievement_Sessions10_Title" xml:space="preserve"><value>I rullning</value></data>
-  <data name="Achievement_Sessions10_Description" xml:space="preserve"><value>10 pass avklarade.</value></data>
-  <data name="Achievement_Sessions25_Title" xml:space="preserve"><value>Vana</value></data>
-  <data name="Achievement_Sessions25_Description" xml:space="preserve"><value>25 pass avklarade — nu sitter det!</value></data>
-  <data name="Achievement_Sessions50_Title" xml:space="preserve"><value>Dedikerad</value></data>
-  <data name="Achievement_Sessions50_Description" xml:space="preserve"><value>50 pass avklarade.</value></data>
-  <data name="Achievement_Sessions100_Title" xml:space="preserve"><value>Vana Legend</value></data>
-  <data name="Achievement_Sessions100_Description" xml:space="preserve"><value>100 pass avklarade. Legendarisk.</value></data>
-  <data name="Achievement_WeekStreak1_Title" xml:space="preserve"><value>Aktiv vecka</value></data>
-  <data name="Achievement_WeekStreak1_Description" xml:space="preserve"><value>Tränat minst en gång två veckor i rad.</value></data>
-  <data name="Achievement_WeekStreak4_Title" xml:space="preserve"><value>En månad stark</value></data>
-  <data name="Achievement_WeekStreak4_Description" xml:space="preserve"><value>4 veckor i rad med träning.</value></data>
-  <data name="Achievement_WeekStreak12_Title" xml:space="preserve"><value>Järnvilja</value></data>
-  <data name="Achievement_WeekStreak12_Description" xml:space="preserve"><value>12 veckor i rad — tre månader!</value></data>
-  <data name="Achievement_FirstPR_Title" xml:space="preserve"><value>Nytt rekord</value></data>
-  <data name="Achievement_FirstPR_Description" xml:space="preserve"><value>Du slog ditt första personliga rekord!</value></data>
-  <data name="Achievement_PR10_Title" xml:space="preserve"><value>PR-maskin</value></data>
-  <data name="Achievement_PR10_Description" xml:space="preserve"><value>10 personliga rekord totalt.</value></data>
-  <data name="Achievement_PR50_Title" xml:space="preserve"><value>Rekordjägare</value></data>
-  <data name="Achievement_PR50_Description" xml:space="preserve"><value>50 personliga rekord totalt.</value></data>
-  <data name="Achievement_TotalVolume100k_Title" xml:space="preserve"><value>100-tonslyftet</value></data>
-  <data name="Achievement_TotalVolume100k_Description" xml:space="preserve"><value>Du har totalt lyft 100 000 kg.</value></data>
-  <data name="Achievement_TotalVolume500k_Title" xml:space="preserve"><value>Halvmiljonär</value></data>
-  <data name="Achievement_TotalVolume500k_Description" xml:space="preserve"><value>Du har totalt lyft 500 000 kg.</value></data>
-  <data name="Achievement_TotalVolume1M_Title" xml:space="preserve"><value>Miljonlyftare</value></data>
-  <data name="Achievement_TotalVolume1M_Description" xml:space="preserve"><value>En miljon kg totalt lyft.</value></data>
-  <data name="Achievement_AllMuscleGroups_Title" xml:space="preserve"><value>Komplett</value></data>
-  <data name="Achievement_AllMuscleGroups_Description" xml:space="preserve"><value>Alla muskelgrupper tränade under sju dagar.</value></data>
-  <data name="Achievement_LongSession_Title" xml:space="preserve"><value>Maratonpass</value></data>
-  <data name="Achievement_LongSession_Description" xml:space="preserve"><value>Du genomförde ett pass längre än 90 minuter.</value></data>
-  <data name="Achievement_EarlyBird_Title" xml:space="preserve"><value>Morgonfågeln</value></data>
+  <data name="Achievement_FirstWorkout_Title" xml:space="preserve"><value>Första passet</value></data>
+  <data name="Achievement_FirstWorkout_Description" xml:space="preserve"><value>Första passet loggat.</value></data>
+  <data name="Achievement_Sessions5_Title" xml:space="preserve"><value>5 pass</value></data>
+  <data name="Achievement_Sessions5_Description" xml:space="preserve"><value>5 pass loggade.</value></data>
+  <data name="Achievement_Sessions10_Title" xml:space="preserve"><value>10 pass</value></data>
+  <data name="Achievement_Sessions10_Description" xml:space="preserve"><value>10 pass loggade.</value></data>
+  <data name="Achievement_Sessions25_Title" xml:space="preserve"><value>25 pass</value></data>
+  <data name="Achievement_Sessions25_Description" xml:space="preserve"><value>25 pass loggade.</value></data>
+  <data name="Achievement_Sessions50_Title" xml:space="preserve"><value>50 pass</value></data>
+  <data name="Achievement_Sessions50_Description" xml:space="preserve"><value>50 pass loggade.</value></data>
+  <data name="Achievement_Sessions100_Title" xml:space="preserve"><value>100 pass</value></data>
+  <data name="Achievement_Sessions100_Description" xml:space="preserve"><value>100 pass loggade.</value></data>
+  <data name="Achievement_WeekStreak1_Title" xml:space="preserve"><value>2 veckor i rad</value></data>
+  <data name="Achievement_WeekStreak1_Description" xml:space="preserve"><value>Minst ett pass per vecka två veckor i rad.</value></data>
+  <data name="Achievement_WeekStreak4_Title" xml:space="preserve"><value>4 veckor i rad</value></data>
+  <data name="Achievement_WeekStreak4_Description" xml:space="preserve"><value>Minst ett pass per vecka fyra veckor i rad.</value></data>
+  <data name="Achievement_WeekStreak12_Title" xml:space="preserve"><value>12 veckor i rad</value></data>
+  <data name="Achievement_WeekStreak12_Description" xml:space="preserve"><value>Minst ett pass per vecka tolv veckor i rad.</value></data>
+  <data name="Achievement_FirstPR_Title" xml:space="preserve"><value>Första PR</value></data>
+  <data name="Achievement_FirstPR_Description" xml:space="preserve"><value>Första personliga rekordet registrerat.</value></data>
+  <data name="Achievement_PR10_Title" xml:space="preserve"><value>10 PR</value></data>
+  <data name="Achievement_PR10_Description" xml:space="preserve"><value>10 personliga rekord registrerade.</value></data>
+  <data name="Achievement_PR50_Title" xml:space="preserve"><value>50 PR</value></data>
+  <data name="Achievement_PR50_Description" xml:space="preserve"><value>50 personliga rekord registrerade.</value></data>
+  <data name="Achievement_TotalVolume100k_Title" xml:space="preserve"><value>100 ton</value></data>
+  <data name="Achievement_TotalVolume100k_Description" xml:space="preserve"><value>100 000 kg total volym.</value></data>
+  <data name="Achievement_TotalVolume500k_Title" xml:space="preserve"><value>500 ton</value></data>
+  <data name="Achievement_TotalVolume500k_Description" xml:space="preserve"><value>500 000 kg total volym.</value></data>
+  <data name="Achievement_TotalVolume1M_Title" xml:space="preserve"><value>1 000 ton</value></data>
+  <data name="Achievement_TotalVolume1M_Description" xml:space="preserve"><value>1 000 000 kg total volym.</value></data>
+  <data name="Achievement_AllMuscleGroups_Title" xml:space="preserve"><value>Alla muskelgrupper</value></data>
+  <data name="Achievement_AllMuscleGroups_Description" xml:space="preserve"><value>Alla muskelgrupper tränade samma vecka.</value></data>
+  <data name="Achievement_LongSession_Title" xml:space="preserve"><value>Pass över 90 min</value></data>
+  <data name="Achievement_LongSession_Description" xml:space="preserve"><value>Ett pass längre än 90 minuter.</value></data>
+  <data name="Achievement_EarlyBird_Title" xml:space="preserve"><value>Pass före 07:00</value></data>
   <data name="Achievement_EarlyBird_Description" xml:space="preserve"><value>Pass startat före klockan 07:00.</value></data>
-  <data name="Achievement_NightOwl_Title" xml:space="preserve"><value>Nattuglan</value></data>
-  <data name="Achievement_NightOwl_Description" xml:space="preserve"><value>Pass startat efter klockan 21:00.</value></data>
-  <data name="Achievement_FirstCustomExercise_Title" xml:space="preserve"><value>Uppfinnaren</value></data>
-  <data name="Achievement_FirstCustomExercise_Description" xml:space="preserve"><value>Du skapade en egen övning.</value></data>
+  <data name="Achievement_NightOwl_Title" xml:space="preserve"><value>Pass efter 21:00</value></data>
+  <data name="Achievement_NightOwl_Description" xml:space="preserve"><value>Pass startat klockan 21:00 eller senare.</value></data>
+  <data name="Achievement_FirstCustomExercise_Title" xml:space="preserve"><value>Egen övning</value></data>
+  <data name="Achievement_FirstCustomExercise_Description" xml:space="preserve"><value>Första egna övningen skapad.</value></data>
 
   <!-- Programs — descriptions and day labels -->
   <data name="Program_ppl_Description" xml:space="preserve"><value>Klassiskt 6-dagarsprogram. Tre muskelgrupper roteras för maximal frekvens och volym.</value></data>
@@ -999,9 +1000,9 @@
   <data name="Program_arnoldsplit_Day3_Label" xml:space="preserve"><value>Ben</value></data>
 
   <!-- Notifications -->
-  <data name="Notification_Reminder_Body" xml:space="preserve"><value>Dags att träna! Öppna appen och sätt igång 💪</value></data>
+  <data name="Notification_Reminder_Body" xml:space="preserve"><value>Dags att träna. Öppna appen för dagens pass.</value></data>
   <data name="Notification_Reminder_Title" xml:space="preserve"><value>Vana Strength · Påminnelse</value></data>
-  <data name="Notification_Reminder_Body_Label_Format" xml:space="preserve"><value>Dags med {0}! Öppna appen och sätt igång 💪</value></data>
+  <data name="Notification_Reminder_Body_Label_Format" xml:space="preserve"><value>Dags för {0}. Öppna appen för att börja.</value></data>
   <data name="Notification_RestTimer_Title" xml:space="preserve"><value>Vilotimer klar!</value></data>
   <data name="Notification_RestTimer_Body_Format" xml:space="preserve"><value>Dags för nästa set – {0}</value></data>
 
@@ -1032,9 +1033,9 @@
   <data name="Periodization_Active_Badge" xml:space="preserve"><value>AKTIV</value></data>
   <data name="Periodization_Weeks_Format" xml:space="preserve"><value>{0} VECKOR</value></data>
   <data name="Periodization_Week_Label_Format" xml:space="preserve"><value>VECKA {0}</value></data>
-  <data name="Periodization_TemplatePicker_Button" xml:space="preserve"><value>Välj template</value></data>
+  <data name="Periodization_TemplatePicker_Button" xml:space="preserve"><value>Välj mall</value></data>
   <data name="Periodization_Empty_Title" xml:space="preserve"><value>Inga mesocykler ännu</value></data>
-  <data name="Periodization_Empty_Body" xml:space="preserve"><value>Starta en via Meso Builder eller en färdig template.</value></data>
+  <data name="Periodization_Empty_Body" xml:space="preserve"><value>Starta en via Meso Builder eller en färdig mall.</value></data>
   <data name="Periodization_Week_Format" xml:space="preserve"><value>Vecka {0}/{1}</value></data>
   <data name="Periodization_WeeksCount_Format" xml:space="preserve"><value>{0} veckor</value></data>
   <data name="Periodization_Delete_Confirm_Title" xml:space="preserve"><value>Ta bort mesocykel</value></data>
@@ -1043,7 +1044,7 @@
   <data name="Periodization_Delete_Confirm_No" xml:space="preserve"><value>Avbryt</value></data>
 
   <!-- TemplatePicker — välj färdig template (Task 21) -->
-  <data name="TemplatePicker_Title" xml:space="preserve"><value>VÄLJ TEMPLATE</value></data>
+  <data name="TemplatePicker_Title" xml:space="preserve"><value>VÄLJ MALL</value></data>
   <data name="TemplatePicker_Subtitle" xml:space="preserve"><value>Färdiga upplägg du kan starta direkt</value></data>
   <data name="TemplatePicker_DaysFormat" xml:space="preserve"><value>{0} dagar/vecka</value></data>
   <data name="TemplatePicker_Config_Title" xml:space="preserve"><value>Konfigurera din mesocykel</value></data>
@@ -1059,7 +1060,7 @@
   <data name="TemplatePicker_Desc_UpperLower" xml:space="preserve"><value>Överkropp/Underkropp — balanserad 4-dagars</value></data>
   <data name="TemplatePicker_Desc_FullBody" xml:space="preserve"><value>Hela kroppen varje pass — 3 dagar/vecka</value></data>
   <data name="TemplatePicker_Desc_Bro" xml:space="preserve"><value>En muskelgrupp per dag</value></data>
-  <data name="TemplatePicker_Desc_Default" xml:space="preserve"><value>Färdig template</value></data>
+  <data name="TemplatePicker_Desc_Default" xml:space="preserve"><value>Färdig mall</value></data>
 
   <!-- CycleDetail — cycle edit/create pages -->
   <data name="CycleDetail_Title_New" xml:space="preserve"><value>Ny cykel</value></data>
@@ -1099,11 +1100,11 @@
   <data name="Day_6" xml:space="preserve"><value>Söndag</value></data>
 
   <!-- TemplatePlanningBoard (RP-clone Task 18) -->
-  <data name="TemplateBoard_Title" xml:space="preserve"><value>Planera template</value></data>
-  <data name="TemplateBoard_NamePlaceholder" xml:space="preserve"><value>Namn på template</value></data>
+  <data name="TemplateBoard_Title" xml:space="preserve"><value>Planera mall</value></data>
+  <data name="TemplateBoard_NamePlaceholder" xml:space="preserve"><value>Namn på mallen</value></data>
   <data name="TemplateBoard_Save" xml:space="preserve"><value>Spara</value></data>
   <data name="TemplateBoard_AddMuscle" xml:space="preserve"><value>+ Lägg till muskel</value></data>
-  <data name="TemplateBoard_AutoFillAll" xml:space="preserve"><value>Auto-fyll alla tomma slots</value></data>
+  <data name="TemplateBoard_AutoFillAll" xml:space="preserve"><value>Fyll alla tomma platser automatiskt</value></data>
   <data name="TemplateBoard_AddExercise" xml:space="preserve"><value>+ Lägg till övning</value></data>
   <data name="TemplateBoard_AutoFill" xml:space="preserve"><value>Auto-fyll</value></data>
   <data name="TemplateBoard_RemoveSlot_Confirm" xml:space="preserve"><value>Ta bort {0} från {1}?</value></data>
@@ -1114,7 +1115,7 @@
   <data name="TemplateBoard_ExerciseMenu_Title" xml:space="preserve"><value>Vad vill du göra?</value></data>
   <data name="TemplateBoard_AddMuscle_Title" xml:space="preserve"><value>Vilken muskelgrupp?</value></data>
   <data name="TemplateBoard_AddDay" xml:space="preserve"><value>+ Ny dag</value></data>
-  <data name="Template_Saved_Toast" xml:space="preserve"><value>Template sparad</value></data>
+  <data name="Template_Saved_Toast" xml:space="preserve"><value>Mallen sparad</value></data>
 
   <!-- Feedback sheets (RP-clone Task 26) -->
   <data name="Feedback_JointPain_Question_Format" xml:space="preserve"><value>Hur kändes lederna under {0}?</value></data>
@@ -1161,8 +1162,93 @@
   <data name="MesoStats_Deload_Upcoming_Format" xml:space="preserve"><value>Deload om {0} veckor</value></data>
   <data name="MesoStats_Deload_Passed" xml:space="preserve"><value>Deload passerad</value></data>
   <data name="MesoStats_Empty_Title" xml:space="preserve"><value>Ingen aktiv mesocykel</value></data>
-  <data name="MesoStats_Empty_Body" xml:space="preserve"><value>Starta en cykel via Meso Builder eller en färdig template.</value></data>
+  <data name="MesoStats_Empty_Body" xml:space="preserve"><value>Starta en cykel via Meso Builder eller en färdig mall.</value></data>
   <data name="MesoStats_Empty_Cta" xml:space="preserve"><value>Öppna mesocykler</value></data>
   <data name="MesoStats_Week_Deload" xml:space="preserve"><value>Deload</value></data>
   <data name="MesoStats_Week_Intensity_Format" xml:space="preserve"><value>{0}%</value></data>
+  <data name="A11y_Back" xml:space="preserve"><value>Tillbaka</value></data>
+  <data name="A11y_Close" xml:space="preserve"><value>Stäng</value></data>
+  <data name="A11y_Settings" xml:space="preserve"><value>Inställningar</value></data>
+  <data name="A11y_Delete" xml:space="preserve"><value>Ta bort</value></data>
+  <data name="A11y_More" xml:space="preserve"><value>Fler alternativ</value></data>
+  <data name="A11y_Add" xml:space="preserve"><value>Lägg till</value></data>
+  <data name="A11y_Duplicate" xml:space="preserve"><value>Duplicera</value></data>
+  <data name="A11y_Start" xml:space="preserve"><value>Starta</value></data>
+  <data name="A11y_Info" xml:space="preserve"><value>Information</value></data>
+  <data name="A11y_Share" xml:space="preserve"><value>Dela</value></data>
+  <data name="A11y_Edit" xml:space="preserve"><value>Redigera</value></data>
+  <data name="A11y_PrevMonth" xml:space="preserve"><value>Föregående månad</value></data>
+  <data name="A11y_NextMonth" xml:space="preserve"><value>Nästa månad</value></data>
+  <data name="A11y_CompleteSet" xml:space="preserve"><value>Markera set som klart</value></data>
+  <data name="A11y_SetCompleted" xml:space="preserve"><value>Set klart</value></data>
+  <data name="A11y_SetType" xml:space="preserve"><value>Ändra settyp</value></data>
+  <data name="A11y_Weight" xml:space="preserve"><value>Vikt</value></data>
+  <data name="A11y_Reps" xml:space="preserve"><value>Repetitioner</value></data>
+  <data name="A11y_Camera" xml:space="preserve"><value>Ta foto</value></data>
+  <data name="A11y_Selected" xml:space="preserve"><value>Vald</value></data>
+  <data name="A11y_Plates" xml:space="preserve"><value>Vikträknare</value></data>
+  <data name="A11y_Stats" xml:space="preserve"><value>Statistik</value></data>
+  <data name="A11y_LogWeight" xml:space="preserve"><value>Logga kroppsvikt</value></data>
+  <data name="A11y_RestTimer" xml:space="preserve"><value>Vilotid</value></data>
+  <data name="A11y_Search" xml:space="preserve"><value>Sök</value></data>
+  <data name="A11y_ActiveWorkout" xml:space="preserve"><value>Pass pågår. Tryck för att öppna.</value></data>
+  <data name="Common_ErrorRetry" xml:space="preserve"><value>Något gick fel. Försök igen.</value></data>
+  <data name="Common_Discard_Title" xml:space="preserve"><value>Släng ändringar?</value></data>
+  <data name="Common_Discard_Body" xml:space="preserve"><value>Du har ändringar som inte är sparade.</value></data>
+  <data name="Common_Discard_Confirm" xml:space="preserve"><value>Släng</value></data>
+  <data name="Hem_Accessibility_RecoveryNoData" xml:space="preserve"><value>Återhämtning: ingen data</value></data>
+  <data name="Hem_Rec_NoData_Head" xml:space="preserve"><value>INGEN ÅTERHÄMTNINGSDATA</value></data>
+  <data name="Hem_Rec_NoData_Body" xml:space="preserve"><value>Råden bygger på HRV, vilopuls och sömn från Apple Watch via Hälsa. Utan den datan ges inget råd.</value></data>
+  <data name="Hem_SeeAll_A11y" xml:space="preserve"><value>Visa all historik</value></data>
+  <data name="Hem_Avatar_A11y" xml:space="preserve"><value>Öppna Kropp</value></data>
+  <data name="Hem_StreakDay_Trained_A11y" xml:space="preserve"><value>pass loggat</value></data>
+  <data name="Hem_MuscleTrend_A11y" xml:space="preserve"><value>{0}: {1} kg senaste veckan, {2} kg för fyra veckor sedan</value></data>
+  <data name="Hem_Heatmap_Tile_A11y" xml:space="preserve"><value>{0}: {1} av 10</value></data>
+  <data name="Hem_Heatmap_Tile_A11y_None" xml:space="preserve"><value>{0}: ingen träning senaste 7 dagarna</value></data>
+  <data name="Train_Deload_Body_HighVolume" xml:space="preserve"><value>Din veckovolym har legat över 15 000 kg fyra veckor i rad. Minska vikterna med 40–50% i veckan.</value></data>
+  <data name="History_Achievements_A11y" xml:space="preserve"><value>Meriter</value></data>
+  <data name="History_Cal_TrainedDay_A11y" xml:space="preserve"><value>{0}, pass loggat</value></data>
+  <data name="Kropp_InvalidNumber" xml:space="preserve"><value>Ogiltigt värde. Ange bara siffror, t.ex. 80,5.</value></data>
+  <data name="Kropp_WeightChart_A11y" xml:space="preserve"><value>Viktkurva med {0} mätningar, från {1} kg till {2} kg</value></data>
+  <data name="Onboarding_Step1_Wk1_Title" xml:space="preserve"><value>1 PASS / VECKA</value></data>
+  <data name="Onboarding_Step1_Wk1_Sub" xml:space="preserve"><value>Håller nuvarande nivå</value></data>
+  <data name="Onboarding_Step1_Wk7_Title" xml:space="preserve"><value>7 PASS / VECKA</value></data>
+  <data name="Onboarding_Step1_Wk7_Sub" xml:space="preserve"><value>Träning varje dag, kräver uppdelat program</value></data>
+  <data name="Onboarding_Step4_LibraryNote" xml:space="preserve"><value>Programmet aktiveras inte automatiskt. Du hittar det under Bibliotek → Program.</value></data>
+  <data name="Onboarding_Health_Title" xml:space="preserve"><value>Apple Hälsa</value></data>
+  <data name="Onboarding_Health_Body" xml:space="preserve"><value>Vana Strength kan läsa steg, puls, vilopuls, HRV, sömn och VO2max från Hälsa för att visa dagsform och återhämtning på Hem. Pass och kroppsvikt som du loggar sparas i Hälsa.
+Du kan ändra det senare i Inställningar.</value></data>
+  <data name="Onboarding_Health_Allow" xml:space="preserve"><value>Fortsätt</value></data>
+  <data name="Onboarding_Health_NotNow" xml:space="preserve"><value>Inte nu</value></data>
+  <data name="Settings_Reminders_DayOn_Format" xml:space="preserve"><value>{0}, påminnelse på</value></data>
+  <data name="Settings_Reminders_DayOff_Format" xml:space="preserve"><value>{0}, påminnelse av</value></data>
+  <data name="Settings_Reminders_LabelA11y_Format" xml:space="preserve"><value>Dagsetikett för {0}</value></data>
+  <data name="BodyWeight_ChartA11y_Format" xml:space="preserve"><value>Viktkurva med {0} mätningar. Senast {1}.</value></data>
+  <data name="ExerciseProgress_ChartA11y_Format" xml:space="preserve"><value>Beräknat 1RM över {0} pass. Senast {1} kg, högst {2} kg.</value></data>
+  <data name="Periodization_MesoBuilder_A11y" xml:space="preserve"><value>Ny mesocykel med Meso Builder</value></data>
+  <data name="MesoBuilder_ReplaceActive_Title" xml:space="preserve"><value>Ersätt aktiv cykel?</value></data>
+  <data name="MesoBuilder_ReplaceActive_Body_Format" xml:space="preserve"><value>"{0}" är din aktiva cykel. Den nya cykeln blir aktiv och "{0}" avslutas. Den finns kvar i listan.</value></data>
+  <data name="MesoBuilder_ReplaceActive_Confirm" xml:space="preserve"><value>Ersätt</value></data>
+  <data name="MesoStats_StartsOn_Format" xml:space="preserve"><value>Startar {0}</value></data>
+  <data name="MesoStats_Finished_Format" xml:space="preserve"><value>Avslutad · {0} veckor</value></data>
+  <data name="MuscleVolume_Invalid_Title" xml:space="preserve"><value>Alla värden sparades inte</value></data>
+  <data name="MuscleVolume_Invalid_Body_Format" xml:space="preserve"><value>Sparades inte: {0}. MEV och MRV ska vara heltal större än 0, och MRV får inte vara lägre än MEV.</value></data>
+  <data name="TemplateBoard_DayMenu_Remove" xml:space="preserve"><value>Ta bort dag</value></data>
+  <data name="TemplateBoard_DayLabel_Format" xml:space="preserve"><value>Dag {0}</value></data>
+  <data name="TemplateBoard_UnnamedTemplate" xml:space="preserve"><value>Namnlös mall</value></data>
+  <data name="Achievements_Locked" xml:space="preserve"><value>LÅST</value></data>
+  <data name="ActiveWorkout_A11y_RirNone" xml:space="preserve"><value>RIR ej angiven</value></data>
+  <data name="ActiveWorkout_A11y_Rir_Format" xml:space="preserve"><value>RIR {0}</value></data>
+  <data name="ActiveWorkout_A11y_TapToChange" xml:space="preserve"><value>Tryck för att ändra.</value></data>
+  <data name="ActiveWorkout_A11y_SetType_Format" xml:space="preserve"><value>{0}. Ändra settyp</value></data>
+  <data name="ActiveWorkout_A11y_SetNormal_Format" xml:space="preserve"><value>Set {0}</value></data>
+  <data name="ActiveWorkout_A11y_SetWarmup" xml:space="preserve"><value>Uppvärmningsset</value></data>
+  <data name="ActiveWorkout_A11y_SetDropset" xml:space="preserve"><value>Dropset</value></data>
+  <data name="ActiveWorkout_A11y_SetTime" xml:space="preserve"><value>Tidsset</value></data>
+  <data name="ActiveWorkout_RemoveLoggedSet_Title" xml:space="preserve"><value>Ta bort loggat set</value></data>
+  <data name="ActiveWorkout_RemoveLoggedSet_Body_Format" xml:space="preserve"><value>Set {0} i {1} är loggat. Det tas bort från passet och historiken.</value></data>
+  <data name="ActiveWorkout_FinishEmpty_Title" xml:space="preserve"><value>Inga set loggade</value></data>
+  <data name="ActiveWorkout_FinishEmpty_Body" xml:space="preserve"><value>Passet har inga loggade set och sparas inte i historiken.</value></data>
+  <data name="ActiveWorkout_FinishEmpty_Discard" xml:space="preserve"><value>Släng passet</value></data>
+  <data name="WeightSuggestion_Reason_NoRir" xml:space="preserve"><value>Alla reps nådda men ingen RIR loggad — behåll vikten. Logga RIR så kan nästa vikt föreslås.</value></data>
 </root>

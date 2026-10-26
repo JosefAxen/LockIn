@@ -108,6 +108,32 @@ public partial class HistoryViewModel(DatabaseService db, ISessionRepository ses
         IsLoading = false;
     }
 
+    /// <summary>
+    /// Tyst uppdatering vid återbesök (t.ex. tillbaka från ett pass): ingen laddningsvy,
+    /// och listan byggs bara om när datan ändrats — då med lika många kort som innan.
+    /// Annars nollställs scrollpositionen varje gång sidan visas.
+    /// </summary>
+    public async Task RefreshAsync()
+    {
+        var sessions = await sessionRepo.GetCompletedSummariesAsync();
+        var cardio = await sessionRepo.GetCardioSessionsAsync(20);
+        if (!cardio.Select(c => c.Id).SequenceEqual(CardioSessions.Select(c => c.Id)))
+            CardioSessions = cardio.AsReadOnly();
+        await RefreshCalendarAsync();
+
+        bool changed = sessions.Count != _allSessions.Count
+            || sessions.Where((s, i) =>
+                {
+                    var o = _allSessions[i];
+                    return s.Id != o.Id || s.TotalVolume != o.TotalVolume || s.TotalSets != o.TotalSets
+                        || s.PRCount != o.PRCount || s.TemplateName != o.TemplateName;
+                }).Any();
+        if (!changed) return;
+
+        _allSessions = sessions;
+        ApplyFilterSort(keepLoadedCount: true);
+    }
+
     private void RefreshTabColors()
     {
         OnPropertyChanged(nameof(Period0Bg)); OnPropertyChanged(nameof(Period0Fg));
@@ -157,8 +183,9 @@ public partial class HistoryViewModel(DatabaseService db, ISessionRepository ses
         CalendarChanged?.Invoke();
     }
 
-    private void ApplyFilterSort()
+    private void ApplyFilterSort(bool keepLoadedCount = false)
     {
+        int loadedCount = keepLoadedCount ? Math.Max(SessionsPerPage, Sessions.Count) : SessionsPerPage;
         var today = DateTime.Today;
         IEnumerable<SessionSummaryRow> filtered;
 
@@ -190,7 +217,7 @@ public partial class HistoryViewModel(DatabaseService db, ISessionRepository ses
 
         _filteredSessions = sorted.ToList();
         Sessions.Clear();
-        foreach (var s in _filteredSessions.Take(SessionsPerPage))
+        foreach (var s in _filteredSessions.Take(loadedCount))
             Sessions.Add(s);
 
         HasNoSessions = _filteredSessions.Count == 0;

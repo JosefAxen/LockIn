@@ -1,4 +1,5 @@
 using LockIn.Navigation;
+using LockIn.Resources.Strings;
 using LockIn.Services;
 using LockIn.ViewModels;
 using Microsoft.Maui.Devices;
@@ -7,6 +8,11 @@ namespace LockIn.Views;
 
 public partial class KroppPage : ContentPage
 {
+    // Bottenpadding för scrollinnehållet: tab-baren, plus "PASS PÅGÅR"-bannern
+    // (Margin 96 + ca 59 pt hög) när den visas.
+    private const double BottomInset = 120;
+    private const double BottomInsetWithBanner = 176;
+
     private readonly KroppViewModel _vm;
     private readonly ActiveWorkoutStateService _state;
     private bool _hasLoaded;
@@ -25,42 +31,80 @@ public partial class KroppPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        WorkoutBanner.IsVisible = _state.IsActive;
-        if (_state.IsActive) StartBannerPulse();
+        UpdateBannerState();
+        _state.StateChanged += OnWorkoutStateChanged;
         _vm.HeatmapReady += BuildHeatmapGrid;
         _vm.PropertyChanged += OnKroppVmPropertyChanged;
 
-        StickyHeader.Opacity = 0;
+        UpdateStickyHeader(0);
 
-        if (!_hasLoaded)
+        bool animate = !AnimationHelper.ReduceMotion;
+        try
         {
-            Content.Opacity = 0;
-            Content.TranslationY = 16;
-            await _vm.LoadAsync();
-            _hasLoaded = true;
-            await Task.WhenAll(
-                Content.FadeTo(1, 400, Easing.CubicOut),
-                Content.TranslateTo(0, 0, 400, Easing.CubicOut)
-            );
+            if (!_hasLoaded)
+            {
+                if (animate)
+                {
+                    Content.Opacity = 0;
+                    Content.TranslationY = 16;
+                }
+                await _vm.LoadAsync();
+                _hasLoaded = true;
+                if (animate)
+                    await Task.WhenAll(
+                        Content.FadeTo(1, 400, Easing.CubicOut),
+                        Content.TranslateTo(0, 0, 400, Easing.CubicOut)
+                    );
+            }
+            else if (animate)
+            {
+                Content.Opacity = 0;
+                Content.TranslationY = 12;
+                await Task.WhenAll(
+                    _vm.LoadAsync(),
+                    Content.FadeTo(1, 320, Easing.CubicOut),
+                    Content.TranslateTo(0, 0, 320, Easing.CubicOut)
+                );
+            }
+            else
+            {
+                await _vm.LoadAsync();
+            }
         }
-        else
+        catch (Exception ex)
         {
-            Content.Opacity = 0;
-            Content.TranslationY = 12;
-            await Task.WhenAll(
-                _vm.LoadAsync(),
-                Content.FadeTo(1, 320, Easing.CubicOut),
-                Content.TranslateTo(0, 0, 320, Easing.CubicOut)
-            );
+            System.Diagnostics.Debug.WriteLine($"[KroppPage] OnAppearing failed: {ex}");
+            await DisplayAlert(null, AppResources.Common_ErrorRetry, AppResources.Common_OK);
+        }
+        finally
+        {
+            Content.Opacity = 1;
+            Content.TranslationY = 0;
         }
     }
 
     protected override void OnDisappearing()
     {
         base.OnDisappearing();
+        _state.StateChanged -= OnWorkoutStateChanged;
         _vm.HeatmapReady -= BuildHeatmapGrid;
         _vm.PropertyChanged -= OnKroppVmPropertyChanged;
         BannerPulseRing.StopPulse();
+    }
+
+    private void OnWorkoutStateChanged()
+        => MainThread.BeginInvokeOnMainThread(UpdateBannerState);
+
+    private void UpdateBannerState()
+    {
+        var active = _state.IsActive;
+        WorkoutBanner.IsVisible = active;
+        if (active) StartBannerPulse();
+        else BannerPulseRing.StopPulse();
+
+        // Sista kortet ska kunna scrollas fram ovanför bannern och tab-baren.
+        var p = ScrollContent.Padding;
+        ScrollContent.Padding = new Thickness(p.Left, p.Top, p.Right, active ? BottomInsetWithBanner : BottomInset);
     }
 
     private void StartBannerPulse() => BannerPulseRing.StartPulse();
@@ -69,7 +113,14 @@ public partial class KroppPage : ContentPage
         => await AnimationHelper.PressAsync(sender);
 
     private void OnScrolled(object sender, ScrolledEventArgs e)
-        => StickyHeader.Opacity = Math.Clamp((e.ScrollY - 80.0) / 40.0, 0, 1);
+        => UpdateStickyHeader(e.ScrollY);
+
+    private void UpdateStickyHeader(double scrollY)
+    {
+        StickyHeader.Opacity = Math.Clamp((scrollY - 80.0) / 40.0, 0, 1);
+        // Osynlig header får inte svälja tryck i toppen av sidan.
+        StickySettingsButton.InputTransparent = StickyHeader.Opacity < 0.5;
+    }
 
     private void BuildHeatmapGrid() =>
         MainThread.BeginInvokeOnMainThread(BuildHeatmap);
@@ -98,7 +149,7 @@ public partial class KroppPage : ContentPage
     {
         if (_tabColumnWidth <= 0) return;
         var targetX = _vm.SelectedTab * _tabColumnWidth;
-        if (animated)
+        if (animated && !AnimationHelper.ReduceMotion)
             TabIndicator.TranslateTo(targetX, 0, 280, Easing.SpringOut);
         else
             TabIndicator.TranslationX = targetX;

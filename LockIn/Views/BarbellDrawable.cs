@@ -31,8 +31,9 @@ public class BarbellDrawable : IDrawable
     };
 
     private static readonly Color BarColor    = Color.FromArgb("#484850");
-    private static readonly Color PlateColor  = Color.FromArgb("#FF5A1F");
-    private static readonly Color PlateLabel  = Color.FromArgb("#FFFFFF");
+    // Token-färger: mörk etikett på orange (8,5:1) — vitt på #FF5A1F gav 3,1:1 på 9 pt
+    private static readonly Color PlateColor  = DesignTokens.AccentOrange;
+    private static readonly Color PlateLabel  = DesignTokens.FabForeground;
     private static readonly Color CollarColor = Color.FromArgb("#303035");
 
     public void Draw(ICanvas canvas, RectF dirtyRect)
@@ -87,7 +88,7 @@ public class BarbellDrawable : IDrawable
     {
         canvas.FontColor = color;
         canvas.FontSize = 9f;
-        var label = plate >= 10 ? $"{(int)plate}" : $"{plate:G}";
+        var label = plate >= 10 ? $"{(int)plate}" : plate.ToString("0.##");
         canvas.DrawString(label, x - 12f, y - 8f, 24f, 16f,
             HorizontalAlignment.Center, VerticalAlignment.Center);
     }

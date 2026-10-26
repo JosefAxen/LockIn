@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.IO.Compression;
 using System.Text;
 
@@ -13,7 +14,7 @@ public class ExportService(DatabaseService db)
         Directory.CreateDirectory(exportsDir);
 
         var zipPath = Path.Combine(exportsDir,
-            $"lockin_export_{DateTime.Now:yyyy-MM-dd}.zip");
+            $"vana_strength_export_{DateTime.Now:yyyy-MM-dd}.zip");
 
         if (File.Exists(zipPath)) File.Delete(zipPath);
         using var zip = ZipFile.Open(zipPath, ZipArchiveMode.Create);
@@ -40,7 +41,8 @@ public class ExportService(DatabaseService db)
                     dur,
                     Csv(s.TemplateName),
                     s.TotalSets,
-                    s.TotalVolumeKg.ToString("F1"),
+                    // CSV: alltid punkt som decimaltecken (appens kultur är sv-SE)
+                    s.TotalVolumeKg.ToString("F1", CultureInfo.InvariantCulture),
                     s.PRCount,
                     Csv(s.Notes)));
             }
@@ -66,7 +68,7 @@ public class ExportService(DatabaseService db)
                     EquipmentName(r.Equipment),
                     r.SetNumber,
                     SetTypeName(r.SetType),
-                    r.WeightKg.ToString("F2"),
+                    r.WeightKg.ToString("F2", CultureInfo.InvariantCulture),
                     r.Reps,
                     r.RIR,
                     r.IsPR ? "true" : "false",

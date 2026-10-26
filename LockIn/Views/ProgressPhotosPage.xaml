@@ -12,17 +12,14 @@
 
     <Grid RowDefinitions="Auto,*" SafeAreaEdges="None">
 
-        <!-- Atmosf�risk bakgrund -->
+        <!-- Atmosfärisk bakgrund -->
         <controls:AtmosphericBackgroundView Grid.RowSpan="2" InputTransparent="True"/>
 
         <!-- Header -->
         <Grid Grid.Row="0" Padding="16,56,16,12">
-            <Border WidthRequest="36" HeightRequest="36"
-                    HorizontalOptions="Start" VerticalOptions="Center"
-                    StrokeShape="Ellipse"
-                    BackgroundColor="{AppThemeBinding Light=#1A000000, Dark=#17FFFFFF}"
-                    Stroke="{AppThemeBinding Light=#0D000000, Dark=#29FFFFFF}"
-                    StrokeThickness="0.5">
+            <Border Style="{StaticResource IconCircleButton}"
+                    HorizontalOptions="Start"
+                    SemanticProperties.Description="{loc:Localize A11y_Back}">
                 <Path Style="{StaticResource BackChevron}"/>
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding GoBackCommand}"/>
@@ -44,7 +41,12 @@
                         ItemsSource="{Binding PhotoGroups}"
                         IsGrouped="True"
                         IsVisible="{Binding IsLoading, Converter={x:Static vm:InverseBoolConverter.Instance}}"
-                        Margin="16,4,16,48">
+                        Margin="16,4,16,0">
+
+            <!-- Luft under sista fotot så att tab-baren inte döljer det -->
+            <CollectionView.Footer>
+                <BoxView HeightRequest="110" Color="Transparent"/>
+            </CollectionView.Footer>
 
             <CollectionView.GroupHeaderTemplate>
                 <DataTemplate x:DataType="vm:PhotoGroup">
@@ -94,15 +96,23 @@
                                        FontFamily="DMSansMedium" FontSize="14"
                                        TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
                                        VerticalOptions="Center"/>
-                                <Label Grid.Column="1" Text="✕"
-                                       TextColor="{StaticResource ForgeMuted}"
-                                       FontSize="16" VerticalOptions="Center">
-                                    <Label.GestureRecognizers>
+                                <!-- Ta bort: 44×44 träffyta -->
+                                <Grid Grid.Column="1"
+                                      WidthRequest="44" HeightRequest="44"
+                                      Margin="0,-12,-12,-12"
+                                      BackgroundColor="Transparent"
+                                      VerticalOptions="Center"
+                                      SemanticProperties.Description="{loc:Localize A11y_Delete}">
+                                    <Label Text="✕"
+                                           TextColor="{StaticResource ForgeMuted}"
+                                           FontSize="16"
+                                           HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    <Grid.GestureRecognizers>
                                         <TapGestureRecognizer
                                             Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ProgressPhotosViewModel}}, Path=DeletePhotoCommand}"
                                             CommandParameter="{Binding .}"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
+                                    </Grid.GestureRecognizers>
+                                </Grid>
                             </Grid>
                         </Grid>
                     </Border>

@@ -18,18 +18,14 @@
 
     <Grid RowDefinitions="Auto,*" SafeAreaEdges="None">
 
-        <!-- Atmosf�risk bakgrund -->
+        <!-- Atmosfärisk bakgrund -->
         <controls:AtmosphericBackgroundView Grid.RowSpan="2" InputTransparent="True"/>
 
         <!-- Header -->
         <Grid Grid.Row="0" Padding="16,56,16,8" ColumnDefinitions="Auto,*">
             <Border Grid.Column="0"
-                    WidthRequest="36" HeightRequest="36"
-                    StrokeShape="Ellipse"
-                    BackgroundColor="{AppThemeBinding Light=#1A000000, Dark=#17FFFFFF}"
-                    Stroke="{AppThemeBinding Light=#0D000000, Dark=#29FFFFFF}"
-                    StrokeThickness="0.5"
-                    VerticalOptions="Center">
+                    Style="{StaticResource IconCircleButton}"
+                    SemanticProperties.Description="{loc:Localize A11y_Back}">
                 <Path Style="{StaticResource BackChevron}"/>
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding GoBackCommand}"/>
@@ -43,7 +39,8 @@
         </Grid>
 
         <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Never">
-            <VerticalStackLayout Padding="16,4,16,48" Spacing="12">
+            <!-- Bottenpadding 120: tab-baren är synlig och genomskinlig på push-sidor -->
+            <VerticalStackLayout Padding="16,4,16,120" Spacing="12">
 
                 <!-- Latest weight hero -->
                 <Border Style="{StaticResource CardFrame}" Padding="24,20">
@@ -89,7 +86,8 @@
                         <Label Text="{loc:Localize BodyWeight_ChartTitle}"
                                Style="{StaticResource SectionLabel}"
                                Margin="4,0,0,0"/>
-                        <controls:LineChartView Points="{Binding ChartPoints}" StrokeColor="#6EA8DC" HeightRequest="180" BackgroundColor="Transparent"/>
+                        <controls:LineChartView Points="{Binding ChartPoints}" StrokeColor="#6EA8DC" HeightRequest="180" BackgroundColor="Transparent"
+                                                SemanticProperties.Description="{Binding ChartDescription}"/>
                     </VerticalStackLayout>
                 </Border>
 
@@ -98,7 +96,8 @@
                         StrokeShape="RoundRectangle 26"
                         StrokeThickness="0"
                         HeightRequest="56"
-                        HorizontalOptions="Fill">
+                        HorizontalOptions="Fill"
+                        SemanticProperties.Description="{loc:Localize A11y_LogWeight}">
                     <HorizontalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="10">
                         <views:AppIcon Source="ic_plus.png"
                                        WidthRequest="18" HeightRequest="18"
@@ -125,21 +124,20 @@
                     <StackLayout BindableLayout.ItemsSource="{Binding RecentEntries}" Spacing="0">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate x:DataType="models:BodyWeightEntry">
-                                <Grid ColumnDefinitions="*,Auto,Auto" Padding="16,10,12,10">
+                                <Grid ColumnDefinitions="*,Auto,Auto" Padding="16,6,12,6">
                                     <Label Grid.Column="0"
                                            Text="{Binding LoggedAt, StringFormat='{0:d MMM yyyy  HH:mm}'}"
                                            Style="{StaticResource MutedLabel}"
                                            VerticalOptions="Center"/>
                                     <Label Grid.Column="1"
-                                           Text="{Binding WeightKg, StringFormat='{0:F1} kg'}"
+                                           Text="{Binding WeightKg, StringFormat='{0:0.##} kg'}"
                                            FontFamily="DMSansMedium" FontSize="15"
                                            TextColor="{AppThemeBinding Light={StaticResource LightAccent}, Dark={StaticResource ForgeAccent}}"
                                            VerticalOptions="Center"
                                            Margin="0,0,12,0"/>
                                     <Border Grid.Column="2"
-                                            WidthRequest="36" HeightRequest="36"
-                                            BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}"
-                                            StrokeShape="Ellipse" StrokeThickness="0">
+                                            Style="{StaticResource IconCircleButton}"
+                                            SemanticProperties.Description="{loc:Localize A11y_Delete}">
                                         <views:AppIcon Source="ic_trash.png"
                                                        WidthRequest="16" HeightRequest="16"
                                                        HorizontalOptions="Center" VerticalOptions="Center"/>
@@ -158,7 +156,9 @@
                 <!-- Visa fler -->
                 <Border Style="{StaticResource CardFrame}"
                         Padding="0,4"
-                        IsVisible="{Binding HasMore}">
+                        MinimumHeightRequest="44"
+                        IsVisible="{Binding HasMore}"
+                        SemanticProperties.Description="{loc:Localize BodyWeight_ShowMore}">
                     <Label Text="{loc:Localize BodyWeight_ShowMore}"
                            FontFamily="BebasNeue" FontSize="15" CharacterSpacing="2"
                            TextColor="{AppThemeBinding Light={StaticResource LightMuted}, Dark={StaticResource ForgeMuted}}"

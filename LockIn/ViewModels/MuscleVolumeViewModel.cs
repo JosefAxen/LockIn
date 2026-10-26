@@ -50,19 +50,46 @@ public partial class MuscleVolumeViewModel(IMesocycleRepository mesocyclesRepo) 
     [RelayCommand]
     private async Task SaveAsync()
     {
-        foreach (var row in Rows)
+        // Ogiltiga rader sparas inte — och användaren får veta vilka.
+        // Giltigt: heltal > 0 och MRV ≥ MEV (MRV justeras inte i tysthet).
+        var notSaved = new List<string>();
+        try
         {
-            if (!int.TryParse(row.MevText, out var mev) || mev <= 0) continue;
-            if (!int.TryParse(row.MrvText, out var mrv) || mrv <= 0) continue;
-            if (mrv < mev) mrv = mev; // enforce mrv >= mev
-            await mesocyclesRepo.SaveLandmarksAsync(new MuscleVolumeLandmarks
+            foreach (var row in Rows)
             {
-                MuscleGroup = row.Muscle,
-                MEV = mev,
-                MRV = mrv,
-            });
+                if (!int.TryParse(row.MevText?.Trim(), out var mev) || mev <= 0
+                    || !int.TryParse(row.MrvText?.Trim(), out var mrv) || mrv <= 0
+                    || mrv < mev)
+                {
+                    notSaved.Add(row.DisplayName);
+                    continue;
+                }
+                await mesocyclesRepo.SaveLandmarksAsync(new MuscleVolumeLandmarks
+                {
+                    MuscleGroup = row.Muscle,
+                    MEV = mev,
+                    MRV = mrv,
+                });
+            }
         }
-        await Toast.Make(AppResources.MuscleVolume_Saved_Toast).Show();
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[MuscleVolume] Kunde inte spara: {ex}");
+            await Toast.Make(AppResources.Common_ErrorRetry).Show();
+            return;
+        }
+
+        if (notSaved.Count == 0)
+        {
+            await Toast.Make(AppResources.MuscleVolume_Saved_Toast).Show();
+            return;
+        }
+
+        if (Shell.Current?.CurrentPage is { } page)
+            await page.DisplayAlert(
+                AppResources.MuscleVolume_Invalid_Title,
+                string.Format(AppResources.MuscleVolume_Invalid_Body_Format, string.Join(", ", notSaved)),
+                AppResources.Common_OK);
     }
 
     private static string MuscleDisplayName(MuscleGroup mg) => mg switch

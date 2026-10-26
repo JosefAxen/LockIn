@@ -96,22 +96,31 @@ public partial class MuscleFeedbackSheetViewModel : ObservableObject
     private async Task SaveAsync()
     {
         if (Pump is null || Volume is null) return;
-        await _sessionRepo.SaveMuscleFeedbackAsync(new SessionMuscleFeedback
+        try
         {
-            SessionId = SessionId,
-            MuscleGroupValue = (int)Muscle,
-            PumpLevelValue = (int)Pump.Value,
-            VolumeLevelValue = (int)Volume.Value,
-        });
-        if (JointPain is not null && LastSessionExerciseId > 0)
-        {
-            await _sessionRepo.SaveExerciseFeedbackAsync(new SessionExerciseFeedback
+            await _sessionRepo.SaveMuscleFeedbackAsync(new SessionMuscleFeedback
             {
-                SessionExerciseId = LastSessionExerciseId,
-                JointPainLevelValue = (int)JointPain.Value,
+                SessionId = SessionId,
+                MuscleGroupValue = (int)Muscle,
+                PumpLevelValue = (int)Pump.Value,
+                VolumeLevelValue = (int)Volume.Value,
             });
+            if (JointPain is not null && LastSessionExerciseId > 0)
+            {
+                await _sessionRepo.SaveExerciseFeedbackAsync(new SessionExerciseFeedback
+                {
+                    SessionExerciseId = LastSessionExerciseId,
+                    JointPainLevelValue = (int)JointPain.Value,
+                });
+            }
+            CloseRequested?.Invoke(this, EventArgs.Empty);
         }
-        CloseRequested?.Invoke(this, EventArgs.Empty);
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[MuscleFeedback] Save: {ex}");
+            try { await CommunityToolkit.Maui.Alerts.Toast.Make(AppResources.Common_ErrorRetry).Show(); }
+            catch { /* felvisningen får inte själv fälla passet */ }
+        }
     }
 
     [RelayCommand]

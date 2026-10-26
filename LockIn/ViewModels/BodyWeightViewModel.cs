@@ -27,6 +27,8 @@ public partial class BodyWeightViewModel(DatabaseService db, IHealthService heal
     [ObservableProperty] private bool   _hasBmi;
     [ObservableProperty] private string _weightTrend = "";
     [ObservableProperty] private bool   _hasTrend;
+    // VoiceOver-sammanfattning av viktdiagrammet
+    [ObservableProperty] private string _chartDescription = "";
 
     public ObservableCollection<BodyWeightEntry> RecentEntries { get; } = new();
 
@@ -39,13 +41,15 @@ public partial class BodyWeightViewModel(DatabaseService db, IHealthService heal
         if (HasData)
         {
             var latest = _allEntries[0];
-            LatestWeight = $"{latest.WeightKg:F1} kg";
+            LatestWeight = $"{latest.WeightKg:0.##} kg";
             LatestDate   = latest.LoggedAt.ToString("d MMM yyyy", CultureInfo.CurrentUICulture);
 
             ChartPoints = _allEntries
                 .OrderBy(e => e.LoggedAt)
                 .Select(e => new ChartPoint(e.LoggedAt, (double)e.WeightKg))
                 .ToList();
+            ChartDescription = string.Format(AppResources.BodyWeight_ChartA11y_Format,
+                _allEntries.Count, LatestWeight);
         }
 
         // BMI
@@ -85,8 +89,8 @@ public partial class BodyWeightViewModel(DatabaseService db, IHealthService heal
             WeightTrend = absDelta < 0.2
                 ? AppResources.BodyWeight_Trend_Stable
                 : delta > 0
-                    ? string.Format(AppResources.BodyWeight_Trend_Up,   absDelta.ToString("F1", CultureInfo.InvariantCulture))
-                    : string.Format(AppResources.BodyWeight_Trend_Down, absDelta.ToString("F1", CultureInfo.InvariantCulture));
+                    ? string.Format(AppResources.BodyWeight_Trend_Up,   absDelta.ToString("0.0"))
+                    : string.Format(AppResources.BodyWeight_Trend_Down, absDelta.ToString("0.0"));
             HasTrend = true;
         }
         else
@@ -124,11 +128,21 @@ public partial class BodyWeightViewModel(DatabaseService db, IHealthService heal
             placeholder: AppResources.BodyWeight_EntryPlaceholder);
 
         if (string.IsNullOrWhiteSpace(result)) return;
-        if (!decimal.TryParse(result.Replace(',', '.'), System.Globalization.NumberStyles.Any,
-            System.Globalization.CultureInfo.InvariantCulture, out var kg) || kg <= 0) return;
+        // NumberStyles.Number (inte Any) så att "82,5" aldrig tolkas som 825
+        if (!decimal.TryParse(result.Replace(',', '.'), NumberStyles.Number,
+            CultureInfo.InvariantCulture, out var kg) || kg <= 0) return;
 
         var loggedAt = DateTime.Now;
-        await bodyRepo.SaveWeightEntryAsync(new BodyWeightEntry { LoggedAt = loggedAt, WeightKg = kg });
+        try
+        {
+            await bodyRepo.SaveWeightEntryAsync(new BodyWeightEntry { LoggedAt = loggedAt, WeightKg = kg });
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[BodyWeight] Kunde inte spara vikt: {ex}");
+            await Shell.Current.DisplayAlert(null, AppResources.Common_ErrorRetry, AppResources.Common_OK);
+            return;
+        }
         try { await health.SaveBodyMassAsync(kg, loggedAt); }
         catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"[BodyWeight] HealthKit sync misslyckades: {ex.Message}"); }
         await LoadAsync();
@@ -138,12 +152,21 @@ public partial class BodyWeightViewModel(DatabaseService db, IHealthService heal
     private async Task DeleteEntryAsync(BodyWeightEntry entry)
     {
         var body = string.Format(AppResources.BodyWeight_DeleteBody_Format,
-            $"{entry.WeightKg:F1}", entry.LoggedAt.ToString("d MMM", CultureInfo.CurrentUICulture));
+            $"{entry.WeightKg:0.##}", entry.LoggedAt.ToString("d MMM", CultureInfo.CurrentUICulture));
         var confirmed = await Shell.Current.DisplayAlert(
             AppResources.Common_Delete, body,
             AppResources.Common_Delete, AppResources.Common_Cancel);
         if (!confirmed) return;
-        await bodyRepo.DeleteWeightEntryAsync(entry);
+        try
+        {
+            await bodyRepo.DeleteWeightEntryAsync(entry);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[BodyWeight] Kunde inte ta bort vikt: {ex}");
+            await Shell.Current.DisplayAlert(null, AppResources.Common_ErrorRetry, AppResources.Common_OK);
+            return;
+        }
         await LoadAsync();
     }
 

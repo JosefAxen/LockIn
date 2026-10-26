@@ -1,4 +1,5 @@
 using LockIn.Navigation;
+using LockIn.Resources.Strings;
 using LockIn.ViewModels;
 
 namespace LockIn.Views;
@@ -18,9 +19,20 @@ public partial class TemplatePickerPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        await _vm.RefreshAsync();
+        try
+        {
+            await _vm.RefreshAsync();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[TemplatePicker] Laddning misslyckades: {ex}");
+            await DisplayAlert(null, AppResources.Common_ErrorRetry, AppResources.Common_OK);
+        }
     }
 
     private async void OnBackTapped(object? sender, EventArgs e)
-        => await Shell.Current.GoToAsync(AppRoutes.Back);
+    {
+        try { await Shell.Current.GoToAsync(AppRoutes.Back); }
+        catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"[TemplatePicker] Tillbaka misslyckades: {ex}"); }
+    }
 }

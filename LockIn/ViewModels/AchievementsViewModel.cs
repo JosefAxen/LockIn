@@ -19,26 +19,32 @@ public partial class AchievementsViewModel(ISettingsRepository settingsRepo) : O
     public async Task LoadAsync()
     {
         IsLoading = true;
-        var unlocked = await settingsRepo.GetUnlockedAchievementsAsync();
-        var unlockedIds = unlocked.ToDictionary(u => (AchievementId)u.Id, u => u.UnlockedAt);
-
-        Achievements.Clear();
-        foreach (var def in AchievementService.All)
+        try
         {
-            var isUnlocked = unlockedIds.TryGetValue(def.Id, out var unlockedAt);
-            Achievements.Add(new AchievementRow
-            {
-                Id = def.Id,
-                Emoji = def.Emoji,
-                Title = def.Title,
-                Description = def.Description,
-                IsUnlocked = isUnlocked,
-                UnlockedAt = isUnlocked ? unlockedAt.ToString("d MMM yyyy") : "",
-            });
-        }
+            var unlocked = await settingsRepo.GetUnlockedAchievementsAsync();
+            var unlockedIds = unlocked.ToDictionary(u => (AchievementId)u.Id, u => u.UnlockedAt);
 
-        UnlockedCount = $"{unlockedIds.Count}/{AchievementService.All.Count} {AppResources.Achievements_Unlocked}";
-        IsLoading = false;
+            Achievements.Clear();
+            foreach (var def in AchievementService.All)
+            {
+                var isUnlocked = unlockedIds.TryGetValue(def.Id, out var unlockedAt);
+                Achievements.Add(new AchievementRow
+                {
+                    Id = def.Id,
+                    Emoji = def.Emoji,
+                    Title = def.Title,
+                    Description = def.Description,
+                    IsUnlocked = isUnlocked,
+                    UnlockedAt = isUnlocked ? unlockedAt.ToString("d MMM yyyy") : "",
+                });
+            }
+
+            UnlockedCount = $"{unlockedIds.Count}/{AchievementService.All.Count} {AppResources.Achievements_Unlocked}";
+        }
+        finally
+        {
+            IsLoading = false;
+        }
     }
 
     [RelayCommand]
@@ -54,8 +60,14 @@ public class AchievementRow
     public bool IsUnlocked { get; set; }
     public string UnlockedAt { get; set; } = "";
 
-    public string DisplayEmoji => IsUnlocked ? Emoji : "🔒";
-    public double CardOpacity => IsUnlocked ? 1.0 : 0.45;
+    // Låsta meriter: dämpade färger med full opacitet (≥ 4,5:1) i stället för Opacity 0.45,
+    // och status i text ("LÅST" / datum) — inte bara färg. Ingen emoji.
+    public string Symbol => Emoji;
+    public Color SymbolColor => IsUnlocked ? DesignTokens.AccentAmber : DesignTokens.TextMuted;
+    public Color TitleColor => IsUnlocked ? DesignTokens.Text : DesignTokens.TextSecondary;
+    public string StatusText => IsUnlocked ? UnlockedAt : AppResources.Achievements_Locked;
+    public Color StatusColor => IsUnlocked ? DesignTokens.AccentAmber : DesignTokens.TextMuted;
+    public string A11yDescription => $"{Title}. {Description} {StatusText}";
 
     public Color CardBackground => IsUnlocked
         ? Color.FromArgb("#1FFBBF24")

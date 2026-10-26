@@ -1,4 +1,5 @@
 using LockIn.Navigation;
+using LockIn.Resources.Strings;
 using LockIn.Services;
 using LockIn.ViewModels;
 using Microsoft.Maui.Devices;
@@ -7,6 +8,11 @@ namespace LockIn.Views;
 
 public partial class TrainPage : ContentPage
 {
+    // Bottenpadding: FAB/cardio-knapparna (100–156 pt från botten), och när passet pågår
+    // "PASS PÅGÅR"-bannern ovanför dem (Margin 168 + ca 59 pt hög).
+    private const double BottomInset = 172;
+    private const double BottomInsetWithBanner = 240;
+
     private readonly TrainViewModel _vm;
     private readonly ActiveWorkoutStateService _state;
     private bool _hasLoaded;
@@ -31,15 +37,24 @@ public partial class TrainPage : ContentPage
         _state.StateChanged += OnWorkoutStateChanged;
 
         StickyHeader.Opacity = 0;
-        Content.Opacity = 0;
-        Content.TranslationY = _hasLoaded ? 12 : 16;
+        bool animate = !AnimationHelper.ReduceMotion;
+        if (animate)
+        {
+            Content.Opacity = 0;
+            Content.TranslationY = _hasLoaded ? 12 : 16;
+        }
 
         // try/finally säkerhetsnät: om LoadAsync eller animationerna kastar
         // (race condition med PostWorkout DB-save, layout inte mätt än, etc)
         // så förblir Content.Opacity låst på 0 → svart skärm. Återställ alltid.
         try
         {
-            if (!_hasLoaded)
+            if (!animate)
+            {
+                await _vm.LoadAsync();
+                _hasLoaded = true;
+            }
+            else if (!_hasLoaded)
             {
                 await _vm.LoadAsync();
                 _hasLoaded = true;
@@ -56,6 +71,12 @@ public partial class TrainPage : ContentPage
                     Content.TranslateTo(0, 0, 320, Easing.CubicOut)
                 );
             }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[TrainPage] OnAppearing failed: {ex}");
+            _vm.IsLoading = false;
+            await DisplayAlert(null, AppResources.Common_ErrorRetry, AppResources.Common_OK);
         }
         finally
         {
@@ -81,6 +102,10 @@ public partial class TrainPage : ContentPage
         FrittPassButton.IsVisible = !active;
         if (active) StartBannerPulse();
         else BannerPulseRing.StopPulse();
+
+        // Sista kortet ska kunna scrollas fram ovanför knapparna, bannern och tab-baren.
+        var p = ScrollContent.Padding;
+        ScrollContent.Padding = new Thickness(p.Left, p.Top, p.Right, active ? BottomInsetWithBanner : BottomInset);
     }
 
     private void StartBannerPulse() => BannerPulseRing.StartPulse();
@@ -102,6 +127,8 @@ public partial class TrainPage : ContentPage
 
     private async void OnMuscleBarLoaded(object sender, EventArgs e)
     {
+        // "Minska rörelse": staplarna visas direkt i rätt längd.
+        if (AnimationHelper.ReduceMotion) return;
         if (sender is not BoxView bar) return;
         var target = bar.ScaleX;
         if (target <= 0) return;

@@ -1,3 +1,4 @@
+using LockIn.Resources.Strings;
 using LockIn.ViewModels;
 
 namespace LockIn.Views;
@@ -16,6 +17,14 @@ public partial class PeriodizationPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        await _vm.RefreshAsync();
+        try
+        {
+            await _vm.RefreshAsync();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[Periodization] Laddning misslyckades: {ex}");
+            await DisplayAlert(null, AppResources.Common_ErrorRetry, AppResources.Common_OK);
+        }
     }
 }

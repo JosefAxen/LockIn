@@ -60,7 +60,7 @@ public class MetricRingView : SKCanvasView
             InvalidateSurface();
             return;
         }
-        if (!_hasAnimatedIn && newValue > 0.001f)
+        if (!_hasAnimatedIn && newValue > 0.001f && !LockIn.Views.AnimationHelper.ReduceMotion)
         {
             _hasAnimatedIn = true;
             _isAnimating = true;

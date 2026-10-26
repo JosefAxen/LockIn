@@ -10,19 +10,30 @@ namespace LockIn.Services;
 public class NotificationService
 {
     private const string TimerId = "rest_timer";
+    private bool _permissionRequested;
 
     public async Task RequestPermissionAsync()
     {
 #if IOS
         await UNUserNotificationCenter.Current.RequestAuthorizationAsync(
-            UNAuthorizationOptions.Alert | UNAuthorizationOptions.Sound | UNAuthorizationOptions.Badge);
+            UNAuthorizationOptions.Alert | UNAuthorizationOptions.Sound);
 #else
         await Task.CompletedTask;
 #endif
     }
 
+    // Frågar om notisbehörighet först när appen faktiskt ska skicka en notis
+    // (vilotimer eller påminnelse) — inte vid första start. iOS visar dialogen bara en gång.
+    private void EnsurePermission()
+    {
+        if (_permissionRequested) return;
+        _permissionRequested = true;
+        _ = RequestPermissionAsync();
+    }
+
     public void ScheduleTimer(int seconds, string exerciseName)
     {
+        EnsurePermission();
         CancelTimer();
 #if IOS
         var content = new UNMutableNotificationContent
@@ -46,6 +57,7 @@ public class NotificationService
 
     public void ScheduleReminders(int daysBitmask, int timeMinutes, string[] labels)
     {
+        EnsurePermission();
         CancelReminders();
 #if IOS
         var h = timeMinutes / 60;

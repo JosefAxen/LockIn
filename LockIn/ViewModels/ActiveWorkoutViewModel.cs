@@ -28,6 +28,11 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
     private readonly object _supersetLock = new();
     private readonly HashSet<MuscleGroup> _feedbackShownFor = new();
     private readonly HashSet<int> _jointPainReportedFor = new();
+    // Serialiserar alla DB-skrivningar för set (logga, ändra, ångra, ta bort) så att
+    // snabba tryck inte ger dubbletter eller skriver över varandra i fel ordning.
+    private readonly SemaphoreSlim _setLock = new(1, 1);
+    // Scroll-mål som begärdes medan sidan inte lyssnade (t.ex. övning tillagd från väljaren)
+    private int? _pendingScrollId;
 
     [ObservableProperty] private string _templateName = AppResources.ActiveWorkout_FreeWorkout;
     [ObservableProperty] private string _elapsedTime = "0:00";
@@ -53,8 +58,9 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         int templateId = 0;
         if (query.TryGetValue("TemplateId", out var val) && val is int id)
             templateId = id;
-        // Navigating back to an ongoing workout (e.g. via "PASS PÅGÅR" banner) — no TemplateId in query
-        if (state.IsActive && !query.ContainsKey("TemplateId"))
+        // Navigating back to an ongoing workout (e.g. via "PASS PÅGÅR" banner, or back from
+        // the post-workout page) — no TemplateId in query. Never start a new workout then.
+        if ((state.IsActive || _session is not null) && !query.ContainsKey("TemplateId"))
             return;
         // Return early only when navigating back from a sub-page during the same ongoing workout
         if (_session is not null && _templateId == templateId)
@@ -89,7 +95,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             if (_activeCycle is not null)
             {
                 WeekDayHeader = string.Format(AppResources.ActiveWorkout_Week_Day_Format,
-                    _activeCycle.WeekNumber, ComputeDayNumber());
+                    _activeCycle.WeekNumber, await ComputeDayNumberAsync());
                 WeekDaySubHeader = string.Format(AppResources.ActiveWorkout_DayLabel_Format,
                     ComputeDayName(), TemplateName);
             }
@@ -146,17 +152,15 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             StartClock();
             state.Activate();
         }
-        catch
+        catch (Exception ex)
         {
-            // Om sessionen hann sparas i DB men laddningen misslyckades — stäng den direkt
-            // så att den inte hamnar som en "orphan" session utan sets och utan CompletedAt.
+            // Om sessionen hann sparas i DB men laddningen misslyckades — ta bort den,
+            // annars blir den ett tomt pass i historiken.
             if (_session is not null)
-            {
-                _session.CompletedAt = DateTime.Now;
-                _ = sessionRepo.SaveSessionAsync(_session);
-            }
+                _ = DeleteSessionSafeAsync(_session.Id);
             _session = null;
             Exercises.Clear();
+            await ShowErrorAsync(ex, "LoadAsync");
         }
         finally
         {
@@ -168,11 +172,15 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         Exercise exercise, int orderIndex, int sets = 3, int reps = 8,
         decimal targetWeight = 0, int restSeconds = 90,
         int targetRepsMin = 0, int targetRepsMax = 0, decimal weightIncrementKg = 2.5m,
-        int autoProgressMode = 0, int? supersetGroupId = null, int templateExerciseId = 0)
+        int autoProgressMode = 0, int? supersetGroupId = null, int templateExerciseId = 0,
+        bool scrollIntoView = false)
     {
+        // Sidan kan ligga kvar efter att passet avslutats — lägg aldrig till övningar utan session
+        var session = _session ?? throw new InvalidOperationException("Inget aktivt pass.");
+
         var se = new SessionExercise
         {
-            SessionId = _session!.Id,
+            SessionId = session.Id,
             ExerciseId = exercise.Id,
             OrderIndex = orderIndex,
             SupersetGroupId = supersetGroupId
@@ -184,7 +192,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             SessionExerciseId = se.Id,
             ExerciseId = exercise.Id,
             TemplateExerciseId = templateExerciseId,
-            ExerciseName = exercise.Name,
+            ExerciseName = exercise.DisplayName,
             ExerciseDescription = exercise.Description ?? "",
             DefaultRestSeconds = restSeconds,
             RestSeconds = restSeconds,
@@ -213,7 +221,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             section.ShowRecommendedRirHint = true;
         }
 
-        var prevSets = await sessionRepo.GetLastSessionSetsAsync(exercise.Id, _session!.Id);
+        var prevSets = await sessionRepo.GetLastSessionSetsAsync(exercise.Id, session.Id);
 
         string prevSummary = "";
         if (prevSets.Count > 0)
@@ -223,7 +231,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
                 .Select(s => s.SetType == SetType.Time && s.DurationSeconds > 0
                     ? $"{s.DurationSeconds}s"
                     : s.WeightKg > 0
-                        ? $"{s.WeightKg:G}×{s.Reps}"
+                        ? $"{Kg(s.WeightKg)}×{s.Reps}"
                         : s.Reps > 0
                             ? $"{s.Reps}r"
                             : null)
@@ -237,7 +245,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         WeightSuggestion? rpSuggestion = null;
         if (!(autoProgressMode > 0 && targetWeight > 0))
         {
-            rpSuggestion = await weightProgression.SuggestNextWeightAsync(exercise.Id, _session!.Id, reps);
+            rpSuggestion = await weightProgression.SuggestNextWeightAsync(exercise.Id, session.Id, reps);
             if (rpSuggestion is not null)
                 section.WeightSuggestionReason = rpSuggestion.Reason;
         }
@@ -248,10 +256,10 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
 
             // Progression äger hints när aktiv, annars RP-suggestion från förra passet, sist senaste sessions vikt
             var weightHint = autoProgressMode > 0 && targetWeight > 0
-                ? targetWeight.ToString("G")
+                ? Kg(targetWeight)
                 : rpSuggestion is not null
-                    ? rpSuggestion.WeightKg.ToString("G", CultureInfo.InvariantCulture)
-                    : (prev is { WeightKg: > 0 } ? prev.WeightKg.ToString("G") : "");
+                    ? Kg(rpSuggestion.WeightKg)
+                    : (prev is { WeightKg: > 0 } ? Kg(prev.WeightKg) : "");
             var repsHint = autoProgressMode > 0
                 ? reps.ToString()
                 : prev?.SetType == SetType.Time && prev.DurationSeconds > 0
@@ -273,61 +281,116 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         }
 
         Exercises.Add(section);
-        ScrollToSectionRequested?.Invoke(this, section.SessionExerciseId);
+        if (scrollIntoView)
+            RequestScrollTo(section.SessionExerciseId);
         return section;
     }
 
-    public Task AddExerciseFromPickerAsync(Exercise exercise)
-        => AddExerciseSectionAsync(exercise, Exercises.Count);
+    public Task<WorkoutExerciseSection> AddExerciseFromPickerAsync(Exercise exercise)
+        => AddExerciseSectionAsync(exercise, Exercises.Count, scrollIntoView: true);
+
+    /// <summary>Svensk visning av vikt utan onödiga nollor: 82,5 / 85.</summary>
+    private static string Kg(decimal weightKg) => weightKg.ToString("0.##");
+
+    private static bool TryParseDecimal(string? text, out decimal value) =>
+        decimal.TryParse((text ?? "").Trim().Replace(',', '.'),
+            NumberStyles.Number, CultureInfo.InvariantCulture, out value);
+
+    private void RequestScrollTo(int sessionExerciseId)
+    {
+        var handler = ScrollToSectionRequested;
+        if (handler is null)
+        {
+            _pendingScrollId = sessionExerciseId;
+            return;
+        }
+        handler.Invoke(this, sessionExerciseId);
+    }
+
+    /// <summary>Hämtar (och nollställer) ett scroll-mål som begärdes medan sidan inte lyssnade.</summary>
+    public int? TakePendingScroll()
+    {
+        var id = _pendingScrollId;
+        _pendingScrollId = null;
+        return id;
+    }
+
+    private static async Task ShowErrorAsync(Exception ex, string context)
+    {
+        System.Diagnostics.Debug.WriteLine($"[ActiveWorkout] {context}: {ex}");
+        try { await Toast.Make(AppResources.Common_ErrorRetry).Show(); }
+        catch { /* Toast får inte fälla passet */ }
+    }
 
     [RelayCommand]
     private async Task DismissRirHintAsync()
     {
         ShowRirHint = false;
-        var settings = await settingsRepo.GetAsync();
-        settings.HasSeenRirHint = true;
-        await settingsRepo.SaveAsync(settings);
+        try
+        {
+            var settings = await settingsRepo.GetAsync();
+            settings.HasSeenRirHint = true;
+            await settingsRepo.SaveAsync(settings);
+        }
+        catch (Exception ex) { await ShowErrorAsync(ex, "DismissRirHint"); }
     }
 
     [RelayCommand]
     private async Task AddExerciseAsync()
     {
-        await Shell.Current.GoToAsync(AppRoutes.ExercisePicker, new Dictionary<string, object>
+        try
         {
-            { "CallbackAction", new Action<Exercise>(async ex =>
+            await Shell.Current.GoToAsync(AppRoutes.ExercisePicker, new Dictionary<string, object>
             {
-                await AddExerciseSectionAsync(ex, Exercises.Count);
-            })}
-        });
+                { "CallbackAction", new Action<Exercise>(async ex =>
+                {
+                    try
+                    {
+                        await AddExerciseSectionAsync(ex, Exercises.Count, scrollIntoView: true);
+                    }
+                    catch (Exception e) { await ShowErrorAsync(e, "AddExercise"); }
+                })}
+            });
+        }
+        catch (Exception ex) { await ShowErrorAsync(ex, "AddExercise"); }
     }
 
     [RelayCommand]
     private async Task RemoveExerciseAsync(WorkoutExerciseSection section)
     {
-        var loggedCount = section.Sets.Count(s => s.IsCompleted);
-        var detail = loggedCount > 0
-            ? string.Format(AppResources.ActiveWorkout_RemoveExercise_Body_Logs, section.ExerciseName, loggedCount)
-            : string.Format(AppResources.ActiveWorkout_RemoveExercise_Body_Empty, section.ExerciseName);
-        var ok = await Shell.Current.DisplayAlert(
-            AppResources.ActiveWorkout_RemoveExercise_Title,
-            detail,
-            AppResources.Common_Delete, AppResources.Common_Cancel);
-        if (!ok) return;
-        await sessionRepo.DeleteSessionExerciseWithSetsAsync(section.SessionExerciseId);
-        Exercises.Remove(section);
+        try
+        {
+            var loggedCount = section.Sets.Count(s => s.IsCompleted);
+            var detail = loggedCount > 0
+                ? string.Format(AppResources.ActiveWorkout_RemoveExercise_Body_Logs, section.ExerciseName, loggedCount)
+                : string.Format(AppResources.ActiveWorkout_RemoveExercise_Body_Empty, section.ExerciseName);
+            var ok = await Shell.Current.DisplayAlert(
+                AppResources.ActiveWorkout_RemoveExercise_Title,
+                detail,
+                AppResources.Common_Delete, AppResources.Common_Cancel);
+            if (!ok) return;
+            await sessionRepo.DeleteSessionExerciseWithSetsAsync(section.SessionExerciseId);
+            Exercises.Remove(section);
+            RefreshPRBanner();
+        }
+        catch (Exception ex) { await ShowErrorAsync(ex, "RemoveExercise"); }
     }
 
     [RelayCommand]
     private async Task ChangeRestTimeAsync(WorkoutExerciseSection section)
     {
-        var result = await Shell.Current.DisplayPromptAsync(
-            AppResources.ActiveWorkout_RestTime_Title,
-            string.Format(AppResources.ActiveWorkout_RestTime_Body_Format, section.ExerciseName),
-            initialValue: section.RestSeconds.ToString(),
-            keyboard: Keyboard.Numeric);
+        try
+        {
+            var result = await Shell.Current.DisplayPromptAsync(
+                AppResources.ActiveWorkout_RestTime_Title,
+                string.Format(AppResources.ActiveWorkout_RestTime_Body_Format, section.ExerciseName),
+                initialValue: section.RestSeconds.ToString(),
+                keyboard: Keyboard.Numeric);
 
-        if (int.TryParse(result, out var secs) && secs > 0)
-            section.RestSeconds = secs;
+            if (int.TryParse(result, out var secs) && secs > 0)
+                section.RestSeconds = secs;
+        }
+        catch (Exception ex) { await ShowErrorAsync(ex, "ChangeRestTime"); }
     }
 
     [RelayCommand]
@@ -342,25 +405,78 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             WeightText = last?.WeightText ?? "",
             RepsText = last?.RepsText ?? "8",
             TargetReps = section.TargetReps,
+            TargetRir = section.TargetRir,
             IsFreshlyAdded = true
         });
     }
 
-    [RelayCommand]
-    private void RemoveSet(WorkoutExerciseSection section)
+    /// <summary>
+    /// "− SET": sista raden tas bort. Är den loggad krävs bekräftelse, eftersom setet
+    /// då också raderas ur databasen och historiken.
+    /// </summary>
+    public async Task<bool> ConfirmRemoveLastSetAsync(WorkoutExerciseSection section)
     {
-        if (section.Sets.Count > 1)
-            section.Sets.RemoveAt(section.Sets.Count - 1);
+        if (section.Sets.Count <= 1) return false;
+        var last = section.Sets[^1];
+        if (!last.IsCompleted) return true;
+        try
+        {
+            return await Shell.Current.DisplayAlert(
+                AppResources.ActiveWorkout_RemoveLoggedSet_Title,
+                string.Format(AppResources.ActiveWorkout_RemoveLoggedSet_Body_Format, last.SetNumber, section.ExerciseName),
+                AppResources.Common_Delete, AppResources.Common_Cancel);
+        }
+        catch (Exception ex)
+        {
+            await ShowErrorAsync(ex, "ConfirmRemoveLastSet");
+            return false;
+        }
+    }
+
+    /// <summary>Tar bort sista raden (och dess LoggedSet i databasen). False om det misslyckades.</summary>
+    public async Task<bool> RemoveLastSetAsync(WorkoutExerciseSection section)
+    {
+        if (section.Sets.Count <= 1) return false;
+        var last = section.Sets[^1];
+        await _setLock.WaitAsync();
+        try
+        {
+            if (last.LoggedSetId > 0)
+                await sessionRepo.DeleteLoggedSetAsync(last.LoggedSetId);
+            last.LoggedSetId = 0;
+            section.Sets.Remove(last);
+            RefreshPRBanner();
+            return true;
+        }
+        catch (Exception ex)
+        {
+            await ShowErrorAsync(ex, "RemoveLastSet");
+            return false;
+        }
+        finally
+        {
+            _setLock.Release();
+        }
     }
 
     [RelayCommand]
-    private void DeleteSet(LoggedSetRow set)
+    private async Task DeleteSetAsync(LoggedSetRow set)
     {
         var section = Exercises.FirstOrDefault(e => e.Sets.Contains(set));
         if (section is null || section.Sets.Count <= 1) return;
-        section.Sets.Remove(set);
-        for (int i = 0; i < section.Sets.Count; i++)
-            section.Sets[i].SetNumber = i + 1;
+        await _setLock.WaitAsync();
+        try
+        {
+            if (set.LoggedSetId > 0)
+                await sessionRepo.DeleteLoggedSetAsync(set.LoggedSetId);
+            set.LoggedSetId = 0;
+            section.Sets.Remove(set);
+            for (int i = 0; i < section.Sets.Count; i++)
+                section.Sets[i].SetNumber = i + 1;
+            RefreshPRBanner();
+        }
+        catch (Exception ex) { await ShowErrorAsync(ex, "DeleteSet"); }
+        finally { _setLock.Release(); }
     }
 
     [RelayCommand]
@@ -389,14 +505,84 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         var prev = section.Sets[idx - 1];
         var baseStr = !string.IsNullOrEmpty(prev.WeightText) ? prev.WeightText : prev.PrevWeightHint;
         if (string.IsNullOrEmpty(baseStr)) return;
-        if (!decimal.TryParse(baseStr, System.Globalization.NumberStyles.Any,
-                System.Globalization.CultureInfo.InvariantCulture, out var baseW) || baseW <= 0) return;
+        // "82,5" och "82.5" ska båda bli 82,5 — aldrig NumberStyles.Any (då blir "82,5" 825)
+        if (!TryParseDecimal(baseStr, out var baseW) || baseW <= 0) return;
         var suggested = Math.Round(baseW * 0.8m / 2.5m) * 2.5m;
-        set.WeightText = suggested.ToString("G", System.Globalization.CultureInfo.InvariantCulture);
+        set.WeightText = Kg(suggested);
     }
 
-    [RelayCommand]
+    /// <summary>Returnerar ett felmeddelande om raden saknar giltiga reps/sekunder, annars null.</summary>
+    private static string? ParseSet(LoggedSetRow set, out decimal weight, out int reps, out int durationSeconds)
+    {
+        reps = 0;
+        durationSeconds = 0;
+        if (!TryParseDecimal(set.WeightText, out weight) || weight < 0)
+            weight = 0;
+
+        if (set.SetType == SetType.Time)
+        {
+            if (!int.TryParse(set.RepsText, out durationSeconds) || durationSeconds <= 0)
+                return AppResources.ActiveWorkout_Toast_EnterDuration;
+        }
+        else if (!int.TryParse(set.RepsText, out reps) || reps <= 0)
+        {
+            return AppResources.ActiveWorkout_Toast_EnterReps;
+        }
+        return null;
+    }
+
+    private async Task<bool> EvaluatePRAsync(LoggedSetRow set, decimal weight, int reps) =>
+        set.SetType == SetType.Normal && weight > 0 && reps > 0
+        && await pr.IsPRAsync(set.ExerciseId, weight, reps, set.LoggedSetId, _session?.Id ?? 0);
+
+    private LoggedSet ToLoggedSet(LoggedSetRow set, decimal weight, int reps, int durationSeconds, bool isPR) => new()
+    {
+        Id = set.LoggedSetId,
+        SessionExerciseId = set.SessionExerciseId,
+        SetNumber = set.SetNumber,
+        WeightKg = weight,
+        Reps = reps,
+        // Ingen RIR angiven → null, så att coachen inte tolkar det som RIR 0
+        RIR = set.Rir >= 0 ? set.Rir : null,
+        LoggedAt = set.LoggedAt,
+        IsPR = isPR,
+        SetType = set.SetType,
+        DurationSeconds = durationSeconds
+    };
+
+    // Samtidiga körningar tillåts så att ✓ på nästa rad inte ignoreras medan föregående sparas;
+    // IsSaving per rad + _setLock förhindrar dubbletter och håller ordningen.
+    [RelayCommand(AllowConcurrentExecutions = true)]
     private async Task CompleteSetAsync(LoggedSetRow set)
+    {
+        if (set.IsSaving) return;   // dubbeltryck på ✓
+        set.IsSaving = true;
+        await _setLock.WaitAsync();
+        try
+        {
+            if (set.IsCompleted)
+            {
+                // ✓ på ett klart set: ändrade värden sparas (även om fältet nyss lämnades
+                // och sparade sig självt), annars växlar setet tillbaka till ej klart.
+                var justEdited = DateTime.Now - set.LastEditSavedAt < TimeSpan.FromSeconds(1.5);
+                if (set.HasUnsavedEdits)
+                    await SaveEditedSetCoreAsync(set);
+                else if (!justEdited)
+                    await UncompleteSetCoreAsync(set);
+                return;
+            }
+
+            await LogSetCoreAsync(set);
+        }
+        catch (Exception ex) { await ShowErrorAsync(ex, "CompleteSet"); }
+        finally
+        {
+            _setLock.Release();
+            set.IsSaving = false;
+        }
+    }
+
+    private async Task LogSetCoreAsync(LoggedSetRow set)
     {
         // Auto-fill från hint om fälten är tomma
         if (string.IsNullOrWhiteSpace(set.WeightText) && !string.IsNullOrWhiteSpace(set.PrevWeightHint))
@@ -404,62 +590,28 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         if (string.IsNullOrWhiteSpace(set.RepsText) && !string.IsNullOrWhiteSpace(set.PrevRepsHint))
             set.RepsText = set.PrevRepsHint;
 
-        decimal weight = 0;
-        int reps = 0;
-        int durationSeconds = 0;
-
-        if (set.SetType == SetType.Time)
+        var error = ParseSet(set, out var weight, out var reps, out var durationSeconds);
+        if (error is not null)
         {
-            decimal.TryParse(set.WeightText.Replace(',', '.'),
-                NumberStyles.Number, CultureInfo.InvariantCulture, out weight);
-
-            if (!int.TryParse(set.RepsText, out durationSeconds) || durationSeconds <= 0)
-            {
-                await Toast.Make(AppResources.ActiveWorkout_Toast_EnterDuration).Show();
-                return;
-            }
-        }
-        else
-        {
-            decimal.TryParse(set.WeightText.Replace(',', '.'),
-                NumberStyles.Number, CultureInfo.InvariantCulture, out weight);
-            if (!int.TryParse(set.RepsText, out reps) || reps <= 0)
-            {
-                await Toast.Make(AppResources.ActiveWorkout_Toast_EnterReps).Show();
-                return;
-            }
+            await Toast.Make(error).Show();
+            return;
         }
 
-        var rir = set.Rir >= 0 ? set.Rir : 0;
-        var isPR = set.SetType == SetType.Normal && weight > 0 && reps > 0
-            ? await pr.IsPRAsync(set.ExerciseId, weight, reps)
-            : false;
+        var isPR = await EvaluatePRAsync(set, weight, reps);
 
-        var loggedSet = new LoggedSet
-        {
-            SessionExerciseId = set.SessionExerciseId,
-            SetNumber = set.SetNumber,
-            WeightKg = weight,
-            Reps = reps,
-            RIR = rir,
-            LoggedAt = DateTime.Now,
-            IsPR = isPR,
-            SetType = set.SetType,
-            DurationSeconds = durationSeconds
-        };
+        set.LoggedAt = DateTime.Now;
+        var loggedSet = ToLoggedSet(set, weight, reps, durationSeconds, isPR);
         await sessionRepo.SaveLoggedSetAsync(loggedSet);
 
+        // Spara Id:t så att senare ändringar uppdaterar samma rad i stället för att infoga en dubblett
+        set.LoggedSetId = loggedSet.Id;
+        set.SavedWeightText = set.WeightText;
+        set.SavedRepsText = set.RepsText;
         set.IsCompleted = true;
         set.IsPR = isPR;
 
         if (isPR)
-        {
-            HasPR = true;
-            var name = GetExerciseName(set.SessionExerciseId);
-            var est = PRService.CalculateEpley1RM(weight, reps);
-            PrMessage = string.Format(AppResources.ActiveWorkout_PR_Message_Format, name, weight, reps, est.ToString("F0"));
-            PRScored?.Invoke(this, EventArgs.Empty);
-        }
+            AnnouncePR(set, weight, reps);
 
         // Timer och superset-navigering
         if (set.SetType is SetType.Normal or SetType.Time)
@@ -473,11 +625,100 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         {
             var nextIdx = Exercises.IndexOf(completedSection) + 1;
             if (nextIdx < Exercises.Count)
-                ScrollToSectionRequested?.Invoke(this, Exercises[nextIdx].SessionExerciseId);
+                RequestScrollTo(Exercises[nextIdx].SessionExerciseId);
 
             // RP-clone Task 26: trigga MuscleFeedbackSheet när sista övningen i muskelgruppen är klar
             _ = MaybeShowMuscleFeedbackAsync(completedSection);
         }
+    }
+
+    private async Task UncompleteSetCoreAsync(LoggedSetRow set)
+    {
+        if (set.LoggedSetId > 0)
+            await sessionRepo.DeleteLoggedSetAsync(set.LoggedSetId);
+        set.LoggedSetId = 0;
+        set.IsCompleted = false;
+        set.IsPR = false;
+        RefreshPRBanner();
+    }
+
+    /// <summary>
+    /// Sparar ändrad vikt/reps på ett redan loggat set (anropas när fältet lämnas).
+    /// Uppdaterar befintlig LoggedSet — infogar aldrig en ny.
+    /// </summary>
+    public async Task CommitSetEditsAsync(LoggedSetRow set)
+    {
+        if (!set.HasUnsavedEdits) return;
+        await _setLock.WaitAsync();
+        try
+        {
+            if (set.HasUnsavedEdits)
+            {
+                await SaveEditedSetCoreAsync(set);
+                set.LastEditSavedAt = DateTime.Now;
+            }
+        }
+        catch (Exception ex) { await ShowErrorAsync(ex, "CommitSetEdits"); }
+        finally { _setLock.Release(); }
+    }
+
+    /// <summary>RIR-växlaren: – → 0 → 1 → 2 → 3 → 4+ → –. Ett loggat set sparas direkt.</summary>
+    [RelayCommand(AllowConcurrentExecutions = true)]
+    private async Task CycleRirAsync(LoggedSetRow set)
+    {
+        set.CycleRir();   // haptik ges av tryck-animationen i vyn
+        if (!set.IsCompleted || set.LoggedSetId == 0) return;
+        await _setLock.WaitAsync();
+        try
+        {
+            if (set.IsCompleted && set.LoggedSetId > 0)
+                await SaveEditedSetCoreAsync(set);
+        }
+        catch (Exception ex) { await ShowErrorAsync(ex, "CycleRir"); }
+        finally { _setLock.Release(); }
+    }
+
+    private async Task SaveEditedSetCoreAsync(LoggedSetRow set)
+    {
+        var error = ParseSet(set, out var weight, out var reps, out var durationSeconds);
+        if (error is not null)
+        {
+            // Ogiltigt värde på ett loggat set — återställ till det som är sparat
+            set.WeightText = set.SavedWeightText;
+            set.RepsText = set.SavedRepsText;
+            await Toast.Make(error).Show();
+            return;
+        }
+
+        var wasPR = set.IsPR;
+        var isPR = await EvaluatePRAsync(set, weight, reps);
+        await sessionRepo.SaveLoggedSetAsync(ToLoggedSet(set, weight, reps, durationSeconds, isPR));
+
+        set.SavedWeightText = set.WeightText;
+        set.SavedRepsText = set.RepsText;
+        set.IsPR = isPR;
+
+        if (isPR && !wasPR)
+            AnnouncePR(set, weight, reps);
+        else if (!isPR && wasPR)
+            RefreshPRBanner();
+    }
+
+    private void AnnouncePR(LoggedSetRow set, decimal weight, int reps)
+    {
+        HasPR = true;
+        var name = GetExerciseName(set.SessionExerciseId);
+        var est = PRService.CalculateEpley1RM(weight, reps);
+        PrMessage = string.Format(AppResources.ActiveWorkout_PR_Message_Format, name, Kg(weight), reps, est.ToString("F0"));
+        PRScored?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <summary>PR-bannern visas bara så länge något loggat set i passet faktiskt är PR.</summary>
+    private void RefreshPRBanner()
+    {
+        if (Exercises.Any(e => e.Sets.Any(s => s.IsPR))) return;
+        HasPR = false;
+        PrMessage = "";
     }
 
     private async Task MaybeShowMuscleFeedbackAsync(WorkoutExerciseSection completedSection)
@@ -503,7 +744,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             vm.Reset();
             vm.SessionId = _session.Id;
             vm.Muscle = completedSection.MuscleGroup;
-            vm.MuscleName = MuscleGroupDisplayName(completedSection.MuscleGroup);
+            vm.MuscleName = completedSection.MuscleGroup.ToLocalizedLabel();
             vm.LastSessionExerciseId = completedSection.SessionExerciseId;
             vm.ShowJointPain = !_jointPainReportedFor.Contains(completedSection.SessionExerciseId);
 
@@ -512,25 +753,12 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             if (page is null) return;
             await page.ShowPopupAsync(sheet);
         }
-        catch
+        catch (Exception ex)
         {
-            // Sheet-fel ska inte krascha pass — silently ignorera
+            // Sheet-fel ska inte krascha pass
+            System.Diagnostics.Debug.WriteLine($"[ActiveWorkout] MuscleFeedbackSheet: {ex}");
         }
     }
-
-    private static string MuscleGroupDisplayName(MuscleGroup g) => g switch
-    {
-        MuscleGroup.Chest     => AppResources.Muscle_Chest,
-        MuscleGroup.Back      => AppResources.Muscle_Back,
-        MuscleGroup.Shoulders => AppResources.Muscle_Shoulders,
-        MuscleGroup.Biceps    => AppResources.Muscle_Biceps,
-        MuscleGroup.Triceps   => AppResources.Muscle_Triceps,
-        MuscleGroup.Legs      => AppResources.Library_Muscle_Legs,
-        MuscleGroup.Core      => AppResources.Library_Muscle_Core,
-        MuscleGroup.FullBody  => AppResources.Library_Muscle_FullBody,
-        MuscleGroup.Forearms  => AppResources.Library_Muscle_Forearms,
-        _                     => AppResources.Library_Muscle_Other,
-    };
 
     private void HandlePostSetTimer(int sessionExerciseId)
     {
@@ -562,7 +790,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         if (allDone)
             StartTimerForSection(sessionExerciseId);
         else if (next != null)
-            ScrollToSectionRequested?.Invoke(this, next.SessionExerciseId);
+            RequestScrollTo(next.SessionExerciseId);
     }
 
     private void CheckAutoProgression(int sessionExerciseId)
@@ -581,8 +809,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         if (!allHitTarget) return;
 
         var maxWeight = normalSets
-            .Select(s => decimal.TryParse(s.WeightText.Replace(',', '.'),
-                NumberStyles.Number, CultureInfo.InvariantCulture, out var w) ? w : 0m)
+            .Select(s => TryParseDecimal(s.WeightText, out var w) ? w : 0m)
             .DefaultIfEmpty(0m)
             .Max();
 
@@ -593,11 +820,11 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         {
             var increment = section.WeightIncrementKg > 0 ? section.WeightIncrementKg : 2.5m;
             var resetReps = section.TargetRepsMin > 0 ? section.TargetRepsMin : currentTarget;
-            AutoProgressMessage = string.Format(AppResources.ActiveWorkout_AutoProgress_WeightUp_Format, section.ExerciseName, (maxWeight + increment).ToString("G"), resetReps);
+            AutoProgressMessage = string.Format(AppResources.ActiveWorkout_AutoProgress_WeightUp_Format, section.ExerciseName, Kg(maxWeight + increment), resetReps);
         }
         else
         {
-            AutoProgressMessage = string.Format(AppResources.ActiveWorkout_AutoProgress_RepsUp_Format, currentTarget + 1, maxWeight.ToString("G"));
+            AutoProgressMessage = string.Format(AppResources.ActiveWorkout_AutoProgress_RepsUp_Format, currentTarget + 1, Kg(maxWeight));
         }
         HasAutoProgress = true;
     }
@@ -647,8 +874,7 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         var section = _currentTimerSection;
         MainThread.BeginInvokeOnMainThread(() =>
         {
-            if (Preferences.Default.Get("haptic_enabled", true))
-                HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
+            AnimationHelper.Haptic(HapticFeedbackType.LongPress);
             if (Preferences.Default.Get("sound_enabled", true))
                 sound.PlayTimerComplete();
             if (section != null) section.IsTimerActive = false;
@@ -677,43 +903,61 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         });
     }
 
-    private void ForceDeactivateCore()
+    private void StopRestTimer()
     {
-        _clockCts?.Cancel();
         timer.Tick -= OnTimerTick;
         timer.Completed -= OnTimerCompleted;
         timer.Cancel();
+        if (_activeTimerSection != null) _activeTimerSection.IsTimerActive = false;
+        _activeTimerSection = null;
+        _currentTimerSection = null;
+    }
+
+    private void ForceDeactivateCore()
+    {
+        _clockCts?.Cancel();
+        StopRestTimer();
         state.Deactivate();
         Exercises.Clear();
         _supersetRound.Clear();
         _feedbackShownFor.Clear();
         _jointPainReportedFor.Clear();
+        _pendingScrollId = null;
         TemplateName = AppResources.ActiveWorkout_FreeWorkout;
         ElapsedTime = "0:00";
         HasPR = false;
         PrMessage = "";
         HasAutoProgress = false;
         AutoProgressMessage = "";
-        _activeTimerSection = null;
-        _currentTimerSection = null;
     }
 
     public void ForceDeactivate()
     {
-        // Stäng eventuell orphan-session (inga sets loggades)
+        // Ett pass utan loggade set ska inte hamna i historiken — ta bort det i stället för att stänga det
         if (_session is not null && !Exercises.Any(s => s.Sets.Any(r => r.IsCompleted)))
-        {
-            var s = _session;
-            s.CompletedAt = DateTime.Now;
-            _ = sessionRepo.SaveSessionAsync(s);
-        }
+            _ = DeleteSessionSafeAsync(_session.Id);
         _session = null;
         notifications.CancelTimer();
         ForceDeactivateCore();
     }
 
-    // TODO Task 30: räkna antal loggade sessioner denna vecka (måndag-söndag) + 1
-    private int ComputeDayNumber() => 1;
+    private async Task DeleteSessionSafeAsync(int sessionId)
+    {
+        try { await sessionRepo.DeleteSessionAsync(sessionId); }
+        catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"[ActiveWorkout] Kunde inte ta bort tomt pass: {ex}"); }
+    }
+
+    // Dag i mesocykel-veckan = antal avslutade pass sedan veckans start + 1
+    private async Task<int> ComputeDayNumberAsync()
+    {
+        if (_activeCycle is null) return 1;
+        var meso = await mesocycles.GetActiveAsync();
+        if (meso is null) return 1;
+        var weekStart = meso.StartDate.Date.AddDays(7 * (_activeCycle.WeekNumber - 1));
+        var doneThisWeek = await sessionRepo.GetCompletedInRangeAsync(weekStart, DateTime.Now);
+        return doneThisWeek.Count + 1;
+    }
+
     private string ComputeDayName() => DateTime.Now.DayOfWeek switch
     {
         DayOfWeek.Monday    => "Måndag",
@@ -727,20 +971,27 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
     };
 
     [RelayCommand]
-    private async Task OpenMesocycleStatsAsync() =>
-        await Shell.Current.GoToAsync(AppRoutes.MesocycleStats);
+    private async Task OpenMesocycleStatsAsync()
+    {
+        try { await Shell.Current.GoToAsync(AppRoutes.MesocycleStats); }
+        catch (Exception ex) { await ShowErrorAsync(ex, "OpenMesocycleStats"); }
+    }
 
     [RelayCommand]
     private async Task ShowStartWeightGuideAsync()
     {
-        await Shell.Current.DisplayAlert(
-            AppResources.StartWeight_Guide_Title,
-            AppResources.StartWeight_Guide_Body,
-            AppResources.Common_OK);
-        ShowStartWeightHint = false;
-        var settings = await settingsRepo.GetAsync();
-        settings.HasSeenStartWeightHint = true;
-        await settingsRepo.SaveAsync(settings);
+        try
+        {
+            await Shell.Current.DisplayAlert(
+                AppResources.StartWeight_Guide_Title,
+                AppResources.StartWeight_Guide_Body,
+                AppResources.Common_OK);
+            ShowStartWeightHint = false;
+            var settings = await settingsRepo.GetAsync();
+            settings.HasSeenStartWeightHint = true;
+            await settingsRepo.SaveAsync(settings);
+        }
+        catch (Exception ex) { await ShowErrorAsync(ex, "ShowStartWeightGuide"); }
     }
 
     [RelayCommand]
@@ -748,35 +999,39 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
     {
         if (section is null) return;
 
-        var options = new[]
+        try
         {
-            AppResources.ExerciseMenu_AddNote,
-            AppResources.ExerciseMenu_MoveUp,
-            AppResources.ExerciseMenu_MoveDown,
-            AppResources.ExerciseMenu_Replace,
-            AppResources.ExerciseMenu_JointPain,
-            AppResources.ExerciseMenu_AddSet,
-            AppResources.ExerciseMenu_SkipSets,
-            AppResources.ExerciseMenu_Remove,
-        };
+            var options = new[]
+            {
+                AppResources.ExerciseMenu_AddNote,
+                AppResources.ExerciseMenu_MoveUp,
+                AppResources.ExerciseMenu_MoveDown,
+                AppResources.ExerciseMenu_Replace,
+                AppResources.ExerciseMenu_JointPain,
+                AppResources.ExerciseMenu_AddSet,
+                AppResources.ExerciseMenu_SkipSets,
+                AppResources.ExerciseMenu_Remove,
+            };
 
-        var page = Shell.Current?.CurrentPage;
-        if (page is null) return;
-        var choice = await page.DisplayActionSheet(
-            AppResources.ExerciseMenu_Title,
-            AppResources.Common_Cancel,
-            null,
-            options);
-        if (string.IsNullOrEmpty(choice) || choice == AppResources.Common_Cancel) return;
+            var page = Shell.Current?.CurrentPage;
+            if (page is null) return;
+            var choice = await page.DisplayActionSheet(
+                AppResources.ExerciseMenu_Title,
+                AppResources.Common_Cancel,
+                null,
+                options);
+            if (string.IsNullOrEmpty(choice) || choice == AppResources.Common_Cancel) return;
 
-        if      (choice == AppResources.ExerciseMenu_AddNote)   await AddNoteAsync(section);
-        else if (choice == AppResources.ExerciseMenu_MoveUp)    MoveSection(section, -1);
-        else if (choice == AppResources.ExerciseMenu_MoveDown)  MoveSection(section, +1);
-        else if (choice == AppResources.ExerciseMenu_Replace)   await ReplaceExerciseAsync(section);
-        else if (choice == AppResources.ExerciseMenu_JointPain) await OpenJointPainSheetAsync(section);
-        else if (choice == AppResources.ExerciseMenu_AddSet)    AddSet(section);
-        else if (choice == AppResources.ExerciseMenu_SkipSets)  await SkipRemainingSetsAsync(section);
-        else if (choice == AppResources.ExerciseMenu_Remove)    await RemoveExerciseAsync(section);
+            if      (choice == AppResources.ExerciseMenu_AddNote)   await AddNoteAsync(section);
+            else if (choice == AppResources.ExerciseMenu_MoveUp)    MoveSection(section, -1);
+            else if (choice == AppResources.ExerciseMenu_MoveDown)  MoveSection(section, +1);
+            else if (choice == AppResources.ExerciseMenu_Replace)   await ReplaceExerciseAsync(section);
+            else if (choice == AppResources.ExerciseMenu_JointPain) await OpenJointPainSheetAsync(section);
+            else if (choice == AppResources.ExerciseMenu_AddSet)    AddSet(section);
+            else if (choice == AppResources.ExerciseMenu_SkipSets)  await SkipRemainingSetsAsync(section);
+            else if (choice == AppResources.ExerciseMenu_Remove)    await RemoveExerciseAsync(section);
+        }
+        catch (Exception ex) { await ShowErrorAsync(ex, "ShowExerciseMenu"); }
     }
 
     private async Task AddNoteAsync(WorkoutExerciseSection section)
@@ -807,11 +1062,18 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
         {
             { "CallbackAction", new Action<Exercise>(async ex =>
             {
-                await sessionRepo.UpdateSessionExerciseExerciseIdAsync(section.SessionExerciseId, ex.Id);
-                section.ExerciseId = ex.Id;
-                section.ExerciseName = ex.Name;
-                section.MuscleGroup = ex.MuscleGroup;
-                section.NotifyExerciseChanged();
+                try
+                {
+                    await sessionRepo.UpdateSessionExerciseExerciseIdAsync(section.SessionExerciseId, ex.Id);
+                    section.ExerciseId = ex.Id;
+                    section.ExerciseName = ex.DisplayName;
+                    section.MuscleGroup = ex.MuscleGroup;
+                    // PR-kontrollen per set går på ExerciseId — följ med bytet
+                    foreach (var row in section.Sets)
+                        row.ExerciseId = ex.Id;
+                    section.NotifyExerciseChanged();
+                }
+                catch (Exception e) { await ShowErrorAsync(e, "ReplaceExercise"); }
             })}
         });
     }
@@ -838,9 +1100,10 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             if (page is null) return;
             await page.ShowPopupAsync(sheet);
         }
-        catch
+        catch (Exception ex)
         {
             // Sheet-fel ska inte krascha pass
+            System.Diagnostics.Debug.WriteLine($"[ActiveWorkout] JointPainSheet: {ex}");
         }
     }
 
@@ -854,14 +1117,18 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
     }
 
     [RelayCommand]
-    private async Task OpenPlateCalculatorAsync() =>
-        await Shell.Current.GoToAsync(AppRoutes.PlateCalculator);
+    private async Task OpenPlateCalculatorAsync()
+    {
+        try { await Shell.Current.GoToAsync(AppRoutes.PlateCalculator); }
+        catch (Exception ex) { await ShowErrorAsync(ex, "OpenPlateCalculator"); }
+    }
 
     [RelayCommand]
     private async Task ShowExerciseInfoAsync(WorkoutExerciseSection section)
     {
         if (string.IsNullOrWhiteSpace(section.ExerciseDescription)) return;
-        await Shell.Current.DisplayAlert(section.ExerciseName, section.ExerciseDescription, "OK");
+        try { await Shell.Current.DisplayAlert(section.ExerciseName, section.ExerciseDescription, AppResources.Common_OK); }
+        catch (Exception ex) { await ShowErrorAsync(ex, "ShowExerciseInfo"); }
     }
 
     private void StartClock()
@@ -888,37 +1155,71 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
     [RelayCommand]
     private async Task FinishWorkoutAsync()
     {
-        var confirmed = await Shell.Current.DisplayAlert(
-            AppResources.ActiveWorkout_FinishConfirm_Title,
-            AppResources.ActiveWorkout_FinishConfirm_Body,
-            AppResources.ActiveWorkout_FinishConfirm_Yes,
-            AppResources.Common_Continue);
-        if (!confirmed) return;
-
-        _clockCts?.Cancel();
-        timer.Tick -= OnTimerTick;
-        timer.Completed -= OnTimerCompleted;
-        timer.Cancel();
-
         if (_session is null) return;
-
-        // CompletedAt sätts INTE här — defer till CommitFinishAsync
-        var sessionId = _session.Id;
-        state.Deactivate();   // döljer bannern men lämnar _session och Exercises intakta
-
-        await Shell.Current.GoToAsync(AppRoutes.PostWorkout, new Dictionary<string, object>
+        try
         {
-            { "SessionId", sessionId }
-        });
+            // Ett pass utan ett enda loggat set ska inte hamna i historiken
+            if (!Exercises.Any(s => s.Sets.Any(r => r.IsCompleted)))
+            {
+                var discard = await Shell.Current.DisplayAlert(
+                    AppResources.ActiveWorkout_FinishEmpty_Title,
+                    AppResources.ActiveWorkout_FinishEmpty_Body,
+                    AppResources.ActiveWorkout_FinishEmpty_Discard,
+                    AppResources.Common_Continue);
+                if (!discard) return;
+
+                var emptyId = _session.Id;
+                _session = null;
+                notifications.CancelTimer();
+                ForceDeactivateCore();
+                await sessionRepo.DeleteSessionAsync(emptyId);
+                await Shell.Current.GoToAsync(AppRoutes.Back);
+                return;
+            }
+
+            var confirmed = await Shell.Current.DisplayAlert(
+                AppResources.ActiveWorkout_FinishConfirm_Title,
+                AppResources.ActiveWorkout_FinishConfirm_Body,
+                AppResources.ActiveWorkout_FinishConfirm_Yes,
+                AppResources.Common_Continue);
+            if (!confirmed || _session is null) return;
+
+            // Vänta in pågående set-sparningar (t.ex. ett fält som just lämnades)
+            await _setLock.WaitAsync();
+            _setLock.Release();
+
+            // Passet räknas som avslutat direkt, så att meriter och historik ser det på
+            // efter-passet-sidan. Ångra där nollställer CompletedAt; KLAR sparar anteckningarna.
+            _session.CompletedAt = DateTime.Now;
+            await sessionRepo.SaveSessionAsync(_session);
+
+            _clockCts?.Cancel();
+            StopRestTimer();
+            notifications.CancelTimer();
+
+            var sessionId = _session.Id;
+            state.Deactivate();   // döljer bannern men lämnar _session och Exercises intakta
+
+            await Shell.Current.GoToAsync(AppRoutes.PostWorkout, new Dictionary<string, object>
+            {
+                { "SessionId", sessionId }
+            });
+        }
+        catch (Exception ex) { await ShowErrorAsync(ex, "FinishWorkout"); }
     }
 
-    public async Task CommitFinishAsync(string notes)
+    /// <summary>
+    /// Sparar anteckningar och släpper passet. False om passet inte längre är det pågående
+    /// (redan sparat, eller ett nytt pass har startats) — anroparen sparar då anteckningarna själv.
+    /// </summary>
+    public async Task<bool> CommitFinishAsync(int sessionId, string notes)
     {
-        if (_session is null) return;
+        // Rör aldrig ett annat (nyare) pass än det efter-passet-sidan visar
+        if (_session is null || _session.Id != sessionId) return false;
         WorkoutSession committed = _session;
         try
         {
-            committed.CompletedAt = DateTime.Now;
+            committed.CompletedAt ??= DateTime.Now;
             committed.Notes = notes;
             await sessionRepo.SaveSessionAsync(committed);
             await ApplyProgressionAsync();
@@ -929,14 +1230,19 @@ public partial class ActiveWorkoutViewModel(DatabaseService db, PRService pr, Re
             notifications.CancelTimer();
             ForceDeactivateCore();
         }
+        return true;
     }
 
-    public void ResumeFromPostWorkout()
+    /// <summary>"Ångra" på efter-passet-sidan: passet blir pågående igen. False om det redan är sparat.</summary>
+    public async Task<bool> ResumeFromPostWorkoutAsync(int sessionId)
     {
-        if (_session is null) return;
+        if (_session is null || _session.Id != sessionId) return false;
+        _session.CompletedAt = null;
+        await sessionRepo.SaveSessionAsync(_session);
         state.Activate();
         // Återstarta klockan från befintlig _startTime
         StartClock();
+        return true;
     }
 
     private Task ApplyProgressionAsync()

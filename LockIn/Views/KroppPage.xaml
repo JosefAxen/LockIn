@@ -15,41 +15,45 @@
 
     <Grid SafeAreaEdges="None">
 
-        <!-- Atmosf�risk bakgrund -->
+        <!-- Atmosfärisk bakgrund -->
         <controls:AtmosphericBackgroundView InputTransparent="True"/>
 
         <!-- Permanent status bar gradient (alltid synlig, fyller Dynamic Island-zonen) -->
         <BoxView VerticalOptions="Start" HeightRequest="90" InputTransparent="True" ZIndex="19">
             <BoxView.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <GradientStop Color="{AppThemeBinding Light=#28FCFCFC, Dark=#28141418}" Offset="0.0"/>
-                    <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark=#00141418}" Offset="1.0"/>
+                    <GradientStop Color="{AppThemeBinding Light=#28FCFCFC, Dark={StaticResource ForgeStatusBarOverlay}}" Offset="0.0"/>
+                    <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark={StaticResource ForgeStatusBarOverlayClear}}" Offset="1.0"/>
                 </LinearGradientBrush>
             </BoxView.Background>
         </BoxView>
 
         <!-- Sticky header (fades in on scroll) -->
+        <!-- Bara kugghjulet tar emot tryck, och bara när headern syns (styrs i OnScrolled). -->
         <Grid x:Name="StickyHeader" VerticalOptions="Start" ZIndex="20" Opacity="0"
-              HeightRequest="150" SafeAreaEdges="None">
+              HeightRequest="150" SafeAreaEdges="None"
+              InputTransparent="True" CascadeInputTransparent="False">
             <BoxView InputTransparent="True">
                 <BoxView.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                        <GradientStop Color="{AppThemeBinding Light=#D8FCFCFC, Dark=#D8141418}" Offset="0.0"/>
-                        <GradientStop Color="{AppThemeBinding Light=#90FCFCFC, Dark=#90141418}" Offset="0.35"/>
-                        <GradientStop Color="{AppThemeBinding Light=#38FCFCFC, Dark=#38141418}" Offset="0.65"/>
-                        <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark=#00141418}" Offset="1.0"/>
+                        <GradientStop Color="{AppThemeBinding Light=#D8FCFCFC, Dark={StaticResource ForgeStickyHeaderTop}}" Offset="0.0"/>
+                        <GradientStop Color="{AppThemeBinding Light=#90FCFCFC, Dark={StaticResource ForgeStickyHeaderMid1}}" Offset="0.35"/>
+                        <GradientStop Color="{AppThemeBinding Light=#38FCFCFC, Dark={StaticResource ForgeStickyHeaderMid2}}" Offset="0.65"/>
+                        <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark={StaticResource ForgeStatusBarOverlayClear}}" Offset="1.0"/>
                     </LinearGradientBrush>
                 </BoxView.Background>
             </BoxView>
-            <Grid Padding="20,14,16,12" VerticalOptions="Start">
+            <Grid Padding="20,14,16,12" VerticalOptions="Start"
+                  InputTransparent="True" CascadeInputTransparent="False">
                 <Label Text="{loc:Localize Kropp_Title}"
                        HorizontalOptions="Center" HorizontalTextAlignment="Center"
                        Style="{StaticResource DisplayLabel}" FontSize="18"
-                       VerticalOptions="Center"/>
-                <Border HorizontalOptions="End" VerticalOptions="Center"
-                        BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}"
-                        StrokeShape="RoundRectangle 12" StrokeThickness="0"
-                        WidthRequest="44" HeightRequest="44">
+                       VerticalOptions="Center" InputTransparent="True"/>
+                <Border x:Name="StickySettingsButton"
+                        Style="{StaticResource IconCircleButton}"
+                        HorizontalOptions="End"
+                        InputTransparent="True"
+                        SemanticProperties.Description="{loc:Localize A11y_Settings}">
                     <views:AppIcon Source="tab_settings.png"
                                   WidthRequest="20" HeightRequest="20"
                                   HorizontalOptions="Center" VerticalOptions="Center"/>
@@ -68,7 +72,7 @@
         <ScrollView IsVisible="{Binding IsLoading, Converter={x:Static vm:InverseBoolConverter.Instance}}"
                     VerticalScrollBarVisibility="Never"
                     Scrolled="OnScrolled">
-                <VerticalStackLayout Padding="16,56,16,100" Spacing="14">
+                <VerticalStackLayout x:Name="ScrollContent" Padding="16,56,16,120" Spacing="14">
 
                     <!-- Page title -->
                     <Grid ColumnDefinitions="*,Auto" Margin="4,0,0,4">
@@ -77,10 +81,8 @@
                                TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
                                VerticalOptions="Center"/>
                         <Border Grid.Column="1"
-                                BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}"
-                                StrokeShape="RoundRectangle 12" StrokeThickness="0"
-                                WidthRequest="44" HeightRequest="44"
-                                VerticalOptions="Center">
+                                Style="{StaticResource IconCircleButton}"
+                                SemanticProperties.Description="{loc:Localize A11y_Settings}">
                             <views:AppIcon Source="tab_settings.png"
                                           WidthRequest="20" HeightRequest="20"
                                           HorizontalOptions="Center" VerticalOptions="Center"/>
@@ -90,12 +92,12 @@
                         </Border>
                     </Grid>
 
-                    <!-- Segment tabs � iOS glass pill -->
+                    <!-- Segment tabs — iOS glass pill -->
                     <Border BackgroundColor="{StaticResource ForgePillTrack}"
                             StrokeThickness="0"
                             StrokeShape="RoundRectangle 50"
                             Padding="2">
-                        <Grid x:Name="TabPills" ColumnDefinitions="*,*,*" HeightRequest="40"
+                        <Grid x:Name="TabPills" ColumnDefinitions="*,*,*" HeightRequest="44"
                               SizeChanged="OnTabContainerSizeChanged">
                             <Border x:Name="TabIndicator" Grid.ColumnSpan="3"
                                     BackgroundColor="{StaticResource ForgePillIndicator}"
@@ -186,7 +188,8 @@
                                 <Label Text="{loc:Localize Kropp_WeightProgress}"
                                        Style="{StaticResource SectionLabel}"
                                        Margin="4,0,0,0"/>
-                                <controls:LineChartView Points="{Binding WeightChartPoints}" StrokeColor="{StaticResource ForgeAccentBlue}" HeightRequest="180" BackgroundColor="Transparent"/>
+                                <controls:LineChartView Points="{Binding WeightChartPoints}" StrokeColor="{StaticResource ForgeAccentBlue}" HeightRequest="180" BackgroundColor="Transparent"
+                                                        SemanticProperties.Description="{Binding WeightChartAccessibilityLabel}"/>
                             </VerticalStackLayout>
                         </Border>
 
@@ -205,15 +208,14 @@
                                                    Style="{StaticResource MutedLabel}"
                                                    VerticalOptions="Center"/>
                                             <Label Grid.Column="1"
-                                                   Text="{Binding WeightKg, StringFormat='{0:F1} kg'}"
+                                                   Text="{Binding WeightKg, StringFormat='{0:0.##} kg'}"
                                                    FontFamily="DMSansMedium" FontSize="15"
                                                    TextColor="{AppThemeBinding Light={StaticResource LightAccentBlue}, Dark={StaticResource ForgeAccentBlue}}"
                                                    VerticalOptions="Center"
                                                    Margin="0,0,12,0"/>
                                             <Border Grid.Column="2"
-                                                    WidthRequest="44" HeightRequest="44"
-                                                    BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}"
-                                                    StrokeShape="Ellipse" StrokeThickness="0">
+                                                    Style="{StaticResource IconCircleButton}"
+                                                    SemanticProperties.Description="{loc:Localize A11y_Delete}">
                                                 <views:AppIcon Source="ic_trash.png"
                                                                WidthRequest="16" HeightRequest="16"
                                                                HorizontalOptions="Center" VerticalOptions="Center"/>
@@ -237,7 +239,7 @@
                                                    HorizontalOptions="Center" VerticalOptions="Center">
                                 <views:AppIcon Source="ic_plus.png"
                                                WidthRequest="18" HeightRequest="18"
-                                               ForceTint="#38BDF8" VerticalOptions="Center"/>
+                                               ForceTint="{StaticResource ForgeAccentBlue}" VerticalOptions="Center"/>
                                 <Label Text="{loc:Localize Kropp_LogWeight}"
                                        FontFamily="BebasNeue" FontSize="20" CharacterSpacing="3"
                                        TextColor="{StaticResource ForgeAccentBlue}" VerticalOptions="Center"/>
@@ -318,9 +320,8 @@
                                                        Style="{StaticResource MutedLabel}" FontSize="12"/>
                                             </VerticalStackLayout>
                                             <Border Grid.Column="1"
-                                                    WidthRequest="44" HeightRequest="44"
-                                                    BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface2}, Dark={StaticResource ForgeSurface2}}"
-                                                    StrokeShape="Ellipse" StrokeThickness="0">
+                                                    Style="{StaticResource IconCircleButton}"
+                                                    SemanticProperties.Description="{loc:Localize A11y_Delete}">
                                                 <views:AppIcon Source="ic_trash.png"
                                                                WidthRequest="16" HeightRequest="16"
                                                                HorizontalOptions="Center" VerticalOptions="Center"/>
@@ -344,7 +345,7 @@
                                                    HorizontalOptions="Center" VerticalOptions="Center">
                                 <views:AppIcon Source="ic_plus.png"
                                                WidthRequest="18" HeightRequest="18"
-                                               ForceTint="#A78BFA" VerticalOptions="Center"/>
+                                               ForceTint="{StaticResource ForgeAccentPurple}" VerticalOptions="Center"/>
                                 <Label Text="{loc:Localize Kropp_LogMeasurement}"
                                        FontFamily="BebasNeue" FontSize="20" CharacterSpacing="3"
                                        TextColor="{StaticResource ForgeAccentPurple}" VerticalOptions="Center"/>
@@ -372,7 +373,7 @@
                 </VerticalStackLayout>
             </ScrollView>
 
-            <!-- = WORKOUT BANNER � Live Forge Capsule = -->
+            <!-- = WORKOUT BANNER — Live Forge Capsule = -->
             <Grid x:Name="WorkoutBanner"
                   IsVisible="False"
                   VerticalOptions="End"
@@ -387,7 +388,8 @@
                 <Border StrokeThickness="1"
                         Stroke="{StaticResource ForgeBannerStroke}"
                         StrokeShape="RoundRectangle 22"
-                        Padding="16,9,18,10">
+                        Padding="16,9,18,10"
+                        SemanticProperties.Description="{loc:Localize A11y_ActiveWorkout}">
                     <Border.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                             <GradientStop Color="{StaticResource ForgeSurface2}" Offset="0"/>
@@ -413,14 +415,14 @@
                 </Border>
             </Grid>
 
-    <!-- Bottom gradient fade behind floating tab bar � matchar topp-gradienten spegelv�nt -->
+    <!-- Bottom gradient fade behind floating tab bar — matchar topp-gradienten spegelvänt -->
     <BoxView Grid.RowSpan="99" InputTransparent="True" VerticalOptions="End" HeightRequest="150">
         <BoxView.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark=#00141418}" Offset="0.0"/>
-                <GradientStop Color="{AppThemeBinding Light=#38FCFCFC, Dark=#38141418}" Offset="0.35"/>
-                <GradientStop Color="{AppThemeBinding Light=#90FCFCFC, Dark=#90141418}" Offset="0.65"/>
-                <GradientStop Color="{AppThemeBinding Light=#FCFCFC, Dark=#141418}" Offset="1.0"/>
+                <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark={StaticResource ForgeStatusBarOverlayClear}}" Offset="0.0"/>
+                <GradientStop Color="{AppThemeBinding Light=#38FCFCFC, Dark={StaticResource ForgeBottomFadeMid1}}" Offset="0.35"/>
+                <GradientStop Color="{AppThemeBinding Light=#90FCFCFC, Dark={StaticResource ForgeBottomFadeMid2}}" Offset="0.65"/>
+                <GradientStop Color="{AppThemeBinding Light=#FCFCFC, Dark={StaticResource ForgeBottomFadeBottom}}" Offset="1.0"/>
             </LinearGradientBrush>
         </BoxView.Background>
     </BoxView>

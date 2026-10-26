@@ -18,7 +18,7 @@
 
     <Grid RowDefinitions="Auto,*,Auto" SafeAreaEdges="None">
 
-        <!-- Atmosf�risk bakgrund -->
+        <!-- Atmosfärisk bakgrund -->
         <controls:AtmosphericBackgroundView Grid.RowSpan="3" InputTransparent="True"/>
 
         <!-- Permanent status bar gradient -->
@@ -49,12 +49,8 @@
         <!-- Header -->
         <Grid Grid.Row="0" Padding="16,56,16,8" ColumnDefinitions="48,*" ZIndex="21">
             <Border Grid.Column="0"
-                    WidthRequest="36" HeightRequest="36"
-                    StrokeShape="Ellipse"
-                    BackgroundColor="#17FFFFFF"
-                    Stroke="#29FFFFFF"
-                    StrokeThickness="0.5"
-                    VerticalOptions="Center">
+                    Style="{StaticResource IconCircleButton}"
+                    SemanticProperties.Description="{loc:Localize A11y_Back}">
                 <Path Style="{StaticResource BackChevron}"/>
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Tapped="OnBackClicked"/>
@@ -70,7 +66,8 @@
 
         <!-- Content -->
         <ScrollView Grid.Row="1" Scrolled="OnScrolled">
-            <VerticalStackLayout Padding="16,4,16,16" Spacing="10">
+            <!-- Bottenpadding 120: tab-baren är synlig och genomskinlig på push-sidor -->
+            <VerticalStackLayout Padding="16,4,16,120" Spacing="10">
 
                 <!-- Description -->
                 <Border Style="{StaticResource CardFrame}" Padding="16,14">
@@ -108,7 +105,7 @@
                                                            FontFamily="DMSansRegular" FontSize="14"
                                                            VerticalOptions="Center"/>
                                                     <Label Grid.Column="1"
-                                                           Text="{Binding Sets, StringFormat='{0}�'}"
+                                                           Text="{Binding Sets, StringFormat='{0}×'}"
                                                            Style="{StaticResource MutedLabel}"
                                                            FontFamily="BebasNeue" FontSize="15"
                                                            VerticalOptions="Center"/>
@@ -136,7 +133,7 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- Bottom gradient fade � matchar topp-gradienten spegelv�nt -->
+        <!-- Bottom gradient fade — matchar topp-gradienten spegelvänt -->
         <BoxView Grid.RowSpan="3" InputTransparent="True" VerticalOptions="End" HeightRequest="150" ZIndex="22">
             <BoxView.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
@@ -148,13 +145,7 @@
             </BoxView.Background>
         </BoxView>
 
-        <!-- Activate button -->
-        <Grid Grid.Row="2" Padding="16,8,16,32" ZIndex="23">
-            <Button Text="{loc:Localize ProgramDetail_ActivateButton}"
-                    Style="{StaticResource PrimaryButton}"
-                    IsEnabled="{Binding IsActivating, Converter={x:StaticResource InvertedBoolConverter}}"
-                    Command="{Binding ActivateCommand}"/>
-        </Grid>
+        <!-- Ingen aktiveringsknapp: program kan inte omvandlas till mallar ännu (Task 21). -->
 
     </Grid>
 

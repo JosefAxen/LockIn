@@ -1,5 +1,6 @@
 using CommunityToolkit.Maui.Extensions;
 using LockIn.Navigation;
+using LockIn.Resources.Strings;
 using LockIn.Services;
 using LockIn.ViewModels;
 using Microsoft.Maui.Devices;
@@ -8,9 +9,16 @@ namespace LockIn.Views;
 
 public partial class HemPage : ContentPage
 {
+    // Bottenpadding för scrollinnehållet: tab-baren, plus "PASS PÅGÅR"-bannern
+    // (Margin 96 + ca 59 pt hög) när den visas.
+    private const double BottomInset = 120;
+    private const double BottomInsetWithBanner = 176;
+
     private readonly HemViewModel _vm;
     private readonly ActiveWorkoutStateService _state;
     private bool _hasLoaded;
+    private bool _healthLoading;
+    private bool _healthErrorShown;
     private CancellationTokenSource? _heatmapCts;
 
     public HemPage(HemViewModel vm, ActiveWorkoutStateService state)
@@ -24,39 +32,77 @@ public partial class HemPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        WorkoutBanner.IsVisible = _state.IsActive;
-        if (_state.IsActive) StartBannerPulse();
+        UpdateBannerState();
         _state.StateChanged += OnWorkoutStateChanged;
 
         StickyHeader.Opacity = 0;
 
-        if (!_hasLoaded)
+        bool animate = !AnimationHelper.ReduceMotion;
+        try
         {
-            Content.Opacity = 0;
-            Content.TranslationY = 16;
-            await _vm.LoadAsync();
+            // Steg 1: lokal data — sidan visas så fort den finns, inte efter Hälsa-dialogen.
+            if (animate)
+            {
+                Content.Opacity = 0;
+                Content.TranslationY = _hasLoaded ? 12 : 16;
+            }
+            if (!_hasLoaded || !animate)
+            {
+                await _vm.LoadLocalAsync();
+                if (animate)
+                    await Task.WhenAll(
+                        Content.FadeTo(1, 400, Easing.CubicOut),
+                        Content.TranslateTo(0, 0, 400, Easing.CubicOut)
+                    );
+            }
+            else
+            {
+                await Task.WhenAll(
+                    _vm.LoadLocalAsync(),
+                    Content.FadeTo(1, 320, Easing.CubicOut),
+                    Content.TranslateTo(0, 0, 320, Easing.CubicOut)
+                );
+            }
             _hasLoaded = true;
-            await Task.WhenAll(
-                Content.FadeTo(1, 400, Easing.CubicOut),
-                Content.TranslateTo(0, 0, 400, Easing.CubicOut)
-            );
+
+            ScrollStreakToToday();
+            AnimateGauge();
+            _heatmapCts?.Cancel();
+            _heatmapCts = new CancellationTokenSource();
+            HeatmapBuilder.Build(HemHeatmapGrid, _vm.HeatmapItems, _heatmapCts.Token);
         }
-        else
+        catch (Exception ex)
         {
-            Content.Opacity = 0;
-            Content.TranslationY = 12;
-            await Task.WhenAll(
-                _vm.LoadAsync(),
-                Content.FadeTo(1, 320, Easing.CubicOut),
-                Content.TranslateTo(0, 0, 320, Easing.CubicOut)
-            );
+            System.Diagnostics.Debug.WriteLine($"[HemPage] Local load failed: {ex}");
+            await DisplayAlert(null, AppResources.Common_ErrorRetry, AppResources.Common_OK);
+        }
+        finally
+        {
+            Content.Opacity = 1;
+            Content.TranslationY = 0;
         }
 
-        ScrollStreakToToday();
-        AnimateGauge();
-        _heatmapCts?.Cancel();
-        _heatmapCts = new CancellationTokenSource();
-        HeatmapBuilder.Build(HemHeatmapGrid, _vm.HeatmapItems, _heatmapCts.Token);
+        // Steg 2: Hälsa (behörighetsdialog första gången + HealthKit-frågor) fyller på efteråt.
+        if (_healthLoading) return;
+        _healthLoading = true;
+        try
+        {
+            await _vm.LoadHealthAsync();
+        }
+        catch (Exception ex)
+        {
+            // Sidan visar redan "–" och inget råd. Meddela en gång, inte vid varje flikbyte.
+            System.Diagnostics.Debug.WriteLine($"[HemPage] Health load failed: {ex}");
+            if (!_healthErrorShown)
+            {
+                _healthErrorShown = true;
+                await DisplayAlert(null, AppResources.Common_ErrorRetry, AppResources.Common_OK);
+            }
+        }
+        finally
+        {
+            _healthLoading = false;
+        }
     }
 
     private void ScrollStreakToToday()
@@ -68,6 +114,11 @@ public partial class HemPage : ContentPage
     private void AnimateGauge()
     {
         float target = (float)(_vm.TrainingScore / 100.0);
+        if (AnimationHelper.ReduceMotion)
+        {
+            Gauge.Progress = target;
+            return;
+        }
         var animation = new Animation(v => Gauge.Progress = (float)v, 0, target, Easing.CubicOut);
         animation.Commit(this, "GaugeAnim", length: 1200);
     }
@@ -81,12 +132,19 @@ public partial class HemPage : ContentPage
     }
 
     private void OnWorkoutStateChanged()
-        => MainThread.BeginInvokeOnMainThread(() =>
-        {
-            WorkoutBanner.IsVisible = _state.IsActive;
-            if (_state.IsActive) StartBannerPulse();
-            else BannerPulseRing.StopPulse();
-        });
+        => MainThread.BeginInvokeOnMainThread(UpdateBannerState);
+
+    private void UpdateBannerState()
+    {
+        var active = _state.IsActive;
+        WorkoutBanner.IsVisible = active;
+        if (active) StartBannerPulse();
+        else BannerPulseRing.StopPulse();
+
+        // Sista kortet ska kunna scrollas fram ovanför bannern och tab-baren.
+        var p = ScrollContent.Padding;
+        ScrollContent.Padding = new Thickness(p.Left, p.Top, p.Right, active ? BottomInsetWithBanner : BottomInset);
+    }
 
     private void StartBannerPulse() => BannerPulseRing.StartPulse();
 
@@ -113,13 +171,15 @@ public partial class HemPage : ContentPage
 
     private static async void OnBannerPointerPressed(object? sender, PointerEventArgs e)
     {
-        HapticFeedback.Default.Perform(HapticFeedbackType.Click);
+        AnimationHelper.Haptic(HapticFeedbackType.Click);
+        if (AnimationHelper.ReduceMotion) return;
         if (sender is PointerGestureRecognizer pgr && pgr.Parent is VisualElement ve)
             await ve.ScaleTo(0.97, 65, Easing.CubicOut);
     }
 
     private static async void OnBannerPointerReleased(object? sender, PointerEventArgs e)
     {
+        if (AnimationHelper.ReduceMotion) return;
         if (sender is PointerGestureRecognizer pgr && pgr.Parent is VisualElement ve)
             await ve.ScaleTo(1.0, 200, Easing.SpringOut);
     }

@@ -16,47 +16,56 @@
 
     <Grid SafeAreaEdges="None">
 
-        <!-- Atmosf�risk bakgrund -->
+        <!-- Atmosfärisk bakgrund -->
         <controls:AtmosphericBackgroundView InputTransparent="True"/>
 
         <!-- Permanent status bar gradient (alltid synlig, fyller Dynamic Island-zonen) -->
         <BoxView VerticalOptions="Start" HeightRequest="90" InputTransparent="True" ZIndex="19">
             <BoxView.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <GradientStop Color="{AppThemeBinding Light=#28FCFCFC, Dark=#28141418}" Offset="0.0"/>
-                    <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark=#00141418}" Offset="1.0"/>
+                    <GradientStop Color="{AppThemeBinding Light=#28FCFCFC, Dark={StaticResource ForgeStatusBarOverlay}}" Offset="0.0"/>
+                    <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark={StaticResource ForgeStatusBarOverlayClear}}" Offset="1.0"/>
                 </LinearGradientBrush>
             </BoxView.Background>
         </BoxView>
 
-        <!-- Sticky header (fades in on scroll) -->
+        <!-- Sticky header (fades in on scroll). Bara MERIT-knappen tar emot tryck,
+             och bara när headern syns (styrs i OnScrolled). -->
         <Grid x:Name="StickyHeader" VerticalOptions="Start" ZIndex="20" Opacity="0"
-              HeightRequest="150" SafeAreaEdges="None">
+              HeightRequest="150" SafeAreaEdges="None"
+              InputTransparent="True" CascadeInputTransparent="False">
             <BoxView InputTransparent="True">
                 <BoxView.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                        <GradientStop Color="{AppThemeBinding Light=#D8FCFCFC, Dark=#D8141418}" Offset="0.0"/>
-                        <GradientStop Color="{AppThemeBinding Light=#90FCFCFC, Dark=#90141418}" Offset="0.35"/>
-                        <GradientStop Color="{AppThemeBinding Light=#38FCFCFC, Dark=#38141418}" Offset="0.65"/>
-                        <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark=#00141418}" Offset="1.0"/>
+                        <GradientStop Color="{AppThemeBinding Light=#D8FCFCFC, Dark={StaticResource ForgeStickyHeaderTop}}" Offset="0.0"/>
+                        <GradientStop Color="{AppThemeBinding Light=#90FCFCFC, Dark={StaticResource ForgeStickyHeaderMid1}}" Offset="0.35"/>
+                        <GradientStop Color="{AppThemeBinding Light=#38FCFCFC, Dark={StaticResource ForgeStickyHeaderMid2}}" Offset="0.65"/>
+                        <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark={StaticResource ForgeStatusBarOverlayClear}}" Offset="1.0"/>
                     </LinearGradientBrush>
                 </BoxView.Background>
             </BoxView>
-            <Grid Padding="20,14,16,12">
+            <Grid Padding="20,14,16,12" InputTransparent="True" CascadeInputTransparent="False">
                 <Label Text="{loc:Localize History_Title}"
                        HorizontalOptions="Center" HorizontalTextAlignment="Center"
                        Style="{StaticResource DisplayLabel}" FontSize="18"
-                       VerticalOptions="Center"/>
-                <Border HorizontalOptions="End" VerticalOptions="Center"
-                        BackgroundColor="{StaticResource ForgeAccentAmberDim}"
-                        StrokeShape="RoundRectangle 10" StrokeThickness="0"
-                        Padding="12,8">
-                    <Label Text="{loc:Localize History_Achievements}" FontFamily="BebasNeue" FontSize="12" CharacterSpacing="1"
-                           TextColor="{StaticResource ForgeAccentAmber}" VerticalOptions="Center"/>
-                    <Border.GestureRecognizers>
+                       VerticalOptions="Center" InputTransparent="True"/>
+                <!-- 44 pt tryckyta runt den visuella MERIT-pillen -->
+                <Grid x:Name="StickyAchievementsButton"
+                      HorizontalOptions="End" VerticalOptions="Center"
+                      MinimumHeightRequest="44" MinimumWidthRequest="44"
+                      InputTransparent="True"
+                      SemanticProperties.Description="{loc:Localize History_Achievements_A11y}">
+                    <Border VerticalOptions="Center" InputTransparent="True"
+                            BackgroundColor="{StaticResource ForgeAccentAmberDim}"
+                            StrokeShape="RoundRectangle 10" StrokeThickness="0"
+                            Padding="12,8">
+                        <Label Text="{loc:Localize History_Achievements}" FontFamily="BebasNeue" FontSize="12" CharacterSpacing="1"
+                               TextColor="{StaticResource ForgeAccentAmber}" VerticalOptions="Center"/>
+                    </Border>
+                    <Grid.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding OpenAchievementsCommand}" Tapped="OnAchievementTapped"/>
-                    </Border.GestureRecognizers>
-                </Border>
+                    </Grid.GestureRecognizers>
+                </Grid>
             </Grid>
         </Grid>
 
@@ -65,10 +74,11 @@
                            HorizontalOptions="Center"
                            VerticalOptions="Center"/>
 
-        <ScrollView IsVisible="{Binding IsLoading, Converter={x:Static vm:InverseBoolConverter.Instance}}"
+        <ScrollView x:Name="MainScroll"
+                    IsVisible="{Binding IsLoading, Converter={x:Static vm:InverseBoolConverter.Instance}}"
                     VerticalScrollBarVisibility="Never"
                     Scrolled="OnScrolled">
-                <VerticalStackLayout Padding="16,56,16,100" Spacing="12">
+                <VerticalStackLayout x:Name="ScrollContent" Padding="16,56,16,120" Spacing="12">
 
                     <!-- Page title -->
                     <Grid ColumnDefinitions="*,Auto" Margin="4,0,0,4">
@@ -76,29 +86,35 @@
                                FontFamily="BebasNeue" FontSize="34" CharacterSpacing="1"
                                TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource ForgeText}}"
                                VerticalOptions="Center"/>
-                        <Border Grid.Column="1"
-                                BackgroundColor="{StaticResource ForgeAccentAmberDim}"
-                                StrokeShape="RoundRectangle 10" StrokeThickness="0"
-                                Padding="12,8" VerticalOptions="Center">
-                            <Label Text="{loc:Localize History_Achievements}" FontFamily="BebasNeue" FontSize="12" CharacterSpacing="1"
-                                   TextColor="{StaticResource ForgeAccentAmber}" VerticalOptions="Center"/>
-                            <Border.GestureRecognizers>
+                        <!-- 44 pt tryckyta runt den visuella MERIT-pillen -->
+                        <Grid Grid.Column="1" VerticalOptions="Center"
+                              MinimumHeightRequest="44" MinimumWidthRequest="44"
+                              SemanticProperties.Description="{loc:Localize History_Achievements_A11y}">
+                            <Border VerticalOptions="Center" InputTransparent="True"
+                                    BackgroundColor="{StaticResource ForgeAccentAmberDim}"
+                                    StrokeShape="RoundRectangle 10" StrokeThickness="0"
+                                    Padding="12,8">
+                                <Label Text="{loc:Localize History_Achievements}" FontFamily="BebasNeue" FontSize="12" CharacterSpacing="1"
+                                       TextColor="{StaticResource ForgeAccentAmber}" VerticalOptions="Center"/>
+                            </Border>
+                            <Grid.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding OpenAchievementsCommand}" Tapped="OnAchievementTapped"/>
-                            </Border.GestureRecognizers>
-                        </Border>
+                            </Grid.GestureRecognizers>
+                        </Grid>
                     </Grid>
 
                     <!-- Kalender -->
                     <Border Style="{StaticResource CardFrame}" Padding="14,12">
                         <VerticalStackLayout Spacing="10">
 
-                            <!-- M�nadsnavigering -->
+                            <!-- Månadsnavigering -->
                             <Grid ColumnDefinitions="Auto,*,Auto">
                                 <Border Grid.Column="0" BackgroundColor="Transparent" StrokeThickness="0"
-                                        MinimumWidthRequest="44" MinimumHeightRequest="44"
-                                        HorizontalOptions="Start" VerticalOptions="Center">
-                                    <Label Text="�" FontSize="26" TextColor="{StaticResource ForgeMuted}"
-                                           HorizontalOptions="Center" VerticalOptions="Center"/>
+                                        WidthRequest="44" HeightRequest="44"
+                                        HorizontalOptions="Start" VerticalOptions="Center"
+                                        SemanticProperties.Description="{loc:Localize A11y_PrevMonth}">
+                                    <Path Style="{StaticResource BackChevron}"
+                                          Stroke="{StaticResource ForgeTextSecondary}"/>
                                     <Border.GestureRecognizers>
                                         <TapGestureRecognizer Tapped="OnCalNavTapped" Command="{Binding PrevMonthCommand}"/>
                                     </Border.GestureRecognizers>
@@ -109,10 +125,11 @@
                                        TextColor="{StaticResource ForgeText}"
                                        HorizontalOptions="Center" VerticalOptions="Center"/>
                                 <Border Grid.Column="2" BackgroundColor="Transparent" StrokeThickness="0"
-                                        MinimumWidthRequest="44" MinimumHeightRequest="44"
-                                        HorizontalOptions="End" VerticalOptions="Center">
-                                    <Label Text="�" FontSize="26" TextColor="{StaticResource ForgeMuted}"
-                                           HorizontalOptions="Center" VerticalOptions="Center"/>
+                                        WidthRequest="44" HeightRequest="44"
+                                        HorizontalOptions="End" VerticalOptions="Center"
+                                        SemanticProperties.Description="{loc:Localize A11y_NextMonth}">
+                                    <Path Style="{StaticResource ForwardChevron}"
+                                          Stroke="{StaticResource ForgeTextSecondary}"/>
                                     <Border.GestureRecognizers>
                                         <TapGestureRecognizer Tapped="OnCalNavTapped" Command="{Binding NextMonthCommand}"/>
                                     </Border.GestureRecognizers>
@@ -141,7 +158,7 @@
                     <!-- Filter + Sort -->
                     <StackLayout Spacing="8">
                         <Border BackgroundColor="{StaticResource ForgePillTrack}" StrokeThickness="0" StrokeShape="RoundRectangle 50" Padding="2">
-                            <Grid x:Name="PeriodPills" ColumnDefinitions="*,*,*" HeightRequest="40"
+                            <Grid x:Name="PeriodPills" ColumnDefinitions="*,*,*" HeightRequest="44"
                                   SizeChanged="OnPeriodContainerSizeChanged">
                                 <Border x:Name="PeriodIndicator" Grid.ColumnSpan="3"
                                         BackgroundColor="{StaticResource ForgePillIndicator}"
@@ -178,7 +195,7 @@
                             </Grid>
                         </Border>
                         <Border BackgroundColor="{StaticResource ForgePillTrack}" StrokeThickness="0" StrokeShape="RoundRectangle 50" Padding="2">
-                            <Grid x:Name="SortPills" ColumnDefinitions="*,*" HeightRequest="38"
+                            <Grid x:Name="SortPills" ColumnDefinitions="*,*" HeightRequest="44"
                                   SizeChanged="OnSortContainerSizeChanged">
                                 <Border x:Name="SortIndicator" Grid.ColumnSpan="2"
                                         BackgroundColor="{StaticResource ForgePillIndicator}"
@@ -331,7 +348,7 @@
                 </VerticalStackLayout>
             </ScrollView>
 
-            <!-- = WORKOUT BANNER � Live Forge Capsule = -->
+            <!-- = WORKOUT BANNER — Live Forge Capsule = -->
             <Grid x:Name="WorkoutBanner"
                   IsVisible="False"
                   VerticalOptions="End"
@@ -346,7 +363,8 @@
                 <Border StrokeThickness="1"
                         Stroke="{StaticResource ForgeBannerStroke}"
                         StrokeShape="RoundRectangle 22"
-                        Padding="16,9,18,10">
+                        Padding="16,9,18,10"
+                        SemanticProperties.Description="{loc:Localize A11y_ActiveWorkout}">
                     <Border.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                             <GradientStop Color="{StaticResource ForgeSurface2}" Offset="0"/>
@@ -372,14 +390,14 @@
                 </Border>
             </Grid>
 
-    <!-- Bottom gradient fade behind floating tab bar � matchar topp-gradienten spegelv�nt -->
+    <!-- Bottom gradient fade behind floating tab bar — matchar topp-gradienten spegelvänt -->
     <BoxView Grid.RowSpan="99" InputTransparent="True" VerticalOptions="End" HeightRequest="150">
         <BoxView.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark=#00141418}" Offset="0.0"/>
-                <GradientStop Color="{AppThemeBinding Light=#38FCFCFC, Dark=#38141418}" Offset="0.35"/>
-                <GradientStop Color="{AppThemeBinding Light=#90FCFCFC, Dark=#90141418}" Offset="0.65"/>
-                <GradientStop Color="{AppThemeBinding Light=#FCFCFC, Dark=#141418}" Offset="1.0"/>
+                <GradientStop Color="{AppThemeBinding Light=#00FCFCFC, Dark={StaticResource ForgeStatusBarOverlayClear}}" Offset="0.0"/>
+                <GradientStop Color="{AppThemeBinding Light=#38FCFCFC, Dark={StaticResource ForgeBottomFadeMid1}}" Offset="0.35"/>
+                <GradientStop Color="{AppThemeBinding Light=#90FCFCFC, Dark={StaticResource ForgeBottomFadeMid2}}" Offset="0.65"/>
+                <GradientStop Color="{AppThemeBinding Light=#FCFCFC, Dark={StaticResource ForgeBottomFadeBottom}}" Offset="1.0"/>
             </LinearGradientBrush>
         </BoxView.Background>
     </BoxView>

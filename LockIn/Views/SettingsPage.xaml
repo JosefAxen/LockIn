@@ -18,7 +18,7 @@
 
     <Grid SafeAreaEdges="None">
 
-        <!-- Atmosf�risk bakgrund -->
+        <!-- Atmosfärisk bakgrund -->
         <controls:AtmosphericBackgroundView InputTransparent="True"/>
 
         <!-- Permanent status bar gradient -->
@@ -46,12 +46,8 @@
             </BoxView>
             <Grid Padding="20,14,16,12" ColumnDefinitions="48,*">
                 <Border Grid.Column="0"
-                        WidthRequest="36" HeightRequest="36"
-                        StrokeShape="Ellipse"
-                        BackgroundColor="{AppThemeBinding Light=#1A000000, Dark=#17FFFFFF}"
-                        Stroke="{AppThemeBinding Light=#0D000000, Dark=#29FFFFFF}"
-                        StrokeThickness="0.5"
-                        VerticalOptions="Center">
+                        Style="{StaticResource IconCircleButton}"
+                        SemanticProperties.Description="{loc:Localize A11y_Back}">
                     <Path Style="{StaticResource BackChevron}"/>
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnBackClicked"/>
@@ -71,12 +67,8 @@
                 <!-- Page title row (scrolls away) -->
                 <Grid Padding="16,56,16,8" ColumnDefinitions="48,*">
                     <Border Grid.Column="0"
-                            WidthRequest="36" HeightRequest="36"
-                            StrokeShape="Ellipse"
-                            BackgroundColor="{AppThemeBinding Light=#1A000000, Dark=#17FFFFFF}"
-                            Stroke="{AppThemeBinding Light=#0D000000, Dark=#29FFFFFF}"
-                            StrokeThickness="0.5"
-                            VerticalOptions="Center">
+                            Style="{StaticResource IconCircleButton}"
+                            SemanticProperties.Description="{loc:Localize A11y_Back}">
                         <Path Style="{StaticResource BackChevron}"/>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnBackClicked"/>
@@ -89,7 +81,8 @@
                            VerticalOptions="End" Margin="4,0,0,0"/>
                 </Grid>
 
-                <StackLayout Padding="16,8,16,48" Spacing="16">
+                <!-- Bottenpadding 160: tab-baren är synlig på push-sidor, plus ev. PASS PÅGÅR-bannern -->
+                <StackLayout Padding="16,8,16,160" Spacing="16">
 
                 <!-- Profile -->
                 <Label Text="{loc:Localize Settings_Section_Profile}" Style="{StaticResource SectionLabel}" Margin="4,0"/>
@@ -171,146 +164,179 @@
                                 <Label Text="{Binding ReminderDisplay}" Style="{StaticResource MutedLabel}"/>
                             </StackLayout>
                         </Grid>
-                        <!-- Day chips -->
-                        <HorizontalStackLayout Spacing="6" HorizontalOptions="Center" Padding="0,0,0,12">
-                            <VerticalStackLayout Spacing="2" WidthRequest="36">
-                                <Border BackgroundColor="{Binding Day0Bg}" StrokeShape="RoundRectangle 8" StrokeThickness="0"
-                                        WidthRequest="36" HeightRequest="36">
-                                    <Label Text="{loc:Localize Settings_Reminders_Day_0}" FontFamily="DMSansMedium" FontSize="11"
+                        <!-- Day chips: 44×44 för att slå på/av, och en egen 44 pt hög yta under för dagsetiketten -->
+                        <HorizontalStackLayout Spacing="4" HorizontalOptions="Center" Padding="0,0,0,4">
+                            <VerticalStackLayout Spacing="0" WidthRequest="44">
+                                <Border BackgroundColor="{Binding Day0Bg}" StrokeShape="RoundRectangle 10" StrokeThickness="0"
+                                        WidthRequest="44" HeightRequest="44"
+                                        SemanticProperties.Description="{Binding Day0A11y}">
+                                    <Label Text="{loc:Localize Settings_Reminders_Day_0}" FontFamily="DMSansMedium" FontSize="12"
                                            TextColor="{Binding Day0Fg}" HorizontalOptions="Center" VerticalOptions="Center"/>
                                     <Border.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding ToggleReminderDayCommand}" CommandParameter="{x:Int32 0}"/>
                                     </Border.GestureRecognizers>
                                 </Border>
-                                <Label Text="{Binding Day0Label}" FontFamily="DMSansRegular" FontSize="8"
-                                       MinimumHeightRequest="10"
-                                       TextColor="{StaticResource ForgeAccent}" HorizontalOptions="Center"
-                                       LineBreakMode="TailTruncation">
-                                    <Label.GestureRecognizers>
+                                <Border BackgroundColor="Transparent" StrokeThickness="0"
+                                        WidthRequest="44" HeightRequest="44" Padding="0,4,0,0"
+                                        SemanticProperties.Description="{Binding Day0LabelA11y}"
+                                        SemanticProperties.Hint="{Binding Day0Label}">
+                                    <Label Text="{Binding Day0Label}" FontFamily="DMSansRegular" FontSize="10"
+                                           TextColor="{StaticResource ForgeAccent}" HorizontalOptions="Center" VerticalOptions="Start"
+                                           LineBreakMode="TailTruncation"/>
+                                    <Border.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding EditReminderLabelCommand}" CommandParameter="{x:Int32 0}"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
+                                    </Border.GestureRecognizers>
+                                </Border>
                             </VerticalStackLayout>
-                            <VerticalStackLayout Spacing="2" WidthRequest="36">
-                                <Border BackgroundColor="{Binding Day1Bg}" StrokeShape="RoundRectangle 8" StrokeThickness="0"
-                                        WidthRequest="36" HeightRequest="36">
-                                    <Label Text="{loc:Localize Settings_Reminders_Day_1}" FontFamily="DMSansMedium" FontSize="11"
+                            <VerticalStackLayout Spacing="0" WidthRequest="44">
+                                <Border BackgroundColor="{Binding Day1Bg}" StrokeShape="RoundRectangle 10" StrokeThickness="0"
+                                        WidthRequest="44" HeightRequest="44"
+                                        SemanticProperties.Description="{Binding Day1A11y}">
+                                    <Label Text="{loc:Localize Settings_Reminders_Day_1}" FontFamily="DMSansMedium" FontSize="12"
                                            TextColor="{Binding Day1Fg}" HorizontalOptions="Center" VerticalOptions="Center"/>
                                     <Border.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding ToggleReminderDayCommand}" CommandParameter="{x:Int32 1}"/>
                                     </Border.GestureRecognizers>
                                 </Border>
-                                <Label Text="{Binding Day1Label}" FontFamily="DMSansRegular" FontSize="8"
-                                       MinimumHeightRequest="10"
-                                       TextColor="{StaticResource ForgeAccent}" HorizontalOptions="Center"
-                                       LineBreakMode="TailTruncation">
-                                    <Label.GestureRecognizers>
+                                <Border BackgroundColor="Transparent" StrokeThickness="0"
+                                        WidthRequest="44" HeightRequest="44" Padding="0,4,0,0"
+                                        SemanticProperties.Description="{Binding Day1LabelA11y}"
+                                        SemanticProperties.Hint="{Binding Day1Label}">
+                                    <Label Text="{Binding Day1Label}" FontFamily="DMSansRegular" FontSize="10"
+                                           TextColor="{StaticResource ForgeAccent}" HorizontalOptions="Center" VerticalOptions="Start"
+                                           LineBreakMode="TailTruncation"/>
+                                    <Border.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding EditReminderLabelCommand}" CommandParameter="{x:Int32 1}"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
+                                    </Border.GestureRecognizers>
+                                </Border>
                             </VerticalStackLayout>
-                            <VerticalStackLayout Spacing="2" WidthRequest="36">
-                                <Border BackgroundColor="{Binding Day2Bg}" StrokeShape="RoundRectangle 8" StrokeThickness="0"
-                                        WidthRequest="36" HeightRequest="36">
-                                    <Label Text="{loc:Localize Settings_Reminders_Day_2}" FontFamily="DMSansMedium" FontSize="11"
+                            <VerticalStackLayout Spacing="0" WidthRequest="44">
+                                <Border BackgroundColor="{Binding Day2Bg}" StrokeShape="RoundRectangle 10" StrokeThickness="0"
+                                        WidthRequest="44" HeightRequest="44"
+                                        SemanticProperties.Description="{Binding Day2A11y}">
+                                    <Label Text="{loc:Localize Settings_Reminders_Day_2}" FontFamily="DMSansMedium" FontSize="12"
                                            TextColor="{Binding Day2Fg}" HorizontalOptions="Center" VerticalOptions="Center"/>
                                     <Border.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding ToggleReminderDayCommand}" CommandParameter="{x:Int32 2}"/>
                                     </Border.GestureRecognizers>
                                 </Border>
-                                <Label Text="{Binding Day2Label}" FontFamily="DMSansRegular" FontSize="8"
-                                       MinimumHeightRequest="10"
-                                       TextColor="{StaticResource ForgeAccent}" HorizontalOptions="Center"
-                                       LineBreakMode="TailTruncation">
-                                    <Label.GestureRecognizers>
+                                <Border BackgroundColor="Transparent" StrokeThickness="0"
+                                        WidthRequest="44" HeightRequest="44" Padding="0,4,0,0"
+                                        SemanticProperties.Description="{Binding Day2LabelA11y}"
+                                        SemanticProperties.Hint="{Binding Day2Label}">
+                                    <Label Text="{Binding Day2Label}" FontFamily="DMSansRegular" FontSize="10"
+                                           TextColor="{StaticResource ForgeAccent}" HorizontalOptions="Center" VerticalOptions="Start"
+                                           LineBreakMode="TailTruncation"/>
+                                    <Border.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding EditReminderLabelCommand}" CommandParameter="{x:Int32 2}"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
+                                    </Border.GestureRecognizers>
+                                </Border>
                             </VerticalStackLayout>
-                            <VerticalStackLayout Spacing="2" WidthRequest="36">
-                                <Border BackgroundColor="{Binding Day3Bg}" StrokeShape="RoundRectangle 8" StrokeThickness="0"
-                                        WidthRequest="36" HeightRequest="36">
-                                    <Label Text="{loc:Localize Settings_Reminders_Day_3}" FontFamily="DMSansMedium" FontSize="11"
+                            <VerticalStackLayout Spacing="0" WidthRequest="44">
+                                <Border BackgroundColor="{Binding Day3Bg}" StrokeShape="RoundRectangle 10" StrokeThickness="0"
+                                        WidthRequest="44" HeightRequest="44"
+                                        SemanticProperties.Description="{Binding Day3A11y}">
+                                    <Label Text="{loc:Localize Settings_Reminders_Day_3}" FontFamily="DMSansMedium" FontSize="12"
                                            TextColor="{Binding Day3Fg}" HorizontalOptions="Center" VerticalOptions="Center"/>
                                     <Border.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding ToggleReminderDayCommand}" CommandParameter="{x:Int32 3}"/>
                                     </Border.GestureRecognizers>
                                 </Border>
-                                <Label Text="{Binding Day3Label}" FontFamily="DMSansRegular" FontSize="8"
-                                       MinimumHeightRequest="10"
-                                       TextColor="{StaticResource ForgeAccent}" HorizontalOptions="Center"
-                                       LineBreakMode="TailTruncation">
-                                    <Label.GestureRecognizers>
+                                <Border BackgroundColor="Transparent" StrokeThickness="0"
+                                        WidthRequest="44" HeightRequest="44" Padding="0,4,0,0"
+                                        SemanticProperties.Description="{Binding Day3LabelA11y}"
+                                        SemanticProperties.Hint="{Binding Day3Label}">
+                                    <Label Text="{Binding Day3Label}" FontFamily="DMSansRegular" FontSize="10"
+                                           TextColor="{StaticResource ForgeAccent}" HorizontalOptions="Center" VerticalOptions="Start"
+                                           LineBreakMode="TailTruncation"/>
+                                    <Border.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding EditReminderLabelCommand}" CommandParameter="{x:Int32 3}"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
+                                    </Border.GestureRecognizers>
+                                </Border>
                             </VerticalStackLayout>
-                            <VerticalStackLayout Spacing="2" WidthRequest="36">
-                                <Border BackgroundColor="{Binding Day4Bg}" StrokeShape="RoundRectangle 8" StrokeThickness="0"
-                                        WidthRequest="36" HeightRequest="36">
-                                    <Label Text="{loc:Localize Settings_Reminders_Day_4}" FontFamily="DMSansMedium" FontSize="11"
+                            <VerticalStackLayout Spacing="0" WidthRequest="44">
+                                <Border BackgroundColor="{Binding Day4Bg}" StrokeShape="RoundRectangle 10" StrokeThickness="0"
+                                        WidthRequest="44" HeightRequest="44"
+                                        SemanticProperties.Description="{Binding Day4A11y}">
+                                    <Label Text="{loc:Localize Settings_Reminders_Day_4}" FontFamily="DMSansMedium" FontSize="12"
                                            TextColor="{Binding Day4Fg}" HorizontalOptions="Center" VerticalOptions="Center"/>
                                     <Border.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding ToggleReminderDayCommand}" CommandParameter="{x:Int32 4}"/>
                                     </Border.GestureRecognizers>
                                 </Border>
-                                <Label Text="{Binding Day4Label}" FontFamily="DMSansRegular" FontSize="8"
-                                       MinimumHeightRequest="10"
-                                       TextColor="{StaticResource ForgeAccent}" HorizontalOptions="Center"
-                                       LineBreakMode="TailTruncation">
-                                    <Label.GestureRecognizers>
+                                <Border BackgroundColor="Transparent" StrokeThickness="0"
+                                        WidthRequest="44" HeightRequest="44" Padding="0,4,0,0"
+                                        SemanticProperties.Description="{Binding Day4LabelA11y}"
+                                        SemanticProperties.Hint="{Binding Day4Label}">
+                                    <Label Text="{Binding Day4Label}" FontFamily="DMSansRegular" FontSize="10"
+                                           TextColor="{StaticResource ForgeAccent}" HorizontalOptions="Center" VerticalOptions="Start"
+                                           LineBreakMode="TailTruncation"/>
+                                    <Border.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding EditReminderLabelCommand}" CommandParameter="{x:Int32 4}"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
+                                    </Border.GestureRecognizers>
+                                </Border>
                             </VerticalStackLayout>
-                            <VerticalStackLayout Spacing="2" WidthRequest="36">
-                                <Border BackgroundColor="{Binding Day5Bg}" StrokeShape="RoundRectangle 8" StrokeThickness="0"
-                                        WidthRequest="36" HeightRequest="36">
-                                    <Label Text="{loc:Localize Settings_Reminders_Day_5}" FontFamily="DMSansMedium" FontSize="11"
+                            <VerticalStackLayout Spacing="0" WidthRequest="44">
+                                <Border BackgroundColor="{Binding Day5Bg}" StrokeShape="RoundRectangle 10" StrokeThickness="0"
+                                        WidthRequest="44" HeightRequest="44"
+                                        SemanticProperties.Description="{Binding Day5A11y}">
+                                    <Label Text="{loc:Localize Settings_Reminders_Day_5}" FontFamily="DMSansMedium" FontSize="12"
                                            TextColor="{Binding Day5Fg}" HorizontalOptions="Center" VerticalOptions="Center"/>
                                     <Border.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding ToggleReminderDayCommand}" CommandParameter="{x:Int32 5}"/>
                                     </Border.GestureRecognizers>
                                 </Border>
-                                <Label Text="{Binding Day5Label}" FontFamily="DMSansRegular" FontSize="8"
-                                       MinimumHeightRequest="10"
-                                       TextColor="{StaticResource ForgeAccent}" HorizontalOptions="Center"
-                                       LineBreakMode="TailTruncation">
-                                    <Label.GestureRecognizers>
+                                <Border BackgroundColor="Transparent" StrokeThickness="0"
+                                        WidthRequest="44" HeightRequest="44" Padding="0,4,0,0"
+                                        SemanticProperties.Description="{Binding Day5LabelA11y}"
+                                        SemanticProperties.Hint="{Binding Day5Label}">
+                                    <Label Text="{Binding Day5Label}" FontFamily="DMSansRegular" FontSize="10"
+                                           TextColor="{StaticResource ForgeAccent}" HorizontalOptions="Center" VerticalOptions="Start"
+                                           LineBreakMode="TailTruncation"/>
+                                    <Border.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding EditReminderLabelCommand}" CommandParameter="{x:Int32 5}"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
+                                    </Border.GestureRecognizers>
+                                </Border>
                             </VerticalStackLayout>
-                            <VerticalStackLayout Spacing="2" WidthRequest="36">
-                                <Border BackgroundColor="{Binding Day6Bg}" StrokeShape="RoundRectangle 8" StrokeThickness="0"
-                                        WidthRequest="36" HeightRequest="36">
-                                    <Label Text="{loc:Localize Settings_Reminders_Day_6}" FontFamily="DMSansMedium" FontSize="11"
+                            <VerticalStackLayout Spacing="0" WidthRequest="44">
+                                <Border BackgroundColor="{Binding Day6Bg}" StrokeShape="RoundRectangle 10" StrokeThickness="0"
+                                        WidthRequest="44" HeightRequest="44"
+                                        SemanticProperties.Description="{Binding Day6A11y}">
+                                    <Label Text="{loc:Localize Settings_Reminders_Day_6}" FontFamily="DMSansMedium" FontSize="12"
                                            TextColor="{Binding Day6Fg}" HorizontalOptions="Center" VerticalOptions="Center"/>
                                     <Border.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding ToggleReminderDayCommand}" CommandParameter="{x:Int32 6}"/>
                                     </Border.GestureRecognizers>
                                 </Border>
-                                <Label Text="{Binding Day6Label}" FontFamily="DMSansRegular" FontSize="8"
-                                       MinimumHeightRequest="10"
-                                       TextColor="{StaticResource ForgeAccent}" HorizontalOptions="Center"
-                                       LineBreakMode="TailTruncation">
-                                    <Label.GestureRecognizers>
+                                <Border BackgroundColor="Transparent" StrokeThickness="0"
+                                        WidthRequest="44" HeightRequest="44" Padding="0,4,0,0"
+                                        SemanticProperties.Description="{Binding Day6LabelA11y}"
+                                        SemanticProperties.Hint="{Binding Day6Label}">
+                                    <Label Text="{Binding Day6Label}" FontFamily="DMSansRegular" FontSize="10"
+                                           TextColor="{StaticResource ForgeAccent}" HorizontalOptions="Center" VerticalOptions="Start"
+                                           LineBreakMode="TailTruncation"/>
+                                    <Border.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding EditReminderLabelCommand}" CommandParameter="{x:Int32 6}"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
+                                    </Border.GestureRecognizers>
+                                </Border>
                             </VerticalStackLayout>
                         </HorizontalStackLayout>
                         <!-- Divider -->
                         <BoxView HeightRequest="1" BackgroundColor="{StaticResource ForgeSurface2}"/>
                         <!-- Time row -->
-                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8" Padding="16,12">
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8" Padding="16,4">
                             <Label Grid.Column="0" Text="{loc:Localize Settings_Reminders_Time_Label}"
                                    FontFamily="DMSansMedium" FontSize="14" VerticalOptions="Center"/>
-                            <Label Grid.Column="1" Text="{Binding ReminderTimeDisplay}"
-                                   Style="{StaticResource MutedLabel}" VerticalOptions="Center"/>
-                            <Grid.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding EditReminderTimeCommand}"/>
-                            </Grid.GestureRecognizers>
+                            <TimePicker Grid.Column="1"
+                                        Time="{Binding ReminderTime, Mode=TwoWay}"
+                                        Format="HH:mm"
+                                        FontFamily="DMSansMedium" FontSize="14"
+                                        TextColor="{StaticResource ForgeTextSecondary}"
+                                        BackgroundColor="Transparent"
+                                        MinimumHeightRequest="44"
+                                        MinimumWidthRequest="72"
+                                        VerticalOptions="Center"
+                                        SemanticProperties.Description="{loc:Localize Settings_Reminders_TimePrompt_Title}"/>
                         </Grid>
                     </VerticalStackLayout>
                 </Border>
@@ -487,6 +513,7 @@
                         <Button Grid.Column="1" Text="{loc:Localize Settings_ClearData_Button}"
                                 Style="{StaticResource DestructiveButton}"
                                 HorizontalOptions="Start"
+                                MinimumHeightRequest="44"
                                 Command="{Binding ClearAllDataCommand}"/>
                     </Grid>
                 </Border>
@@ -509,7 +536,7 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- = WORKOUT BANNER � Live Forge Capsule = -->
+        <!-- = WORKOUT BANNER — Live Forge Capsule = -->
         <Grid x:Name="WorkoutBanner"
               IsVisible="False"
               VerticalOptions="End"
@@ -524,7 +551,9 @@
             <Border StrokeThickness="1"
                     Stroke="#55B8B8BC"
                     StrokeShape="RoundRectangle 22"
-                    Padding="16,9,18,10">
+                    Padding="16,9,18,10"
+                    MinimumHeightRequest="44"
+                    SemanticProperties.Description="{loc:Localize A11y_ActiveWorkout}">
                 <Border.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                         <GradientStop Color="#26262E" Offset="0"/>
