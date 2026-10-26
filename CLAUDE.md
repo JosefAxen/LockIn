@@ -8,7 +8,7 @@ iOS-träningsapp byggd med **.NET MAUI 10**, target `net10.0-ios`. CI publicerar
 
 **Låsta val:**
 - **Bara mörkt läge:** `Info.plist` UIUserInterfaceStyle=Dark + `UserAppTheme=Dark`. Ljust läge är inte designat; bakgrunden är alltid mörk.
-- **Bara iPhone, stående läge.**
+- **Stående läge** (iPhone + iPad i helskärm — iPad-stödet måste finnas kvar enligt App Store-regel 90101).
 - **Kulturen är tvingad till sv-SE** i `MauiProgram`, så `ToString()` ger decimalkomma.
   - Parsa inmatning med `text.Replace(',', '.')` + `CultureInfo.InvariantCulture`.
   - Skriv CSV med InvariantCulture.

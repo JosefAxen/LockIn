@@ -5,7 +5,7 @@
 > Hex values below are copied from those files — if they disagree, the code wins. Avoid new hex outside those two files.
 
 **Theme:** dark only. `Info.plist` sets `UIUserInterfaceStyle=Dark` and `App` sets `UserAppTheme=Dark`; the `Light*` tokens and `AppThemeBinding Light=` values are unused until a real light theme is designed (the page background is always the dark `AtmosphericBackgroundView`).
-**Orientation:** iPhone, portrait only.
+**Orientation:** portrait only (iPhone + iPad full screen; iPad support cannot be dropped once shipped).
 
 ---
 
